@@ -26,7 +26,7 @@ There are two layers:
    It also **denies** force-pushes, direct pushes to `main`, and deleting the repo, branches or secrets. GitHub can't enforce branch protection on this private free-plan repo, so this agent-side guard is what protects `main`. Humans: please work through PRs too.
 3. Add yourself to [coord/agents.md](coord/agents.md) with your role.
 
-Once per repo (owner only):
+Once per repo (owner only; already done):
 
 ```bash
 ./scripts/setup-labels.sh
@@ -34,28 +34,37 @@ Once per repo (owner only):
 
 To use `@claude` on GitHub: run `claude setup-token`, then add the result as the repo secret `CLAUDE_CODE_OAUTH_TOKEN`. You can use an API key in `ANTHROPIC_API_KEY` instead.
 
-## Running it
+## Quick start (everyone)
 
-| Who | Command | What it does |
-|---|---|---|
-| Planner (1 person) | `claude` → paste [coord/prompts/planner.md](coord/prompts/planner.md) | Turns `coord/plan.md` into contracts and small `status:ready` issues |
-| Worker (anyone) | `./scripts/worker.sh` (`--loop` to keep going) | Picks the next free issue, claims it, builds it in a worktree, opens a PR |
-| Worker with a team | `claude` → paste [coord/prompts/team-lead.md](coord/prompts/team-lead.md) | The lead claims 2–3 issues and gives each to a teammate |
-| Reviewer (1 person) | `claude` → paste [coord/prompts/reviewer.md](coord/prompts/reviewer.md) | Reviews and merges PRs marked `status:review` |
-| Anyone on GitHub | comment `@claude …` on an issue or PR | Small fixes and review answers |
+```bash
+git clone https://github.com/KNixt0/Hackathon-Bydgoszcz && cd Hackathon-Bydgoszcz
+./swarm setup     # checks gh, claude, python + shows roles
+./swarm view      # opens the live view in your browser
+```
 
-Useful scripts:
+On a Mac you can also **double-click `Swarm.command`** to open the live view. On Windows (no bash), run `python dashboard/server.py --open`.
 
-- `./scripts/next-task.sh`: prints the next claimable issue number. It skips issues that are assigned or whose dependencies are still open.
-- `./scripts/claim.sh <issue>`: locks the issue, creates branch `agent/<login>/<issue>` and worktree `.worktrees/<issue>`.
+## Running it: one command, `./swarm`
+
+| Command | Who | Role · model · effort | What it does |
+|---|---|---|---|
+| `./swarm view` | anyone | — | Animated live view (opens the browser, finds a free port) |
+| `./swarm status` | anyone | — | Task and PR counts in the terminal |
+| `./swarm roles` | anyone | — | Who does what, which model and effort |
+| `./swarm work [--loop]` | anyone | Builder · Sonnet · medium (`model:opus` → Opus/high, `size:xs` → Haiku/low) | Takes the next free task, builds it in a worktree, opens a PR |
+| `./swarm team [N]` | anyone | Builder | An Agent Team on your laptop: a lead plus N builders |
+| `./swarm plan` | KNixt0 | Planner · Opus · high | `coord/plan.md` → contracts → tasks |
+| `./swarm lead` | KNixt0 | Lead · Sonnet · medium | **Only delegates and merges.** Never writes code |
+| (automatic) | GitHub Actions | Verifier · Opus · high | Independent review of every PR from others |
+| `@claude …` on GitHub | anyone | Sonnet · medium | Small ad-hoc fixes |
+
+Why it's split this way: [coord/roles.md](coord/roles.md), also as a page for the team: [docs/swarm-roles.html](docs/swarm-roles.html). To change a model or effort, edit [coord/roles.json](coord/roles.json); everything reads from there.
+
+Lower-level scripts: `./scripts/next-task.sh` (next claimable issue) and `./scripts/claim.sh <issue>` (lock, branch `agent/<login>/<issue>`, worktree `.worktrees/<issue>`).
 
 ## Live view (2D)
 
-```bash
-python3 dashboard/server.py
-```
-
-Open http://127.0.0.1:8787. It's an animated map of the swarm that refreshes every 10 s from GitHub, using your own `gh` login (no token reaches the browser):
+`./swarm view` opens an animated map of the swarm. It refreshes every 10 s from GitHub through your own `gh` login, so no token reaches the browser:
 
 - **Do wzięcia** (to take): `status:ready` issues pinned on a board.
 - **Warsztat** (workshop): one robot per claimed issue, colored by its owner, typing at a desk.
@@ -63,9 +72,9 @@ Open http://127.0.0.1:8787. It's an animated map of the swarm that refreshes eve
 - **Zablokowane** (blocked): `status:blocked` / `needs-decision`.
 - **main**: merged PRs become commit nodes, with confetti on each new merge.
 - **Zespół** (team): every collaborator, with a badge showing how many agents they have running.
-- The right panel is a live activity feed.
+- The right panel shows **Kto co robi** (who does what: roles, models, effort) and a live activity feed.
 
-Click **Demo**, or open `?demo=1`, to see a simulated swarm when the repo has no tasks yet.
+Click **Demo** to see a simulated swarm while the repo has no tasks yet.
 
 ## Owner review gate
 

@@ -14,9 +14,11 @@ import pathlib
 import subprocess
 import threading
 import time
+import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = pathlib.Path(__file__).resolve().parent
+ROLES = HERE.parent / "coord" / "roles.json"
 CACHE_SECONDS = 8
 
 PR_FIELDS = ",".join([
@@ -112,9 +114,11 @@ def make_handler(state):
             super().__init__(*a, directory=str(HERE), **kw)
 
         def do_GET(self):
-            if self.path.split("?")[0] == "/api/state":
+            route = self.path.split("?")[0]
+            if route in ("/api/state", "/api/roles"):
                 try:
-                    body, code = json.dumps(state.get()).encode(), 200
+                    payload = state.get() if route == "/api/state" else json.loads(ROLES.read_text())
+                    body, code = json.dumps(payload).encode(), 200
                 except Exception as exc:  # gh offline, auth expired, rate limit…
                     body, code = json.dumps({"error": str(exc)[:500]}).encode(), 502
                 self.send_response(code)
@@ -123,7 +127,7 @@ def make_handler(state):
                 self.end_headers()
                 self.wfile.write(body)
                 return
-            if self.path.split("?")[0] not in ("/", "", "/index.html"):
+            if route not in ("/", "", "/index.html"):
                 self.send_error(404)
                 return
             self.path = "/index.html"
@@ -140,10 +144,26 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--port", type=int, default=8787)
     ap.add_argument("--repo", help="owner/name (default: this checkout's GitHub repo)")
+    ap.add_argument("--open", action="store_true", help="open the browser")
     args = ap.parse_args()
-    repo = args.repo or gh("repo", "view", "--json", "nameWithOwner")["nameWithOwner"]
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(State(repo)))
-    print(f"Swarm na żywo: http://127.0.0.1:{args.port}  (repo {repo}, demo: ?demo=1)", flush=True)
+    try:
+        repo = args.repo or gh("repo", "view", "--json", "nameWithOwner")["nameWithOwner"]
+    except Exception as exc:
+        raise SystemExit(f"Nie mogę odczytać repo przez gh ({exc}).\nZaloguj się: gh auth login")
+    handler = make_handler(State(repo))
+    server = None
+    for port in range(args.port, args.port + 20):  # first free port
+        try:
+            server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+            break
+        except OSError:
+            continue
+    if server is None:
+        raise SystemExit(f"Brak wolnego portu od {args.port}")
+    url = f"http://127.0.0.1:{port}"
+    print(f"Swarm na żywo: {url}  (repo {repo}, demo: {url}/?demo=1)  · Ctrl+C kończy", flush=True)
+    if args.open:
+        webbrowser.open(url)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

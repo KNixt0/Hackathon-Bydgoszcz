@@ -1,0 +1,179 @@
+<title>Swarm Hackathon Bydgoszcz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: one readable column; roles as a scannable grid of role cards, then flow, then commands. */
+  :root {
+    --bg: #f6f7fb; --surface: #ffffff; --edge: #dfe3ee; --fg: #161a26; --muted: #5b6478;
+    --accent: #4f5bd5; --opus: #6a3fc4; --sonnet: #17649a; --haiku: #17703d; --human: #85560c;
+    --code-bg: #eef0f7;
+    --display: "Space Grotesk", system-ui, sans-serif;
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0e1118; --surface: #151a25; --edge: #262e40; --fg: #e8ebf2; --muted: #98a1b5;
+    --accent: #8f99ff; --opus: #b99bff; --sonnet: #7cc4f5; --haiku: #7dd9a2; --human: #e6b45c; --code-bg: #1c2232; color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --bg: #0e1118; --surface: #151a25; --edge: #262e40; --fg: #e8ebf2; --muted: #98a1b5;
+    --accent: #8f99ff; --opus: #b99bff; --sonnet: #7cc4f5; --haiku: #7dd9a2; --human: #e6b45c; --code-bg: #1c2232; color-scheme: dark }
+
+  body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+  .wrap { max-width: 960px; margin: 0 auto; padding-block: 40px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 48px; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.1; letter-spacing: -.01em; }
+  h2 { font-size: 22px; margin-bottom: 14px; }
+  h3 { font-size: 17px; }
+  p { margin: 0; max-width: 65ch; }
+  .lede { color: var(--muted); font-size: 17px; margin-top: 10px; }
+  .eyebrow { font: 600 12px var(--body); text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 8px; }
+  section { display: grid; gap: 14px; min-width: 0; }
+
+  .roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .role { background: var(--surface); border: 1px solid var(--edge); border-radius: 12px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+  .role-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .who { color: var(--muted); font-size: 13px; }
+  .pill { font: 500 12px var(--mono); padding: 3px 8px; border-radius: 6px; border: 1px solid currentColor; white-space: nowrap; }
+  .pill.opus { color: var(--opus); } .pill.sonnet { color: var(--sonnet); } .pill.haiku { color: var(--haiku); } .pill.human { color: var(--human); }
+  .role ul { margin: 2px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .role .not { font-size: 13px; color: var(--muted); border-top: 1px dashed var(--edge); padding-top: 8px; }
+  .variants { display: grid; gap: 6px; font-size: 13px; }
+  .variants div { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+
+  .why { display: grid; gap: 10px; }
+  .why div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; }
+  .why b { font-family: var(--display); font-weight: 500; }
+  @media (max-width: 520px) { .why div { grid-template-columns: 1fr; gap: 2px; } }
+
+  .flow { overflow-x: auto; background: var(--surface); border: 1px solid var(--edge); border-radius: 12px; padding: 16px; }
+  .steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 70ch; }
+  .steps li::marker { font-family: var(--display); color: var(--accent); }
+
+  .cmds { display: grid; gap: 8px; }
+  .cmd { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center;
+    background: var(--surface); border: 1px solid var(--edge); border-radius: 10px; padding: 10px 12px; }
+  .cmd code { font: 500 14px var(--mono); background: var(--code-bg); padding: 4px 8px; border-radius: 6px; overflow-x: auto; white-space: nowrap; display: block; min-width: 0; }
+  .cmd span { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+  .copy { font: 500 13px var(--body); color: var(--fg); background: transparent; border: 1px solid var(--edge); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+  .copy:hover { border-color: var(--accent); }
+  .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .lamps { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+  .lamps i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-right: 6px; vertical-align: -1px; }
+  code.inline { font: 500 13px var(--mono); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  footer { color: var(--muted); font-size: 13px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hackathon Bydgoszcz · swarm agentów</div>
+    <h1>Kto planuje, kto buduje, kto sprawdza</h1>
+    <p class="lede">Każdy z zespołu uruchamia agentów Claude na własnym koncie. Agenci nie rozmawiają ze sobą bezpośrednio. Koordynują się przez GitHub: zadania to issues, wyniki to pull requesty, a stan pokazują etykiety.</p>
+  </header>
+
+  <section aria-labelledby="h-roles">
+    <h2 id="h-roles">Role, modele i effort</h2>
+    <div class="roles">
+      <article class="role">
+        <div class="role-head"><h3>Planer</h3><span class="pill opus">opus · high</span></div>
+        <div class="who">Claude na koncie KNixt0, raz na etap · <code class="inline">./swarm plan</code></div>
+        <ul><li>Zamienia plan na kontrakty (kształt API, formaty danych)</li><li>Tnie pracę na zadania po 1–3 h, każde z własnymi plikami</li></ul>
+        <div class="not">Nie pisze kodu funkcji.</div>
+      </article>
+      <article class="role">
+        <div class="role-head"><h3>Budowniczy</h3><span class="pill sonnet">sonnet · medium</span></div>
+        <div class="who">Claude na koncie każdego · <code class="inline">./swarm work</code> lub <code class="inline">./swarm team</code></div>
+        <ul><li>Bierze wolne zadanie, buduje w osobnej gałęzi</li><li>Odpala testy, otwiera PR z blokiem statusu</li></ul>
+        <div class="variants">
+          <div><span class="pill opus">opus · high</span> etykieta <code class="inline">model:opus</code>: trudne zadania</div>
+          <div><span class="pill haiku">haiku · low</span> etykieta <code class="inline">size:xs</code>: drobne zadania</div>
+        </div>
+        <div class="not">Nie merguje i nie recenzuje własnej pracy.</div>
+      </article>
+      <article class="role">
+        <div class="role-head"><h3>Weryfikator</h3><span class="pill opus">opus · high</span></div>
+        <div class="who">GitHub Action + CI, uruchamia się sam</div>
+        <ul><li>Niezależnie recenzuje każdy PR od innych</li><li>Wydaje werdykt <code class="inline">claude-verdict: APPROVE</code> albo <code class="inline">CHANGES</code></li></ul>
+        <div class="not">Nie merguje, tylko ocenia.</div>
+      </article>
+      <article class="role">
+        <div class="role-head"><h3>Lead</h3><span class="pill sonnet">sonnet · medium</span></div>
+        <div class="who">Claude na koncie KNixt0 · <code class="inline">./swarm lead</code></div>
+        <ul><li>Deleguje: priorytety, trudność, odblokowania</li><li>Merguje, gdy wszystkie trzy lampki są zielone</li></ul>
+        <div class="not">Nie pisze i nie poprawia kodu, odsyła PR-y z uwagami.</div>
+      </article>
+      <article class="role">
+        <div class="role-head"><h3>Właściciel</h3><span class="pill human">człowiek</span></div>
+        <div class="who">KNixt0</div>
+        <ul><li>Zatwierdza każdy PR od innych przed merge</li><li>Rozstrzyga sprawy oznaczone <code class="inline">needs-decision</code></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-why">
+    <h2 id="h-why">Dlaczego tak</h2>
+    <div class="why">
+      <div><b>Planer na Opus</b><p>Podział pracy decyduje o wszystkim dalej: zły podział to konflikty i blokady dla całego zespołu. Planer działa rzadko, więc stać go na najmocniejszy model.</p></div>
+      <div><b>Budowniczy na Sonnet</b><p>Zadania są małe i dobrze opisane, więc liczą się szybkość i koszt. Kilku budowniczych działa równolegle na limitach różnych kont.</p></div>
+      <div><b>Weryfikator na Opus</b><p>Recenzent z innym modelem i świeżym kontekstem nie dzieli założeń autora, więc łapie więcej błędów.</p></div>
+      <div><b>Lead na Sonnet</b><p>Koordynacja jest rutynowa i działa w długiej pętli. Trudne decyzje idą do właściciela, nie do leada.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-flow">
+    <h2 id="h-flow">Jak płynie jedno zadanie</h2>
+    <div class="flow">
+<pre class="mermaid">
+flowchart LR
+  P["plan.md"] --> PL["Planer · Opus"]
+  PL --> I["Zadanie<br/>status:ready"]
+  I --> B["Budowniczy · Sonnet"]
+  B --> PR["Pull request"]
+  PR --> CI["CI"]
+  PR --> V["Weryfikator · Opus"]
+  PR --> O["Właściciel"]
+  CI --> L["Lead merguje"]
+  V --> L
+  O --> L
+  L --> M["main"]
+  M -. odblokowuje .-> I
+</pre>
+    </div>
+    <ol class="steps">
+      <li>Planer tworzy zadanie z listą plików, które wolno zmienić, i etykietą <code class="inline">status:ready</code>.</li>
+      <li>Budowniczy na czyimś laptopie bierze je skryptem, który blokuje zadanie na niego, i pracuje w osobnej gałęzi.</li>
+      <li>Po skończeniu otwiera PR. Uruchamia się CI, a weryfikator Claude zostawia recenzję.</li>
+      <li>Jeśli autorem nie jest KNixt0, PR czeka na zatwierdzenie właściciela.</li>
+      <li>Lead merguje dopiero przy trzech zielonych lampkach i odblokowuje zadania, które czekały na to jedno.</li>
+    </ol>
+    <div class="lamps" aria-label="Lampki w recenzji">
+      <span><i></i><b>CI</b>: testy przechodzą</span>
+      <span><i></i><b>AI</b>: weryfikator zatwierdził</span>
+      <span><i></i><b>Ty</b>: właściciel zatwierdził ostatni commit</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-start">
+    <h2 id="h-start">Start dla każdego</h2>
+    <p>Potrzebujesz <code class="inline">gh</code> i Claude Code zalogowanych na własne konta. Potem w sklonowanym repo:</p>
+    <div class="cmds">
+      <div class="cmd"><code>./swarm setup</code><button class="copy" type="button">Kopiuj</button><span>sprawdza narzędzia i pokazuje role</span></div>
+      <div class="cmd"><code>./swarm view</code><button class="copy" type="button">Kopiuj</button><span>otwiera animowany podgląd pracy na żywo (na Macu: dwuklik w Swarm.command)</span></div>
+      <div class="cmd"><code>./swarm work --loop</code><button class="copy" type="button">Kopiuj</button><span>Twój agent-budowniczy bierze kolejne zadania</span></div>
+      <div class="cmd"><code>./swarm status</code><button class="copy" type="button">Kopiuj</button><span>kolejka zadań i PR-ów w terminalu</span></div>
+    </div>
+    <p>Za pierwszym razem uruchom <code class="inline">claude</code> w folderze repo i zaakceptuj „trust this folder”, bo bez tego agent nie dostanie uprawnień.</p>
+  </section>
+
+  <footer>Modele i effort zmienia się w jednym miejscu: <code class="inline">coord/roles.json</code> w repo.</footer>
+</div>
+
+<script>
+  document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", async () => {
+    const code = btn.previousElementSibling;
+    try { await navigator.clipboard.writeText(code.textContent); btn.textContent = "Skopiowano"; }
+    catch { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Zaznaczono"; }
+    setTimeout(() => (btn.textContent = "Kopiuj"), 1600);
+  }));
+</script>
