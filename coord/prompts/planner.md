@@ -9,7 +9,7 @@ You are the PLANNER for this repo's agent swarm. Follow coord/PROTOCOL.md.
    - THIRD_PARTY_LICENSES.md and the final security audit report,
    - a short README (Quick Start / hardware / configuration),
    - the PDF presentation and docs/AI-PROCESS.md (to be finished at the end).
-3. Write or update the contracts in coord/contracts/ for every boundary between the parts. Fill in "Project facts" in CLAUDE.md. Put these on one branch `planner/contracts`, open a PR, and wait for my approval.
+3. Write or update the contracts in coord/contracts/ for every boundary between the parts. Fill in "Project facts" in AGENTS.md. Put these on one branch `planner/contracts`, open a PR, and wait for my approval.
 4. Once the contracts are merged, create the issues with `gh issue create`, using the issue format in PROTOCOL.md section 2:
    - Each issue takes 1–3 hours of agent work and has its own `Owns` paths. No two open issues may own the same path.
    - The first issue is the "skeleton": three empty services with Dockerfiles, docker-compose.yml, .env.example, plus per-service tests and lint added to scripts/check.sh (ESLint `no-console` in the frontend). Every other issue says `Depends on: #<skeleton>`.

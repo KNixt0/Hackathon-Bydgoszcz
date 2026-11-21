@@ -6,7 +6,8 @@ Kod powstaje z pomocą agentów Claude Code, ale każdą zmianę sprawdzają aut
 
 | Plik | Rola |
 |---|---|
-| [CLAUDE.md](../CLAUDE.md) | Instrukcje ładowane przez każdego agenta: twarde reguły, sposób pracy |
+| [AGENTS.md](../AGENTS.md) | Wspólne instrukcje dla każdego agenta, niezależnie od narzędzia (Claude Code, Codex, Gemini CLI; `CLAUDE.md` i `GEMINI.md` tylko go importują) |
+| [Roster (issue `swarm:roster`)](../coord/PROTOCOL.md) | Każdy agent melduje operatora (człowieka), narzędzie, model i poziom. Na pytanie „kto cię obsługuje?” odpowiada tym samym blokiem |
 | [coord/GUIDELINES.md](../coord/GUIDELINES.md) | Wymogi z briefu: on-premise, licencje, sekrety, separacja serwisów |
 | [coord/PROTOCOL.md](../coord/PROTOCOL.md) | Cykl zadania, format przekazania pracy (blok YAML), zasady gałęzi |
 | [coord/contracts/](../coord/contracts/) | Kontrakty między serwisami. Ich zmiana wymaga decyzji człowieka |
@@ -24,7 +25,7 @@ Każde zadanie (issue) ma listę plików, które agent może zmienić (`Owns`). 
 | Weryfikator: niezależna recenzja PR | AI | Opus / high, inny model niż autor |
 | Lead: deleguje i merguje, nie pisze kodu | AI | Sonnet / medium |
 
-Konfiguracja jest w [coord/roles.json](../coord/roles.json), a uzasadnienie w [coord/roles.md](../coord/roles.md).
+Konfiguracja jest w [coord/roles.json](../coord/roles.json), a uzasadnienie w [coord/roles.md](../coord/roles.md). Do swarmu mogą dołączyć też inne modele (Codex, Gemini, modele lokalne). Lead przydziela im zadania według poziomu (strong / standard / light) i mocnych stron zgłoszonych w rosterze. Każdy PR ma w bloku przekazania pola `agent:` i `model:`, więc wiadomo, kto i czym wykonał pracę.
 
 ## 3. Human-in-the-loop: bramki przed `main`
 

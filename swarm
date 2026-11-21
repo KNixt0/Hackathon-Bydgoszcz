@@ -13,8 +13,12 @@ $(b "./swarm") — sterowanie swarmem agentów
   $(b view)            animowany podgląd na żywo (otwiera przeglądarkę)
   $(b status)          stan kolejki zadań i PR-ów w terminalu
   $(b roles)           kto co robi, jaki model i effort
+  $(b agents)          kto jest online: operator, narzędzie, model, poziom
+  $(b checkin) [opcje] zamelduj swojego agenta (--tool --model --tier --status)
+  $(b rollcall)        zapytaj wszystkich agentów „kto cię obsługuje?”
 
   $(b work) [--loop]   budowniczy: bierze następne zadanie i je robi   (każdy)
+                   inne narzędzie: SWARM_TOOL=codex|gemini|custom SWARM_MODEL=… SWARM_TIER=…
   $(b team) [N]        lead zespołu agentów na tym laptopie, N zadań   (każdy)
   $(b plan)            planer: plan.md → kontrakty → zadania           (KNixt0)
   $(b lead)            lead: tylko deleguje i merguje                  (KNixt0)
@@ -39,6 +43,29 @@ case "$cmd" in
   team)   run_claude builder coord/prompts/team-lead.md "s/{{N:-3}}/${1:-3}/g" ;;
   work)   exec ./scripts/worker.sh "$@" ;;
   roles)  role table ;;
+  checkin) exec ./scripts/checkin.sh "$@" ;;
+  rollcall)
+    n=$(gh issue list --state open --label swarm:roster --json number --jq '.[0].number // empty')
+    [[ -n "$n" ]] || { echo "brak issue z etykietą swarm:roster"; exit 1; }
+    gh issue comment "$n" --body "Roll call: who operates you? Answer with the check-in block (coord/PROTOCOL.md §0)." >/dev/null
+    echo "Zapytano na #$n. Odpowiedzi zobaczysz w: ./swarm agents"
+    ;;
+  agents)
+    gh issue list --state open --label swarm:roster --limit 1 --json number,comments | python3 -c '
+import json, sys, datetime as dt
+sys.path.insert(0, "dashboard"); from server import parse_roster
+now = dt.datetime.now(dt.timezone.utc)
+rows = parse_roster(json.load(sys.stdin))
+if not rows: print("  nikt się jeszcze nie zameldował (./swarm checkin)")
+for a in rows:
+    age = (now - dt.datetime.fromisoformat(a["at"].replace("Z", "+00:00"))).total_seconds() / 60
+    st = "offline" if a.get("checkin") == "offline" or age > 30 else a.get("checkin")
+    w = a.get("working_on") or "none"
+    work = " #" + w if st == "busy" and w != "none" else ""
+    name, tier, tool, model = a["agent"], a.get("tier", "?"), a.get("tool", "?"), a.get("model", "?")
+    print(f"  {st:8} {name:36} {tier:9} {tool}/{model}{work}  ({int(age)} min temu)")
+'
+    ;;
   status)
     echo "$(b Zadania)"
     for s in ready claimed review blocked needs-decision; do

@@ -11,6 +11,7 @@ import argparse
 import http.server
 import json
 import pathlib
+import re
 import subprocess
 import threading
 import time
@@ -63,6 +64,8 @@ class State:
                        "--json", "number,title,author,mergedAt,closingIssuesReferences,url"),
             "events": ("api", f"repos/{R}/events?per_page=40"),
             "collaborators": ("api", f"repos/{R}/collaborators", "--jq", "[.[].login]"),
+            "roster": ("issue", "list", "-R", R, "--state", "open", "--label", "swarm:roster",
+                       "--limit", "1", "--json", "number,comments"),
         }
         with ThreadPoolExecutor(len(jobs)) as pool:
             futures = {k: pool.submit(gh, *a) for k, a in jobs.items()}
@@ -70,6 +73,7 @@ class State:
 
         for p in data["prs"]:
             p["checks"] = checks(p.pop("statusCheckRollup", None))
+        data["agents"] = parse_roster(data.pop("roster") or [])
         data["events"] = [
             {
                 "type": e.get("type"),
@@ -88,6 +92,30 @@ class State:
                 self.cached = self.fetch()
                 self.cached_at = time.time()
             return self.cached
+
+
+BLOCK = re.compile(r"```ya?ml\s*\n(.*?)```", re.S)
+ROSTER_KEYS = {"checkin", "agent", "operator", "tool", "model", "tier", "strengths", "working_on"}
+
+
+def parse_roster(issues):
+    """Latest check-in block per agent from the swarm:roster issue (PROTOCOL §0)."""
+    latest = {}
+    for issue in issues[:1]:
+        for c in issue.get("comments") or []:
+            for block in BLOCK.findall(c.get("body") or ""):
+                fields = {}
+                for line in block.splitlines():
+                    k, sep, v = line.partition(":")
+                    k = k.strip()
+                    if sep and k in ROSTER_KEYS:
+                        fields[k] = v.split("#", 1)[0].strip()
+                if "checkin" not in fields or not fields.get("agent"):
+                    continue
+                fields["at"] = c.get("createdAt")
+                fields["postedBy"] = (c.get("author") or {}).get("login")
+                latest[fields["agent"]] = fields  # comments are oldest → newest
+    return sorted(latest.values(), key=lambda a: a.get("at") or "", reverse=True)
 
 
 def slim_payload(kind, p):
@@ -120,7 +148,8 @@ def make_handler(state):
                     payload = state.get() if route == "/api/state" else json.loads(ROLES.read_text())
                     body, code = json.dumps(payload).encode(), 200
                 except Exception as exc:  # gh offline, auth expired, rate limit…
-                    body, code = json.dumps({"error": str(exc)[:500]}).encode(), 502
+                    # 200 + {"error"} keeps the browser console clean; the page shows the message.
+                    body, code = json.dumps({"error": str(exc)[:500]}).encode(), 200
                 self.send_response(code)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.send_header("Cache-Control", "no-store")

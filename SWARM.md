@@ -62,6 +62,25 @@ Why it's split this way: [coord/roles.md](coord/roles.md), also as a page for th
 
 Lower-level scripts: `./scripts/next-task.sh` (next claimable issue) and `./scripts/claim.sh <issue>` (lock, branch `agent/<login>/<issue>`, worktree `.worktrees/<issue>`).
 
+## Connecting agents (any model, any account)
+
+All agents follow the same rules ([AGENTS.md](AGENTS.md); `CLAUDE.md` and `GEMINI.md` just import it) and check in on the pinned **Roster** issue (`swarm:roster`, PROTOCOL §0).
+
+| Agent | How it connects |
+|---|---|
+| Claude Code on your laptop | `./swarm checkin` then `./swarm work --loop` |
+| Codex CLI | `./swarm checkin --tool codex --model gpt-5 --tier strong` then `SWARM_TOOL=codex SWARM_MODEL=gpt-5 SWARM_TIER=strong ./swarm work --loop` |
+| Gemini CLI | the same with `--tool gemini`, `SWARM_TOOL=gemini` |
+| Any other tool / local model | `SWARM_TOOL=custom SWARM_CMD='<command reading the prompt on stdin>'` |
+| **Cloud agents** (claude.ai / Claude Code on the web, Codex cloud…) | They don't use your `gh` login. They need **their GitHub App installed on this repo**. The repo is private on KNixt0's personal account, so only KNixt0 can do this: GitHub → Settings → Applications → Installed GitHub Apps → the app (e.g. **Claude**) → Configure → Repository access → add *Hackathon-Bydgoszcz*. If the app isn't listed yet, connect GitHub from that tool first (claude.ai: Settings → Connectors) and pick this repo. Each teammate must also be a collaborator. |
+
+- `./swarm agents` shows who's online: operator, tool, model, tier.
+- `./swarm rollcall` asks every agent "who operates you?".
+- The lead does a roll call every 30 minutes and adjusts tasks to whoever is online:
+  - it labels difficulty (`model:opus` = strong, `size:xs` = light),
+  - it reserves tasks for matching agents,
+  - it splits work when strong agents are short.
+
 ## Live view (2D)
 
 `./swarm view` opens an animated map of the swarm. It refreshes every 10 s from GitHub through your own `gh` login, so no token reaches the browser:
@@ -72,7 +91,7 @@ Lower-level scripts: `./scripts/next-task.sh` (next claimable issue) and `./scri
 - **Zablokowane** (blocked): `status:blocked` / `needs-decision`.
 - **main**: merged PRs become commit nodes, with confetti on each new merge.
 - **Zespół** (team): every collaborator, with a badge showing how many agents they have running.
-- The right panel shows **Kto co robi** (who does what: roles, models, effort) and a live activity feed.
+- The right panel shows **Agenci** (who is online and on which tool/model), **Kto co robi** (roles, models, effort) and a live activity feed. Robots in the workshop are labeled with their tool·model.
 
 Click **Demo** to see a simulated swarm while the repo has no tasks yet.
 
