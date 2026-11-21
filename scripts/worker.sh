@@ -17,9 +17,12 @@ run_one() {
   wt=$(sed -n 's/^WORKTREE=//p' <<<"$out")
   branch=$(sed -n 's/^BRANCH=//p' <<<"$out")
   prompt=$(sed -e "s|{{ISSUE}}|$issue|g" -e "s|{{BRANCH}}|$branch|g" coord/prompts/worker.md)
+  # Model + effort come from coord/roles.json (builder; model:opus / size:xs labels override).
+  labels=$(gh issue view "$issue" --json labels --jq '[.labels[].name] | join(",")')
+  read -r model effort < <(python3 scripts/roles.py builder "$labels")
 
-  echo "▶ #$issue in $wt ($branch)"
-  (cd "$wt" && claude -p "$prompt" --permission-mode acceptEdits)
+  echo "▶ #$issue in $wt ($branch) · $model/$effort"
+  (cd "$wt" && claude -p "$prompt" --permission-mode acceptEdits --model "$model" --effort "$effort")
   echo "■ #$issue finished"
 }
 

@@ -1,0 +1,54 @@
+{
+  "owner": "KNixt0",
+  "roles": [
+    {
+      "id": "owner",
+      "name": "Właściciel",
+      "who": "KNixt0 (człowiek)",
+      "model": null,
+      "effort": null,
+      "does": "Zatwierdza PR-y od innych (check owner-approval). Decyduje przy status:needs-decision.",
+      "command": null
+    },
+    {
+      "id": "lead",
+      "name": "Lead",
+      "who": "Claude na koncie KNixt0",
+      "model": "sonnet",
+      "effort": "medium",
+      "does": "Tylko deleguje i merguje: ustala priorytety, oznacza trudność zadań, odblokowuje, merguje gdy CI + weryfikator + właściciel są zielone. Nie pisze kodu.",
+      "command": "./swarm lead"
+    },
+    {
+      "id": "planner",
+      "name": "Planer",
+      "who": "Claude na koncie KNixt0, raz na etap",
+      "model": "opus",
+      "effort": "high",
+      "does": "Zamienia coord/plan.md na kontrakty i małe zadania (issues) z przypisanymi plikami.",
+      "command": "./swarm plan"
+    },
+    {
+      "id": "builder",
+      "name": "Budowniczy",
+      "who": "Claude na koncie każdego z zespołu",
+      "model": "sonnet",
+      "effort": "medium",
+      "does": "Bierze zadanie, buduje je w osobnej gałęzi, otwiera PR. Domyślny model dla zadań 1-3h.",
+      "command": "./swarm work",
+      "variants": [
+        { "label": "model:opus", "model": "opus", "effort": "high", "when": "trudne: algorytmy, zmiany przekrojowe, wydajność" },
+        { "label": "size:xs", "model": "haiku", "effort": "low", "when": "drobne: teksty, dokumentacja, konfiguracja" }
+      ]
+    },
+    {
+      "id": "verifier",
+      "name": "Weryfikator",
+      "who": "GitHub Action (owner-review) + CI",
+      "model": "opus",
+      "effort": "high",
+      "does": "Niezależnie recenzuje każdy PR od innych: inny model i świeży kontekst niż budowniczy. Werdykt claude-verdict: APPROVE | CHANGES.",
+      "command": null
+    }
+  ]
+}

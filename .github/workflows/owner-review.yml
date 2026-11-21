@@ -4,7 +4,7 @@ name: owner-review
 #   2. the owner is asked for review and the PR gets label needs:owner-review,
 #   3. check "owner-approval" stays red until the owner approves the latest commit.
 # GitHub Free can't block the merge button on private repos, so this check +
-# the reviewer agent rules + main-guard.yml are what enforce it.
+# the lead agent rules + main-guard.yml are what enforce it.
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
@@ -54,7 +54,9 @@ jobs:
             Put specific problems as inline comments.
             Finish with ONE summary comment via `gh pr comment`, under 15 lines, ending with exactly one line:
             claude-verdict: APPROVE   or   claude-verdict: CHANGES
+          # Verifier role (coord/roles.json): Opus, effort high, a different model from the Sonnet builders.
           claude_args: |
+            --model opus --effort high
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh issue view:*)"
 
   owner-approval:

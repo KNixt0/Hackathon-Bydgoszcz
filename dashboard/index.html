@@ -45,6 +45,15 @@
   li time { grid-column: 2; color: var(--faint); font-size: 12px; }
   li.fresh { animation: fresh 1.6s ease-out; }
   @keyframes fresh { from { background: rgb(138 150 255 / .14); } to { background: transparent; } }
+  .roles { display: grid; gap: 2px; margin-bottom: 22px; }
+  .role { display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; padding: 8px 0; border-bottom: 1px solid #1a2030; }
+  .role b { font-weight: 600; }
+  .role .who { grid-column: 1; color: var(--muted); font-size: 12px; }
+  .role .does { grid-column: 1 / -1; color: var(--faint); font-size: 12px; }
+  .role .var { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+  .pill { grid-column: 2; grid-row: 1 / span 2; align-self: start; font: 600 11px ui-monospace, Menlo, monospace;
+    padding: 3px 7px; border-radius: 6px; background: var(--card); border: 1px solid var(--card-edge); white-space: nowrap; }
+  .pill.opus { color: #c9a7ff; } .pill.sonnet { color: #8fd3ff; } .pill.haiku { color: #9be3b0; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 12px; margin: 10px 2px 0; }
   .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
   @media (prefers-reduced-motion: reduce) { .dot.on, li.fresh { animation: none; } }
@@ -78,6 +87,8 @@
     <p id="err" class="err" role="alert"></p>
   </div>
   <aside>
+    <h2>Kto co robi</h2>
+    <div id="roles" class="roles"></div>
     <h2>Aktywność</h2>
     <ol id="feed" aria-live="polite"></ol>
   </aside>
@@ -612,8 +623,29 @@
     return tick;
   }
 
+  // ---------- roles panel (coord/roles.json) ----------
+  async function loadRoles() {
+    const box = document.getElementById("roles");
+    try {
+      const r = await fetch("/api/roles", { cache: "no-store" });
+      const data = await r.json(); if (!r.ok || data.error) throw 0;
+      const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+      const frag = document.createDocumentFragment();
+      for (const role of data.roles) {
+        const row = el("div", "role");
+        row.append(el("b", null, role.name));
+        row.append(el("span", "pill " + (role.model || ""), role.model ? `${role.model} · ${role.effort}` : "człowiek"));
+        row.append(el("span", "who", role.who));
+        row.append(el("span", "does", role.does));
+        for (const v of role.variants || []) row.append(el("span", "var", `↳ ${v.label}: ${v.model} · ${v.effort} (${v.when})`));
+        frag.append(row);
+      }
+      box.replaceChildren(frag);
+    } catch { box.previousElementSibling.hidden = true; box.hidden = true; }
+  }
+
   // ---------- start ----------
-  resize();
+  resize(); loadRoles();
   if (DEMO) {
     dot.className = "dot demo"; status.textContent = "tryb demo: symulowany swarm";
     const tick = makeDemo(); tick(); setInterval(tick, POLL_MS);
