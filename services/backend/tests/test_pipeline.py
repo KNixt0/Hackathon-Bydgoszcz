@@ -116,8 +116,7 @@ def test_ai_down_retries_then_succeeds(client, monkeypatch):
     from app.pipeline import process_job
 
     monkeypatch.setattr(get_settings(), "scan_max_retries", 2)
-    monkeypatch.setattr(get_settings(), "task_mode", "celery")
-    monkeypatch.setattr("app.jobs.dispatch", lambda job_id: None)
+    monkeypatch.setattr("app.api.scans.dispatch", lambda job_id: None)
     client.world.pages[URL] = ARTICLE
     client.world.ai_down = True
     job_id = scan(client)
@@ -157,7 +156,7 @@ def test_platform_detection_and_metadata(client):
     <meta property="og:title" content="Jak zarobić"><meta property="og:description" content="Gwarantowany zysk na forex, link w opisie">
     <script type="application/ld+json">{"@type":"VideoObject","name":"Jak zarobić","uploadDate":"2026-10-30",
     "author":{"@type":"Person","name":"Finfluencer Jan","url":"https://www.youtube.com/@jan"}}</script></head><body></body></html>"""
-    assert job(client, scan(client))["error"] is None
+    assert job(client, scan(client, url))["error"] is None
     document = client.world.ai_calls[0]["document"]
     assert document["platform"] == "youtube" and document["title"] == "Jak zarobić"
     assert document["published_at"] == "2026-10-30"
@@ -173,11 +172,3 @@ def test_backdating_only_from_sample_meta(client):
         client.get(f"/api/incidents/{incident_id}").json()["created_at"].replace("Z", "+00:00")
     )
     assert abs((datetime.now(UTC) - created).total_seconds()) < 60
-
-
-def test_dbg(client):
-    url = "https://www.youtube.com/watch?v=abc"
-    client.world.pages[url] = "<html><body><p>hello world</p></body></html>"
-    scan(client, url)
-    print([str(r.url) for r in client.world.requests])
-    assert 0

@@ -15,7 +15,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
-from app.api import incidents, scans, system
+from app.api import discovery, incidents, scans, system
 from app.config import get_settings
 from app.db import init_db
 from app.log import setup_logging
@@ -24,9 +24,11 @@ log = logging.getLogger(__name__)
 
 
 def _seed() -> None:
+    from app.discovery import register_fixture_source
     from app.seed import seed_if_empty
 
     try:
+        register_fixture_source()
         seed_if_empty()
     except Exception:  # noqa: BLE001
         log.exception("startup seed failed")
@@ -89,6 +91,7 @@ def create_api() -> FastAPI:
 
     api.include_router(incidents.router)
     api.include_router(scans.router)
+    api.include_router(discovery.router)
     api.include_router(system.router)
     return api
 

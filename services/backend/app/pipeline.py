@@ -58,6 +58,7 @@ def build_document(job: ScanJob, page: FetchedPage, fetcher: Fetcher) -> dict[st
             sample_text = str(json.loads(page.body).get("text") or "")
         except (ValueError, AttributeError):
             sample_text = ""
+        page.body, page.content_type = sample_text, "text/plain; charset=utf-8"  # archive the text itself
 
     if sample_text is not None:
         title, text, language, published, author = "", sample_text, None, None, None
@@ -199,6 +200,8 @@ def _run(job_id: str) -> None:
             db,
             payload,
             created_at=created_at,
+            meta=job.meta,
+            context=job.context,
             origin=job.origin,
             fetch_url=job.fetch_url,
             render=job.render,
@@ -212,11 +215,11 @@ def _run(job_id: str) -> None:
     if created and summary["risk_score"] >= settings.alert_threshold:
         events.emit("alert:high", summary)
     log.info(
-        "scan finished",
+        "incident stored",
         extra={
             "job_id": job_id,
             "incident_id": incident_id,
-            "created": created,
+            "is_new": created,
             "risk_score": summary["risk_score"],
         },
     )
@@ -242,6 +245,5 @@ def process_job(job_id: str) -> float | None:
     except Exception as exc:  # noqa: BLE001
         log.exception("scan failed unexpectedly", extra={"job_id": job_id})
         message = f"internal error ({type(exc).__name__})"
-    log.warning("scan failed", extra={"job_id": job_id, "error": message})
     set_state(job_id, "failed", error=message)
     return None

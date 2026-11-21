@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 # Service boundaries
 
@@ -103,3 +103,20 @@ One sample = `<slug>.json`, optionally next to `<slug>.html`:
 - `meta.seed: false` → skipped by the startup seed (used for the live demo trigger).
 - A bare `*.html` or `*.txt` without a `.json` is imported too, with `platform: "sample"`.
 - Seeding and import go through the real pipeline: the backend serves the file at `/fixtures/<path>`, the scraper fetches it over HTTP, the AI service scores it. Nothing is inserted pre-scored.
+
+## Additions in version 2 (backend)
+
+| Method + path | Request | Response |
+|---|---|---|
+| `GET /api/incidents` | also `limit` (default 1000, max 5000), `offset` | `total` is the full count |
+| `POST /api/incidents/{id}/rescan` | | `202 {job_id}` · 404. Re-fetches the source; a changed hash adds a version row; emits `incident:updated` |
+| `GET /api/incidents/{id}/versions` | | `{items: {content_hash, risk_score, changed: bool, created_at}[]}` newest first, max 20 |
+| `GET /api/watchlist` · `POST /api/watchlist` · `DELETE /api/watchlist/{id}` · `POST /api/watchlist/rescan` | `{url, module_hint?, render?}` | `WatchItem = {id, url, module_hint, render, created_at, last_scanned_at}` · `202 {job_ids}` for rescan |
+| `GET /api/discovery/sources` · `POST /api/discovery/sources` · `DELETE /api/discovery/sources/{id}` | `{url, module_hint?, keywords?: string[], max_links?: 1..100, render?}` | `Source = {id, url, module_hint, keywords, max_links, render, created_at, last_run_at, last_found, last_error}` |
+| `POST /api/discovery/run` | | `202 {status: "queued"}`: fetch each source, filter links by keyword, scan the unseen ones |
+| `POST /api/registries/refresh` | | `202 {status: "queued"}` |
+| `GET /fixtures/{path}` | | sample files, read-only |
+
+Discovery is the "wyszukiwanie" step of every module: seed pages (search results, ad libraries, listings) → candidate links → scans. Offline, `samples/discovery/index.html` is registered as a source at seed time.
+
+The dedup key is the source URL: the same URL updates the incident in place. The demo trigger deletes the previous incident of that demo case; clients refetch the list on `incident:new`.

@@ -81,6 +81,11 @@ services:
     <<: *backend
     command: ["api"]
     ports: ["${BACKEND_PORT:-8000}:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
     depends_on:
       postgres: { condition: service_healthy }
       valkey: { condition: service_healthy }
@@ -95,21 +100,19 @@ services:
   beat:
     <<: *backend
     command: ["beat"]
-    environment:
-      <<: *backend-env
-      SEED_ON_START: "false"
 
   frontend:
     build: ./services/frontend
     environment:
       BACKEND_URL: http://backend:8000
     ports: ["${FRONTEND_PORT:-3000}:8080"]
-    depends_on: [backend]
+    depends_on:
+      backend: { condition: service_healthy }
     restart: unless-stopped
 
   ollama:
     profiles: ["llm"]
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.16
     volumes: [ollama:/root/.ollama]
     restart: unless-stopped
 

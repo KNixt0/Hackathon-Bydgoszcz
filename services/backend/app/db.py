@@ -7,7 +7,7 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from sqlalchemy import JSON, create_engine
+from sqlalchemy import JSON, create_engine, inspect, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -76,6 +76,22 @@ def get_db() -> Iterator[Session]:
         yield session
 
 
+def _add_missing_columns() -> None:
+    """create_all never alters existing tables: add nullable columns introduced after a volume
+    was first created (keeps `docker compose up` working without wiping data)."""
+    engine = get_engine()
+    inspector = inspect(engine)
+    for table in Base.metadata.sorted_tables:
+        existing = {column["name"] for column in inspector.get_columns(table.name)}
+        for column in table.columns:
+            if column.name not in existing and column.nullable:
+                kind = column.type.compile(engine.dialect)
+                ddl = f'ALTER TABLE "{table.name}" ADD COLUMN "{column.name}" {kind}'
+                with engine.begin() as connection:
+                    connection.execute(text(ddl))
+                log.info("added column", extra={"table": table.name, "column": column.name})
+
+
 def init_db(attempts: int = 30, delay: float = 2.0) -> None:
     """create_all with retries: the DB may still be starting, and api/worker/beat may race."""
     from app import models  # noqa: F401  (register tables)
@@ -83,10 +99,20 @@ def init_db(attempts: int = 30, delay: float = 2.0) -> None:
     last: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
-            Base.metadata.create_all(get_engine())
+            engine = get_engine()
+            with engine.begin() as connection:
+                if engine.dialect.name == "postgresql":
+                    # api, worker and beat start together: only one of them creates the schema at a time
+                    connection.execute(text("SELECT pg_advisory_xact_lock(74210011)"))
+                Base.metadata.create_all(connection)
+            _add_missing_columns()
             return
         except Exception as exc:  # noqa: BLE001
             last = exc
-            log.warning("database not ready", extra={"attempt": attempt, "error": type(exc).__name__})
+            log.log(
+                logging.INFO if attempt < 5 else logging.WARNING,
+                "waiting for database",
+                extra={"attempt": attempt, "error": type(exc).__name__},
+            )
             time.sleep(delay)
     raise RuntimeError("database unavailable") from last

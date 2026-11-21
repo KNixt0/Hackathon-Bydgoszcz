@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     scan_retry_backoff_seconds: float = 5.0
     rescan_cron: str = "0 */6 * * *"
     registry_refresh_cron: str = "30 3 * * *"
+    discovery_cron: str = "15 */6 * * *"
+    rescan_samples: bool = False  # scheduled re-scan also covers sample/synthetic incidents
+    discovery_max_links: int = 20  # default per-run cap of new links per source
+    # keyword filter of the offline listing page (SAMPLES_DIR/discovery/index.html), comma separated
+    discovery_keywords: str = "oferta,inwest,doradztw,family office,wealth"
 
     # --- pipeline ---
     alert_threshold: float = 70.0
@@ -74,6 +79,10 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def discovery_keyword_list(self) -> list[str]:
+        return [k.strip() for k in self.discovery_keywords.split(",") if k.strip()]
 
     @property
     def proxy_list(self) -> list[str]:

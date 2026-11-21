@@ -74,6 +74,8 @@ markupsafe==3.0.4
     # via jinja2
 opentelemetry-api==1.45.2
     # via fastapi
+packaging==26.3
+    # via -r requirements.in
 pg8000==1.31.6
     # via -r requirements.in
 playwright==1.65.2

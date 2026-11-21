@@ -54,6 +54,10 @@ celery.conf.update(
             "task": "investwatch.rescan_sources",
             "schedule": parse_cron(settings.rescan_cron, "0 */6 * * *"),
         },
+        "run-discovery": {
+            "task": "investwatch.run_discovery",
+            "schedule": parse_cron(settings.discovery_cron, "15 */6 * * *"),
+        },
         "refresh-registries": {
             "task": "investwatch.refresh_registries",
             "schedule": parse_cron(settings.registry_refresh_cron, "30 3 * * *"),

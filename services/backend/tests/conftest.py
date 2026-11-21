@@ -25,6 +25,8 @@ os.environ.update(
     }
 )
 
+import logging  # noqa: E402
+
 import httpx  # noqa: E402
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
@@ -34,6 +36,8 @@ from app.db import Base, get_engine  # noqa: E402
 from app.main import api  # noqa: E402
 from app.scraper import engine as scraper_engine  # noqa: E402
 from app.scraper import ssrf  # noqa: E402
+
+logging.getLogger().setLevel(logging.DEBUG)  # build every log record (catches bad `extra` keys)
 
 RULE_IDS = [
     "1",
@@ -353,7 +357,13 @@ def client(samples_dir: Path, monkeypatch: pytest.MonkeyPatch):
     transport = httpx.MockTransport(world.handler)
     monkeypatch.setattr(ai_client, "transport", transport)
     monkeypatch.setattr(scraper_engine, "transport", transport)
-    hosts = {"internal.test": ["10.0.0.5"], "mixed.test": [PUBLIC_IP, "127.0.0.1"]}
+    hosts = {
+        "backend": ["172.18.0.5"],
+        "localhost": ["127.0.0.1"],
+        "0x7f.1": ["127.0.0.1"],
+        "internal.test": ["10.0.0.5"],
+        "mixed.test": [PUBLIC_IP, "127.0.0.1"],
+    }
     monkeypatch.setattr(ssrf, "resolver", lambda host, port: hosts.get(host, [PUBLIC_IP]))
     emitted: list[tuple[str, dict]] = []
     monkeypatch.setattr(events, "emit", lambda event, payload: emitted.append((event, payload)))

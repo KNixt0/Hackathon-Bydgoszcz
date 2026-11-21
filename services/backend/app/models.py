@@ -43,6 +43,8 @@ class Incident(Base):
     fetch_url: Mapped[str] = mapped_column(Text, default="")
     render: Mapped[bool] = mapped_column(Boolean, default=False)
     module_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    scan_meta: Mapped[dict | None] = mapped_column(JSONType, nullable=True)  # sample meta
+    scan_context: Mapped[dict | None] = mapped_column(JSONType, nullable=True)  # AI Context sent with it
 
 
 class IncidentVersion(Base):
@@ -112,6 +114,44 @@ class RegistrySnapshot(Base):
     entries: Mapped[list] = mapped_column(JSONType, default=list)
     pushed_to_ai: Mapped[bool] = mapped_column(Boolean, default=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class DiscoverySource(Base):
+    """A seed page (search results, ad library, channel/listing page) scanned for new material."""
+
+    __tablename__ = "discovery_sources"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    url: Mapped[str] = mapped_column(Text)
+    url_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    module_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    keywords: Mapped[list] = mapped_column(JSONType, default=list)  # empty = every link is a candidate
+    max_links: Mapped[int] = mapped_column(Integer, default=20)
+    render: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    last_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_found: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class DiscoveredLink(Base):
+    """Every link discovery has already queued (so it is queued only once)."""
+
+    __tablename__ = "discovered_links"
+
+    url_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    url: Mapped[str] = mapped_column(Text)
+    source_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AppLock(Base):
+    """Cross-container mutex (e.g. only one process runs the startup seed)."""
+
+    __tablename__ = "app_locks"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    taken_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
 Index("ix_incidents_score_created", Incident.risk_score.desc(), Incident.created_at.desc())

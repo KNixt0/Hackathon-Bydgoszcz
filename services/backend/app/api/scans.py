@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import threading
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.db import get_db, session_scope
 from app.incidents import delete_incident, url_hash
 from app.jobs import create_job, create_sample_job, dispatch, job_dict
@@ -102,3 +104,23 @@ def delete_watchlist(item_id: str, db: Db) -> None:
     if item is None:
         raise HTTPException(404, "watchlist item not found")
     db.delete(item)
+
+
+@router.post("/watchlist/rescan", status_code=202)
+def rescan_now() -> dict:
+    """Extra: run the periodic re-scan (RESCAN_CRON) right now."""
+    from app.tasks import enqueue_rescan
+
+    return {"job_ids": enqueue_rescan()}
+
+
+@router.post("/registries/refresh", status_code=202)
+def refresh_registries_now() -> dict:
+    """Extra: run the KNF register refresh (REGISTRY_REFRESH_CRON) right now, in the background."""
+    from app.tasks import refresh_registries
+
+    if get_settings().task_mode == "celery":
+        refresh_registries.delay()
+    else:
+        threading.Thread(target=refresh_registries.run, daemon=True, name="registry-refresh").start()
+    return {"status": "queued"}

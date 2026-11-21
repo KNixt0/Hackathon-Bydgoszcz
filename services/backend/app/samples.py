@@ -56,8 +56,12 @@ class Sample:
         return url if isinstance(url, str) and url.startswith(("http://", "https://")) else self.fixture_url
 
 
+DISCOVERY_DIR = "discovery"  # listing pages for the discovery job, not samples
+
+
 def _visible(path: Path, root: Path) -> bool:
-    return not any(part.startswith(".") for part in path.relative_to(root).parts)
+    parts = path.relative_to(root).parts
+    return not any(part.startswith(".") for part in parts) and parts[0] != DISCOVERY_DIR
 
 
 def _load_json_sample(path: Path, root: Path) -> Sample | None:

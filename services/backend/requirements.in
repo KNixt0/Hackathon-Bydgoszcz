@@ -11,3 +11,4 @@ playwright
 jinja2
 beautifulsoup4
 pydantic-settings
+packaging  # imported by kombu's redis transport but not declared by it

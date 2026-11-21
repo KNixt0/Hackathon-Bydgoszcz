@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, field_validator
 
@@ -63,6 +63,13 @@ class DemoTriggerRequest(Strict):
 
 class WatchlistRequest(ScanRequest):
     pass
+
+
+class DiscoverySourceRequest(ScanRequest):
+    keywords: list[Annotated[str, Field(min_length=1, max_length=80)]] = Field(
+        default_factory=list, max_length=30
+    )
+    max_links: int | None = Field(default=None, ge=1, le=100)
 
 
 # ---- AI service response (only what the backend relies on is enforced; the rest passes through) ----

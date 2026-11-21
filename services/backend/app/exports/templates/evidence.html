@@ -104,7 +104,7 @@
 
 <h2>Macierz 19 kryteriów</h2>
 <table>
-  <tr><th style="width:9mm">Nr</th><th style="width:44mm">Kryterium</th><th style="width:20mm">Wynik</th><th style="width:13mm">Pewność</th><th>Uzasadnienie i podstawa prawna</th></tr>
+  <tr><th style="width:11mm">Nr</th><th style="width:42mm">Kryterium</th><th style="width:25mm">Wynik</th><th style="width:16mm">Pewność</th><th>Uzasadnienie i podstawa prawna</th></tr>
   {% for r in rules %}
   <tr><td>{{ r.id }}</td><td>{{ r.name }}</td><td class="st-{{ r.status }}">{{ rule_status.get(r.status, r.status) }}</td>
       <td>{% if r.confidence is number %}{{ '%.0f'|format(r.confidence * 100) }}%{% endif %}</td>

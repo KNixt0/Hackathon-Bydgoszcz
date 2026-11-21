@@ -12,7 +12,8 @@ from sqlalchemy.orm import Session
 from app import events
 from app.db import get_db
 from app.exports import csv_export
-from app.incidents import to_incident, to_summary
+from app.incidents import rescan_options, to_incident, to_summary
+from app.jobs import create_job, dispatch
 from app.models import Incident, IncidentVersion, utcnow
 from app.schemas import PLATFORMS, STATUSES, StatusPatch, iso
 
@@ -119,6 +120,18 @@ def patch_incident(incident_id: str, body: StatusPatch, db: Db) -> dict:
     db.commit()
     events.emit("incident:updated", to_summary(row))
     return to_incident(row)
+
+
+@router.post("/incidents/{incident_id}/rescan", status_code=202)
+def rescan_incident(incident_id: str, db: Db) -> dict:
+    """Extra: fetch the same source again through the pipeline (periodic update on demand). The
+    incident is updated in place; a changed content hash is recorded in its version history."""
+    row = _get_or_404(db, incident_id)
+    url, options = row.source_url, rescan_options(row)
+    db.close()
+    job_id = create_job(url, **options)
+    dispatch(job_id)
+    return {"job_id": job_id}
 
 
 @router.get("/incidents/{incident_id}/versions")

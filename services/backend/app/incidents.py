@@ -106,6 +106,8 @@ def upsert_incident(
     fetch_url: str,
     render: bool,
     module_hint: int | None,
+    meta: dict | None = None,
+    context: dict | None = None,
 ) -> tuple[Incident, bool]:
     """Store an Analysis. Same source url -> update in place (keeps id, status, created_at) and
     record a version; `changed` on the version says whether the content hash moved (the diff)."""
@@ -125,6 +127,7 @@ def upsert_incident(
     apply_payload(row, payload)
     row.updated_at = row.created_at if created else now
     row.origin, row.fetch_url, row.render, row.module_hint = origin, fetch_url, render, module_hint
+    row.scan_meta, row.scan_context = meta or None, context or None
     db.flush()
     db.add(
         IncidentVersion(
@@ -151,3 +154,16 @@ def upsert_incident(
 def delete_incident(db: Session, row: Incident) -> None:
     db.query(IncidentVersion).filter(IncidentVersion.incident_id == row.id).delete()
     db.delete(row)
+
+
+def rescan_options(row: Incident) -> dict:
+    """create_job() arguments that fetch this incident's source again exactly like the first time."""
+    meta = {k: v for k, v in (row.scan_meta or {}).items() if k != "detected_days_ago"}
+    return {
+        "fetch_url": row.fetch_url or row.source_url,
+        "origin": row.origin,
+        "render": row.render,
+        "module_hint": row.module_hint,
+        "meta": meta,
+        "context": row.scan_context or {},
+    }

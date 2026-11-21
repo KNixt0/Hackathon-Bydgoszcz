@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from typing import Any
+from urllib.parse import urlsplit
 
 import socketio
 
@@ -22,17 +23,33 @@ _loop: asyncio.AbstractEventLoop | None = None
 _writer: Any = None
 
 
+def origin_allowed(origin: str | None, environ: dict | None = None) -> bool:
+    """Socket.IO origin check: same host as the request (the port is ignored, because nginx behind
+    a published port forwards `Host` without it), or an origin listed in CORS_ORIGINS."""
+    if not origin:
+        return True  # non-browser client
+    configured = get_settings().cors_origin_list
+    if "*" in configured or origin in configured:
+        return True
+    origin_host = (urlsplit(origin).hostname or "").lower()
+    environ = environ or {}
+    for header in ("HTTP_HOST", "HTTP_X_FORWARDED_HOST"):
+        for value in str(environ.get(header) or "").split(","):
+            host = (urlsplit("//" + value.strip()).hostname or "").lower() if value.strip() else ""
+            if host and host == origin_host:
+                return True
+    return False
+
+
 def create_server() -> socketio.AsyncServer:
     """Called once by the API process."""
     global _sio
     settings = get_settings()
     manager = socketio.AsyncRedisManager(settings.redis_url) if settings.redis_url else None
-    origins = settings.cors_origin_list
     _sio = socketio.AsyncServer(
         async_mode="asgi",
         client_manager=manager,
-        # None = engine.io default: same origin only (honours X-Forwarded-Host/Proto from nginx)
-        cors_allowed_origins=("*" if origins == ["*"] else origins) if origins else None,
+        cors_allowed_origins=origin_allowed,
         logger=False,
         engineio_logger=False,
     )
