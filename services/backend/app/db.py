@@ -127,6 +127,42 @@ def _backfill_norm_hash(engine: Engine) -> None:
             )
 
 
+def _backfill_evidence() -> None:
+    """Contract v4: cases stored before observations existed get their current payload frozen as the
+    evidence, so that a later re-scan of a corrected page cannot overwrite what was detected."""
+    from app.models import Incident, IncidentVersion
+    from app.thresholds import get_thresholds
+
+    with session_scope() as db:
+        if db.get_bind().dialect.name == "postgresql":
+            # api, worker and beat start together: only one of them backfills, the others then see its rows
+            db.execute(text("SELECT pg_advisory_xact_lock(74210013)"))
+        flag = float(get_thresholds(db)["flag"])
+        rows = (
+            db.query(Incident)
+            .filter(Incident.evidence_version_id.is_(None), Incident.risk_score >= flag)
+            .all()
+        )
+        for row in rows:
+            version = IncidentVersion(
+                incident_id=row.id,
+                content_hash=row.content_hash,
+                risk_score=row.risk_score,
+                changed=False,
+                created_at=row.created_at,
+                outcome="content",
+                http_status=200,
+                payload=row.payload,
+                published_at=(row.payload.get("source") or {}).get("published_at"),
+            )
+            db.add(version)
+            db.flush()
+            row.evidence_version_id = version.id
+            row.content_state = row.content_state or "online"
+        if rows:
+            log.info("backfilled evidence", extra={"rows": len(rows)})
+
+
 def _upgrade_data() -> None:
     """Idempotent value migrations that create_all cannot express."""
     engine = get_engine()
@@ -148,6 +184,7 @@ def _upgrade_data() -> None:
         ):
             connection.execute(text(statement))
     _backfill_norm_hash(engine)
+    _backfill_evidence()
     if engine.dialect.name == "postgresql":
         try:
             with engine.begin() as connection:

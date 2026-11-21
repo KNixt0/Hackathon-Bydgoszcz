@@ -102,3 +102,20 @@ def test_old_escalation_paths_are_renamed_on_start(client):
     _upgrade_data()
     with session_scope() as db:
         assert db.get(Incident, case["id"]).escalation_path == "UNLICENSED_ACTIVITY"
+
+
+def test_cases_from_before_v4_get_their_evidence_frozen_on_start(client):
+    from app.db import _upgrade_data, session_scope
+    from app.models import Incident
+
+    case = detected_case(client)
+    with session_scope() as db:  # simulate a row written before contract v4
+        db.get(Incident, case["id"]).evidence_version_id = None
+    _upgrade_data()
+    with session_scope() as db:
+        row = db.get(Incident, case["id"])
+        assert row.evidence_version_id is not None
+        evidence = row.evidence_version_id
+    _upgrade_data()  # idempotent
+    with session_scope() as db:
+        assert db.get(Incident, case["id"]).evidence_version_id == evidence
