@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-socketio
+celery
+redis
+sqlalchemy
+pg8000
+boto3
+httpx
+playwright
+jinja2
+beautifulsoup4
+pydantic-settings

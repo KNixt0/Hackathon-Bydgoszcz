@@ -1,0 +1,195 @@
+{
+ "registry": "knf_brokerage_houses",
+ "label": "Domy maklerskie (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych/domy_maklerskie",
+ "snapshot_date": "2026-11-21",
+ "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
+ "partial": false,
+ "synthetic_sample": false,
+ "entries": [
+  {
+   "name": "AIXON INVESTMENT MANAGEMENT SP. Z O.O.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 2024-12-06"
+  },
+  {
+   "name": "CASPAR ASSET MANAGEMENT S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 26-05-2010"
+  },
+  {
+   "name": "CERES DOM INWESTYCYJNY S.A.",
+   "aliases": [
+    "EFIX DOM MAKLERSKI S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 08-02-2011"
+  },
+  {
+   "name": "CVI DOM MAKLERSKI SP. Z O.O.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 21-05-2013"
+  },
+  {
+   "name": "DOM INWESTYCYJNY NEHREBETIUS S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 22-03-2005"
+  },
+  {
+   "name": "DOM INWESTYCYJNY XELION SP. Z O.O.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 18-10-2011"
+  },
+  {
+   "name": "DOM MAKLERSKI AFS Sp. z o.o.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 15-07-2010"
+  },
+  {
+   "name": "DOM MAKLERSKI BANKU OCHRONY ŚRODOWISKA S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 18-08-1994"
+  },
+  {
+   "name": "DOM MAKLERSKI BDM S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 08-10-1993"
+  },
+  {
+   "name": "DOM MAKLERSKI INC S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 21-02-2012"
+  },
+  {
+   "name": "DOM MAKLERSKI NAVIGATOR S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 27-09-2007"
+  },
+  {
+   "name": "DORADZTWO DLA POLSKICH PRZEDSIĘBIORSTW SECURITIES S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 20-05-2008"
+  },
+  {
+   "name": "ERSTE SECURITIES POLSKA S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 29-09-1995"
+  },
+  {
+   "name": "EVEREST INVESTMENT MANAGEMENT S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 06-10-2015"
+  },
+  {
+   "name": "EVO DOM MAKLERSKI S.A.",
+   "aliases": [
+    "PRIME SELECTION DOM MAKLERSKI S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 17-11-2015"
+  },
+  {
+   "name": "IFDS DOM MAKLERSKI S.A.",
+   "aliases": [
+    "INVESTMENT FUNDS DEPOSITARY SERVICES S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 2023-09-28"
+  },
+  {
+   "name": "IPOPEMA SECURITIES S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 30-06-2005"
+  },
+  {
+   "name": "IX ASSET MANAGEMENT S.A.",
+   "aliases": [
+    "NIEZALEŻNY DOM MAKLERSKI S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 18-11-2014"
+  },
+  {
+   "name": "LFI DOM MAKLERSKI S.A.",
+   "aliases": [
+    "LFI DM S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 2026-06-26"
+  },
+  {
+   "name": "MICHAEL/STRÖM DOM MAKLERSKI S.A.",
+   "aliases": [
+    "MICHAEL/STRÖM DOM MAKLERSKI Sp. z o.o."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 04-06-2013"
+  },
+  {
+   "name": "NOBLE Securities S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 27-12-1993"
+  },
+  {
+   "name": "NWAI DOM MAKLERSKI S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 31-07-2009"
+  },
+  {
+   "name": "OANDA TMS BROKERS S.A.",
+   "aliases": [
+    "Dom Maklerski TMS BROKERS S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 26-04-2004"
+  },
+  {
+   "name": "PEKAO INVESTMENT BANKING S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 08-10-1993"
+  },
+  {
+   "name": "PGE DOM MAKLERSKI S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 10-12-2013"
+  },
+  {
+   "name": "Q SECURITIES S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 29-10-2013"
+  },
+  {
+   "name": "TRIGON DOM MAKLERSKI S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Data zezwolenia: 30-09-1991"
+  },
+  {
+   "name": "XTB S.A.",
+   "aliases": [
+    "X-TRADE BROKERS DOM MAKLERSKI S.A."
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 08-11-2005"
+  }
+ ]
+}

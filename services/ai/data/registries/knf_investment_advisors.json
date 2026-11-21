@@ -1,0 +1,43 @@
+{
+ "registry": "knf_investment_advisors",
+ "label": "Lista doradców inwestycyjnych (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/lista_doradcow_inwestycyjnych",
+ "snapshot_date": "2026-11-21",
+ "source": "SYNTHETIC SAMPLE for the hackathon demo: invented entries only, not real register data",
+ "partial": true,
+ "synthetic_sample": true,
+ "entries": [
+  {
+   "name": "Anna Przykładowa",
+   "number": "9001",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Wpis przykładowy (licencja nr 9001)",
+   "synthetic": true
+  },
+  {
+   "name": "Tomasz Wymyślony",
+   "number": "9002",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Wpis przykładowy (licencja nr 9002)",
+   "synthetic": true
+  },
+  {
+   "name": "Ewa Fikcyjna",
+   "number": "9003",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Wpis przykładowy (licencja nr 9003)",
+   "synthetic": true
+  },
+  {
+   "name": "Piotr Zmyślony",
+   "number": "9004",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Wpis przykładowy (licencja nr 9004)",
+   "synthetic": true
+  }
+ ]
+}

@@ -6,3 +6,8 @@ node_modules/
 .env.*
 __pycache__/
 *.pyc
+!.env.example
+.venv/
+dist/
+.pytest_cache/
+.ruff_cache/

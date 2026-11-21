@@ -1,0 +1,45 @@
+{
+ "registry": "knf_public_warnings",
+ "label": "Lista ostrzeżeń publicznych KNF",
+ "url": "https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne",
+ "snapshot_date": "2026-11-21",
+ "source": "SYNTHETIC SAMPLE for the hackathon demo: invented entries only, not real register data",
+ "partial": true,
+ "synthetic_sample": true,
+ "entries": [
+  {
+   "name": "Zmyślony Kapitał Global Ltd",
+   "aliases": [
+    "zmyslonykapital.example"
+   ],
+   "status": "warning",
+   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia (art. 178 ustawy o obrocie)",
+   "synthetic": true
+  },
+  {
+   "name": "Fikcja Trade Solutions OÜ",
+   "aliases": [
+    "FikcjaTrade"
+   ],
+   "status": "warning",
+   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia (art. 178 ustawy o obrocie)",
+   "synthetic": true
+  },
+  {
+   "name": "Bajkowy Zysk Invest sp. z o.o.",
+   "aliases": [],
+   "status": "warning",
+   "detail": "Wpis przykładowy: podejrzenie zarządzania portfelami bez zezwolenia",
+   "synthetic": true
+  },
+  {
+   "name": "Nibylandia Wealth Partners LLC",
+   "aliases": [
+    "Nibylandia Wealth"
+   ],
+   "status": "warning",
+   "detail": "Wpis przykładowy: podejrzenie doradztwa inwestycyjnego bez zezwolenia",
+   "synthetic": true
+  }
+ ]
+}

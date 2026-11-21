@@ -1,0 +1,53 @@
+{
+ "note": "FICTIONAL entities added on top of the real KNF snapshots so the demo cases have a 'registered' counterpart. Disable with AI_DEMO_OVERLAY=false.",
+ "registries": {
+  "knf_brokerage_houses": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "aliases": [
+     "Kormoran Fikcyjny DM"
+    ],
+    "status": "listed",
+    "detail": "Podmiot fikcyjny (dane demonstracyjne)",
+    "domains": [
+     "kormoran-fikcyjny.example"
+    ]
+   },
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "aliases": [
+     "DM Wisła Zmyślona"
+    ],
+    "status": "listed",
+    "detail": "Podmiot fikcyjny (dane demonstracyjne)",
+    "domains": [
+     "wisla-zmyslona.example"
+    ]
+   },
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "aliases": [
+     "Bursztyn Przykładowy DM"
+    ],
+    "status": "listed",
+    "detail": "Podmiot fikcyjny (dane demonstracyjne)",
+    "domains": [
+     "bursztyn-przykladowy.example"
+    ]
+   }
+  ],
+  "knf_banks_brokerage": [
+   {
+    "name": "Bank Zmyślony S.A.",
+    "aliases": [
+     "Biuro Maklerskie Banku Zmyślonego"
+    ],
+    "status": "listed",
+    "detail": "Podmiot fikcyjny (dane demonstracyjne)",
+    "domains": [
+     "bank-zmyslony.example"
+    ]
+   }
+  ]
+ }
+}

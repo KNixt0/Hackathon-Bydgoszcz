@@ -1,0 +1,93 @@
+{
+ "registry": "knf_banks_brokerage",
+ "label": "Banki prowadzące działalność maklerską (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych/Banki_prowadzace_dzialalnosc_maklerska",
+ "snapshot_date": "2026-11-21",
+ "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
+ "partial": false,
+ "synthetic_sample": false,
+ "entries": [
+  {
+   "name": "ALIOR BANK S.A.",
+   "aliases": [
+    "Biuro Maklerskie ALIOR Bank"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 05-09-2008"
+  },
+  {
+   "name": "BANK HANDLOWY S.A.",
+   "aliases": [
+    "Departament Maklerski Banku Handlowego"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 13-11-2007"
+  },
+  {
+   "name": "BANK MILLENNIUM S.A.",
+   "aliases": [
+    "Biuro Maklerskie Banku Millennium"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 04-01-2005"
+  },
+  {
+   "name": "BANK PEKAO S.A. (BANK POLSKA KASA OPIEKI S.A.)",
+   "aliases": [
+    "Biuro Maklerskie PEKAO"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 10-10-2007"
+  },
+  {
+   "name": "BNP Paribas Bank Polska S.A.",
+   "aliases": [
+    "Biuro Maklerskie BNP Paribas Bank Polska"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 21-02-1992"
+  },
+  {
+   "name": "ERSTE BANK POLSKA S.A.",
+   "aliases": [
+    "Erste Biuro Maklerskie",
+    "SANTANDER BANK POLSKA S.A.",
+    "Santander Biuro Maklerskie"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 19-07-1991"
+  },
+  {
+   "name": "ING BANK ŚLĄSKI S.A.",
+   "aliases": [
+    "Biuro Maklerskie ING Bank Śląski"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 30-11-2004"
+  },
+  {
+   "name": "mBANK S.A.",
+   "aliases": [
+    "Biuro Maklerskie mBank"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 30-06-2005"
+  },
+  {
+   "name": "POWSZECHNA KASA OSZCZĘDNOŚCI BANK POLSKI S.A. (PKO BP S.A.)",
+   "aliases": [
+    "Biuro Maklerskie PKO Banku Polskiego"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 26-08-1991"
+  },
+  {
+   "name": "VeloBank S.A.",
+   "aliases": [
+    "Departament Maklerski VeloBank"
+   ],
+   "status": "listed",
+   "detail": "Data zezwolenia: 2026-02-26"
+  }
+ ]
+}
