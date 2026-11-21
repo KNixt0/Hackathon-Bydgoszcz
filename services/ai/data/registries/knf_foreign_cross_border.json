@@ -1,0 +1,4694 @@
+{
+ "registry": "knf_foreign_cross_border",
+ "label": "Zagraniczne firmy inwestycyjne bez otwierania oddziału (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych/notyfikowane_zagraniczne_firmy_inwestycyjne",
+ "snapshot_date": "2026-11-21",
+ "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
+ "partial": false,
+ "synthetic_sample": false,
+ "entries": [
+  {
+   "name": "360 Treasury Systems AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2007-06-01 zmiana zakresu działanosci: 2017-08-07"
+  },
+  {
+   "name": "3D Global Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-03-19 zmiana adresu: 2011-06-29 zmiana zakresu działalności: 2017-09-19"
+  },
+  {
+   "name": "42 financial services a.s.",
+   "aliases": [
+    "42 financial services s.r.o."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2012-03-21 zmiana nazwy: 2016-08-05 zmiana zakresu działalności: 2022-09-15 MTF: 2023-03-06 OTF: 2023-07-27"
+  },
+  {
+   "name": "50KCY LTD",
+   "aliases": [
+    "50COINSCY LTD",
+    "UR Trade Fix Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-09-20 zmiana zakresu działalności: 2017-11-01, 2024-06-04, 2026-07-28 zmiana adresu: 2018-10-10, 2020-09-17, 2021-10-14, 2022-02-04 zmiana danych: 2018-09-24, 2021-05-31, 2024-08-28 zmiana danych i zakresu działalności: 2019-09-24, 2024-09-02 zmiana domen: 2021-09-01, 2022-04-20, 2026-09-30 zmiana nazwy i zmiana domen: 2024-03-19 zmiana adresu, zmiana danych: 2024-03-26 dodanie nazwy handlowej i domen: 2024-05-10, 2024-08-28 zmiana nazwy: 2024-12-12"
+  },
+  {
+   "name": "7Q Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-04-09"
+  },
+  {
+   "name": "A.H.W. Capital Mangement GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2010-04-15"
+  },
+  {
+   "name": "A.J.K. Wealth Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-07-27"
+  },
+  {
+   "name": "A.T.I. Associstes (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-06-02 zmiana zakesu działalności: 2012-06-13"
+  },
+  {
+   "name": "A/S Global Risk Management Ltd Fondsmaeglerselskab",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.finanstilsynet.dk; Data wpływu zawiadomienia: 2018-01-03"
+  },
+  {
+   "name": "ABF TRADE EU LIMITED",
+   "aliases": [
+    "X Global Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-05-20 zmiana danych: 2018-03-08 2019-04-11 zmiana adresu i zakresu działalności: 2018-03-21 2018-11-02 zmiana zakresu działalności: 2024-04-05 zmiana nazwy i zmiana domen: 2026-06-04"
+  },
+  {
+   "name": "ABG Sundal Collier ASA",
+   "aliases": [
+    "ABG Sundal Collier Norge ASA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2008-01-28 zmiana nazwy: 2017-01-13 zmiana adresu i afi: 2018-04-03 2026-01-14"
+  },
+  {
+   "name": "ABN AMRO - ODDO BHF B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2021-02-01"
+  },
+  {
+   "name": "AC Markets (Europe) Ltd",
+   "aliases": [
+    "LTTRADER LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-03-01 zmiana danych : 2018-04-20 2021-02-25 zmiana adresu: 2019-02-21 zmiana adresu i zakresu działalności: 2020-03-04 zmiana zakresu dzialalności: 2020-08-06 zmiana nazwy: 2021-01-25"
+  },
+  {
+   "name": "Accuindex EU Limited",
+   "aliases": [
+    "Ruizean Markets Ltd",
+    "RZT Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-12-13 zmiana nazwy i danych: 2019-02-12 2020-08-26 zmiana danych: 2019-11-22 zmiana adresu: 2025-07-30"
+  },
+  {
+   "name": "ACOLIN Europe AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 18.01.2022 dodanie nowego agenta: 2022-04-29 2025-09-19 zakończenie współpracy z agentem: 2023-10-06 2025-08-22 zmiana adresu: 2024-02-09"
+  },
+  {
+   "name": "Across Private Investments, o.c.p., a.s.",
+   "aliases": [
+    "Across Wealth Management o.c.p., a.s.",
+    "Across Investment Services, o.c.p., a.s."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2006-08-23 zmiana nazwy: 2006-09-18 zmiana nazwy, zmiana zakresu działalności, zmiana adresu, zmiana danych: 2024-11-12"
+  },
+  {
+   "name": "ACT Financial Solutions B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2018-01-03 zmiana danych: 2018-11-07"
+  },
+  {
+   "name": "ActivMarkets - Empresa de Investimento, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 2023-05-12"
+  },
+  {
+   "name": "Adamant Capital Partners AD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2011-07-28 zmiana danych: 2021-02-18"
+  },
+  {
+   "name": "Adams Street (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2020-12-22"
+  },
+  {
+   "name": "ADM Investor Services B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2024-02-02"
+  },
+  {
+   "name": "Admiral Markets AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 29.07.2009 Zakończenie działalności oddziału: 2020-07-28"
+  },
+  {
+   "name": "Admirals Europe Ltd",
+   "aliases": [
+    "Admiral Markets Cyprus Ltd",
+    "Admiralex Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-02-27 zmiana zakresu działalności: 2014-06-17 2022-12-08 zmiana nazwy: 2014-10-31 2024-02-16 dodanie nazw handlowych i domen: 2022-04-28 zmiana adresu i zmiana danych: 2025-06-03"
+  },
+  {
+   "name": "Aeonic Securities C.I.F Plc",
+   "aliases": [
+    "Solidus Securities Cyprus C.I.F. Ltd",
+    "Solidus Securities Cyprus Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-09-04 zmiana nazwy: 2013-11-05 2016-02-19 zmiana adresu: 2015-05-22 2018-05-03"
+  },
+  {
+   "name": "AFEX Markets Europe Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 26.02.2020 zmiana adresu i zmiana danych: 2023-05-24"
+  },
+  {
+   "name": "AFS Interest BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2018-01-04"
+  },
+  {
+   "name": "AGF International Advisors Company Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2009-03-03"
+  },
+  {
+   "name": "AHP Capital Management GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 20.12.2025 AFI: 2026-05-14 2026-10-26"
+  },
+  {
+   "name": "AIB Corporate Finance Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2006-01-13"
+  },
+  {
+   "name": "Airwallex Capital (Netherlands) B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2025-08-14"
+  },
+  {
+   "name": "Aisa International, s.r.o.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2022-03-01"
+  },
+  {
+   "name": "AK Jensen Norway AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 01.03.2021 zmiana danych: 2023-05-09"
+  },
+  {
+   "name": "AKCENTA CZ, a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2013-12-02 zmiana danych: 2019-03-14 zmiana adresu: 2019-05-13"
+  },
+  {
+   "name": "AKSYS GLOBAL MARKETS EUROPE LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 12.12.2025 zmiana adresu: 2026-01-21"
+  },
+  {
+   "name": "Alaric Securities OOD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 01.12.2022 zmiana danych: 2023-03-09 dodanie nazwy handlowej: 2023-11-16"
+  },
+  {
+   "name": "ALBOURNE CYPRUS LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-09-18"
+  },
+  {
+   "name": "Alfa Capital Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-10-15"
+  },
+  {
+   "name": "Algorithmic Trading Group Netherlands Management B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2018-01-03"
+  },
+  {
+   "name": "All Energy Trading N.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2007-12-24 zmiana zakresu działalności: 2008-03-17"
+  },
+  {
+   "name": "All Options International N.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2007-12-24 zmiana zakresu działalności: 2008-03-27"
+  },
+  {
+   "name": "All Securities BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2010-05-21"
+  },
+  {
+   "name": "Allianz Global Investors Europe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2006-06-30"
+  },
+  {
+   "name": "ALPACA EUROPE, A.V., S.L.U.",
+   "aliases": [
+    "WEALTHKERNEL SPAIN, A.V., S.L.U."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 09.06.2026 zmiana nazwy: 2026-10-22"
+  },
+  {
+   "name": "Alpha FX Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2021-04-06 zmiana adresu: 2021-04-08"
+  },
+  {
+   "name": "ALT21 Europe Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2025-05-21"
+  },
+  {
+   "name": "Amana Capital (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-06-08"
+  },
+  {
+   "name": "Amenda Markets AS IBS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Łotwa; Organ nadzoru: www.fktk.lv; Data wpływu zawiadomienia: 2016-07-21 zmiana adresu: 2017-10-10"
+  },
+  {
+   "name": "AMFIE",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2017-02-08"
+  },
+  {
+   "name": "Aon Solutions Ireland Limited",
+   "aliases": [
+    "Aon Hewitt Ireland Limited"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 04.12.2019 zmiana nazwy: 2023-04-17"
+  },
+  {
+   "name": "APME FX Trading Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-12-07 zmiana danych: 2018-05-18 2018-10-26 zmiana adresu: 2021-04-14 zmiana nazwy handlowej: 2022-01-26 zmiana adresu: 2022-04-26 2026-08-27"
+  },
+  {
+   "name": "Apollo Capital Solutions Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2023-02-10"
+  },
+  {
+   "name": "Aquilla Nummus Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-04-25 zmiana adresu: 2019-04-22"
+  },
+  {
+   "name": "Arctic Asset Management AS",
+   "aliases": [
+    "Arctic Fund Management AS",
+    "Arctic Capital Partners AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2009-01-09 zmiana statusu i zakresu działaności: 2011-05-10 zmiana nazwy: 2020-06-22"
+  },
+  {
+   "name": "Arctic Securities AS",
+   "aliases": [
+    "Arctic Securities ASA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2007-09-20 zmiana danych: 2014-08-08 2023-06-20 afi"
+  },
+  {
+   "name": "Arctica Finance hf.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Islandia; Organ nadzoru: www.fme.is; Data wpływu zawiadomienia: 2018-01-25"
+  },
+  {
+   "name": "Argus Stockbrokers Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-12-01 zmiana zakresu działalności: 2016-07-07"
+  },
+  {
+   "name": "Arion Banki hf.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Islandia; Organ nadzoru: www.cb.is; Data wpływu zawiadomienia: 2024-03-22"
+  },
+  {
+   "name": "Arisaig Wealth Management B.V.",
+   "aliases": [
+    "Black Swan Capital B.V."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 14.11.2019 zmiana nazwy: 2026-10-05"
+  },
+  {
+   "name": "ARTEX Global Markets AG",
+   "aliases": [
+    "Artex MTF AG"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 13.06.2023 zmiana nazwy: 2024-07-23"
+  },
+  {
+   "name": "ARTS Asset Management GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2019-01-29"
+  },
+  {
+   "name": "AS Mintos Marketplace",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Łotwa; Organ nadzoru: www.bank.lv/en/; Data wpływu zawiadomienia: 04.09.2023 zmiana zakresu działalności: 2026-03-12"
+  },
+  {
+   "name": "AS Suprema Securities",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee/; Data wpływu zawiadomienia: 2006-02-07"
+  },
+  {
+   "name": "Asante Capital Group Germany GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2023-01-10"
+  },
+  {
+   "name": "Asset Management International B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2026-08-24"
+  },
+  {
+   "name": "ASSETERA GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at/en/; Data wpływu zawiadomienia: 2024-07-11"
+  },
+  {
+   "name": "ASTEO Luxembourg S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2015-03-16"
+  },
+  {
+   "name": "ATFX Global Markets (CY) Ltd",
+   "aliases": [
+    "Positiva Markets (CY) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-06-21 zmiana danych: 2017-08-29 2019-05-20 2024-07-30 zmiana nazwy: 2017-12-27 zmiana adresu: 2018-11-13 zmiana domen: 2024-01-18 dodanie nazwy handlowej i domeny: 2024-07-22 2024-07-30"
+  },
+  {
+   "name": "Atlantic Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.fsc.gi; Data wpływu zawiadomienia: 2016-02-03 zmiana adresu: 2017-06-30"
+  },
+  {
+   "name": "Atlantic Securities Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-12-11"
+  },
+  {
+   "name": "Attrax Financial Services SA",
+   "aliases": [
+    "attrax S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2016-05-30 zmiana danych: 2021-02-19"
+  },
+  {
+   "name": "Aurel-bcg",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-07-09"
+  },
+  {
+   "name": "Ava Trade EU Ltd",
+   "aliases": [
+    "Ava Capital Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2009-07-17 zmiana nazwy: 2014-09-16 zmiana adresu: 2015-07-20 2026-07-09 zmiana zakresu działalności: 2016-04-29"
+  },
+  {
+   "name": "AWM Wealth Advisers Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 29.05.2019 zmiana adresu i zmiana danych: 2023-03-09"
+  },
+  {
+   "name": "Axeltis",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2010-07-07"
+  },
+  {
+   "name": "Axia Ventures Group Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-09-02 zmiana zakresu działaności: 2012-01-04 2022-12-20"
+  },
+  {
+   "name": "Ayers Alliance Financial Group Ltd",
+   "aliases": [
+    "Harborx Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 03.12.2014 zmiana nazwy: 2018-04-02 zmiana adresu: 2023-08-04"
+  },
+  {
+   "name": "AYOMI Financial Services Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2021-09-03"
+  },
+  {
+   "name": "B2B Prime Services EU Ltd",
+   "aliases": [
+    "Menasecurities Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 25.02.2020 zmiana nazwy, dodanie domeny oraz e-mail: 2021-11-19 zmiana adresu: 2026-07-23"
+  },
+  {
+   "name": "Ballinger Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2024-02-07"
+  },
+  {
+   "name": "Bankhaus Scheich Wertpapierspezialist AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2021-04-21"
+  },
+  {
+   "name": "BCM Begin Capital Markets CY Ltd",
+   "aliases": [
+    "OX Capital Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-06-16 zmiana nazwy: 2020-03-12 zmiana danych: 2020-06-22 zmiana adresu: 2020-10-20 zmiana adresu: 2021-11-08"
+  },
+  {
+   "name": "BDT & MSD Partners Europe GmbH",
+   "aliases": [
+    "BDT & Company Europe GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 30.09.2019 zmiana adresu: 2022-03-07 zmiana nazwy, zmiana zakresu działalności, zmiana danych: 2023-03-15"
+  },
+  {
+   "name": "BenchMark Finance PLC",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2011-07-25 zmiana zakresu działalności: 2021-02-25"
+  },
+  {
+   "name": "BESTINVER, SOCIEDAD DE VALORES, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2023-11-14"
+  },
+  {
+   "name": "BETA Securities SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 2004-12-30"
+  },
+  {
+   "name": "Bitpanda Financial Services GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 01.03.2021 zmiana zakresu działalności, zmiana adresu: 2024-07-31 zmiana zakresu działalności: 2025-08-05"
+  },
+  {
+   "name": "Bitstamp finančne storitve d.o.o.",
+   "aliases": [
+    "(ang. Bitstamp Financial Services Ltd.)"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowenia; Organ nadzoru: www.a-tvp.si; Data wpływu zawiadomienia: 06.01.2025 zmiana zakresu działalności: 2026-05-15"
+  },
+  {
+   "name": "BlackRock (Netherlands) B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2018-10-31"
+  },
+  {
+   "name": "Blacktower Financial Management (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-10-06 zmiana zakresu działalności: 2021-03-05 zmiana adresu: 2023-03-28"
+  },
+  {
+   "name": "Blacktower Financial Management (International) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.fsc.gi; Data wpływu zawiadomienia: 2015-12-17"
+  },
+  {
+   "name": "BLOCKMAZE GREECE INVESTMENT SERVICES SINLGE MEMBER SOCIETE ANONYME",
+   "aliases": [
+    "TRIPLE A EXPERTS INVESTMENT SERVICES SINGLE MEMBER S.A.",
+    "TRIPLE A EXPERTS INVESTMENT SERVICES S.A.",
+    "Triple A Experts Investment Services Single Member S.A.",
+    "Triple A Experts S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 2012-05-15 zmiana zakresu działalności: 2016-10-06 dodanie nazw handlowych: 2021-10-07 zmiana nazwy: 2021-12-03 2022-03-08 2023-11-29 zmiana domen: 2023-05-16 zmiana adresu: 2024-04-10 zmiana domen i zmiana danych: 2025-10-23 zmiana nazwy i dodanie nazwy handlowej: 2026-05-27"
+  },
+  {
+   "name": "Bloomberg Trading Facility B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-01-31"
+  },
+  {
+   "name": "Blue Suisse Ltd",
+   "aliases": [
+    "Port FX Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2014-04-02 zmiana nazwy: 2018-07-12"
+  },
+  {
+   "name": "BLUENEXT",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-04-21"
+  },
+  {
+   "name": "BMCP GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 25.06.2020 zmiana adresu: 2021-08-30 2026-08-10 zmiana zakresu działalności, zmiana adresu, AFI: 2025-06-13 zmiana zakresu działalności i AFI: 2026-07-02 AFI: 2026-09-17 2026-09-22 2026-10-01"
+  },
+  {
+   "name": "BN & Partners Capital AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2026-06-22"
+  },
+  {
+   "name": "BNP Paribas Dealing Services",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2017-03-31"
+  },
+  {
+   "name": "BNP Paribas Equities France",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2005-07-01"
+  },
+  {
+   "name": "BNP Paribas Investment Partners Netherlands N.V.",
+   "aliases": [
+    "ABN Amro Asset Management (Netherlands) B.V."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2006-04-11 zmiana nazwy: 2015-06-29 zmiana adresu: 2016-01-25"
+  },
+  {
+   "name": "Boer & Olij Securities B.V.",
+   "aliases": [
+    "Boer & Olij Effectenhuis"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2008-11-20 zmiana zakresu działalności: zmiana adresu: 2019-09-16"
+  },
+  {
+   "name": "Boku Securities SIA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Łotwa; Organ nadzoru: www.bank.lv/en/; Data wpływu zawiadomienia: 2026-06-18"
+  },
+  {
+   "name": "BOS Wealth Management Europe sa",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2018-09-17 zmiana zakresu działalności: 2020-01-28 zmiana danych: 2024-05-27"
+  },
+  {
+   "name": "Boson Alfa Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2019-03-20"
+  },
+  {
+   "name": "BOURSE DIRECT",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-04-15"
+  },
+  {
+   "name": "BP ENERGY SOLUTIONS, SOCIEDAD DE VALORES, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2023-06-02"
+  },
+  {
+   "name": "Brewin Dolphin Wealth Management Ltd",
+   "aliases": [
+    "Tilman Brewin Dolphin Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2018-09-19 zmiana nazwy: 2019-02-13"
+  },
+  {
+   "name": "BROCTAGON PRIME LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 13.02.2023 dodanie domen: 2025-08-18"
+  },
+  {
+   "name": "BSG France S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2024-04-18"
+  },
+  {
+   "name": "BT Securities SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Rumunia; Organ nadzoru: www.asfromania.ro; Data wpływu zawiadomienia: 2011-04-13"
+  },
+  {
+   "name": "BTIG Norway AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2025-09-03"
+  },
+  {
+   "name": "Calamatta Cuschieri Investment Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2018-10-08"
+  },
+  {
+   "name": "Cambridge Associates GmbH",
+   "aliases": [
+    "Cambridge Associates (Germany) GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2020-03-16 zmiana adresu: 2020-04-21 zmiana nazwy i adresu: 2022-07-26"
+  },
+  {
+   "name": "Campbell Lutyens & Co (France) S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.fr; Data wpływu zawiadomienia: 2021-04-01"
+  },
+  {
+   "name": "Cantor Fitzgerald Ireland Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2018-11-06"
+  },
+  {
+   "name": "CAPITAL COM GROUP LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 03.03.2026 zmiana adresu: 2026-10-06"
+  },
+  {
+   "name": "Capital Com SV Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 22.08.2017 zmiana danych: 2024-05-21 dodanie domen: 2024-12-06 zmiana adresu: 2024-12-16"
+  },
+  {
+   "name": "Capital Markets, o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2008-03-17 zmiana adresu i zakresu działalności: 2012-11-09 zmiana zakresu działalności: 2015-05-14"
+  },
+  {
+   "name": "Capital Solutions Advisory GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2020-02-11"
+  },
+  {
+   "name": "Captin B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2022-05-24"
+  },
+  {
+   "name": "Carne Global Financial Services (Europe) – Empresa de Investimento, S.A.",
+   "aliases": [
+    "Carne Global Financial Services (Europe), Unipessoal Lda."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 26.08.2019 zmiana nazwy oraz zmiana zakresu działalności: 2022-09-26 afi: 2023-01-18 2023-08-31 2024-05-16 2024-07-05 2025-06-25 2025-07-28 2025-09-10 zmiana zakresu działalności: 2025-06-02"
+  },
+  {
+   "name": "Cashline Értékpapír zártkörűen működő Részvénytársaság",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 2007-05-10 zmiana zakresu działalności: 2007-08-01"
+  },
+  {
+   "name": "CBRE Capital Advisors B.V.",
+   "aliases": [
+    "CBRE Real Estate Finance B.V.",
+    "CB Richard Ellis Real Estate Finance BV"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 31.10.2011 zmiana zakresu działalności, zmiana nazwy, zmiana danych: 2023-01-31"
+  },
+  {
+   "name": "CDJ SOCIAL STOCKS LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-03-20"
+  },
+  {
+   "name": "Centris Capital AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 19.04.2012 zmiana zakresu działalności: 2026-04-01"
+  },
+  {
+   "name": "Centrus Advisors Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 04.07.2024 zmiana adresu: 2026-07-27"
+  },
+  {
+   "name": "Cex Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-06-17"
+  },
+  {
+   "name": "CHARLGATE Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-01-08 zmiana danych: 2020-02-11 2020-05-05 2020-05-06 zmiana adresu: 2020-10-08 zmiana zakresu działalności, dodanie nazwy handlowej: 2025-03-11 2026-07-09 dodanie domeny: 2026-03-27 2026-07-13"
+  },
+  {
+   "name": "Chase Buchanan Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-04-27 zmiana danych: 2016-11-28 2017-02-28 zmiana adresu: 2019-05-09 2022-12-06"
+  },
+  {
+   "name": "Chatham Financial Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2024-05-24"
+  },
+  {
+   "name": "Chefinvest International AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2015-06-19"
+  },
+  {
+   "name": "Cheuvreux SA",
+   "aliases": [
+    "Credit Agricole Cheuvreux"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2010-07-07 zmiana nazwy: 2013-06-13 zmiana zakresu działalności: 2018-04-05"
+  },
+  {
+   "name": "Citadel Securities GCS (Ireland) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 16.11.2018 zmiana zakresu działalności: 2026-01-15 2026-05-15"
+  },
+  {
+   "name": "Citfin – Finanční trhy, a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2024-07-04"
+  },
+  {
+   "name": "Citigroup Global Markets Europe AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2018-12-27"
+  },
+  {
+   "name": "CLAREMONT SQUARE CAPITAL LIMITED",
+   "aliases": [
+    "Afterprime Europe Limited",
+    "H.C.F.S. High Capital Financial Services Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 20.11.2020 zmiana adresu: 2023-04-04 2024-03-08 zmiana nazwy, zmiana adresu, zmiana danych: 2023-11-22 zmiana domen i zmiana danych: 2024-01-22 zmiana danych: 2024-07-15 zmiana nazwy: 2025-01-19"
+  },
+  {
+   "name": "Clarkson Platou Project Sales AS",
+   "aliases": [
+    "RS Platou Finans Shipping AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2013-08-16 zmiana nazwy, adresu i zakresu działalności: 2017-04-24 zmiana zakresu działalności: 2020-09-10"
+  },
+  {
+   "name": "Clear Street Europe BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2026-05-12"
+  },
+  {
+   "name": "Cleaves Securities AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2014-02-11 zmiana zakresu działalności: 2020-02-12 zmiana adresu: 2024-11-08"
+  },
+  {
+   "name": "CLICKOPTIONS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-05-28"
+  },
+  {
+   "name": "CLSA Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-04-02"
+  },
+  {
+   "name": "CMC Markets Germany GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 13.09.2019 zmiana zakresu działalności: 2026-08-03"
+  },
+  {
+   "name": "Coeli Wealth Management AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2019-08-12"
+  },
+  {
+   "name": "Cohen & Company (Europe) S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2021-11-23"
+  },
+  {
+   "name": "Coinbase Financial Services Europe Ltd.",
+   "aliases": [
+    "Bux Europe Ltd",
+    "HUA REN (Cyprus) Financial Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 18.10.2019 zmiana nazwy i danych: 2021-12-14 zmiana domen i dodanie nazwy handlowej: 2022-07-20 zmiana nazwy, zmiana domen i zmiana danych: 2024-10-11 zmiana zakresu dzialalności i zmiana domen: 2025-12-12 2026-07-02 zmiana zakresu działalności: 2026-02-25 2026-05-19"
+  },
+  {
+   "name": "Colin&Cie. Luxembourg S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2017-01-19"
+  },
+  {
+   "name": "Colmex Pro Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-03-16 zmiana danych: 2015-02-03 zmiana adresu: 2019-01-18 zmiana adresu: 2021-09-28"
+  },
+  {
+   "name": "Columbia Threadneedle Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 24.11.2025 zmiana zakresu działalności: 2025-12-08"
+  },
+  {
+   "name": "Comgest Asset Management International Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2020-09-23"
+  },
+  {
+   "name": "Computershare Investor Services (Ireland) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2018-12-18 zmiana zakresu działalności i adresu: 2019-03-26"
+  },
+  {
+   "name": "Concorde Értékpapir Részvénytársaság",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 2004-12-13"
+  },
+  {
+   "name": "Connaught (EU) B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.amf.nl; Data wpływu zawiadomienia: 2024-09-05"
+  },
+  {
+   "name": "Conotoxia Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-11-14 zmiana danych: 2019-12-11 2020-01-10 zmiana domen: 2022-05-30 zmiana zakresu działalności i zmiana danych: 2023-05-11 zawieszene zezwolenia: 2025-07-30"
+  },
+  {
+   "name": "Conseq Investment Management, a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2012-09-14"
+  },
+  {
+   "name": "Convera Europe Financial S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2023-05-03"
+  },
+  {
+   "name": "Corum Vermögensverwaltung (Deutschland) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2026-06-22"
+  },
+  {
+   "name": "Createrra Finance S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2022-05-13"
+  },
+  {
+   "name": "Credit Financier Invest (CFI) Ltd",
+   "aliases": [
+    "CFI Markets Ltd",
+    "CF Invest Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-05-22 zmiana nazwy: 2014-10-31 2018-02-22 zmiana danych: 2015-07-17 2019-03-06 2019-07-23 2021-04-15 2024-01-08 2024-11-26 zmiana zakresu działalności: 2016-05-31 dodanie nazw handlowych: 2024-10-31 zmiana domen: 2025-10-14 zmiana adresu: 2025-11-20"
+  },
+  {
+   "name": "CREDO Vermogensmanagement GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2011-05-31"
+  },
+  {
+   "name": "CREDOS d.o.o.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Chorwacja; Organ nadzoru: www.hanfa.hr; Data wpływu zawiadomienia: 2017-03-07 częściowe zawieszenie zezwolenia: 2017-07-28 zmiana zakresu działalności: 2017-09-13 zmiana danych: 2026-09-23"
+  },
+  {
+   "name": "CROWD Tech Ltd",
+   "aliases": [
+    "MPF Global Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-04-16 zmiana danych: 2014-10-15 2015-10-09 2023-02-02 zmiana nazwy: 2015-09-22 2017-10-05 zmiana adresu: 2016-06-23 2020-09-03 2023-04-05 zmiana afi: 2020-06-17 2022-09-01"
+  },
+  {
+   "name": "CTCAP LTD",
+   "aliases": [
+    "CT CAPITALLTRADERS LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 11.09.2023 dodanie domeny i zmiana danych: 2023-10-31 zmiana adresu i zmiana danych: 2024-03-26 zmiana nazwy, zmiana adresu, zmiana zakresu działalności: 2024-07-23 zmiana adresu: 2026-06-05"
+  },
+  {
+   "name": "CTS Cloud Trading Solutions Ltd",
+   "aliases": [
+    "Novox Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-04-11 zmiana danych: 2017-12-13 2018-04-23 2020-04-27 2020-05-04 zmiana adresu: 2020-10-12 zawieszenie zezwolenia: 2022-10-21 zmiana nazwy i zmiana domen: 2023-11-13 zmiana adresu i zmiana danych: 2023-11-21"
+  },
+  {
+   "name": "CVC Capital Markets S.à r.l.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 07.07.2023 2024-07-09 zmiana adresu"
+  },
+  {
+   "name": "CYRRUS a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2006-07-24 zmiana zakresu działalności: 2007-07-05"
+  },
+  {
+   "name": "D.T. Direct Investment Hub Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2019-01-28 zmiana danych: 2019-10-11 2021-12-07 zmiana adresu: 2023-01-10 zmiana zakresu działalności: 2026-01-26"
+  },
+  {
+   "name": "D2X Group N.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 22.03.2024 zmiana zakresu działalności: 2025-06-04"
+  },
+  {
+   "name": "Daiwa Capital Markets Deutschland GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 30.11.2018 zmiana adresu: 2023-03-06"
+  },
+  {
+   "name": "Darion Capital Management BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2013-09-10"
+  },
+  {
+   "name": "DC Placement Advisors GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2015-12-30 zmiana a.f.i.: 2017-05-12 2019-03-04 zmiana adresu: 2023-09-08"
+  },
+  {
+   "name": "DealerBox Technologies S.A.S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2025-04-09"
+  },
+  {
+   "name": "DeFinVa Deutsche Finanzvertriebsagentur GmbH",
+   "aliases": [
+    "The Silverfern Group Europe GmbH",
+    "First Investment Partners"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2018-04-12 zmiana danych: 2021-03-12 zmiana nazwy: 2021-09-24"
+  },
+  {
+   "name": "Deltastock AD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2009-04-03 zmiana adresu i zakresu działalności: 2018-11-30 2021-02-11"
+  },
+  {
+   "name": "Deriv Investments (Europe) Ltd",
+   "aliases": [
+    "Deriv Investment (Europe) Ltd",
+    "Binary Investment (Europe) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2015-05-25 zmiana zakresu działalności: 2016-07-01 zmiana nazwy i adresu: 2020-07-01 modyfikacja nazwy oraz zmiana zakresu działalności: 2025-05-09"
+  },
+  {
+   "name": "Descartes Trading S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2015-04-24"
+  },
+  {
+   "name": "Development Company for Israel Europe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2021-02-03"
+  },
+  {
+   "name": "Dialog Vermögensmanagement GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 08.04.2022 zmiana afi: 2023-01-05"
+  },
+  {
+   "name": "Dif Broker – Empresa de Investimento, S.A.",
+   "aliases": [
+    "DIF Broker - Sociedade Financeira de Corretagem, SA",
+    "DIF Broker - Sociedade Corretora, SA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 2010-04-16 zmiana nazwy: 2015-07-07 zmiana adresu: 2017-10-17 zmiana nazwy i zmiana adresu: 2023-03-23 zmiana zakresu dzialalności: 2025-06-02"
+  },
+  {
+   "name": "Direct Hedge Danmark Fondsmæglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.finanstilsynet.dk; Data wpływu zawiadomienia: 2011-07-20"
+  },
+  {
+   "name": "Directa SIM S.p.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 2016-06-16"
+  },
+  {
+   "name": "Dodge & Cox (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2023-05-26"
+  },
+  {
+   "name": "DonauCapital Pure Investment GmbH",
+   "aliases": [
+    "DonauCapital Investment GmbH",
+    "DonauCapital Wertpapier AG"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2010-03-28 a.f.i.: 2017-09-12 zmiana nazwy: 2019-09-24 druga zmiana nazwy: 2021-08-31"
+  },
+  {
+   "name": "DonauCapital Wertpapier GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2016-06-08 afi: 2019-01-31 2021-04-26 2021-05-11 2022-07-26 2025-05-09"
+  },
+  {
+   "name": "DOO FINANCIAL CYPRUS LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2025-03-04"
+  },
+  {
+   "name": "Doto Europe Ltd.",
+   "aliases": [
+    "Vasby Capital Markets Limited"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 21.09.2021 zmiana nazwy: 2022-12-02"
+  },
+  {
+   "name": "DPRG IM LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 04.09.2025 zmiana nazw handlowych: 2025-09-18"
+  },
+  {
+   "name": "Dragon Capital (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-12-13 zmiana zakresu działalności: 2011-01-14 2011-02-16 2011-06-09 2012-02-08 2012-05-16 2012-06-26 2012-10-26 2014-04-08 2018-11-20 zmiana danych i adresu: 2016-06-07 2018-11-20 zmiana adresu: 2025-12-03"
+  },
+  {
+   "name": "DriveWealth Europe UAB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 13.11.2024 zmiana adresu: 2025-04-17 2025-11-20"
+  },
+  {
+   "name": "DRW Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 13.01.2025 zmiana zakresu działalności: 2026-04-21"
+  },
+  {
+   "name": "Dukascopy Europe IBS AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Łotwa; Organ nadzoru: www.fktk.lv; Data wpływu zawiadomienia: 2011-07-12 zmiana zakresu działalności: 2013-10-21"
+  },
+  {
+   "name": "Dutch Options and Futures Institute B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2005-05-16"
+  },
+  {
+   "name": "DWS International GmbH",
+   "aliases": [
+    "Deutsche Asset Management International GmBH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 21.03.2007 zmiana adresu: 2022-04-26"
+  },
+  {
+   "name": "e-MID SIM S.p.A",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 2008-11-07"
+  },
+  {
+   "name": "Easy Forex Trading Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2007-08-10 zmiana zakresu działalności: 2012-08-08 zmiana adresu: 2012-08-09 zmiana danych: 2016-11-12 2025-11-25 zmiana zakresu działalności, zmiana adresu, dodanie nazwy handlowej: 2023-06-20 zmiana adresu: 2025-07-29 zmiana domen: 2025-11-07"
+  },
+  {
+   "name": "EBURY PARTNERS MARKETS CYPRUS LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2025-11-17"
+  },
+  {
+   "name": "ECOMMBX INVESTMENTS LIMITED",
+   "aliases": [
+    "Mercorix Limited",
+    "Symmetria F.S. Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-07-15 zmiana danych: 2021-07-26 zmiana nazwy: 2021-11-09 zmiana adresu e-mail: 2021-12-01 zmiana nazwy, zmiana adresu, zmiana domen, dodanie nazwy handlowej, zmiana danych: 2024-11-11 zmiana zakresu działalności: 2024-11-19 2026-10-14"
+  },
+  {
+   "name": "EDR Financial Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-05-27 zmiana adresu i zakresu działalności: 2017-08-30 2020-05-15 zmiana adresu 2019-07-11 2025-01-15 zmiana danych: 2020-01-03 2020-04-08 2023-08-23 zmiana domen: 2022-11-02 zmiana zakresu działalności i zmiana danych: 2024-06-25"
+  },
+  {
+   "name": "EFEKTA obchodník s cennými papíry a.s.",
+   "aliases": [
+    "Efekta Consulting, a.s."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 25.06.2010 zmiana nazwy i zmiana adresu: 2023-03-21"
+  },
+  {
+   "name": "Eightcap EU Ltd",
+   "aliases": [
+    "R Capital Solutions Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-10-13 zmiana danych: 2015-09-02 2019-01-04 2020-09-04 2021-08-02 2021-09-02 zmiana adresu: 2019-03-15 2026-04-28 zmiana domen: 2022-01-25 2026-05-20 zmiana adresu i danych: 2022-03-03"
+  },
+  {
+   "name": "ELIDI Securities Ltd",
+   "aliases": [
+    "UGM Securities Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-06-03 zmiana adresu: 2020-11-20 zmiana nazwy i dodanie domen: 2023-11-01 zmiana adresu, zmiana domen, zmiana danych: 2024-12-04 zmiana zakresu działalności: 2025-02-12"
+  },
+  {
+   "name": "ELITE SIM S.p.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.bancaditalia.it; Data wpływu zawiadomienia: 2019-10-16"
+  },
+  {
+   "name": "Elitepartner Financial Advisors GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2007-12-10"
+  },
+  {
+   "name": "Eminova Fondkommission AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2024-03-04"
+  },
+  {
+   "name": "EMKAP LTD",
+   "aliases": [
+    "MeritKapital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-03-08 zmiana zakresu działalności: 2010-04-27 2010-06-14 2012-11-27 2014-11-03 2015-08-03 zmiana nazwy i dodanie domeny: 2025-09-09 zmiana danych: 2026-09-15"
+  },
+  {
+   "name": "Emporium Capital K.A. Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2021-10-26 zmiana adresu: 2021-12-23 dodanie domen: 2022-10-14 zmiana zakresu działalności: 2023-02-08"
+  },
+  {
+   "name": "Energy Risk Management Fondsmæglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.dfsa.dk; Data wpływu zawiadomienia: 2025-05-13"
+  },
+  {
+   "name": "ENGIE Global Markets",
+   "aliases": [
+    "GDF SUEZ Trading",
+    "GASELYS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-05-28 zmiana nazwy: 2011-10-14 2016-04-15 zmiana zakresu działalności: 2018-10-24 zmiana adresu: 2026-07-06"
+  },
+  {
+   "name": "Enmacc Financial Services GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2023-03-13"
+  },
+  {
+   "name": "EOS Venture",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2016-10-13"
+  },
+  {
+   "name": "EOS Venture",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 29.03.2019 zmiana zakresu działalności i OTF: 2022-10-10"
+  },
+  {
+   "name": "Equilor Investment Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 16.12.2010 zmiana zakresu działalności i zmiana adresu: 2023-01-13"
+  },
+  {
+   "name": "equinet AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2007-12-10"
+  },
+  {
+   "name": "EQUITI GLOBAL MARKETS LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 23.05.2023 zmiana domen: 2023-09-08 zmiana adresu: 2025-10-21 zmiana danych: 2026-01-15"
+  },
+  {
+   "name": "Erste Investment AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 2015-10-12"
+  },
+  {
+   "name": "Etoro (Europe) Ltd",
+   "aliases": [
+    "RetailFX Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-04-12 zmiana adresu: 2011-07-04 2016-03-03 2026-06-11 zmiana nazwy: 2012-06-07 zmiana zakresu działalności: 2014-07-30 2026-10-08 dodanie domeny: 2024-06-20"
+  },
+  {
+   "name": "EUI Private Wealth Ltd",
+   "aliases": [
+    "AHR Private Wealth Europe Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2021-02-04 zmiana nazwy: 2021-02-23 zmiana adresu: 2023-04-12"
+  },
+  {
+   "name": "Eurivex Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-07-19 zmiana zakresu działalności: 2016-01-27 2023-10-19 zmiana adresu: 2019-01-08 dodanie nowych domen: 2022-04-19"
+  },
+  {
+   "name": "EUROAMERICAN FINANCIAL ADVISORS EAF, S.L",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2025-09-24"
+  },
+  {
+   "name": "Eurobank Equities Investment Firm S.A.",
+   "aliases": [
+    "Eurobank EFG Equities Investment Firm S.A.",
+    "Eurobank EFG Securities Investment Firm S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 2009-11-09 zmiana nazwy: 2010-06-01 2012-10-16"
+  },
+  {
+   "name": "Europa Brokerhaz",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 2014-04-10 zmiana danych: 2014-12-16"
+  },
+  {
+   "name": "Eurotrade Investments RGB Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-09-30 zmiana zakresu działalności: 2018-01-30 zmiana adresu: 2018-03-06 2020-07-09 2022-05-31 2022-07-04 zmiana danych: 2022-05-31 zmiana domen: 2023-04-05"
+  },
+  {
+   "name": "EUROXX SECURITIES S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 11.04.2023 zmiana zakresu działalności: 2024-04-17"
+  },
+  {
+   "name": "Evbx Ltd",
+   "aliases": [
+    "VSTAR & SOHO MARKETS LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 18.04.2022 zmiana nazwy, dodanie domeny: 2024-11-11"
+  },
+  {
+   "name": "Evelyn Partners Investment Management (Europe) Limited",
+   "aliases": [
+    "Smith & Williamson Investment Management (Europe) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 23.04.2019 zmiana danych: 2021-03-02 zmiana nazwy i zmiana danych: 2022-06-24 zmiana adresu: 2025-10-08"
+  },
+  {
+   "name": "EVER CAPITAL INVESTMENTS, S.V., S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2026-02-19"
+  },
+  {
+   "name": "Ever Financial AD",
+   "aliases": [
+    "Financial House Ever AD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2010-08-11 zmiana danych: 2021-02-25 2026-04-23 zmiana nazwy, zmiana domen: 2023-06-15 zmiana nazw handlowych i zmiana danych: 2025-10-09 zmiana domen: 2026-02-27"
+  },
+  {
+   "name": "Evercore GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2021-01-19"
+  },
+  {
+   "name": "Everest Index Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-07-13"
+  },
+  {
+   "name": "Evli Oyj",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.finanssivalvonta.fi; Data wpływu zawiadomienia: 2022-05-04"
+  },
+  {
+   "name": "EXANE Options",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-08-01"
+  },
+  {
+   "name": "Exclusive Change Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-09-12 zmiana adresu: 2019-04-11 2023-07-04 zmiana danych: 2021-05-13 zmiana nazw handlowych: 2025-03-19 dodanie domeny: 2025-05-19 zmiana zakresu działalności: 2025-07-03"
+  },
+  {
+   "name": "EXCLUSIVE PARTNERS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-07-01"
+  },
+  {
+   "name": "Exelcius Prime Ltd",
+   "aliases": [
+    "CopyDO Social Investment Network Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2019-03-26 zmiana danych: 2019-07-29 2020-05-14 2021-04-06 zmiana adresu: 2019-08-01 zmiana domen: 2022-02-02 zmiana domen: 2022-02-08 zawieszenie zezwolenia: 2022-08-04"
+  },
+  {
+   "name": "EXENICO (CY) LTD",
+   "aliases": [
+    "Grandis Securities Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 06.10.2020 zmiana nazwy, zmiana domen, dodanie nazwy handlowej: 2025-02-03 zmiana adresu: 2025-05-05"
+  },
+  {
+   "name": "Exness (Cy) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-08-06 zmiana adresu: 2014-06-16"
+  },
+  {
+   "name": "EXT Ltd",
+   "aliases": [
+    "M&L Invest Union Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-09-17 zmiana adresu: 2014-04-10 2020-09-16 2022-06-29 zmiana zakresu działalności: 2014-04-15 2020-09-16 zmiana danych: 2015-07-14 2018-10-02 2018-12-19 2020-01-22 zmiana nazwy: 2018-04-04"
+  },
+  {
+   "name": "FACTORY AD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2010-06-07"
+  },
+  {
+   "name": "Fathom Wealth Management Advisors Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-12-08"
+  },
+  {
+   "name": "Fearnley Securities AS",
+   "aliases": [
+    "Fearnley Fonds ASA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2005-05-23 zmiana zakresu działalności: 2018-09-27 zmiana adresu: 2021-10-29"
+  },
+  {
+   "name": "Fiduciary Wealth Management Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.gfsc.gi; Data wpływu zawiadomienia: 14.01.2020 zmiana adresu: 2020-11-03"
+  },
+  {
+   "name": "FIL (Luxembourg) SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2011-11-14 zmiana zakresu działalności: 2012-01-10 zmiana zakresu działalności: 2018-12-12"
+  },
+  {
+   "name": "FIMEX Capital o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2008-12-02"
+  },
+  {
+   "name": "Finad GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 15.12.2021 zmiana zakresu działalności: 2024-09-25"
+  },
+  {
+   "name": "FINALTO EU LTD",
+   "aliases": [
+    "Magnasale Trading Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-03-30 zmiana adresu: 2016-06-14 dodanie nowej domeny: 2021-09-13 zmiana nazwy: 2025-08-27 zmiana domen i zmiana danych: 2025-08-28 zmiana danych: 2026-05-12 zmiana domen: 2026-06-24"
+  },
+  {
+   "name": "Financial & Risk Transaction Services Ireland Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-04-05"
+  },
+  {
+   "name": "Finary SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-09-15"
+  },
+  {
+   "name": "Finax o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2018-06-21 afi: 2020-04-07 2020-05-21 2023-02-10 2025-07-23"
+  },
+  {
+   "name": "FinDeal Advisers S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2025-10-09"
+  },
+  {
+   "name": "FINQUOTES FINANCIAL (CYPRUS) LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2024-10-22"
+  },
+  {
+   "name": "FIO, burzovni spolecnost, a.s. Czechy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2004-05-31"
+  },
+  {
+   "name": "First Avenue Partners (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2025-01-22"
+  },
+  {
+   "name": "First Capital Management Group GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 08.01.2020 afi: 2023-03-02"
+  },
+  {
+   "name": "First Prudential Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2019-05-29 zmiana zakresu działalności: 2019-07-16 dodanie tymczasowego adresu: 2022-07-18 zmiana adresu: 2023-09-13 2025-06-02 2026-05-28"
+  },
+  {
+   "name": "Fisher Investments Ireland Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 14.03.2019 zmiana adresu: 2022-03-08"
+  },
+  {
+   "name": "Fisher Investments Luxembourg Sarl",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2019-09-18 afi: 2019-10-03 2020-01-20 2020-02-12 zmiana zakresu działalności: 2021-02-24 zmiana danych: 2024-04-24"
+  },
+  {
+   "name": "Flow Traders B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2013-05-14 zmiana akresu działalności: 2021-08-12"
+  },
+  {
+   "name": "FMO Investment Management B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2015-12-23"
+  },
+  {
+   "name": "FNZ (Europe) DAC",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2023-05-25"
+  },
+  {
+   "name": "Fondee s.r.o.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2022-03-21"
+  },
+  {
+   "name": "Forex TB Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-12-22 zmiana zakresu działalności i adresu: 2020-02-19 zmiana danych: 2021-05-26 zmiana adresu: 2024-08-27"
+  },
+  {
+   "name": "FORIS CAPITAL CY LIMITED",
+   "aliases": [
+    "A.N. Allnew Investments Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-12-28 zmiana danych: 2019-04-18 2020-11-09 2021-03-30 2022-07-04 zmiana domen: 2022-07-18 zmiana zakresu działalności: 2023-03-06 zmiana nazwy, zmiana nazwy handlowej, zmiana domen, zmiana danych: 2025-09-23"
+  },
+  {
+   "name": "Fortrade Cyprus Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 23.06.2020 zmiana danych: 2021-12-17 2022-03-17 zmiana adresu: 2022-11-04 2023-10-12 zmiana zakresu działalności: 2023-09-15"
+  },
+  {
+   "name": "FP Asset Management Cyprus Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-02-15 dodanie domeny: 2026-06-24"
+  },
+  {
+   "name": "Freedom Finance Europe Ltd",
+   "aliases": [
+    "Freedom Finance Cyprus Ltd",
+    "FFINEU Investments Limited"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-03-20 zmiana danych: 2018-07-12 2018-08-22 2018-11-08 2019-05-20 2021-04-23 2021-05-05 2022-06-22 2022-12-20 zmiana nazwy: 2018-11-01 2020-05-25 zmiana zakresu działalności: 2022-08-10 zmiana adresu: 2022-09-28 zmiana domen: 2023-07-26 2023-08-01"
+  },
+  {
+   "name": "FTI Finance Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 24.06.2009 zmiana zakresu działalności, zmiana danych: 2023-05-05"
+  },
+  {
+   "name": "FUND CHANNEL S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 27.11.2023 zmiana zakresu działalności: 2026-01-19"
+  },
+  {
+   "name": "FundRock Distribution S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 26.09.2023 zmiana adresu: 2024-07-26 zmiana zakresu działalności: 2025-01-28"
+  },
+  {
+   "name": "Fundvest UAB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 03.01.2023 zmiana adresu: 2023-07-24 2025-12-03"
+  },
+  {
+   "name": "FUSION MARKETS EU LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2025-03-10"
+  },
+  {
+   "name": "FX Central Clearing Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-03-30 zmiana adresu: 2014-11-06 zmiana zakresu działalności: 2015-04-17 dodanie domeny: 2024-10-08"
+  },
+  {
+   "name": "FXdirekt Bank AG Niemcy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2005-06-30"
+  },
+  {
+   "name": "FXGlobe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-12-16 zmiana zakresu działalności: 2015-03-02 zmiana adresu: 2016-05-30 2020-01-09 2021-07-06 zmiana danych: 2018-10-24 2020-01-23 2023-04-25 zmiana domen: 2022-11-09"
+  },
+  {
+   "name": "FXNET Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-12-19 zmiana adresu: 2016-10-11 2017-06-30 zmiana zakresu działalności: 2017-11-29 2019-09-02 zmiana danych: 2018-07-02 2019-04-11 2019-10-02 2020-06-16 dodanie nowej domeny: 2021-10-14 2024-04-15 zmiana domen: 2025-06-26 2025-07-28"
+  },
+  {
+   "name": "FXOPEN EU Ltd",
+   "aliases": [
+    "AMB Prime Ltd",
+    "Valutrades CY Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-04-11 zmiana nazwy: 2016-10-03 2020-09-22 zmiana danych: 2021-05-07 2023-11-03"
+  },
+  {
+   "name": "FXPRO Financial Services Ltd",
+   "aliases": [
+    "Euroorient Securities and Financial Services Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2008-01-24 zmiana nazwy: 2009-08-06 zmiana adresu: 2010-11-25 2023-05-19 zmiana zakresu działalności: 2010-12-21 dodanie domen: 2023-05-23"
+  },
+  {
+   "name": "Gasum Portfolio Services Oy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.finanssivalvonta.fi; Data wpływu zawiadomienia: 2020-05-12"
+  },
+  {
+   "name": "GATE SECURITIES (CYPRUS) LTD",
+   "aliases": [
+    "Sheer Markets (Cyprus) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 14.05.2021 zmiana domen: 2021-12-28 zmiana adresu: 2022-10-17 zmiana nazwy: 2026-01-19"
+  },
+  {
+   "name": "GBE Brokers Ltd",
+   "aliases": [
+    "GBE Safepay Transactions Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-09-21 zmiana nazwy: 2016-02-16 zmiana adresu: 2016-04-19 2019-05-13 2023-04-03 zmiana danych: 2017-10-10 2019-01-25 2020-04-27 zmiana domen: 2024-01-04 2025-10-07"
+  },
+  {
+   "name": "GBR Capital GmbH",
+   "aliases": [
+    "GBR Financial Services GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 10.11.2010 zmiana nazwy: 2022-03-11"
+  },
+  {
+   "name": "GBR Capital GmbH",
+   "aliases": [
+    "GBR Financial Services GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2010-03-22"
+  },
+  {
+   "name": "GC Exchange Fondsmæglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.dfsa.dk; Data wpływu zawiadomienia: 2023-05-04"
+  },
+  {
+   "name": "Gemini Intergalactic EU Artemis, Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2025-06-26"
+  },
+  {
+   "name": "General Investments AG",
+   "aliases": [
+    "DT Securities AG",
+    "DT Securities GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2004-10-11 zmiana nazwy: 2006-07-03 zmiana nazwy i zakresu działalności: 2007-10-31 2009-07-21"
+  },
+  {
+   "name": "Geneve Invest (Europe) S.A.",
+   "aliases": [
+    "Geneve Invest (Europe) S.a.r.l."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2013-01-15 zmiana statusu: 2016-10-18 zmiana adresu: 2019-08-27"
+  },
+  {
+   "name": "GHI GLOBAL ADVISORY PARTNERS A.V, S.L.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 14.04.2026 afi: 2026-07-23"
+  },
+  {
+   "name": "GLITNIR AS",
+   "aliases": [
+    "Fischer Partners Fondkommission AB"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2005-03-21 zmiana nazwy: 2007-01-03 zmiana zakresu działalności: 2008-02-25"
+  },
+  {
+   "name": "Global Funds Exchange EAD",
+   "aliases": [
+    "Emirates Wealth EAD",
+    "BMFN EAD",
+    "UniTrader EAD",
+    "BMFN EAD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2011-04-19 zmiana danych: 2014-04-03 2017-03-27 zmiana nazwy: 2014-11-14 2017-01-04 2019-07-30 2021-02-16 zmiana adresu: 2021-11-02"
+  },
+  {
+   "name": "Global Shares Execution Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 12.03.2019 zmiana zakresu działalności: 2022-08-31 2026-04-27"
+  },
+  {
+   "name": "Global Trade CIF Ltd",
+   "aliases": [
+    "Vistabrokers CIF Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-01-29 zmiana zakresu działalności: 2015-09-22 2016-04-26 2016-06-03 2016-09-09 zmiana adresu: 2020-08-25 2024-02-26 2025-08-13 zmiana danych: 2020-05-13 2020-09-01 2022-05-03 2025-08-27 zmiana nazwy i danych: 2022-03-31"
+  },
+  {
+   "name": "GMG Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 08.06.2023 zmiana zakresu działalności, OTF, zmiana adresu: 2024-06-03"
+  },
+  {
+   "name": "GMO Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2022-10-12"
+  },
+  {
+   "name": "GO Markets Ltd",
+   "aliases": [
+    "Galactus Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-08-24 zmiana danych: 2017-12-06 2018-09-20 2018-10-11 2018-12-05 2019-03-12 2020-03-09 zmiana nazwy: 2019-12-09 zmiana adresu: 2022-07-27 2024-02-01 2025-06-24 zmiana domen: 2025-11-03"
+  },
+  {
+   "name": "Goldenburg Group Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-10-22 zmiana zakresu działalności: 2016-05-27 2017-11-06 zmiana adresu: 2022-07-05 zmiana domen: 2022-12-05 2023-03-10 zmiana adresu i zmiana domen: 2023-11-21 zawieszenie zezwolenia: 2023-11-29"
+  },
+  {
+   "name": "Goldman Sachs Paris Inc. Et Cie",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2019-01-14"
+  },
+  {
+   "name": "Goodbody Stockbrokers Unlimited Company",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2024-06-04"
+  },
+  {
+   "name": "Gothaer Asset Management AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2011-08-31"
+  },
+  {
+   "name": "GPB Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-10-14 zmiana adresu: 2012-09-17 2016-07-15 zmiana zakresu działalności: 2015-03-17"
+  },
+  {
+   "name": "Grand Capital Ltd",
+   "aliases": [
+    "Finex Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2018-03-12 zmiana danych: 2021-03-11"
+  },
+  {
+   "name": "Granfeld Wealth Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-02-15 zmiana zakresu działalności: 2017-05-29"
+  },
+  {
+   "name": "GRAVITY PRIVATE WEALTH LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2025-03-07"
+  },
+  {
+   "name": "GreenStream Network Plc",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2008-03-20 zmiana zakresu działalności: 2008-10-23"
+  },
+  {
+   "name": "Griffin Markets Europe SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 06.03.2019 zmiana adresu: 2023-04-04 2026-02-09"
+  },
+  {
+   "name": "Growell Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-07-21 zmiana zakresu działalności: 2014-12-04 zmiana danych: 2019-11-25 2020-11-20 2026-09-08 zmiana nazwy handlowej, zmiana domen: 2024-03-20 2026-08-27"
+  },
+  {
+   "name": "Grunfin AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 2022-01-31"
+  },
+  {
+   "name": "GTSE CAPITAL GROUP LTD",
+   "aliases": [
+    "Eight Plus Capital Ltd",
+    "Acier FX Ltd",
+    "Argusfx Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-09-29 zmiana adresu: 2019-10-29 2021-11-03 2022-08-09 zmiana nazwy: 2020-10-08 2022-03-10 2024-12-13 zmiana danych: 2021-07-23 2021-12-02 dodanie drugiego adresu: 2022-03-08 zmiana domen: 2022-04-29 2022-05-10 zmiana adresu i zmiana domen: 2025-02-18"
+  },
+  {
+   "name": "Guggenheim Partners Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2010-10-22 zmiana zakresu działaności: 2012-03-15"
+  },
+  {
+   "name": "Guggenheim Securities Europe Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2024-03-25"
+  },
+  {
+   "name": "GuildAM Ltd.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2026-02-16"
+  },
+  {
+   "name": "GWT Fondsmeglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.finanstilsynet.dk; Data wpływu zawiadomienia: 2010-08-13 zmiana zakresu działalności: 2010-09-22"
+  },
+  {
+   "name": "HABERL Wealth Management, o. c. p., a. s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2024-03-12"
+  },
+  {
+   "name": "Hamilton Lane (Germany) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2022-03-23"
+  },
+  {
+   "name": "HANetf EU Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2023-09-04"
+  },
+  {
+   "name": "Harindale Ltd.",
+   "aliases": [
+    "ICC Intercertus Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-11-07 zmiana zakresu działalności: 2017-03-09 2018-07-04 2023-10-10 zmiana danych: 2018-04-03 2019-04-08 2021-08-03 2024-03-08 zmiana adresu: 2018-06-11 zmiana nazwy, zmiana adresu, zmiana domen, zmiana danych: 2022-10-03"
+  },
+  {
+   "name": "Harmovest Capital (Cyprus) Ltd",
+   "aliases": [
+    "GVD KORIMCY LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 31.08.2022 zmiana adresu, zmiana domen, zmiana nazwy handlowej, zmiana danych: 2023-09-22 2023-10-09 zmiana adresu: 2024-10-24 zmiana nazwy: 2025-10-29 zmiana nazwy handlowej, zmiana danych: 2025-11-05 2026-06-19 zmiana domen: 2025-12-12"
+  },
+  {
+   "name": "Heptagon Capital Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2018-07-26"
+  },
+  {
+   "name": "HF Markets (Europe) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-04-03 zmiana zakresu działalności: 2013-10-09 2014-04-08 zmiana danych: 2016-11-04 2019-02-01 zmiana afi: 2017-11-30 wygaśnięcie działalności agenta: 2021-09-16 zmiana adresu: 2025-11-10"
+  },
+  {
+   "name": "Hidden Road Partners CIV NL B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2023-05-12"
+  },
+  {
+   "name": "Hitomorrow Securities LTD",
+   "aliases": [
+    "T.C.R. International Ltd",
+    "1 T.C.R. Corp. Ltd",
+    "1 Financial ROD Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-12-09 zmiana nazwy: 2015-06-04 2016-04-11 zmiana danych: 2015-07-17 2018-09-21 2020-03-16 zawieszenie działalności: od 2015-07-16 do 2015-10-20 zmiana adresu i zakresu działalności: 2016-05-13 zmiana zakresu działalności: 2019-10-17 zmiana nazwy i domen: 2026-08-31"
+  },
+  {
+   "name": "Hogg Capital Invetsments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 05.05.2016 zmina zakresu działalności, zmiana adresu, zmiana danych: 2022-11-03"
+  },
+  {
+   "name": "Holborn Assets Wealth Management (Cy) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2021-01-29 zmiana zakresu usług: 2021-11-09 zmiana adresu: 2022-04-11 2024-01-10"
+  },
+  {
+   "name": "Houlihan Lokey (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 17.11.2020 zmiana adresu siedziby: 2021-09-30 zmiana adresu: 2023-03-21"
+  },
+  {
+   "name": "Howden Capital Markets & Advisory (EU) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2026-07-02"
+  },
+  {
+   "name": "HOXTON CAPITAL MANAGEMENT (EUROPE) LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2023-09-20"
+  },
+  {
+   "name": "HRTEU Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-03-25"
+  },
+  {
+   "name": "HSBC Financial Products",
+   "aliases": [
+    "HSBC CCF Financial Products"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2006-11-10 zmiana zakrsu działalności: 2007-12-03"
+  },
+  {
+   "name": "HSBC Global Asset Management (Deutschland) GmbH",
+   "aliases": [
+    "HSBC Investments Deutschland GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2008-07-14 zmiana nazwy: 2016-09-12 zmiana adresu: 2021-11-18"
+  },
+  {
+   "name": "HSBC International Financial Advisers (Malta) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2005-06-29"
+  },
+  {
+   "name": "HSH Corporate Finance ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2008-03-11"
+  },
+  {
+   "name": "HUAPRIME EU LTD",
+   "aliases": [
+    "Ultima Markets Cyprus Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 19.05.2023 zmiana domen: 2023-06-22 zmiana nazwy, zmiana domen, dodanie nazwy handlowej: 2024-07-31"
+  },
+  {
+   "name": "Huber & Co Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.fsc.gi; Data wpływu zawiadomienia: 2013-05-24"
+  },
+  {
+   "name": "HYDE CREDIT LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-02-17"
+  },
+  {
+   "name": "I.W.G. International Wealth Group Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 13.12.2019 zmiana adresu: 2023-09-22"
+  },
+  {
+   "name": "IBKR Europe S.a.r.l.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2019-11-22"
+  },
+  {
+   "name": "ibrokr.AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2010-03-15"
+  },
+  {
+   "name": "IC Markets (EU) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2019-06-13 zmiana adresu 2018-12-06 2023-10-20 zmiana zakresu działalności: 2020-12-04 zmiana domen: 2022-09-05 zmiana danych: 2023-06-23"
+  },
+  {
+   "name": "ICAP Energy AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2011-03-01 zmiana zakresu działalności: 2018-01-02 zmiana danych: 2020-12-07"
+  },
+  {
+   "name": "ICE Securities Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2025-02-07"
+  },
+  {
+   "name": "ICFD Ltd",
+   "aliases": [
+    "iFOREX (Cyprus) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-09-07 zmiana zakresu działalności: 2014-05-20 2019-03-22 zmiana nazwy: 2015-08-28 zmiana danych: 2018-03-13 2022-03-30 2022-04-11 zmiana domen: 2021-10-07 2022-08-01 2022-11-09 2024-10-30 2024-11-04 2024-12-04 zmiana adresu: 2022-06-08"
+  },
+  {
+   "name": "ICM InvestmentBank AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2016-06-07"
+  },
+  {
+   "name": "IDCM Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2023-12-15"
+  },
+  {
+   "name": "IFH Capital Trader Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2024-04-04"
+  },
+  {
+   "name": "IG Europe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-08-19"
+  },
+  {
+   "name": "IGM Forex Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-10-15 zmiana danych: 2020-10-22 2021-04-20 zmiana adresu: 2020-12-15 zmiana adresu: 2021-10-22 zmiana domen: 2022-08-29 2025-07-23 dodanie domen: 2025-06-02"
+  },
+  {
+   "name": "IN2MARKETS LTD",
+   "aliases": [
+    "Pruden Ventures Capital Ltd",
+    "Constance Investment Ltd",
+    "QBF Investment Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-10-13 zmiana adresu: 2016-07-12 2022-12-16 zmiana nazwy: 2017-01-18 2023-01-20 zmiana domen: 2025-04-08 2025-12-11 zmiana zakresu działalności: 2026-03-10"
+  },
+  {
+   "name": "Indication Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-06-15 zmiana zakresu działalnośći: 2012-09-04 zmiana adresu: 2014-01-13 zmiana danych: 2020-07-29 zawieszenie zezwolenia: 2021-08-04 cofnięcie zawieszenia: 2021-08-30 zmiana adresu: 2021-10-20 dodanie drugiego adresu: 2022-04-06"
+  },
+  {
+   "name": "Instant Trading EU Ltd",
+   "aliases": [
+    "Tradomart Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-12-11 zmiana zakresu działalności: 2016-05-09 zmiana adresu: 2016-07-07 zmiana nazwy: 2017-06-28 zmiana danych: 2017-10-02 2018-12-06 2019-09-18 2019-09-25 2020-02-11 2020-04-27 dodanie domeny: 2022-09-22"
+  },
+  {
+   "name": "Instinet Germany GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 29.03.2019 zmiana adresu: 2026-08-10"
+  },
+  {
+   "name": "Institutional CN (Europe) — Empresa de Investimento, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 2023-11-13"
+  },
+  {
+   "name": "Integrae Sim S.p.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 2016-12-14"
+  },
+  {
+   "name": "Interactive Brokers Ireland Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 23.12.2020 zmiana adresu: 2023-03-21"
+  },
+  {
+   "name": "Intercapital Securities Ltd (vrijednosti papiri)",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Chorwacja; Organ nadzoru: www.hanfa.hr; Data wpływu zawiadomienia: 2016-06-09"
+  },
+  {
+   "name": "Intermediate Capital Group Benelux B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-09-26"
+  },
+  {
+   "name": "Intermonte SIM SpA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.bancaditalia.it; Data wpływu zawiadomienia: 2018-01-04"
+  },
+  {
+   "name": "International Commodity Consulting ICC B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2017-07-13"
+  },
+  {
+   "name": "International Investment Platform, o.c.p., a.s.",
+   "aliases": [
+    "Cornhill Management, o.c.p., a.s.",
+    "SFM Group, o.c.p., a.s."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2009-02-09 zmiana nazwy: 2012-04-23 zmiana adresu: 2015-05-14 zmiana nazwy i zakresu działalności: 2020-11-24 2021-02-11"
+  },
+  {
+   "name": "Interpolis Pensioenen Vermogensbeheer B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2008-01-14"
+  },
+  {
+   "name": "InterTrader Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.fsc.gi; Data wpływu zawiadomienia: 2013-02-22"
+  },
+  {
+   "name": "Invest4Growth Asset Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2019-08-13"
+  },
+  {
+   "name": "Investcorp Europe S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2024-09-04"
+  },
+  {
+   "name": "Investec Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-04-23"
+  },
+  {
+   "name": "Investium Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 06.06.2023 zmiana zakresu działalności, dodanie nazwy handlowej: 2024-04-03 zmiana adresu: 2025-07-21"
+  },
+  {
+   "name": "Investors Europe (Malta) Limited",
+   "aliases": [
+    "Dolfin Asset Services Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 24.05.2018 zmiana nazwy, zmiana adresu, zmiana zakresu działalności, zmiana danych: 2025-09-22"
+  },
+  {
+   "name": "IQBroker Europe Ltd",
+   "aliases": [
+    "Iqoption Europe Ltd",
+    "Investlab Holdings Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-02-02 zmiana nazwy: 2015-05-25 2026-07-21 zmiana adresu i zakresu działalności: 2018-03-21 dodanie domen oraz nazw handlowych: 2022-12-23 zmiana adresu: 2023-06-14 2024-05-09 zmiana nazwy handlowej i zmiana danych: 2026-05-20"
+  },
+  {
+   "name": "Iqoption Europe Ltd",
+   "aliases": [
+    "Investlab Holdings Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2014-11-25"
+  },
+  {
+   "name": "Isec Wealth Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-07-06 zmiana adresu: 2021-05-25 zmiana danych: 2021-06-01 zmiana zakresu działalności: 2021-10-13 2025-06-05"
+  },
+  {
+   "name": "iSwap Euro B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-03-28"
+  },
+  {
+   "name": "IWC Investment Partners Fondsmeglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.finanstilsynet.dk; Data wpływu zawiadomienia: 2012-10-10"
+  },
+  {
+   "name": "J.P. Morgan Dublin plc",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-03-28"
+  },
+  {
+   "name": "J&E Davy Unlimited Company",
+   "aliases": [
+    "J&E Davy t/a Davy",
+    "J&E Davy t/a Davy Stockbrokers"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2008-04-21 zmiana nazwy: 2009-04-17 zmiana zakresu dzialalności: 2010-09-10 2010-10-12 zmiana nazwy i zmiana zakresu działalności: 2024-07-17"
+  },
+  {
+   "name": "J2T Services Ltd",
+   "aliases": [
+    "LIME TRADING (CY) LTD",
+    "Just2Trade Online Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-02-24 zmiana danych: 2018-12-14 2020-10-27 2021-01-11 2021-02-15 2022-04-12 zmiana zakresu działalności: 2019-05-06 zmiana nazwy: 2022-11-01 2026-07-21 zmiana domen: 2023-03-15 zmiana adresu: 2024-09-03"
+  },
+  {
+   "name": "Jane Street Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-03-25"
+  },
+  {
+   "name": "JB Capital Markets Sociedad de Valores, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2010-07-19 zmiana zakresu działaności: 2017-12-22 zmiana danych: 2019-10-15 afi oraz zmiana adresu: 2022-06-27"
+  },
+  {
+   "name": "JB DRAX HONORE (FRANCE) SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 01.04.2022 zmiana adresu: 2022-11-24 2024-11-27"
+  },
+  {
+   "name": "Jefferies GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-03-01 zmiana zakresu działaności: 2019-10-18 zmiana zakresu działalności: 2022-03-23"
+  },
+  {
+   "name": "JFD Group Ltd",
+   "aliases": [
+    "JFD Brokers Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-12-08 zmiana zakresu działalności: 2013-06-28 zmiana adresu: 2015-01-29 zmiana danych: 2017-09-29 2018-09-28 2018-11-13 2020-05-04 zmiana adresu: 2019-01-08 zmiana domen: 2021-09-28 2022-09-26 2023-11-22 zmiana zakresu działalności 2021-11-15 dodanie nowej domeny: 2022-04-27"
+  },
+  {
+   "name": "JLL Transaction Services AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 02.04.2019 zmiana zakresu działalności: 2023-08-09"
+  },
+  {
+   "name": "Jump Trading Europe B.V.,",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2020-09-30"
+  },
+  {
+   "name": "Justmarkets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 05.01.2022 dodanie domen: 2024-04-23 zmiana adresu: 2026-08-27"
+  },
+  {
+   "name": "Kepler Capital Markets S.A.",
+   "aliases": [
+    "Landsbanki Kepler",
+    "Kepler Landsbanki",
+    "Kepler Equities"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2005-07-27 zmiana nazwy: 2006-10-16 2007-08-13 i zakresu działalności: 2009-01-26 2011-12-09"
+  },
+  {
+   "name": "Key Way Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-07-21 zmiana danych: 2017-09-27 2019-05-31 2019-08-23 2021-04-26 zmiana zakresu działalnosci: 2019-09-26 2022-08-11 2022-09-09 zmiana domen: 2022-09-23 2023-05-29"
+  },
+  {
+   "name": "KfW Capital GmbH & Co. KG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2022-07-28"
+  },
+  {
+   "name": "KKR Credit Advisors (Ireland) Unlimited Company",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 25.01.2019 zmiana adresu: 2024-08-02"
+  },
+  {
+   "name": "KNG Securities International - Empresa de Investimento, Lda",
+   "aliases": [
+    "KNG Securities International, Lda"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 24.03.2022 zmiana nazwy: 2023-03-23 zmiana zakresu działalności i zmiana adresu: 2025-04-30"
+  },
+  {
+   "name": "Kvarn Investment Services Oy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: https://www.finanssivalvonta.fi; Data wpływu zawiadomienia: 2025-11-06"
+  },
+  {
+   "name": "L.F. Investment Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-10-21 zmiana danych: 2017-01-31 zmiana adresu i zakresu działalności: 2018-12-10 2019-10-10"
+  },
+  {
+   "name": "Lago Kapital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.finanssivalvonta.fi; Data wpływu zawiadomienia: 2021-11-02"
+  },
+  {
+   "name": "LAIETANA LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2023-10-19"
+  },
+  {
+   "name": "LCM Commodities SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-05-11"
+  },
+  {
+   "name": "Leonteq Securities (Europe) GmbH",
+   "aliases": [
+    "EFG Financial Products (Europe) GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2011-03-24 zmiana nazwy i zakresu działalności: 2016-04-06"
+  },
+  {
+   "name": "LIFEGOALS FINANCIAL SERVICES LIMITED",
+   "aliases": [
+    "Emergo Wealth Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 18.12.2017 zmiana nazwy: 2023-03-29"
+  },
+  {
+   "name": "Lightyear Europe AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 10.05.2022 zmiana zakresu działalności, zmiana adresu, zmiana danych: 2024-03-13"
+  },
+  {
+   "name": "LIQID Asset Management GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2020-03-19"
+  },
+  {
+   "name": "Lirunex Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-04-27 zmiana zakresu działalności: 2021-06-10 2026-07-14 dodanie domen i nazwy handlowej: 2025-07-23 zmiana adresu: 2025-12-09"
+  },
+  {
+   "name": "Liteforex (Europe) Ltd",
+   "aliases": [
+    "Mayzus Investment Company Ltd",
+    "United World Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2009-08-03 zmiana adresu: 2012-04-06 zmiana nazwy: 2012-12-20 2016-07-28 zmiana zakresu działalności: 2013-10-16 2014-07-29 2015-04-21"
+  },
+  {
+   "name": "LL Capital & Partners Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2010-05-04 zmiana zakresu działalności: 2013-07-25"
+  },
+  {
+   "name": "Lloyds Bank Corporate Markets Wertpapierhandelsbank GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 15.04.2019 zmiana zakresu działalności: 2025-01-03"
+  },
+  {
+   "name": "LMAX Broker Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-12-15 zmiana zakresu działalności: 2021-03-16 zmiana danych: 2021-04-14 zmiana adresu: 2022-05-17"
+  },
+  {
+   "name": "LocalTapiola Asset Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: Finanssivalvonta.fi; Data wpływu zawiadomienia: 2021-05-10"
+  },
+  {
+   "name": "Luna Wealth Asset Management Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 11.12.2019 zmiana adresu: 2024-10-29 2025-10-07"
+  },
+  {
+   "name": "Lydya Financial Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-06-23 zmiana danych: 2017-08-16 2017-10-04 2020-01-17 2020-02-10 2024-02-28 zmiana zakresu działalności: 2018-07-17 zmiana adresu: 2024-03-20 2025-11-03"
+  },
+  {
+   "name": "Lynx B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2014-10-15 zmiana zakresu działalności: 2015-09-30 2021-05-04"
+  },
+  {
+   "name": "Macquarie Capital France",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2020-12-07 zmiana zakresu działalności, zmiana adresu, zmiana danych: 2022-05-17 zmiana adresu: 2022-11-15"
+  },
+  {
+   "name": "Magic Compass Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-02-15"
+  },
+  {
+   "name": "Magnum FX (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-09-25 zmiana danych: 2019-05-08 2019-11-01 2021-05-26 2022-07-06 zmiana adresu: 2020-02-25 2021-12-29 zawieszenie zezwolenia: 2020-06-01 cofnięcie decyzji o zawieszeniu zezwolenia: 2020-06-18 dodanie nowej domeny: 2021-11-08"
+  },
+  {
+   "name": "Makor Securities Paris SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 28.03.2023 zmiana adresu: 2023-04-04"
+  },
+  {
+   "name": "Man (Europe) AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2013-03-28"
+  },
+  {
+   "name": "Mandatum Asset Management Ltd",
+   "aliases": [
+    "Mandatum Life Investment Services Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 08.10.2014 zmiana nazwy: 2023-05-29"
+  },
+  {
+   "name": "Manentia Wealth Consulting Group Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2020-08-27"
+  },
+  {
+   "name": "Mangold Fonkommission AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2009-11-29"
+  },
+  {
+   "name": "Marche de TitreS France (MTS France)",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 05.03.2018 zmiana zakresu usług i danych: 2021-12-23"
+  },
+  {
+   "name": "Marcuard Heritage (Europe) Ltd",
+   "aliases": [
+    "Marcuard Cyprus Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-05-03 zmiana zakresu działalności: 2013-11-18 zmiana adresu: 2014-12-31 2023-01-13 zmiana nazwy: 2017-06-26"
+  },
+  {
+   "name": "Marex SA",
+   "aliases": [
+    "HPC SA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2016-12-09 zmiana zakresu działalności: 2018-03-01 2019-01-24 2019-02-27 2020-09-18 zmiana nazwy i nazwy handlowej: 2023-08-02"
+  },
+  {
+   "name": "Marex Società di Intermediazione mobiliare S.p.A. (Marex SIM S.p.A.)",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 2026-10-09"
+  },
+  {
+   "name": "Marex Spectron Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-03-11"
+  },
+  {
+   "name": "MARIANA UFP SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2020-01-08"
+  },
+  {
+   "name": "MARIANA UFP SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2021-07-13"
+  },
+  {
+   "name": "Marigny Capital",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 28.11.2016 zmiana zakresu usług: 2021-12-22"
+  },
+  {
+   "name": "Market Securities France SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 02.07.2020 zmiana zakresu usług: 2021-12-15 2024-09-12 dodanie nazwy handlowej: 2026-02-10"
+  },
+  {
+   "name": "MarketAxess NL B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 26.02.2019 zmiana zakresu działalności, dodanie nazwy handlowej: 2025-06-11"
+  },
+  {
+   "name": "MCA Intelifunds Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-12-08 zmiana adresu: 2012-08-09 2016-08-04 zmiana zakresu działalności i danych: 2019-04-17"
+  },
+  {
+   "name": "MeDirect Bank (Malta) PLC",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2022-11-11"
+  },
+  {
+   "name": "Medvešek Pušnik, borzno posredniška hiša, d.d., Ljubljana",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowenia; Organ nadzoru: www.a-tvp.si; Data wpływu zawiadomienia: 2004-10-29"
+  },
+  {
+   "name": "Mega Equity Securities and Financial Services Public Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-04-23"
+  },
+  {
+   "name": "Mercer Global Investments Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 19.06.2019 zmiana adresu: 2026-07-16"
+  },
+  {
+   "name": "Mercia Securities Ltd",
+   "aliases": [
+    "Initial Merit Secure Ltd",
+    "Nextrade Worldwide Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-06-19 zmiana adresu: 2015-07-09 zmiana zakres działalności: 2016-07-20 zmiana danych: 2018-05-09 2018-06-21 2019-02-12 2026-10-20 zmiana nazwy: 2019-04-09 2026-07-21 zmiana domen: 2026-10-06"
+  },
+  {
+   "name": "Mercurius Pro, o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2020-09-04 zmiana zakresu działalności: 2021-02-23"
+  },
+  {
+   "name": "Merrill Lynch, Pierce, Fenner and Smith SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2010-07-02"
+  },
+  {
+   "name": "MEX EUROPE LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 06.09.2023 zmiana adresu i zmiana danych: 2023-10-18 zmiana danych: 2023-12-07 zmiana adresu: 2024-10-18 2024-11-27"
+  },
+  {
+   "name": "Mexem Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-08-22 zmiana danych: 2017-11-08 2019-01-17 2021-06-16 zmiana adresu: 2018-05-24 2025-02-03 zmiana zakresu działalności: 2020-07-22 dodanie domeny: 2022-08-01 2025-12-23"
+  },
+  {
+   "name": "MIND MONEY LIMITED",
+   "aliases": [
+    "Zerich Securities Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 06.08.2010 zmiana domen: 2021-11-05 zmiana danych: 2021-12-14 zmiana nazwy i zmiana domen: 2023-07-26 zmiana domen i zamiana danych: 2024-05-14"
+  },
+  {
+   "name": "MIO-Partners (EU) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2020-04-08"
+  },
+  {
+   "name": "Mirabella Malta Advisers Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2019-11-05 afi: 2021-05-13 afi: 2022-05-09 2022-08-10 2022-11-01 2023-04-28 2024-02-06 2024-02-14 2024-05-08 2024-06-18 2025-07-31"
+  },
+  {
+   "name": "MIT SIM SpA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 06.07.2021 zmiana zakresu usług: 2022-01-28"
+  },
+  {
+   "name": "MITRADE EU LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2024-04-12"
+  },
+  {
+   "name": "Mitsui Bussan Commodities France SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2020-06-25"
+  },
+  {
+   "name": "MK BROKERS AD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2024-05-09"
+  },
+  {
+   "name": "MMC Securities (Ireland) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 06.08.2021 zmiana danych: 2022-06-28 zmiana adresu, zmiana zakresu działalności i zmiana danych 2023-03-21 zmiana adresu: 2026-07-20"
+  },
+  {
+   "name": "Moelis & Company Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2021-09-23"
+  },
+  {
+   "name": "Monex Europe Markets, S.V, S.A.U",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2024-07-16"
+  },
+  {
+   "name": "Moneycorp Technologies Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2020-06-25"
+  },
+  {
+   "name": "Montesquieu Finance B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2010-02-25"
+  },
+  {
+   "name": "Monument Group Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2023-01-04"
+  },
+  {
+   "name": "Mount Nico Corp Ltd",
+   "aliases": [
+    "Nico Financial NF Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-02-16 zmiana nazwy: 2016-09-14 zmiana zakresu działalności: 2017-01-31 zmiana danych: 2017-08-14 2018-12-07 2019-10-23 2020-03-30 2021-02-10 2021-06-03 zmiana numeru telefonu: 2021-09-23 zmiana numeru telefonu: 2021-12-01 zmiana adresu: 2022-04-29"
+  },
+  {
+   "name": "Moventum S.C.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 27.03.2012 zmiana adresu: 2024-11-26"
+  },
+  {
+   "name": "MTG Liquidity Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 08.02.2021 zmiana adresu: 2022-03-17 zmiana zakresu działalności: 2022-12-12"
+  },
+  {
+   "name": "MTS Associated Markets",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Belgia; Organ nadzoru: www.nbb.be; Data wpływu zawiadomienia: 2007-12-20"
+  },
+  {
+   "name": "Naga Markets Europe Ltd",
+   "aliases": [
+    "Naga Markets Ltd",
+    "Hanseatic Brokerhouse Global Markets Ltd",
+    "AF Alaska Financial Ltd",
+    "Ava Trade Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-10-30 zmiana zakresu działalności: 2015-04-03 zmiana nazwy: 2016-02-02 2016-07-19 2017-10-11 2020-09-22, zmiana adresu: 2017-09-07 2019-08-28 2024-03-05 zmiana adresu i zakresu działalności: 2017-09-25 zmiana danych: 2018-03-26 2019-06-05 2021-01-25 zmiana domen: 2021-12-01 2022-03-23 2025-01-24 2025-01-27"
+  },
+  {
+   "name": "Naxex Invest Ltd.",
+   "aliases": [
+    "Depaho Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-11-29 zmiana zakresu działalności: 2013-06-03 2014-01-14 2019-05-10 2019-11-27 2022-08-09 zmiana adresu: 2014-01-23 2024-03-08 2025-01-07 zmiana danych: 2014-02-26 2019-03-18 zawieszenie zezwolenia: 2021-07-12 2021-07-28 przedłużenie zawieszenia zezwolenia: 2021-09-13 2021-10-25 odwołanie zawieszenia: 2021-11-04 zmiana nazwy i danych: 2022-01-17"
+  },
+  {
+   "name": "NBC Global Finance Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2015-04-14"
+  },
+  {
+   "name": "NBC Paris",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2024-05-14"
+  },
+  {
+   "name": "NBI Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-10-18 zmiana adresu i zakresu działalności: 2017-12-29 zmiana danych: 2018-03-01 zmiana adresu email: 2021-10-08"
+  },
+  {
+   "name": "New England Asset Management Ltd",
+   "aliases": [
+    "GR-NEAM Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2012-06-07 zmiana nazwy: 2016-04-19"
+  },
+  {
+   "name": "New Momentum AV, SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 26.06.2018 AFI: 2026-04-06"
+  },
+  {
+   "name": "NFS Netfonds Financial Service GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 19.11.2021 zmiana zakresu usług: 2021-12-17 dodanie nowego agenta: 2022-01-11 2023-11-20 2025-01-22"
+  },
+  {
+   "name": "NFS Network Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 14.08.2017 dodanie domeny: 2022-06-01 zmiana domen: 2023-03-27"
+  },
+  {
+   "name": "Njord Securities AS",
+   "aliases": [
+    "Castelar Corporate Finance AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2010-02-25 zmiana adresu i zakresu działalności: 2018-04-26 zmiana nazwy: 2020-08-19 zmiana zakresu działalności: 2020-12-10"
+  },
+  {
+   "name": "NNIP Advisors B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2016-04-18"
+  },
+  {
+   "name": "Noemon Finance Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2025-03-17"
+  },
+  {
+   "name": "Nomura Investment Management Europe S.A.",
+   "aliases": [
+    "Macquarie Investment Management Europe S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 15.11.2023 zmiana nazwy: 2025-10-27"
+  },
+  {
+   "name": "Noordnederlands Effektenkantoor B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 05.11.2015 zmiana zakresu działalności, zmiana adresu, dodanie nazw handlowych: 2026-01-12"
+  },
+  {
+   "name": "Nordlux Vermögensmanagement S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2021-11-26"
+  },
+  {
+   "name": "Notely Trading Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-05-07"
+  },
+  {
+   "name": "Notesco Financial Services Ltd",
+   "aliases": [
+    "IronFX Global Ltd",
+    "IronFX Ltd",
+    "IronFX Financial Services Ltd",
+    "IronForex Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-01-13 zmiana nazwy: 2011-04-06 2013-08-05 2013-10-02 2018-01-22 zmiana adresu i zakresu działalności: 2013-07-24 2017-08-14 zmiana danych: 2015-04-24 2018-01-11 2019-01-22 2020-12-01 zmiana zakresu działalności i afi.: 2017-02-23 afi.: 2018-01-31 2018-12-18 2019-01-23"
+  },
+  {
+   "name": "NOVA SECURITIES LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-03-03"
+  },
+  {
+   "name": "NOVIA GLOBAL EUROPE LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 22.01.2025 zmiana zakresu działalności: 2025-03-04"
+  },
+  {
+   "name": "Npinvestor Fondsmaeglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.dfsa.dk; Data wpływu zawiadomienia: 2018-01-30"
+  },
+  {
+   "name": "NRP Project Finance AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2022-07-15"
+  },
+  {
+   "name": "Numisma Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 03.07.2013 zmiana adresu i domen: 2022-02-17"
+  },
+  {
+   "name": "NUNTIUS BROKERAGE AND INVESTMENT SERVICES SINGLE MEMBER S.A.",
+   "aliases": [
+    "Nuntius Brokerage and Investment Services S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 2017-09-12 zmiana zakresu działalności: 2017-10-09 afi: 2019-11-28 dodanie nazwy handlowej i zmiana danych: 2024-01-29 zmiana nazwy i zmiana zakresu działalności: 2024-11-01"
+  },
+  {
+   "name": "OAKK Capital Partners BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2021-04-12"
+  },
+  {
+   "name": "Octa Markets Cyprus Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 05.04.2019 zmiana domen: 2021-10-08 zmiana domen i dodanie nazwy handlowej: 2023-06-27 zmiana danych: 2023-06-29 zmiana zakresu działalności: 2024-01-18 2025-01-16"
+  },
+  {
+   "name": "OEXN LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2023-05-11"
+  },
+  {
+   "name": "OFL Westpapierhandels AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2007-10-03"
+  },
+  {
+   "name": "OKX Europe Markets Limited",
+   "aliases": [
+    "Oanda Europe Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 05.01.2021 zmiana nazwy, zmiana adresu, zmiana zakresu działalności, zmiana danych: 2025-11-12 zmiana zakresu działalności: 2026-03-09 zmiana zakresu działalności i dodanie nazwy handlowej: 2026-10-15"
+  },
+  {
+   "name": "Olive Tree Capital Markets Limited",
+   "aliases": [
+    "Atonline Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-09-17 zmiana zakresu działalności: 2012-02-07 2015-02-06 zmiana danych: 2020-05-15 2021-05-17 2021-05-31 zmiana nazwy i dodanie domen: 2024-09-11 zmiana domen i zmiana danych: 2025-11-25"
+  },
+  {
+   "name": "Omega Funds Investment Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-03-13 zmiana zakresu działalności: 2015-02-09 2015-11-11 zmiana adresu: 2018-07-10 2023-06-01 zmiana danych: 2021-06-15"
+  },
+  {
+   "name": "Omicron Investment Management GmbH",
+   "aliases": [
+    "Omicron Invest Management GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2005-12-14 zmiana nazwy i adresu: 2006-12-19 zmiana adresu: 2019-12-09"
+  },
+  {
+   "name": "One Plus Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-11-10 zmiana danych: 2015-03-09 2017-12-28 2018-04-27 zmiana sdresu i zakresu działalności: 2016-03-01"
+  },
+  {
+   "name": "One Trading Exchange B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 22.10.2024 zmiana zakresu działalności: 2026-05-04 2026-05-19 AFI: 2026-10-20"
+  },
+  {
+   "name": "Oppenheim Asset Management",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2011-08-08"
+  },
+  {
+   "name": "Opstock Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2005-09-05"
+  },
+  {
+   "name": "Optieclub.nl B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2015-04-28"
+  },
+  {
+   "name": "optionsXpress Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2006-03-13 zmiana adresu: 2006-11-16"
+  },
+  {
+   "name": "Optiver v.o.f.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2010-08-24"
+  },
+  {
+   "name": "OQTIMA EU LTD",
+   "aliases": [
+    "Nordskov Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 22.03.2022 dodanie domen: 2022-08-29 zmiana danych i adresu: 2022-10-12 zmiana nazwy: 2023-11-30 zmiana adresu: 2026-06-19"
+  },
+  {
+   "name": "ORBEO",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2008-09-25"
+  },
+  {
+   "name": "ORBEX Ltd",
+   "aliases": [
+    "AFB FX Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-05-09 zmiana nazwy: 2014-03-11 zmiana zakresu działalności: 2016-05-25 zmiana danych: 2021-02-03 zmiana adresu i zmiana email: 2021-10-26"
+  },
+  {
+   "name": "Orion Securities Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 2011-05-04"
+  },
+  {
+   "name": "Orkla Finans Kapitalforvaltning ASA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2006-03-21"
+  },
+  {
+   "name": "Otkritie Broker Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-10-24 zmiana zakresu działalności: 2020-12-04 zmiana danych: 2021-03-03"
+  },
+  {
+   "name": "Ott, Hagen & Partner AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2019-03-20"
+  },
+  {
+   "name": "PAM Capital AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2026-03-11"
+  },
+  {
+   "name": "Pareto Private Equity AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2008-03-31"
+  },
+  {
+   "name": "Pareto Securities",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2007-01-29"
+  },
+  {
+   "name": "Pareto Securities AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2019-04-26"
+  },
+  {
+   "name": "Pareto Securities Oy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2013-12-18"
+  },
+  {
+   "name": "Partners Group (EU) GmbH",
+   "aliases": [
+    "Partners Group (Deutschland) GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-06-04 zmiana nazwy: 2020-09-02 zmiana adresu: 2022-07-06"
+  },
+  {
+   "name": "Patria Finance a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2011-12-29"
+  },
+  {
+   "name": "Payward Europe Digital Solutions (CY) Limited",
+   "aliases": [
+    "I.F. GREENFIELDS WEALTH LTD",
+    "Pacific Union Group Ltd",
+    "Brightfx Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-12-13 zmiana danych: 2020-07-28 2023-12-01 2025-10-30 zmiana zakresu działalności: 2020-07-31 2025-08-27 zmiana nazw i danych: 2020-11-20 zmiana nazwy i zmiana domen: 2023-10-10 zmiana nazwy, zmiana adresu, zmiana domen, zmiana danych: 2025-03-12 dodanie domen: 2025-08-27"
+  },
+  {
+   "name": "Peaks B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2018-03-15 zmiana adresu: 2021-05-28 zmiana zakresu działalności, zmiana adresu: 2025-11-18"
+  },
+  {
+   "name": "PEAKSIGHT LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 09.04.2024 zmiana adresu: 2025-02-06"
+  },
+  {
+   "name": "Peel Hunt Europe Fondsmæglerselskab A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.dfsa.dk; Data wpływu zawiadomienia: 01.06.2023 zmiana zakresu działalności: 2024-04-22"
+  },
+  {
+   "name": "PELICAN EXCHANGE EUROPE (CY) LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2024-04-02"
+  },
+  {
+   "name": "Pepperstone EU Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-11-10 zmiana danych: 2021-04-15 zmiana adresu: 2021-06-15 2024-09-11"
+  },
+  {
+   "name": "Perella Weinbesrg Partners France SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 27.01.2021 zmiana zakresu działalności: 2023-07-24"
+  },
+  {
+   "name": "Performance Ronnaru Company Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-01-08 zmiana adresu: 2019-05-27 zmiana danych: 2019-06-04 2020-10-26"
+  },
+  {
+   "name": "Pershing Securities International Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 21.12.2018 zmiana zakresu działalności: 2024-09-09 zmiana adresu i zmiana danych: 2026-06-19"
+  },
+  {
+   "name": "Petram & Co N.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2016-10-06"
+  },
+  {
+   "name": "PIMCO Europe GmbH",
+   "aliases": [
+    "PIMCO Deutschland GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2012-09-06 zmiana nazwy: 2020-09-07"
+  },
+  {
+   "name": "PineBridge Investemnts Deutschland GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-04-08"
+  },
+  {
+   "name": "Piper Sandler Europe SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-08-05"
+  },
+  {
+   "name": "PJT Partners Park Hill (Spain) A.V., S.A.U.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2020-10-22"
+  },
+  {
+   "name": "PLUM Money CY Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 08.09.2022 zmiana adresu: 2025-09-30 zmiana danych: 2026-09-04"
+  },
+  {
+   "name": "Plus500CY Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-12-12 zmiana zakresu działalności: 2016-05-12 zmiana adresu: 2022-06-29"
+  },
+  {
+   "name": "Plus500EE AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 2022-05-10"
+  },
+  {
+   "name": "PM MTF LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 29.09.2025 dodanie domen: 2026-02-04 zmiana zakresu działalności: 2026-10-23"
+  },
+  {
+   "name": "Pohjola Corporate Finance LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2010-10-29"
+  },
+  {
+   "name": "Primus Global Ltd",
+   "aliases": [
+    "FX Primus Europe (Cy) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-05-20 zmiana adresu: 2015-08-27 zmiana nazwy i zakresu działalności: 2019-02-15 2019-04-12 zmiana danych: 2019-11-27 2020-12-15 2023-01-19 zmiana domen: 2022-03-29 2022-04-11 zmiana adresu: 2022-03-30"
+  },
+  {
+   "name": "Pritle N.V.",
+   "aliases": [
+    "Pritle B.V."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2015-11-23 zmiana statusu: 2015-12-16 zmiana zakresu działaności: 2017-01-19 2017-02-16"
+  },
+  {
+   "name": "Privalux Management S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2015-09-14 zmiana afi: 2019-09-09 2019-11-07"
+  },
+  {
+   "name": "Privanet Securities Oy",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Finlandia; Organ nadzoru: www.fin-fsa.fi; Data wpływu zawiadomienia: 2016-04-12"
+  },
+  {
+   "name": "Probus Pleion Luxembourg S.A.",
+   "aliases": [
+    "BCB & Partners SA"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 16.01.2013 zmiana nazwy: 2024-07-15"
+  },
+  {
+   "name": "Prochoice Chrimatistiriaki Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-12-12 zmiana adresu: 2020-05-28"
+  },
+  {
+   "name": "Prodigit Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-06-25 zmiana adresu: 2015-02-03 2024-05-02 2025-03-31 zmiana danych: 2015-07-14 2015-08-21 dodanie domen: 2024-03-15 2024-12-30"
+  },
+  {
+   "name": "Prospergate Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-12-13"
+  },
+  {
+   "name": "Proteste Investe — Empresa de Investimento, Unipessoal Lda.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 2022-08-19"
+  },
+  {
+   "name": "PROXENTA Finance, o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2012-05-23 zmiana zakresu działalności: 2013-04-25"
+  },
+  {
+   "name": "Qbasis Invest GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2014-12-16"
+  },
+  {
+   "name": "Quantile BV",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2021-12-27"
+  },
+  {
+   "name": "Quay Financials (Gibraltar) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Gibraltar; Organ nadzoru: www.fsc.gi; Data wpływu zawiadomienia: 2008-08-05"
+  },
+  {
+   "name": "QUEST FUND PLACE-MENT EUROPE, AGENCIA DE VALORES, SOCIEDAD ANÓNIMA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2025-11-05"
+  },
+  {
+   "name": "QUIDEOS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-06-24"
+  },
+  {
+   "name": "Quilter Cheviot Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2019-09-03"
+  },
+  {
+   "name": "R.J. O’Brien France S.A.S.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 11.10.2019 zmiana adresu: 2024-09-09"
+  },
+  {
+   "name": "Raiffeisen Vermoegensverwaltungsbank AG Austria",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2006-04-25"
+  },
+  {
+   "name": "Ramius GmbH",
+   "aliases": [
+    "Ramius HVB Partners Austria GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2007-06-19 zmiana nazwy: 2008-05-08"
+  },
+  {
+   "name": "Rathbones Investment Management International (Ireland) Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2026-10-05"
+  },
+  {
+   "name": "Raymond James Corporate Finance GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2022-05-25"
+  },
+  {
+   "name": "RAYMOND JAMES France SAS",
+   "aliases": [
+    "Raymond James Euro Equities"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2013-11-19 zmiana danych: 2019-03-27 2019-05-14 zmiana zakresu działalności: 2020-09-25 zmiana nazwy: 2023-02-03"
+  },
+  {
+   "name": "RBC Capital Markets (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 31.01.2019 zmiana adresu: 2025-08-04"
+  },
+  {
+   "name": "Red Mars Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2021-09-10 zmiana adresu: 2021-09-20 zmiana danych: 2021-11-03 dodanie domeny: 2024-03-27"
+  },
+  {
+   "name": "Redburn (France) SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 29.06.2023 dodanie nazwy handlowej: 2023-09-21 2026-01-30 zmiana zakresu działalności: 2026-02-18"
+  },
+  {
+   "name": "Rede Partners (Netherlands) B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2022-12-29"
+  },
+  {
+   "name": "Redpine Capital Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 06.08.2021 zmiana domen: 2022-04-04 2022-07-04 2023-05-08 zmiana danych: 2022-10-03 zmiana adresu: 2023-01-10 zmiana zakresu działalności: 2023-03-02 zmiana nazw handlowych: 2023-07-04"
+  },
+  {
+   "name": "Renaissance Securities (Cyprus) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2005-04-08 zmiana adresu i zakresu działalności: 2017-12-21 zmiana danych: 2025-08-05"
+  },
+  {
+   "name": "RENARD Solutions AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2026-09-03"
+  },
+  {
+   "name": "Revolut Securities Europe UAB",
+   "aliases": [
+    "Revolut Securities UAB"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 21.01.2022 zmiana zakresu działalności: 2023-01-12 2025-07-30 zmiana nazwy: 2023-03-14"
+  },
+  {
+   "name": "RM-S Market, o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2005-07-05"
+  },
+  {
+   "name": "Robinhood Europe, UAB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 17.04.2025 zmiana zakresu dzialalności: 2025-12-11 2026-01-30 2026-04-24"
+  },
+  {
+   "name": "RoboMarkets Deutschland GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 24.06.2022 zmiana adresu: 2026-01-22"
+  },
+  {
+   "name": "Robomarkets Ltd",
+   "aliases": [
+    "Roboforex (Cy) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-10-15 zmiana danych i zakresu działalności: 2016-03-23 2018-09-25 2020-06-03 zmiana nazwy: 2017-12-27 zmiana danych: 2021-12-16 zmiana domen: 2022-03-10 2023-02-03 2024-10-02 2025-05-12 2025-06-02"
+  },
+  {
+   "name": "Roemer Capital (Europe) Limited",
+   "aliases": [
+    "Sinara Financial Corporation (Europe) Ltd",
+    "THINK WEALTH LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-02-12 zmiana zakresu działaności: 2018-06-01 2018-08-28 zmiana adresu: 2019-09-06 zmiana nazwy i danych: 2021-11-23 2023-01-30"
+  },
+  {
+   "name": "Ronin Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 05.07.2013 zmiana adresu: 2026-04-24"
+  },
+  {
+   "name": "Royal Financial Trading (CY) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-09-07 zmiana danych: 2019-10-24 2020-01-17 zmiana adresu: 2022-07-06 zmiana domen: 2023-03-22"
+  },
+  {
+   "name": "Rubicon Infrastructure Advisors",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 08.05.2014 zmiana adresu i zakresu działalności: 2019-05-23"
+  },
+  {
+   "name": "Ruffer SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2019-05-16"
+  },
+  {
+   "name": "Rynat Trading Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-12-13 zmiana danych: 2018-03-13 2018-06-08 2021-04-19 zmiana adresu: 2018-08-29 zmiana zakresu działaności: 2019-03-08 2021-02-26 zmiana domen: 2022-07-18 2024-01-03 2024-04-18"
+  },
+  {
+   "name": "S.S.I.F. Blue Rock Financial Services S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Rumunia; Organ nadzoru: www.asfromania.ro; Data wpływu zawiadomienia: 2014-09-05 zmiana adresu: 2019-11-18"
+  },
+  {
+   "name": "SAB o.c.p., a.s.",
+   "aliases": [
+    "Fio o.c.p., a.s."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2005-11-28 zmiana zakresu działalności: 2006-12-21 zmiana nazwy: 2017-10-19 zmiana adresu: 2022-10-10"
+  },
+  {
+   "name": "Safecap Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2009-09-29 zmiana zakresu działalności: 2011-01-17 2012-02-01 2013-03-15 2016-06-01 2019-03-01 agent f.i.: 2012-04-12 2012-12-12 2013-01-28 2013-03-15 2013-05-20 2013-11-20 2014-10-15 2015-02-10 2015-04-21 zmiana danych: 2015-05-19 2016-10-14 2019-04-19 zmiana adresu: 2016-05-30 zmiana domen: 2022-04-20 2023-02-23 zmiana adresu, dodanie nazwy handlowej, zmiana danych: 2025-08-08 zmiana domen, zmiana nazw handlowych: 2025-11-05 2026-01-26"
+  },
+  {
+   "name": "Salmann Investment Management AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2023-10-12"
+  },
+  {
+   "name": "Salus Alpha Capital GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2007-08-24 zmiana adresu: 2011-02-15 2024-10-02"
+  },
+  {
+   "name": "SAPIENS MARKETS EU, SOCIEDAD DE VALORES, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2023-02-10"
+  },
+  {
+   "name": "SB1 Markets AS",
+   "aliases": [
+    "Sparebank 1 Markets AS",
+    "Argo Securities AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 12.02.2009 zmiana nazwy: 2025-10-07"
+  },
+  {
+   "name": "SECURITIZE EUROPE BROKERAGE AND MARKETS, S.V., S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 22.05.2025 zmiana zakresu działalności i MTF: 2026-04-28"
+  },
+  {
+   "name": "SFI Markets B.V.",
+   "aliases": [
+    "STX Fixed Income B.V."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2013-05-03 zmiana zakresu działalności: 2014-03-24 2023-08-10 zmiana nazwy: 2023-02-09"
+  },
+  {
+   "name": "SFS Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2013-10-30"
+  },
+  {
+   "name": "SGX FX Markets NL B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2026-09-22"
+  },
+  {
+   "name": "SHARES FINANCIAL ASSETS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 07.08.2023 zmiana adresu: 2024-06-12 2026-01-26"
+  },
+  {
+   "name": "Shine Trades (CY) Ltd",
+   "aliases": [
+    "Triumph Int. (Cyprus) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-04-23 zmiana danch: 2018-05-22 2018-08-16 zmiana nazwy, zmiana danych, zmiana domen: 2024-10-25"
+  },
+  {
+   "name": "SIA “DN Operator”",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Łotwa; Organ nadzoru: www.bank.lv/en/; Data wpływu zawiadomienia: 2026-07-27"
+  },
+  {
+   "name": "SIB (Cyprus) Ltd",
+   "aliases": [
+    "TD Investments Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-07-15 zmiana zakresu działalności: 2012-01-23 zmiana nazwy: 2012-05-31 zmiana danych: 2014-02-26 2014-12-02 zmiana adresu i zakresu działalności: 2016-06-29 2018-09-03"
+  },
+  {
+   "name": "Silvercrest Asset Management (Europe) Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2026-09-08"
+  },
+  {
+   "name": "Skanestas Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-11-20 zmiana adresu i zakresu działalności: 2019-02-08"
+  },
+  {
+   "name": "Skilling Ltd",
+   "aliases": [
+    "Finovel Cyprus Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-06-07 zmiana nazwy: 2018-11-19 zmiana zakresu działalności: 2020-07-15"
+  },
+  {
+   "name": "SKY Asset Management AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2026-05-04"
+  },
+  {
+   "name": "Skybound Wealth Europe Ltd.",
+   "aliases": [
+    "Fenix Capital Markets Trading Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-01-30 zawieszenie zezwolenia: 2018-11-14 cofnięcie zawieszenia: 2019-02-15 zmiana adresu: 2019-03-08 2020-09-15 zmiana danych: 2019-10-08 2019-12-03 2020-02-07 zmiana nazwy: 2022-05-12 zmiana domen: 2022-08-01 zmiana adresu i zmiana danych: 2024-09-16"
+  },
+  {
+   "name": "Slim Vermogensbeheer B.V.",
+   "aliases": [
+    "Berben's Effectenkantoor B.V."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2005-02-24 zmiana nazwy i adresu: 2016-08-10"
+  },
+  {
+   "name": "SM Capital Markets Ltd",
+   "aliases": [
+    "ABC 123 (CY) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-02-27 zmiana nazwy: 2018-12-06 2019-05-29 zmiana danych: 2018-12-11 2019-10-11 2020-01-29 2020-10-23 2021-01-14 zmiana adresu: 2021-02-02 2021-11-23 2023-02-16 2023-11-01 zmiana domen i dodanie nazwy handlowej: 2025-04-16"
+  },
+  {
+   "name": "Small & Mid Cap Investmentbank AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-05-13"
+  },
+  {
+   "name": "Societatea De Servicii De Investitii Financiare Romintrade SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Rumunia; Organ nadzoru: www.asfromania.ro; Data wpływu zawiadomienia: 2013-06-25"
+  },
+  {
+   "name": "Société Générale - Forge",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2022-08-08"
+  },
+  {
+   "name": "SOLARIS EMEA LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 31.10.2023 zmiana zakresu działalności: 2024-02-29 zmiana adresu: 2025-06-16 dodanie domen: 2026-04-24"
+  },
+  {
+   "name": "Solas Capital Germany GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2026-05-14"
+  },
+  {
+   "name": "Solid Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-03-31 zmiana zakresu działalności: 2011-01-17"
+  },
+  {
+   "name": "SOLVENTIS, S.V., S.A.",
+   "aliases": [
+    "Solventis, AV, S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2025-02-10"
+  },
+  {
+   "name": "Spiko Finance SASU",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 05.06.2026 zmiana zakresu działalności: 2026-07-02"
+  },
+  {
+   "name": "Spirit Asset Management SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2021-02-01"
+  },
+  {
+   "name": "Square Global",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 17.05.2023 zmiana adresu: 2025-03-03"
+  },
+  {
+   "name": "Squared Financial (CY) Ltd",
+   "aliases": [
+    "Aspide Financial Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-09-07 zmiana zakresu działalności: 2018-04-27 zmiana nazwy: 2018-10-31 zmiana danych: 2019-04-24 2020-03-10 2020-07-28 zmiana adresu: 2020-07-23 2022-11-14 zmiana domen oraz zmiana danych: 2022-12-20"
+  },
+  {
+   "name": "SSC Smart FX Ltd",
+   "aliases": [
+    "Jin Daocheng Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-10-27 zmiana zakresu działalności: 2019-01-09 zmiana daresu: 2019-09-06 zmiana nazwy i zmiana domen: 2023-11-01 zmiana adresu i zmiana danych: 2025-09-12"
+  },
+  {
+   "name": "SSIF BRK FINANCIAL GROUP S.A",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Rumunia; Organ nadzoru: www.asfromania.ro; Data wpływu zawiadomienia: 2019-07-22"
+  },
+  {
+   "name": "STAK SECURITIES LTD",
+   "aliases": [
+    "STAK FX Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 24.09.2021 zmiana adresu: 2022-03-31 zmiana nazwy, dodanie domeny, zmiana danych: 2024-02-13 zmiana danych: 2026-03-03"
+  },
+  {
+   "name": "STATOK LTD",
+   "aliases": [
+    "SMSG Limited"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 24.09.2021 zmiana adresu: 2022-02-22 2024-07-25 zmiana nazwy, zmiana domen i zmiana danych: 2024-02-06 zmiana domen: 2024-03-13"
+  },
+  {
+   "name": "Stifel Europe Securities SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2026-07-13"
+  },
+  {
+   "name": "Stonehage Fleming Investment Management (Liechtenstein) AG",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2022-03-16"
+  },
+  {
+   "name": "StoneX Europe Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 16.07.2021 dodanie drugiej nazwy handlowej: 2021-10-07 zmiana adresu: 2023-07-31 zmiana zakresu działalności: 2024-10-17 dodanie domen: 2025-04-03"
+  },
+  {
+   "name": "StoneX Financial Europe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2024-11-04"
+  },
+  {
+   "name": "Strategic Wealth Management A/S",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Dania; Organ nadzoru: www.dfsa.dk; Data wpływu zawiadomienia: 2025-04-28"
+  },
+  {
+   "name": "Strato Markets B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2012-10-15"
+  },
+  {
+   "name": "Stratos Europe Limited",
+   "aliases": [
+    "FXCM EU Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-12-16 zmiana zakresu działalności: 2021-06-17 2022-09-06 zmiana danych: 2021-06-29 2022-02-23 zmiana adresu: 2022-06-03 zmiana domen: 2023-08-04 2023-12-13 2025-02-10 zmiana nazwy: 2023-09-05 zmiana nazw handlowych: 2023-09-06 zmiana zakresu działalności i dodanie nazwy handlowej: 2025-09-04"
+  },
+  {
+   "name": "Streams Financial Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 09.10.2019 zmiana domen: 2022-11-09 2023-03-06 zmiana adresu: 2023-09-07 zmiana danych: 2024-02-20 zmiana domen i zmiana danych: 2025-01-22 zmiana adresu i zmiana danych: 2025-07-04"
+  },
+  {
+   "name": "Substnz Capital Partners GmbH",
+   "aliases": [
+    "eXapital Capital Advisors GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 11.12.2020 zmiana nazwy i zmiana danych: 2024-10-02"
+  },
+  {
+   "name": "Sucden Financial Hamburg GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2024-06-28"
+  },
+  {
+   "name": "Superfund Asset Management GmbH",
+   "aliases": [
+    "Quadriga Asset Management GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 2004-07-26 zmiana nazwy: 2006-07-17"
+  },
+  {
+   "name": "Susquehanna International Securities Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2016-07-19 zmiana danych: 2016-10-20"
+  },
+  {
+   "name": "Svensk Värdepappersservice i Stockholm AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 2024-12-19"
+  },
+  {
+   "name": "Swiss Life Asset Managers Transactions AS",
+   "aliases": [
+    "NRP Finans AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2013-06-13 zmiana zakresu działalności:: 2020-02-10 zmiana nazwy oraz zmiana danych: 2022-06-03"
+  },
+  {
+   "name": "Swiss Re Capital Markets Europe S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2019-04-02 zmiana adresu: 2020-08-27 zmiana zakresu działalności: 2021-03-25"
+  },
+  {
+   "name": "Swissquote Capital Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2023-01-04"
+  },
+  {
+   "name": "Systrade AG",
+   "aliases": [
+    "Systrade Asset Management AG, Vaduz Liechtenstein"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 2006-12-19 zmiana nazwy i adresu: 2017-07-07"
+  },
+  {
+   "name": "T Markets EU Limited",
+   "aliases": [
+    "NBH Markets EU Ltd",
+    "Fideliscm (Cyprus) Ltd",
+    "SN Financials Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-10-03 zmiana nazwy: 2016-09-01 2019-01-23 2024-04-08 zmiana zakresu działalności: 2017-12-07 zmiana danych: 2018-12-19 2019-10-17 dodanie nowej domeny: 2021-09-06 zmiana adresu: 2023-01-20 usunięcie domen i zmiana danych: 2023-12-08"
+  },
+  {
+   "name": "TAURUS (EUROPE) LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-10-08"
+  },
+  {
+   "name": "TCW Italy SIM S.p.A.",
+   "aliases": [
+    "(TCW Italy Societŕ di Intermediazione Mobiliare S.p.A.,)"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Włochy; Organ nadzoru: www.consob.it; Data wpływu zawiadomienia: 2021-12-01"
+  },
+  {
+   "name": "TD Global Finance Unlimited Company",
+   "aliases": [
+    "TD Global Finance"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2005-11-28 zmiana zakresu działalności: 2011-09-13 zmiana nazwy i adresu: 2016-12-23"
+  },
+  {
+   "name": "Templar EIS Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2015-06-25 zmiana adresu: 2018-03-14"
+  },
+  {
+   "name": "TF Global Markets (Europe) Ltd",
+   "aliases": [
+    "A-Conversio Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-07-08 zmiana adresu: 2016-05-10 2020-06-04 2020-06-19 2020-11-02 2026-01-05 zmiana danych: 2019-09-19 zmiana nazwy, domeny i nazwy handlowej: 2021-11-01 zmiana adresu i adresu e-mail: 2021-11-04 zmiana zakresu usług: 2021-11-25"
+  },
+  {
+   "name": "TFI Ecommpay Ltd",
+   "aliases": [
+    "TFI Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-06-08 zmiana zakresu działalności: 2011-05-11 zmiana danych: 2020-01-29 zmiana domen: 2022-02-16 zmiana adresu: 2022-11-01 zmiana nazwy: 2026-04-14"
+  },
+  {
+   "name": "The Alliance Partnership Netherlands B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2012-12-06"
+  },
+  {
+   "name": "The Cyprus Investment and Securities Corporation Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2011-06-27 zmiana adresu: 2014-06-05 zmiana danych: 2017-08-16 zmiana adresu: 2022-04-15"
+  },
+  {
+   "name": "The First Interstellar Capital Ltd",
+   "aliases": [
+    "Olikriet Capital Ltd",
+    "Consulco Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-05-28 zmiana nazwy i zakresu działalności: 2018-03-29 zmiana adresu: 2019-03-07 2021-05-10 zmiana nazwy i danych: 2020-09-22"
+  },
+  {
+   "name": "The New Amsterdam Group B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2017-11-09"
+  },
+  {
+   "name": "The Spectrum IFA Group Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2023-09-28"
+  },
+  {
+   "name": "THE ULTIMA INVESTMENTS CYPRUS LIMITED",
+   "aliases": [
+    "BrokerCreditService (Cyprus) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2013-04-23 zmiana zakresu działalności i adresu: 2016-02-17 zmiana zakresu działalności: 2018-02-23 zmiana adresu: 2022-09-12 zmiana nazwy: 2025-02-17 zmiana domen i zmiana danych: 2025-04-14"
+  },
+  {
+   "name": "Tickmill Europe Ltd",
+   "aliases": [
+    "Vipro Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-01-26 zmiana zakresu działalności: 2016-10-18 zmiana nazwy: 2017-12-06 zmiana domen: 2024-06-13 zmiana adresu: 2026-09-16"
+  },
+  {
+   "name": "Timberland Invest Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2014-07-02 zmiana zakresu działalności: 2015-09-04 zmiana zakresu usług: 2022-01-31"
+  },
+  {
+   "name": "TIOMARKETS CY LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2024-03-07"
+  },
+  {
+   "name": "Titanedge Securities Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 15.07.2022 dodanie domeny: 2022-10-13 2023-10-30 zmiana zakresu działalności: 2023-01-17 zmiana adresu: 2023-02-09 2025-02-10 2025-08-22"
+  },
+  {
+   "name": "Today’s Group B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2024-06-28"
+  },
+  {
+   "name": "TOM B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2011-02-09"
+  },
+  {
+   "name": "Top Markets Solutions Ltd.",
+   "aliases": [
+    "Teletrade-DJ International Consulting Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-08-07 zmiana zakresu działalności: 2013-05-24 zmiana adresu: 2015-02-17 2018-06-05 2025-08-20 zmiana danych: 2015-05-08 2018-08-23 zmiana nazwy, zmiana domen, zmiana danych: 2024-03-15 zmiana domen: 2026-09-30"
+  },
+  {
+   "name": "TOPFX Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-03-19 zmiana zakresu działalności: 2013-11-26 zmiana adresu: 2014-04-29 2024-09-03 zakresu działalności, adresu i danych: 2016-06-15 2019-03-14 zmiana domen: 2022-08-29 2026-07-13"
+  },
+  {
+   "name": "Tower Research Capital Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-02-26 zmiana adresu: 2019-03-05 zmiana zakresu działalności: 2022-11-17"
+  },
+  {
+   "name": "TP ICAP (Europe) SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 03.06.2019 zmiana adresu: 2022-10-12 dodanie nazwy handlowej: 2026-08-12"
+  },
+  {
+   "name": "Trade Capital Markets (TCM) Ltd",
+   "aliases": [
+    "Leadcapital Markets Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-04-16 zmiana adresu: 2014-12-01 2015-05-12 2017-08-30 2017-09-27 2019-06-18 zmiana danych: 2015-09-17 2015-10-08 2016-01-13 2017-08-16 2018-12-13 zmiana zakresu działalności: 2016-06-24 2020-06-17 zmiana nazwy: 2019-05-09 zmiana domen: 2023-03-16 2024-08-02"
+  },
+  {
+   "name": "TRADEPLACE LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2026-04-27"
+  },
+  {
+   "name": "TradeStation Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2026-03-31"
+  },
+  {
+   "name": "TRADESTONE LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-03-30 zmiana zakresu działaności: 2018-07-16 2019-11-18 2021-05-14 zmiana danycxh: 2020-11-09 2023-03-29"
+  },
+  {
+   "name": "Tradeview Europe Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2022-08-11"
+  },
+  {
+   "name": "Tradeweb EU B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-01-17 zmiana zakresu działalności: 2021-01-21 zmiana adresu i zmiana zakresu działalności: 2026-08-18"
+  },
+  {
+   "name": "Tradeweb Execution Services B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2022-05-24"
+  },
+  {
+   "name": "Trading 212 EU GmbH",
+   "aliases": [
+    "FXFlat Bank AG",
+    "FX Flat Bank GmbH",
+    "FXFlat Wertpapierhandelsbank GmbH",
+    "Heyder Kruger & Kollegen GmbH"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 01.02.2013 zmiana nazwy: 2020-11-12: 2021-06-29 2021-11-15 2026-03-26 zmiana zakresu działalności, zmiana adresu, zmiana danych: 2022-12-23"
+  },
+  {
+   "name": "Trading 212 Ltd",
+   "aliases": [
+    "Avus Capital Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 2011-11-16 zmiana nazwy: 2017-11-22 zmiana zakresu działaoności i adresu: 2019-11-21"
+  },
+  {
+   "name": "Trading 212 Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 10.05.2021 zmiana zakresu usług: 2021-09-17 zmiana adresu: 2022-03-29 zmiana zakresu działalności: 2022-11-17"
+  },
+  {
+   "name": "Trading Point of Financial Instruments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-12-20 zmiana zakresu działalności: 2011-09-26 2024-12-10 zmiana adresu i zmiana danych: 2024-01-03"
+  },
+  {
+   "name": "TRADING.COM MARKETS EU LIMITED",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 14.10.2024 zmiana zakresu działalności: 2025-10-15 zmiana adresu: 2026-06-05"
+  },
+  {
+   "name": "Tradition Financial Services España, Sociedad De Valores S.A.U.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2021-12-13"
+  },
+  {
+   "name": "Tradition Financial Services GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2022-02-22"
+  },
+  {
+   "name": "Tradition Luxembourg SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 2019-06-04"
+  },
+  {
+   "name": "Tradition Securities and Futures S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2006-02-07 zmiana zakresu działalności: 2011-11-16"
+  },
+  {
+   "name": "Trek Labs Europe Ltd",
+   "aliases": [
+    "FTX EU LTD",
+    "K-DNA Financial Services Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2015-07-02 zmiana adresu: 2015-07-17 2016-06-17 zmiana danych: 2017-12-18 2020-09-16 2022-02-25 2022-10-10 zmiana zakresu działalności: 2021-05-14 2025-10-27 zmiana adresu i danych: 2022-04-28 zmiana nazwy: 2022-11-01 zawieszenie zezwolenia: 2022-11-14 2022-12-23 2023-04-12 2023-10-24 2024-04-16 2024-11-06 zmiana domen: 2023-03-07 2025-10-27 zmiana nazwy, zmiana adresu, usunięcie domen, zmiana danych: 2025-03-11 cofnięcie decyzji o zawieszeniu zezwolenia: 2025-07-07"
+  },
+  {
+   "name": "Triangleview Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2020-08-06 zmiana danych: 2021-08-06 zmiana adresu: 2025-07-28 zawieszenie zezwolenia: 2025-08-13"
+  },
+  {
+   "name": "TriOptima AB",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Szwecja; Organ nadzoru: www.fi.se; Data wpływu zawiadomienia: 07.04.2008 zmiana zakresu działalności i zmiana adresu: 2022-05-18"
+  },
+  {
+   "name": "Trive Financial Services Europe Ltd.",
+   "aliases": [
+    "Trive Financial Services Malta Limited",
+    "AKFX Financial Services Ltd",
+    "Cresco Capital Markets (Malta) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2019-01-17 zmiana adresu: 2020-11-13 zmiana nazwy: 2022-08-11 2025-04-02 zmiana zakresu działalności: 2022-10-27"
+  },
+  {
+   "name": "Trust Capital TC Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 18.04.2019 zmiana domen: 2021-10-22 2024-04-15 zmiana domen i zmiana danych: 2022-10-18"
+  },
+  {
+   "name": "TSAF OTC SA",
+   "aliases": [
+    "Viel Tradition S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2006-02-07 zmiana nazwy: 2007-06-04 zmiana zakresu działalności: 2011-10-31 2020-02-14 2020-12-16"
+  },
+  {
+   "name": "TSG Brokers Ltd.",
+   "aliases": [
+    "GWG (Cyprus) Ltd",
+    "Gametech (Cyprus) Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-04-26 zmiana zakresu działalności: 2017-04-06 2018-03-29 zawieszenie zezwolenia: 2017-04-05 cofnięcie zawieszenia: 2017-10-16 zmiana nazwy: 2017-11-09 zmiana danych: 2017-12-01 zmiana domen: 2022-07-20 zmiana nazwy, zmiana domen i zmiana danych: 2025-07-28 zmiana adresu: 2025-08-13"
+  },
+  {
+   "name": "Turquoise Global Holdings Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2019-03-07"
+  },
+  {
+   "name": "UAB ,,Axiology DLT”",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 2026-06-15"
+  },
+  {
+   "name": "UAB FMI \"MRC Markets\"",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Litwa; Organ nadzoru: www.lb.lt; Data wpływu zawiadomienia: 2012-05-14"
+  },
+  {
+   "name": "UBK Markets Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 22.05.2015 zmiana danych: 2026-08-31 2026-09-08"
+  },
+  {
+   "name": "Unifinanz Tust reg.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Liechtenstein; Organ nadzoru: www.fma-li.li; Data wpływu zawiadomienia: 22.03.2019 zmiana adresu: 2024-07-15"
+  },
+  {
+   "name": "Union Corporate AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2010-05-12"
+  },
+  {
+   "name": "UNIQUA Capital Markets GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Austria; Organ nadzoru: www.fma.gv.at; Data wpływu zawiadomienia: 27.11.2012 prośba o aktualizację informacji na stronie KNF: 2021-10-22"
+  },
+  {
+   "name": "UP Trend Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Bułgaria; Organ nadzoru: www.fsc.bg; Data wpływu zawiadomienia: 16.03.2021 zmiana danych: 2023-07-18 dodanie nazwy handlowej, zmiana domen, zmiana danych: 2023-11-09 zmiana domen, zmiana nazw handlowych: 2025-08-12"
+  },
+  {
+   "name": "UPTEVIA",
+   "aliases": [
+    "Caceis Corporate Trust (Caceis CT)",
+    "Credit Agricole Investor Services Corporate Trust S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2004-08-26 zmiana nazwy: 2005-12-20 2023-02-03 zmiana adresu: 2022-07-11 2024-01-11"
+  },
+  {
+   "name": "Upvest Securities GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2024-05-03"
+  },
+  {
+   "name": "UTI INTERNATIONAL (FRANCE) SAS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2024-04-17"
+  },
+  {
+   "name": "Validas N.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2009-01-09"
+  },
+  {
+   "name": "Validus Europe AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2024-11-18"
+  },
+  {
+   "name": "VALOR o.c.p., a. s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2025-01-25"
+  },
+  {
+   "name": "Van Sterling Capital Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.mt; Data wpływu zawiadomienia: 2025-08-25"
+  },
+  {
+   "name": "VanEck (Europe) GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2022-08-01"
+  },
+  {
+   "name": "Veles International Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-03-16 zmiana adresu: 2012-10-15"
+  },
+  {
+   "name": "Velthuyse & Mulder Vermogensbeheer B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2009-06-12"
+  },
+  {
+   "name": "Venturebeam Markets AS",
+   "aliases": [
+    "Funderbeam Markets AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 12.01.2021 zmiana nazwy: 2024-09-05 zmiana adresu: 2025-04-03"
+  },
+  {
+   "name": "Verdispar Securities AS",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Norwegia; Organ nadzoru: www.finanstilsynet.no; Data wpływu zawiadomienia: 2008-07-22"
+  },
+  {
+   "name": "VermogensParaplu Beheer B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2006-04-20"
+  },
+  {
+   "name": "Vernier Capital Advisors (Europe) Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2021-08-12"
+  },
+  {
+   "name": "Vertis Environmental Financial Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Węgry; Organ nadzoru: www.mnb.hu; Data wpływu zawiadomienia: 26.02.2018 zmiana zakresu działalności: 2022-11-16 2024-08-08 afi: 2025-10-01"
+  },
+  {
+   "name": "VICTORIAPARTNERS GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2024-01-10"
+  },
+  {
+   "name": "Virtu Europe Trading Limited",
+   "aliases": [
+    "Virtu ITG Europe Ltd",
+    "Investment Technology Group Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2008-01-30 zmiana nazwy: 2019-05-09 2023-03-02 zmiana adresu: 2020-08-27"
+  },
+  {
+   "name": "Virtu Financial Ireland Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2014-07-03 zmiana zakresu działalności: 2018-01-15"
+  },
+  {
+   "name": "Vivid Money B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 26.05.2023 zmiana zakresu działalności: 2023-11-23"
+  },
+  {
+   "name": "VLK-KBCS B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 2026-10-08"
+  },
+  {
+   "name": "VSMARKETS LTD",
+   "aliases": [
+    "KLIPS CY LTD"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 30.11.2023 zmiana adresu: 2024-09-19 zmiana nazwy i dodanie domeny: 2025-11-04 zmiana danych: 2026-05-08 zmiana zakresu działalności: 2026-08-28"
+  },
+  {
+   "name": "VTC Europe B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 03.06.2020 zmiana zakresu działalności; 2021-11-04"
+  },
+  {
+   "name": "W.G. WEALTH GUARDIAN LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2018-03-26 zmiana adresu: 2021-03-29 zawieszenie zezwolenia: 2024-05-30 2025-06-23"
+  },
+  {
+   "name": "W1M EUROPE, A.V., S.A.",
+   "aliases": [
+    "LONDON AND CAPITAL WEALTH MANAGEMENT EUROPE, A.V. S.A."
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: www.cnmv.es; Data wpływu zawiadomienia: 2022-04-27"
+  },
+  {
+   "name": "Waystone Investment Management (IE) Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 2024-11-28"
+  },
+  {
+   "name": "WB TRADE EU LTD",
+   "aliases": [
+    "Windsor Brokers Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2010-02-12 zmiana danych: 2012-12-11 2019-07-24 2024-09-03 zmiana zakresu działalności: 2013-10-24 2020-07-15 zmiana nazwy i zmiana domen: 2024-08-06"
+  },
+  {
+   "name": "WEALTHYHOOD EUROPE INVESTMENT SERVICES SINGLE MEMBER SOCIETE ANONYME",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Grecja; Organ nadzoru: www.hcmc.gr; Data wpływu zawiadomienia: 05.08.2026 zmiana danych: 2026-09-15"
+  },
+  {
+   "name": "Webull Securities (Europe) B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.amf.nl; Data wpływu zawiadomienia: 2026-02-19"
+  },
+  {
+   "name": "Wellington Management Euorpe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: www.bafin.de; Data wpływu zawiadomienia: 2019-06-24"
+  },
+  {
+   "name": "Wells Fargo Securities Europe",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Francja; Organ nadzoru: www.acpr.banque-france.fr; Data wpływu zawiadomienia: 2019-09-16"
+  },
+  {
+   "name": "WGM Services Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-03-31 zmiana zakresu działaności: 2014-05-16 notyfikowana działalność zawieszona od 2014-11-20 do 2014-12-23 zmiana domen: 2021-12-22"
+  },
+  {
+   "name": "WH Selfinvest SA",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: www.cssf.lu; Data wpływu zawiadomienia: 23.04.2007 zmiana adresu: 2024-09-26"
+  },
+  {
+   "name": "Wijs & Van Oostveen B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 16.11.2005 zmiana zakresu działalności: 2025-09-10 2025-09-16"
+  },
+  {
+   "name": "William Blair B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: www.afm.nl; Data wpływu zawiadomienia: 07.07.2022 zmiana zakresu działalności: 2026-08-04"
+  },
+  {
+   "name": "Winners Investments o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: www.nbs.sk; Data wpływu zawiadomienia: 2023-06-15"
+  },
+  {
+   "name": "Wisdompoint Capital Ltd",
+   "aliases": [
+    "Tradernet Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-10-23 zmiana adresu: 2019-02-28 zmiana nazwy: 2021-07-01 zmiana danych: 2023-12-08"
+  },
+  {
+   "name": "WisdomTree Ireland Limited",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Irlandia; Organ nadzoru: www.centralbank.ie; Data wpływu zawiadomienia: 31.01.2022 zmiana adresu: 2023-04-04 2025-07-28"
+  },
+  {
+   "name": "Wise Assets Europe AS",
+   "aliases": [
+    "TINV Europe AS"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Estonia; Organ nadzoru: www.fi.ee; Data wpływu zawiadomienia: 24.01.2023 zmiana nazwy: 2025-08-01 zmiana zakresu działalności, zmiana adresu: 2026-07-10"
+  },
+  {
+   "name": "Wise Wolves Finance Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2017-11-02 zmiana zakresu działalności: 2019-05-30 zmiana zakresu działalności: 2022-03-04 zmiana zakresu działalności i zmiana adresu: 2025-07-15 2025-11-12"
+  },
+  {
+   "name": "WOOD & Company Financial Services a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2005-04-18 zmiana adresu: 2021-01-28"
+  },
+  {
+   "name": "WOOD Retail Investments a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: www.cnb.cz; Data wpływu zawiadomienia: 2023-12-19"
+  },
+  {
+   "name": "WRDNB Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 20.11.2023 dodanie domen i zmiana danych: 2026-07-13 zmiana adresu i zmiana danych: 2026-07-15"
+  },
+  {
+   "name": "XBorder Partners Wealth — Empresa de Investimento, S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Portugalia; Organ nadzoru: www.cmvm.pt; Data wpływu zawiadomienia: 2026-03-31"
+  },
+  {
+   "name": "XNT Ltd",
+   "aliases": [
+    "Exante Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Malta; Organ nadzoru: www.mfsa.com.mt; Data wpływu zawiadomienia: 2014-04-01 zmiana nazwy: 2017-01-09"
+  },
+  {
+   "name": "XSpot Wealth (EU) Ltd",
+   "aliases": [
+    "X Spot Markets (EU) Ltd",
+    "Boursotrade Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2014-11-25 zmiana zakresu działalności: 2015-05-21 2016-11-12 2019-11-08 zawieszenie zezwolenia: od 2017-04-05 do 2018-02-23 zmiana danych: 2018-03-28 2019-01-18 2020-11-23 zmiana nazwy: 2018-09-21 zmiana zakresu działalności i adresu: 2018-10-26 zmiana adresu: 2022-02-10 2024-10-24 2025-07-31"
+  },
+  {
+   "name": "XTB Ltd",
+   "aliases": [
+    "DUB Investments Ltd"
+   ],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2012-12-05 zmiana zakresu dzialalności: 2013-05-17 zmiana adresu: 2014-02-13 2018-05-21 zmiana nazwy i zakresu działalności: 2018-05-09 zmiana danych: 2018-07-02 zmiana domen: 2025-07-04"
+  },
+  {
+   "name": "XTELLUS EUROPE LTD",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 22.11.2024 zmiana zakresu działalności: 2026-03-19"
+  },
+  {
+   "name": "Zemblanco Investments Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: www.cysec.gov.cy; Data wpływu zawiadomienia: 2016-04-19 zmiana adresu i zakresu działalności: 2017-10-25 zmiana zakresu działalności: 2018-03-06"
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Pakiet dowodowy {{ i.id }}</title>
+<style>
+  @page { size: A4; }
+  * { box-sizing: border-box; }
+  body { font-family: "DejaVu Sans", "Noto Sans", "Liberation Sans", Arial, Helvetica, sans-serif; font-size: 9.5pt; line-height: 1.4; color: #16202b; margin: 0; }
+  h1 { font-size: 16pt; margin: 0 0 2mm; }
+  h2 { font-size: 11pt; margin: 6mm 0 2mm; padding-bottom: 1mm; border-bottom: 1.5px solid #1d3557; color: #1d3557; break-after: avoid; }
+  p { margin: 0 0 2mm; }
+  .muted { color: #5b6672; }
+  .small { font-size: 8pt; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm; border-bottom: 2px solid #1d3557; padding-bottom: 3mm; }
+  .brand { font-weight: 700; color: #1d3557; letter-spacing: .3px; }
+  .synthetic { border: 1.5px solid #9a5b00; color: #9a5b00; background: #fff6e5; padding: 1.5mm 3mm; font-weight: 700; margin: 3mm 0; text-align: center; }
+  .verdict { display: flex; gap: 4mm; margin: 4mm 0; }
+  .box { flex: 1; border: 1px solid #c9d1da; border-radius: 2mm; padding: 2.5mm 3mm; }
+  .box .label { font-size: 7.5pt; text-transform: uppercase; color: #5b6672; letter-spacing: .4px; }
+  .box .value { font-size: 13pt; font-weight: 700; }
+  .red { color: #b3261e; } .orange { color: #a15c00; } .green { color: #1b6e3c; }
+  .bg-red { border-color: #b3261e; background: #fdecea; } .bg-orange { border-color: #a15c00; background: #fff4e0; } .bg-green { border-color: #1b6e3c; background: #e8f5ec; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 2mm; }
+  th, td { border: 1px solid #c9d1da; padding: 1.2mm 1.8mm; vertical-align: top; text-align: left; overflow-wrap: anywhere; }
+  th { background: #eef2f6; font-size: 8pt; }
+  tr { break-inside: avoid; }
+  td.k { width: 42mm; background: #f6f8fa; font-weight: 600; }
+  .st-fail { color: #b3261e; font-weight: 700; } .st-pass { color: #1b6e3c; } .st-na, .st-unknown { color: #5b6672; }
+  blockquote { margin: 1mm 0; padding: 1mm 2.5mm; border-left: 2.5px solid #1d3557; background: #f6f8fa; font-style: italic; }
+  .mono { font-family: "DejaVu Sans Mono", "Liberation Mono", Menlo, Consolas, monospace; font-size: 8pt; overflow-wrap: anywhere; }
+  ul { margin: 0 0 2mm; padding-left: 5mm; }
+  li { margin-bottom: 1mm; }
+  .cols { display: flex; gap: 5mm; } .cols > div { flex: 1; }
+</style>
+</head>
+<body>
+<div class="head">
+  <div>
+    <div class="brand">#InvestWatch · UKNF</div>
+    <h1>Pakiet dowodowy</h1>
+    <div>{{ i.title }}</div>
+  </div>
+  <div class="small muted" style="text-align:right">
+    Incydent: <span class="mono">{{ i.id }}</span><br>
+    Wykryto: {{ i.created_at }}<br>
+    Status: {{ status_label }}<br>
+    Wygenerowano: {{ generated_at }}
+  </div>
+</div>
+
+{% if i.synthetic %}<div class="synthetic">Dane syntetyczne – materiał demonstracyjny, nie dotyczy rzeczywistego podmiotu</div>{% endif %}
+
+<div class="verdict">
+  <div class="box bg-{{ level }}"><div class="label">Werdykt</div><div class="value {{ level }}">{{ level_label }}</div></div>
+  <div class="box"><div class="label">Wskaźnik ryzyka (0–100)</div><div class="value">{{ '%.1f'|format(i.risk_score|float) }}</div></div>
+  <div class="box"><div class="label">Compliance Score</div><div class="value">{{ '%.1f'|format(i.compliance_score|default(100 - i.risk_score)|float) }}</div></div>
+  <div class="box"><div class="label">Moduł</div><div style="font-weight:700">{{ module_label }}</div></div>
+</div>
+
+<p>{{ i.summary }}</p>
+
+<h2>Rekomendacja</h2>
+<table>
+  <tr><td class="k">Działanie</td><td><strong>{{ recommendation.label or recommendation.action or '—' }}</strong></td></tr>
+  <tr><td class="k">Następny krok</td><td>{{ recommendation.next_step or '—' }}</td></tr>
+</table>
+
+<h2>Źródło</h2>
+<table>
+  <tr><td class="k">Adres URL</td><td class="mono">{{ source.url }}</td></tr>
+  <tr><td class="k">Platforma</td><td>{{ source.platform }}</td></tr>
+  <tr><td class="k">Pobrano</td><td>{{ source.fetched_at }}</td></tr>
+  <tr><td class="k">Język</td><td>{{ source.language or '—' }}</td></tr>
+  <tr><td class="k">Skrót treści (SHA-256)</td><td class="mono">{{ source.content_hash }}</td></tr>
+  <tr><td class="k">Archiwum HTML</td><td class="mono">{{ (source.archive or {}).html_key or '—' }}</td></tr>
+  <tr><td class="k">Zrzut ekranu</td><td class="mono">{{ (source.archive or {}).screenshot_key or '—' }}</td></tr>
+</table>
+
+<h2>Podmioty</h2>
+<table>
+  <tr><th>Rola</th><th>Nazwa</th><th>Rodzaj</th><th>Identyfikatory</th></tr>
+  {% macro party(role, p) %}
+  <tr><td>{{ role }}</td><td>{{ p.name }}</td><td>{{ p.kind or '' }}</td>
+      <td class="small">{% if p.krs %}KRS {{ p.krs }} {% endif %}{% if p.nip %}NIP {{ p.nip }} {% endif %}{% if p.handle %}{{ p.handle }} {% endif %}{% if p.country %}({{ p.country }}) {% endif %}{% if p.url %}<span class="mono">{{ p.url }}</span>{% endif %}</td></tr>
+  {% endmacro %}
+  {% if entities.investment_firm %}{{ party('Firma inwestycyjna', entities.investment_firm) }}{% endif %}
+  {% if entities.advertiser %}{{ party('Reklamodawca / autor', entities.advertiser) }}{% endif %}
+  {% for p in entities.others or [] %}{{ party('Inny podmiot', p) }}{% endfor %}
+  {% if not entities.investment_firm and not entities.advertiser and not entities.others %}<tr><td colspan="4" class="muted">Nie zidentyfikowano podmiotów.</td></tr>{% endif %}
+</table>
+
+{% if registry_checks %}
+<h2>Statusy w rejestrach</h2>
+<table>
+  <tr><th>Rejestr</th><th>Szukany podmiot</th><th>Status</th><th>Szczegóły</th><th>Stan na</th></tr>
+  {% for r in registry_checks %}
+  <tr><td>{{ r.label or r.registry }}<div class="mono muted">{{ r.url }}</div></td><td>{{ r.subject }}</td>
+      <td class="{{ 'st-fail' if r.status in ('not_listed', 'warning_listed', 'inactive') else 'st-pass' if r.status == 'listed' else 'st-na' }}">{{ registry_status.get(r.status, r.status) }}</td>
+      <td>{{ r.detail }}</td><td>{{ r.snapshot_date or '—' }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<h2>Macierz 19 kryteriów</h2>
+<table>
+  <tr><th style="width:9mm">Nr</th><th style="width:44mm">Kryterium</th><th style="width:20mm">Wynik</th><th style="width:13mm">Pewność</th><th>Uzasadnienie i podstawa prawna</th></tr>
+  {% for r in rules %}
+  <tr><td>{{ r.id }}</td><td>{{ r.name }}</td><td class="st-{{ r.status }}">{{ rule_status.get(r.status, r.status) }}</td>
+      <td>{% if r.confidence is number %}{{ '%.0f'|format(r.confidence * 100) }}%{% endif %}</td>
+      <td>{{ r.explanation }}{% if r.legal_basis %}<div class="small muted">{{ r.legal_basis }}</div>{% endif %}{% if r.evidence_ids %}<div class="small muted">Dowody: {{ r.evidence_ids|join(', ') }}</div>{% endif %}</td></tr>
+  {% else %}
+  <tr><td colspan="5" class="muted">Brak ocen kryteriów.</td></tr>
+  {% endfor %}
+</table>
+
+<h2>Argumenty</h2>
+<div class="cols">
+  <div>
+    <strong>Za naruszeniem</strong>
+    <ul>{% for c in args_for %}<li>{{ c.text }} <span class="small muted">({{ verdicts.get(c.verdict, c.verdict) }}{% if c.confidence is number %}, pewność {{ '%.0f'|format(c.confidence * 100) }}%{% endif %})</span></li>{% else %}<li class="muted">Brak.</li>{% endfor %}</ul>
+  </div>
+  <div>
+    <strong>Przeciw / okoliczności łagodzące</strong>
+    <ul>{% for c in args_against %}<li>{{ c.text }} <span class="small muted">({{ verdicts.get(c.verdict, c.verdict) }}{% if c.confidence is number %}, pewność {{ '%.0f'|format(c.confidence * 100) }}%{% endif %})</span></li>{% else %}<li class="muted">Brak.</li>{% endfor %}</ul>
+  </div>
+</div>
+{% if arbiter %}<p><strong>Uzasadnienie arbitra:</strong> {{ arbiter }}</p>{% endif %}
+
+<h2>Dowody</h2>
+<table>
+  <tr><th style="width:12mm">ID</th><th style="width:24mm">Rodzaj</th><th>Treść</th></tr>
+  {% for e in evidence %}
+  <tr><td class="mono">{{ e.id }}</td><td>{{ evidence_kind.get(e.kind, e.kind) }}</td>
+      <td><strong>{{ e.label }}</strong>
+        {% if e.quote %}<blockquote>„{{ e.quote }}”</blockquote>{% endif %}
+        {% if e.legal_ref %}<div>Podstawa prawna: {{ e.legal_ref }}</div>{% endif %}
+        {% if e.attachment %}<div class="small muted">Źródło: {{ e.attachment }}</div>{% endif %}
+        {% if e.url %}<div class="mono">{{ e.url }}</div>{% endif %}
+        {% if e.storage_key %}<div class="mono muted">archiwum: {{ e.storage_key }}</div>{% endif %}
+      </td></tr>
+  {% else %}
+  <tr><td colspan="3" class="muted">Brak dowodów.</td></tr>
+  {% endfor %}
+</table>
+
+<h2>Silnik analizy</h2>
+<table>
+  <tr><td class="k">Wersja silnika</td><td>{{ engine.version or '—' }}</td></tr>
+  <tr><td class="k">Wtyczki</td><td>{{ (engine.plugins or [])|join(', ') or '—' }}</td></tr>
+  <tr><td class="k">Model lokalny (LLM)</td><td>{% if engine.llm_used %}{{ engine.model or 'tak' }}{% else %}nie użyto (reguły deterministyczne){% endif %}</td></tr>
+  <tr><td class="k">Czas analizy</td><td>{% if engine.duration_ms is number %}{{ engine.duration_ms }} ms{% else %}—{% endif %}</td></tr>
+  <tr><td class="k">Backend</td><td>#InvestWatch backend {{ backend_version }}</td></tr>
+</table>
+<p class="small muted">Dokument wygenerowany automatycznie. Wynik jest wskazaniem analitycznym wymagającym weryfikacji przez pracownika UKNF; nie stanowi rozstrzygnięcia.</p>
+</body>
+</html>

@@ -1,0 +1,66 @@
+/* Design tokens. Everything visual in the app derives from these variables. */
+:root {
+  /* Surfaces: cool neutral paper, white objects, hairline borders */
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-sunken: #f8f9fb;
+  --surface-hover: #f1f3f6;
+  --line: #e3e6eb;
+  --line-strong: #cbd0d8;
+
+  /* Ink */
+  --ink: #141821;
+  --ink-2: #3a4150;
+  --muted: #5f6877;
+  --faint: #8a92a0;
+
+  /* Institutional navy: navigation, primary actions, selection */
+  --accent: #1b2a5c;
+  --accent-hover: #24377a;
+  --accent-soft: #e9edf8;
+  --accent-ink: #1b2a5c;
+  --focus: #2f5bea;
+
+  /* Status: the only saturated colours in the product */
+  --red: #c9302a;
+  --red-ink: #9a1d17;
+  --red-soft: #fdecea;
+  --red-line: #f3c2bd;
+  --orange: #e07b00;
+  --orange-ink: #8a4700;
+  --orange-soft: #fff2de;
+  --orange-line: #f3d19c;
+  --green: #1f8a55;
+  --green-ink: #14603a;
+  --green-soft: #e6f4ec;
+  --green-line: #b4dcc4;
+  --neutral-soft: #eef0f3;
+
+  /* Type: one family, tabular figures for every number */
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-xs: 11.5px;
+  --fs-sm: 12.5px;
+  --fs-base: 13.5px;
+  --fs-md: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --fs-2xl: 34px;
+
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  --shadow-pop: 0 8px 28px rgba(20, 24, 33, 0.14), 0 1px 3px rgba(20, 24, 33, 0.08);
+  --shadow-drawer: -12px 0 40px rgba(20, 24, 33, 0.14);
+
+  --sidebar-w: 220px;
+  --dur: 140ms;
+}

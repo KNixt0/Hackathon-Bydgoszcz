@@ -52,3 +52,13 @@ Każdy PR przechodzi przez te same bramki, zanim trafi do `main`:
 Claude Code (agenci), GitHub Issues/PR (koordynacja), GitHub Actions (CI, bezpieczeństwo, recenzja). Postęp na żywo widać na animowanym podglądzie: `./swarm view`.
 
 AI jest wyłącznie narzędziem deweloperskim. Produkt działa w 100% lokalnie na modelach open source.
+
+## 6. Jak ten proces wyglądał przy #InvestWatch
+
+1. **Najpierw pytania, potem kod.** Agent-lead przeczytał brief i załączniki UKNF, sprawdził środowisko i zadał człowiekowi cztery pytania decyzyjne (runtime kontenerów, model, nazwy w danych demo, repozytorium). Odpowiedzi są w [coord/decisions.md](../coord/decisions.md) (#6–#11).
+2. **Kontrakt przed implementacją.** Lead napisał [incident.md](../coord/contracts/incident.md) i [api.md](../coord/contracts/api.md). Dopiero wtedy trzech agentów-budowniczych ruszyło równolegle, każdy z własnym katalogiem (`services/backend`, `services/ai` + `samples`, `services/frontend`) i zakazem wychodzenia poza niego.
+3. **Brief agenta ma stały układ:** co posiadasz, co przeczytać, co zbudować, próg jakości (testy, lint, audyt zależności, licencje), co zaraportować. Agent nie commituje; robi to lead po sprawdzeniu.
+4. **Lead nie wierzy raportom.** Po każdym agencie uruchamia jego testy, `scripts/check.sh`, cały stos przez `docker compose up` i przechodzi przepływ w przeglądarce (alert WebSocket, suwak progu, konsola).
+5. **Człowiek zatwierdza.** Całość trafia do `main` jako PR, po bramkach z sekcji 3.
+
+Zasady, które agenci dostali wprost, bo AI lubi je łamać: żadnych cytatów spoza tekstu źródłowego (test sprawdza, że każdy cytat jest podciągiem źródła), żadnych wyników wpisanych na sztywno pod próbkę, żadnych danych testowych w paczce produkcyjnej, status reguły `unknown` zamiast zgadywania.
