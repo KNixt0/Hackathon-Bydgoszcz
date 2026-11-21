@@ -29,12 +29,13 @@
 ## Out of scope
 - Logging in to social platforms or bypassing anti-bot protection (public pages, ad libraries and samples only).
 - Real KRS/CRBR/KIRP/KIDP connectors: modelled as `Context` enrichment with sample data; the interface is in the contract.
-- OCR of banners, multi-tenant auth.
+- OCR of banners; production authentication (the demo has two local demo accounts).
 
 ## Timeline
-| When | Milestone |
-|---|---|
-| Sat 21.11 20:00 | Draft checkpoint: HackTribe project, repo link, task locked; contracts + service skeletons + compose + seed cases on a branch |
-| Sat 21.11 night | Must-haves complete, E2E on compose, clean console, audits |
-| Sun 22.11 09:00 | Feature freeze; README, AI process doc, PDF deck, demo script, optional Azure deploy |
-| Sun 22.11 11:00 | Final submission |
+| When | Milestone | State |
+|---|---|---|
+| Sat 21.11 20:00 | Draft checkpoint: HackTribe project, repo link, task locked | owner |
+| Sat 21.11 evening | Must-haves end to end on compose, audits, README, deck | done (PR #30) |
+| Sat 21.11 night | Additions from the owner's spec: rendered visual audit, login + workflow + audit log, public reports; redesign; Azure demo | done (PR #30) |
+| Sun 22.11 morning | Clean demo data, rehearse the 3-minute script, final deck numbers, merge | open |
+| Sun 22.11 11:00 | Final submission | open |

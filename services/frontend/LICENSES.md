@@ -10,7 +10,6 @@ Versions are pinned in `package.json` and `package-lock.json`. Regenerate this f
 | @fontsource/public-sans | 5.3.0 | OFL-1.1 | Self-hosted UI typeface (Public Sans 400, 500, 700; latin + latin-ext) |
 | @radix-ui/react-dialog | 1.3.1 | MIT | Accessible dialog / drawer primitive |
 | @radix-ui/react-dropdown-menu | 2.2.1 | MIT | Accessible menu primitive |
-| @radix-ui/react-slider | 1.6.1 | MIT | Threshold slider primitive |
 | @radix-ui/react-tabs | 1.2.1 | MIT | Tabs primitive |
 | cmdk | 1.1.1 | MIT | Command palette (Cmd+K) |
 | lucide-react | 1.77.0 | ISC | Icons |

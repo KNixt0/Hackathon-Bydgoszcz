@@ -27,3 +27,7 @@ Data: 2026-11-21
 - Skany pip-audit obejmują tylko pliki `requirements.txt`, nie pliki `requirements.in`.
 - Wyniki odzwierciedlają bazy danych narzędzi w dniu skanu (2026-11-21); nowe podatności mogą się pojawić później.
 - Nie sprawdzano obrazów kontenerów (np. mcr.microsoft.com/playwright/python:v1.65.2-noble, postgres, valkey).
+
+## Aktualizacja po dodaniu logowania i nowego wyglądu (2026-11-21, wieczór)
+
+Skany powtórzono po dodaniu zależności `argon2-cffi`, `PyJWT` (backend) i `@fontsource/public-sans` (frontend) oraz usunięciu `@radix-ui/react-slider`: `pip-audit` dla obu serwisów Python i `npm audit` nadal nie zgłaszają znanych podatności; `guard.sh` przechodzi. Pliki wyników w tym katalogu pochodzą z tego powtórzonego skanu.

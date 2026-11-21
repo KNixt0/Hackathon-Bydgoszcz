@@ -3,4 +3,3 @@
 ✓ brak oczywistych sekretów
 ✓ brak console.log we froncie
 ✓ docker compose obecny
-exit=0

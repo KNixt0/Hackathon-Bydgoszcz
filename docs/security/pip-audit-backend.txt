@@ -1,2 +1,1 @@
 No known vulnerabilities found
-exit=0
