@@ -1,4 +1,4 @@
-version: 3
+version: 4
 
 # Incident: the one schema every module ends in
 
@@ -225,3 +225,49 @@ interface Source {
 ```
 
 Invariant 5: a rule reports `method: "rendered"` only when its verdict comes from `document.visual` measurements; without them it falls back to `static` or returns `unknown`.
+
+## Version 4 additions
+
+```ts
+// UKNF remit (decision #20). Outside the remit nothing is flagged: risk_score < T_orange, all 19 rules "na",
+// recommendation {action: "none", label: "Poza właściwością UKNF"}.
+interface Scope {
+  in_scope: boolean;
+  category: "investment" | "consumer_credit" | "deposit" | "crypto" | "insurance" | "tax_legal" | "foreign_market" | "no_financial_offer";
+  basis: "supervised_entity" | "warning_listed" | "investment_offer" | "out_of_scope";
+  reason: string;                  // Polish
+  authority_hint?: string | null;  // a hint for the analyst, never a legal qualification
+}
+interface Analysis { scope: Scope; }
+interface Source { published_at?: string | null; }   // when the material was posted (not when it was detected)
+// RegistryCheck.registry gains "knf_tfi" (towarzystwa funduszy inwestycyjnych, KNF).
+// "uknf_cooperation_notice" stays in the enum for old payloads but is no longer produced (decision #21).
+
+// CHANGED (decision #22): neutral paths and outcomes; the system detects and reports, it drafts no formal motions.
+type EscalationPath = "RISK_INFORMATION" | "UNLICENSED_ACTIVITY" | "THIRD_PARTY_ADVERTISING";   // default by module: 2, 3, 1
+type ResolutionAction = "evidence_report" | "content_removed" | "content_corrected" | "false_positive";
+// Old values are rewritten in place on start (SUPERVISION_RISK_DEPT, LEGAL_WARNING_LIST, THIRD_PARTY_AUDIT).
+
+// CHANGED (decision #24): follow-up after an intervention.
+type Status = "new" | "in_review" | "escalation_requested" | "escalated" | "awaiting_correction" | "resolved" | "false_positive";
+// Added transitions: in_review → awaiting_correction · escalated → awaiting_correction ·
+//                    awaiting_correction → resolved | in_review | escalation_requested.
+// awaiting_correction requires a reason (what UKNF did) and takes follow_up_days (1-180, default 14).
+
+// Detection vs post vs later checks (decision #23).
+interface Observation {
+  published_at: string | null;           // the post
+  detected_at: string;                   // the first flagged observation (= created_at)
+  evidence_version_id: number | null;    // the frozen detection; null while the source was never flagged
+  content_state: "online" | "changed" | "removed" | "unreachable";
+  last_checked_at: string;
+}
+interface FollowUp { intervention_at: string; note: string; due: string | null; outcome: "removed" | "corrected" | "persisting" | null; }
+interface Incident { observation: Observation; follow_up: FollowUp | null; previous_incident_id: string | null; }
+interface IncidentSummary {
+  in_scope: boolean | null; content_state: Observation["content_state"];
+  follow_up: { due: string | null; outcome: FollowUp["outcome"] } | null;
+}
+```
+
+Invariant 6: once a case has evidence, a later observation never changes its payload (quotes, rules, archive keys, risk_score); it only appends a version and updates `observation` / `follow_up`.
