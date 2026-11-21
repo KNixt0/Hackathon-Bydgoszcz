@@ -49,6 +49,14 @@ Useful scripts:
 - `./scripts/next-task.sh`: prints the next claimable issue number. It skips issues that are assigned or whose dependencies are still open.
 - `./scripts/claim.sh <issue>`: locks the issue, creates branch `agent/<login>/<issue>` and worktree `.worktrees/<issue>`.
 
+## Owner review gate
+
+Every PR from someone other than **KNixt0** goes through this before merge:
+
+1. **Claude reviews it automatically** (`owner-review.yml`) and leaves comments plus a `claude-verdict: APPROVE | CHANGES` line. This needs the repo secret `CLAUDE_CODE_OAUTH_TOKEN`; without it the step is skipped with a warning.
+2. **KNixt0 gets a review request.** The check `owner-approval` stays red and the PR carries `needs:owner-review` until KNixt0 approves the **latest** commit. A new push needs a new approval.
+3. **Safety net:** GitHub Free can't block the merge button on private repos. If something lands on `main` without that approval, `main-guard.yml` opens an issue assigned to KNixt0 with the diff.
+
 ## Ground rules
 
 Read [coord/PROTOCOL.md](coord/PROTOCOL.md). In short:
