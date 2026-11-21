@@ -187,3 +187,14 @@ No login. The URL is normalised (tracking parameters such as `fbclid`, `gclid`, 
 Events: `incident:updated` on every count change; `alert:viral` (`IncidentSummary`) when a case with `risk_score >= critical` threshold reaches 5 reports.
 
 `GET /api/auth/config` also returns `authenticated: boolean`, so a logged-out page load needs no failing `/api/auth/me` call. `GET /api/audit` also accepts `action`.
+
+### Version 3 notes (as implemented)
+Additions and deviations found in the code; nothing above was renamed.
+- `GET /api/incidents` and the CSV export accept `sort=risk|priority` (default `risk`; other values 422) and `min_reports=<int>` (cases with `user_reports_count >=` the value).
+- `GET /api/incidents/{id}/reports` (login required): `{items: [{created_at, category_hint, comment}]}`, newest first, at most 50, no reporter data.
+- `POST /api/public/reports`: a repeat report from the same reporter for the same URL within 24 h returns 202 with the same body and is not counted. A new URL that the SSRF guard refuses returns 422; a full report-scan queue returns 429 with `Retry-After`. Body: `{status: "accepted", known: boolean}`.
+- `alert:viral` fires also from the pipeline when pending reports are linked to a case after its scan and the count crosses the threshold (5) while `risk_score >= critical`.
+- `Document` carries `affiliate_links` at top level (the links behind `affiliate_params`). `Document.visual` additionally has `max_font_px` (largest text size, desktop; falls back to the dominant size) and `has_viewport_meta`; each `risk_elements[]` and `performance_blocks[]` item has `by_viewport: {desktop|tablet|mobile: measurements}`.
+- Backend settings `VISUAL_AUDIT_ENABLED` (default true) and `VISUAL_AUDIT_TIMEOUT_SECONDS` (default 20) control the rendered audit; it runs only for HTML documents and when Playwright is enabled, otherwise `visual` is absent and the AI service uses static analysis.
+- `GET /api/auth/config` returns `{demo_login, authenticated}`.
+

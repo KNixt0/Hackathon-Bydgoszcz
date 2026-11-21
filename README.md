@@ -9,14 +9,14 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Dashboard: http://localhost:3000. Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
+Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Formularz publiczny dla obywateli, bez logowania: http://localhost:3000/zglos. Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
 Skalowanie workerów: `docker compose up --scale worker=3`.
 
 ## Wymagania sprzętowe
 
 - Docker z Compose v2.
 - Bez modelu lokalnego: 4 CPU, 6 GB RAM, ok. 3 GB miejsca na dysku.
-- Z modelem lokalnym (`gemma4:e4b` + `embeddinggemma:300m` przez Ollama): 16 GB RAM, ok. 12 GB miejsca na dysku.
+- Z modelem lokalnym (`gemma4:e4b` + `embeddinggemma:300m` przez Ollama): 16 GB RAM, ok. 12 GB miejsca na dysku. Zmierzono: ok. 3 s na analizę na laptopie z Apple silicon, gdy Ollama działa na hoście (`OLLAMA_URL=http://host.docker.internal:11434`). Dla Ollamy w kontenerze na CPU nie mamy pomiaru; jest wolniejsza.
 - Po zbudowaniu obrazów system działa offline.
 
 ## Serwisy
@@ -24,9 +24,11 @@ Skalowanie workerów: `docker compose up --scale worker=3`.
 | Serwis | Technologia | Port / rola |
 |---|---|---|
 | frontend | React + nginx | `FRONTEND_PORT` (3000) |
-| backend | FastAPI + Socket.IO | `BACKEND_PORT` (8000) |
-| worker | Celery, scraper httpx + Playwright | kolejka zadań |
+| backend (api) | FastAPI + Socket.IO | `BACKEND_PORT` (8000): REST, logowanie, workflow, dziennik audytu, zgłoszenia publiczne |
+| worker | Celery, scraper httpx + Playwright (Chromium) | kolejka zadań; audyt wizualny w 3 rozdzielczościach |
 | beat | Celery beat | harmonogram (cron) |
+
+`api`, `worker` i `beat` używają jednego obrazu (`investwatch-backend`), więc przebudowa aktualizuje wszystkie trzy.
 | ai | FastAPI | `AI_PORT` (8001): wtyczki modułów 1-3, scoring |
 | postgres | PostgreSQL 16 | baza danych |
 | valkey | Valkey 8 | kolejka (broker) |
@@ -65,6 +67,11 @@ Wartości domyślne z `.env.example`.
 | `EMBEDDINGS_BACKEND` | hash | `hash` lub `ollama` |
 | `OLLAMA_EMBED_MODEL` | embeddinggemma:300m | model embeddingów |
 | `LLM_TIMEOUT_S` | 60 | limit czasu zapytania do modelu (s) |
+| `VISUAL_AUDIT_ENABLED` | true | renderowanie stron w Chromium i pomiar ostrzeżeń (reguły 4-8, 13 `method: "rendered"`) |
+| `VISUAL_AUDIT_TIMEOUT_SECONDS` | 20 | limit czasu audytu wizualnego na dokument |
+| `PUBLIC_REPORTS_PER_HOUR` | 20 | limit zgłoszeń z `/zglos` na zgłaszającego (solony skrót IP) |
+| `PUBLIC_REPORTS_MAX_QUEUED` | 50 | maks. skanów oczekujących, uruchomionych przez zgłoszenia |
+| `PUBLIC_REPORTS_SALT` | (puste) | sól skrótu zgłaszającego; puste = pochodna `JWT_SECRET` |
 | `APP_ENV` | development | `production` wymaga prawdziwego `JWT_SECRET` (min. 32 znaki) |
 | `JWT_SECRET` | (puste) | klucz HS256 sesji; puste + `DEMO_LOGIN=true` = losowy przy każdym starcie |
 | `JWT_EXPIRE_HOURS` | 8 | ważność sesji (h) |
@@ -76,6 +83,14 @@ Wartości domyślne z `.env.example`.
 ## Logowanie demo
 
 Przy starcie backend tworzy dwa konta z `.env`: analityka (`DEMO_ANALYST_*`) i kierownika (`DEMO_SUPERVISOR_*`). Przy `DEMO_LOGIN=true` strona logowania ma przyciski „Zaloguj jako analityk (demo)” i „Zaloguj jako kierownik (demo)”. Tylko kierownik zatwierdza eskalacje, zapisuje progi globalne i widzi dziennik audytu (`/audyt`). Puste hasło oznacza konto dostępne wyłącznie przez logowanie demo. Na produkcji: `APP_ENV=production`, `DEMO_LOGIN=false`, własne hasła i `JWT_SECRET`.
+
+## Ograniczenia
+
+- Demo na Azure działa tylko po HTTP, bez TLS (`deploy/azure/README.md`).
+- Konta demo są jawne; na produkcji `DEMO_LOGIN=false` i własne hasła.
+- Limity zgłoszeń publicznych są w pamięci procesu API (nie współdzielone między replikami).
+- Rejestry KIRP, KIDP i lista doradców to próbki demonstracyjne, nie pełne rejestry.
+- Parsery platform społecznościowych testowano wyłącznie na fixture'ach.
 
 ## Model lokalny (opcjonalnie)
 

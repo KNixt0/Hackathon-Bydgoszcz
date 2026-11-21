@@ -28,6 +28,13 @@ deploy/azure/04-allow-ip.sh 203.0.113.7        # albo 203.0.113.0/24
 Domyślnie porty 22 i 80 są otwarte tylko dla Twojego bieżącego publicznego IP (/32).
 Skrypt odmawia `0.0.0.0/0`, chyba że ustawisz `AZ_ALLOW_PUBLIC=yes`.
 
+## Brak pojemności w regionie
+Subskrypcje studenckie ("Azure for Students") ograniczają regiony polityką i często nie mają wolnych zasobów. Przy pierwszym uruchomieniu Poland Central, Germany West Central i Italy North odrzucały każdy próbowany rozmiar (`SkuNotAvailable`); pojemność była tylko w Belgium Central dla `Standard_B4s_v2`. Gdy provisioning się nie powiedzie, spróbuj innego dozwolonego regionu lub rozmiaru:
+```bash
+AZ_LOCATION=belgiumcentral AZ_RESOURCE_GROUP=rg-investwatch-belgia AZ_VM_SIZE=Standard_B4s_v2 deploy/azure/01-provision.sh
+```
+Te same zmienne przekaż do kolejnych skryptów (lub wpisz je w `config.env`). Listę dozwolonych regionów pokaże `az account list-locations`, a dostępność rozmiaru `az vm list-skus`.
+
 ## Usunięcie
 ```bash
 deploy/azure/99-teardown.sh    # pokazuje zasoby i usuwa całą grupę zasobów po potwierdzeniu
@@ -41,6 +48,6 @@ VM jest rozliczana, dopóki działa. Cena zależy od regionu i rozmiaru maszyny;
 ## Ograniczenia
 - tylko HTTP, bez TLS
 - jedna VM, bez wysokiej dostępności
-- panel nie ma logowania, dlatego dostęp jest ograniczony adresami IP; backend i AI nie są publikowane na hoście, na zewnątrz wystawiony jest tylko frontend (port 80)
+- panel ma logowanie, ale konta demo są publicznie znane, dlatego ograniczenie adresów IP zostaje obowiązkowe (nie ustawiaj `AZ_ALLOW_PUBLIC=yes`); backend i AI nie są publikowane na hoście, na zewnątrz wystawiony jest tylko frontend (port 80)
 - model lokalny działa na CPU i jest wolny, dlatego domyślnie jest wyłączony
 - pierwsze budowanie może być spowolnione limitami Docker Hub
