@@ -1,0 +1,13 @@
+# Override for the Azure VM. Use together with the base file:
+#   docker compose -f docker-compose.yml -f deploy/azure/compose.azure.yml up -d --build
+# Requires Docker Compose >= 2.24.6 (YAML tags !reset / !override).
+# Compose MERGES list fields such as `ports` by default, so a plain `ports: []`
+# would not remove anything. `!reset` clears the inherited list, `!override` replaces it.
+services:
+  backend:
+    ports: !reset []
+  ai:
+    ports: !reset []
+  frontend:
+    ports: !override
+      - "80:8080"
