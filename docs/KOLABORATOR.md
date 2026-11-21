@@ -83,7 +83,43 @@ Twój PR przechodzi kolejno:
 
 Jeśli dostaniesz uwagi, popraw je w tym samym folderze i zrób `git push`. PR zaktualizuje się sam, ale nowy commit wymaga ponownego zatwierdzenia.
 
-## 5. Na koniec sesji
+## 5. Podgląd na żywo
+
+Masz dwa różne podglądy.
+
+**a) Podgląd produktu**, czyli tego, co budujesz. Wymaga Dockera i istnieje od momentu, gdy w repo jest `docker-compose.yml` (zadanie „skeleton”).
+
+```bash
+./swarm preview 12        # uruchamia całą aplikację z folderu zadania #12
+./swarm preview           # wersja z main
+```
+
+Każde zadanie dostaje własne porty, więc kilka podglądów działa obok siebie:
+- zadanie #12 to frontend `localhost:5120`, backend `6120`, AI `7120`,
+- `main` to porty `5000`, `6000` i `7000`.
+
+Adresy wypisują się na starcie. Frontend przeładowuje się sam po zapisaniu pliku.
+
+**b) Podgląd pracy swarmu**: kto nad czym pracuje, lampki recenzji, merge'e.
+
+```bash
+./swarm view              # albo dwuklik w Swarm.command na Macu
+```
+
+## 6. Jak dobierany jest model i effort
+
+- **Twój model wybierasz Ty.** Ustawiasz go flagami `--tool`, `--model` i `--tier`. Dla Claude Code bez flag worker bierze model z `coord/roles.json`:
+  - zwykłe zadanie: Sonnet / medium,
+  - zadanie z etykietą `model:opus`: Opus / high,
+  - zadanie z etykietą `size:xs`: Haiku / low.
+- **Lead dobiera zadania do modeli, a nie modele do zadań.** Oznacza trudność zadania. Poziom z Twojego meldunku decyduje, co możesz wziąć:
+  - `strong` (Opus, GPT-5, Gemini Pro): wszystko, trudne zadania w pierwszej kolejności,
+  - `standard` (Sonnet, GPT-5 mini, Gemini Flash): wszystko poza `model:opus`,
+  - `light` (Haiku, małe modele lokalne): tylko `size:xs`.
+- **Rezerwacje:** jeśli w meldunku podasz mocne strony (`--strengths frontend`), lead może zarezerwować dla Ciebie pasujące zadanie. Takie zadanie weźmiesz jako pierwsze.
+- **Oszczędzanie limitów:** odpalaj `--loop` tylko wtedy, gdy masz limit do wykorzystania. Do drobnych zadań używaj tańszego modelu (`--tier light`).
+
+## 7. Na koniec sesji
 
 ```bash
 ./swarm checkin --status offline
@@ -96,7 +132,7 @@ Jeśli dostaniesz uwagi, popraw je w tym samym folderze i zrób `git push`. PR z
 | Claude Code (terminal) | `./swarm work …` (domyślne narzędzie) |
 | Codex CLI | `./swarm work --tool codex --model …` |
 | Gemini CLI | `./swarm work --tool gemini --model …` |
-| Cursor / Antigravity (edytor) | Wariant B: `./swarm claim N`, praca w edytorze, `./swarm done N` |
+| Cursor / Antigravity (edytor) | Wariant B: `./swarm claim N`, praca w edytorze, podgląd `./swarm preview N`, potem `./swarm done N` |
 | Agenci w chmurze: claude.ai, Cursor Background Agents, Codex cloud | aplikacje Claude, Cursor i Codex są zainstalowane na repo. Połącz GitHub w danym narzędziu (np. claude.ai → Settings → Connectors) i wybierz to repo |
 | Antigravity w chmurze | łączy się przez Twoje konto GitHub (OAuth), więc jako kolaborator widzisz repo |
 
