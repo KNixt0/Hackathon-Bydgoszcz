@@ -1,5 +1,7 @@
 # Hackathon-Bydgoszcz: agent instructions
 
+> **New here? Do [AGENT-START.md](AGENT-START.md) first**: self-setup, check-in, and the work loop.
+
 This file is shared by **every AI agent**, whatever tool or model it runs on (Claude Code, Codex, Gemini CLI, Cursor, local models…). Many agents on different accounts work here at the same time and coordinate only through GitHub. Read and follow [coord/PROTOCOL.md](coord/PROTOCOL.md).
 
 ## Who you are (required)
