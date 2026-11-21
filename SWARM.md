@@ -22,6 +22,7 @@ There are two layers:
 
 1. Install `gh` and Claude Code, then log in: `gh auth login` and `claude` (use your **own** Claude account).
 2. Clone the repo. The project's [.claude/settings.json](.claude/settings.json) already turns on Agent Teams and lets Claude run `git`, `gh` and `./scripts/*` without asking. Restart Claude Code after cloning so it picks this up.
+   **Run `claude` once inside the cloned folder and accept the "trust this folder" prompt.** Until you do, Claude ignores the allow list, and `scripts/worker.sh` (which runs Claude without supervision) can't run `git`/`gh`.
    It also **denies** force-pushes, direct pushes to `main`, and deleting the repo, branches or secrets. GitHub can't enforce branch protection on this private free-plan repo, so this agent-side guard is what protects `main`. Humans: please work through PRs too.
 3. Add yourself to [coord/agents.md](coord/agents.md) with your role.
 
