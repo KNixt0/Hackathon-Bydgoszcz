@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swarm na żywo</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --bg: #0c0f15; --panel: #121722; --zone: #161c29; --zone-edge: #232b3c;
+    --card: #1e2535; --card-edge: #2d3750; --text: #e7eaf0; --muted: #8b94a7; --faint: #5a6378;
+    --ok: #3fb950; --bad: #f2564b; --wait: #e0a526; --off: #465065; --accent: #8a96ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
+    padding: 14px 20px; border-bottom: 1px solid var(--zone-edge); }
+  h1 { font-size: 16px; font-weight: 650; margin: 0; letter-spacing: .01em; }
+  .sub { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--off); flex: none; }
+  .dot.on { background: var(--ok); animation: pulse 2s infinite; }
+  .dot.err { background: var(--bad); }
+  .dot.demo { background: var(--accent); }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgb(63 185 80 / .55); } 70% { box-shadow: 0 0 0 8px rgb(63 185 80 / 0); } 100% { box-shadow: 0 0 0 0 rgb(63 185 80 / 0); } }
+  .stats { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-left: auto; font-variant-numeric: tabular-nums; }
+  .stat { min-width: 64px; }
+  .stat b { display: block; font-size: 18px; font-weight: 650; }
+  .stat span { color: var(--muted); font-size: 12px; }
+  .mode { font: inherit; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--card-edge);
+    border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .mode:hover { border-color: var(--accent); }
+  .mode:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 300px; }
+  @media (max-width: 1100px) { main { grid-template-columns: minmax(0, 1fr); } aside { border-left: 0; border-top: 1px solid var(--zone-edge); max-height: none; } }
+  .stage { padding: 14px; min-width: 0; }
+  canvas { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; background: var(--panel); }
+  .err { color: var(--bad); font-size: 13px; margin: 8px 2px 0; min-height: 1em; }
+  aside { border-left: 1px solid var(--zone-edge); padding: 14px 16px; max-height: calc(100vh - 66px); overflow: auto; }
+  aside h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 2px 0 10px; }
+  ol { list-style: none; margin: 0; padding: 0; }
+  li { display: grid; grid-template-columns: 10px 1fr; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid #1a2030; }
+  li .who { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
+  li .txt { overflow-wrap: anywhere; }
+  li time { grid-column: 2; color: var(--faint); font-size: 12px; }
+  li.fresh { animation: fresh 1.6s ease-out; }
+  @keyframes fresh { from { background: rgb(138 150 255 / .14); } to { background: transparent; } }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 12px; margin: 10px 2px 0; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  @media (prefers-reduced-motion: reduce) { .dot.on, li.fresh { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Swarm na żywo</h1>
+    <div class="sub"><span id="dot" class="dot"></span><span id="status">łączenie…</span></div>
+  </div>
+  <div class="stats" aria-label="Podsumowanie">
+    <div class="stat"><b id="s-ready">0</b><span>do wzięcia</span></div>
+    <div class="stat"><b id="s-work">0</b><span>w pracy</span></div>
+    <div class="stat"><b id="s-review">0</b><span>w recenzji</span></div>
+    <div class="stat"><b id="s-blocked">0</b><span>zablokowane</span></div>
+    <div class="stat"><b id="s-merged">0</b><span>zmergowane</span></div>
+  </div>
+  <button id="mode" class="mode" type="button"></button>
+</header>
+<main>
+  <div class="stage">
+    <canvas id="c" role="img" aria-label="Animowana mapa pracy agentów: zadania, warsztat, recenzja i main"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--ok)"></i>zielone</span>
+      <span><i style="background:var(--wait)"></i>w toku</span>
+      <span><i style="background:var(--bad)"></i>błąd / czeka</span>
+      <span><i style="background:var(--off)"></i>brak</span>
+      <span>Lampki w recenzji: <b>CI</b> · <b>AI</b> (recenzja Claude) · <b>Ty</b> (zatwierdzenie właściciela)</span>
+    </div>
+    <p id="err" class="err" role="alert"></p>
+  </div>
+  <aside>
+    <h2>Aktywność</h2>
+    <ol id="feed" aria-live="polite"></ol>
+  </aside>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const DEMO = new URLSearchParams(location.search).has("demo");
+  const POLL_MS = DEMO ? 2600 : 10000;
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const C = Object.fromEntries(["bg","panel","zone","zone-edge","card","card-edge","text","muted","faint","ok","bad","wait","off","accent"].map(k => [k, css("--" + k)]));
+
+  // ---------- world layout (virtual 1600x900, scaled to the canvas) ----------
+  const W = 1600, H = 900;
+  const Z = {
+    ready:   { x: 24,   y: 24,  w: 340, h: 610, t: "Do wzięcia" },
+    work:    { x: 384,  y: 24,  w: 606, h: 610, t: "Warsztat" },
+    review:  { x: 1010, y: 24,  w: 360, h: 610, t: "Recenzja" },
+    main:    { x: 1390, y: 24,  w: 186, h: 852, t: "main" },
+    team:    { x: 24,   y: 654, w: 966, h: 222, t: "Zespół" },
+    blocked: { x: 1010, y: 654, w: 360, h: 222, t: "Zablokowane" },
+  };
+  const CARD_W = 150, CARD_H = 44;
+
+  const hue = s => { let h = 7; for (const ch of s || "?") h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 360; };
+  const tint = (s, l = 62, a = 1) => s ? `hsl(${hue(s)} 68% ${l}% / ${a})` : `hsl(220 10% ${l - 10}% / ${a})`;
+
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  let scale = 1, ox = 0, oy = 0;
+  function resize() {
+    const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+    scale = Math.min(canvas.width / W, canvas.height / H);
+    ox = (canvas.width - W * scale) / 2; oy = (canvas.height - H * scale) / 2;
+  }
+  addEventListener("resize", resize);
+
+  // ---------- state → zones ----------
+  const labelsOf = i => new Set((i.labels || []).map(l => l.name));
+  function zoneOf(issue, pr) {
+    const L = labelsOf(issue);
+    if (L.has("status:blocked") || L.has("status:needs-decision")) return "blocked";
+    if (pr || L.has("status:review")) return "review";
+    if (L.has("status:claimed") || (issue.assignees || []).length) return "work";
+    return "ready";
+  }
+  const lamp = (pr, match) => {
+    if (!pr) return "NONE";
+    const hits = (pr.checks || []).filter(c => match(c.name));
+    if (!hits.length) return "NONE";
+    const s = hits.map(c => c.state);
+    if (s.some(x => ["FAILURE","ERROR","CANCELLED","TIMED_OUT","ACTION_REQUIRED","STARTUP_FAILURE"].includes(x))) return "BAD";
+    if (s.every(x => ["SUCCESS"].includes(x))) return "OK";
+    if (s.every(x => ["SKIPPED","NEUTRAL"].includes(x))) return "NONE";
+    return "WAIT";
+  };
+  const lampColor = s => ({ OK: C.ok, BAD: C.bad, WAIT: C.wait })[s] || C.off;
+
+  // layout: returns Map key -> {kind, tx, ty, ...}
+  function layout(st) {
+    const out = new Map();
+    const prByIssue = {}, loose = [];
+    for (const p of st.prs || []) {
+      const refs = (p.closingIssuesReferences || []).map(r => r.number);
+      refs.length ? refs.forEach(n => (prByIssue[n] = p)) : loose.push(p);
+    }
+    const zones = { ready: [], work: [], review: [], blocked: [] };
+    for (const i of st.issues || []) {
+      const pr = prByIssue[i.number] || null;
+      if (pr && pr.isDraft && !labelsOf(i).has("status:review")) { zones.work.push(item(i, pr)); continue; }
+      zones[zoneOf(i, pr)].push(item(i, pr));
+    }
+    for (const p of loose) zones.review.push({ key: "p" + p.number, n: p.number, title: p.title, owner: p.author?.login, pr: p, isPR: true });
+    for (const k in zones) zones[k].sort((a, b) => a.n - b.n);
+
+    // ready board: 2 columns of cards
+    const R = Z.ready, perCol = Math.floor((R.h - 64) / (CARD_H + 10));
+    zones.ready.slice(0, perCol * 2).forEach((it, k) => {
+      const col = k % 2, row = Math.floor(k / 2);
+      out.set(it.key, { kind: "card", it, zone: "ready", tx: R.x + 14 + col * (CARD_W + 12), ty: R.y + 52 + row * (CARD_H + 10) });
+    });
+    // workshop: 3x3 desks
+    const Wk = Z.work, cw = Wk.w / 3, ch = (Wk.h - 44) / 3;
+    zones.work.slice(0, 9).forEach((it, k) => {
+      const cx = Wk.x + cw * (k % 3) + cw / 2, cy = Wk.y + 44 + ch * Math.floor(k / 3);
+      out.set(it.key, { kind: "card", it, zone: "work", tx: cx - CARD_W / 2, ty: cy + 18, desk: { x: cx, y: cy } });
+      out.set("b" + it.key, { kind: "bot", it, zone: "work", owner: it.owner, tx: cx, ty: cy + 136 });
+    });
+    // review: rows with three lamps
+    const Rv = Z.review;
+    zones.review.slice(0, 8).forEach((it, k) => {
+      const y = Rv.y + 66 + k * 66;
+      const lamps = [
+        lamp(it.pr, n => n === "check" || /^ci\b/i.test(n)),
+        lamp(it.pr, n => /claude/i.test(n)),
+        it.owner === st.owner ? "OK" : lamp(it.pr, n => /owner-approval/i.test(n)),
+      ];
+      out.set(it.key, { kind: "card", it, zone: "review", tx: Rv.x + 58, ty: y, lamps });
+      out.set("b" + it.key, { kind: "bot", it, zone: "review", owner: it.owner, tx: Rv.x + 32, ty: y + CARD_H });
+    });
+    // blocked
+    const B = Z.blocked;
+    zones.blocked.slice(0, 6).forEach((it, k) => {
+      const col = k % 2, row = Math.floor(k / 2);
+      const x = B.x + 40 + col * 166, y = B.y + 48 + row * 56;
+      out.set(it.key, { kind: "card", it, zone: "blocked", tx: x, ty: y, w: 120 });
+      out.set("b" + it.key, { kind: "bot", it, zone: "blocked", owner: it.owner, tx: x - 16, ty: y + CARD_H - 2 });
+    });
+    // main: merged PRs as commit nodes, newest on top
+    const M = Z.main;
+    (st.merged || []).slice(0, 16).forEach((p, k) => {
+      out.set("m" + p.number, { kind: "node", it: { n: p.number, title: p.title, owner: p.author?.login }, zone: "main", tx: M.x + 30, ty: M.y + 70 + k * 49 });
+    });
+    // team: humans
+    const team = teamList(st), T = Z.team, step = Math.min(150, (T.w - 60) / Math.max(1, team.length));
+    team.forEach((login, k) => {
+      out.set("h" + login, { kind: "human", it: { owner: login, isOwner: login === st.owner }, zone: "team",
+        tx: T.x + 30 + step / 2 + k * step, ty: T.y + 108 });
+    });
+    return { out, counts: Object.fromEntries(Object.entries(zones).map(([k, v]) => [k, v.length])), overflow: {
+      ready: Math.max(0, zones.ready.length - perCol * 2), work: Math.max(0, zones.work.length - 9),
+      review: Math.max(0, zones.review.length - 8), blocked: Math.max(0, zones.blocked.length - 6) } };
+
+    function item(i, pr) {
+      return { key: "i" + i.number, n: i.number, title: i.title,
+        owner: (i.assignees || [])[0]?.login || pr?.author?.login || null, pr, labels: labelsOf(i) };
+    }
+  }
+  function teamList(st) {
+    const set = new Set(st.collaborators || []);
+    for (const i of st.issues || []) for (const a of i.assignees || []) set.add(a.login);
+    for (const p of st.prs || []) if (p.author?.login) set.add(p.author.login);
+    const arr = [...set];
+    arr.sort((a, b) => (a === st.owner ? -1 : b === st.owner ? 1 : a.localeCompare(b)));
+    return arr;
+  }
+
+  // ---------- entities ----------
+  const ents = new Map();
+  let particles = [], firstLoad = true, prevMerged = new Set(), lastState = null, view = null;
+  const now = () => performance.now() / 1000;
+
+  function apply(st) {
+    lastState = st;
+    view = layout(st);
+    const t = now();
+    const newlyMerged = new Set();
+    for (const p of st.merged || []) if (!firstLoad && !prevMerged.has(p.number)) newlyMerged.add(p);
+    const closedByMerge = new Map();
+    for (const p of newlyMerged) for (const r of p.closingIssuesReferences || []) closedByMerge.set("i" + r.number, p.number);
+
+    // update / spawn
+    for (const [key, v] of view.out) {
+      let e = ents.get(key);
+      if (!e) {
+        e = { key, kind: v.kind, seed: Math.random() * 10, born: t, alpha: firstLoad ? 1 : 0, x: v.tx, y: v.ty };
+        if (!firstLoad && v.kind === "bot") { const h = ents.get("h" + v.owner); if (h) { e.x = h.x; e.y = h.y - 10; } }
+        if (!firstLoad && v.kind === "card" && v.zone !== "ready") { const old = ents.get("p" + v.it.n); if (old) { e.x = old.x; e.y = old.y; } }
+        if (!firstLoad && v.kind === "node") { e.y = v.ty - 40; }
+        ents.set(key, e);
+        if (!firstLoad && v.kind === "card" && v.zone === "work") burst(v.tx + CARD_W / 2, v.ty, tint(v.it.owner), 10);
+      }
+      Object.assign(e, v, { dying: false, talpha: 1 });
+    }
+    // die
+    for (const [key, e] of ents) {
+      if (view.out.has(key) || e.dying) continue;
+      e.dying = true; e.talpha = 0; e.diedAt = t;
+      if (e.kind === "card" && closedByMerge.has(key)) {
+        const node = view.out.get("m" + closedByMerge.get(key));
+        if (node) { e.tx = node.tx - 10; e.ty = node.ty - CARD_H / 2; e.fadeDelay = 0.9; }
+      } else if (e.kind === "bot") {
+        const h = view.out.get("h" + e.owner);
+        if (h) { e.tx = h.tx; e.ty = h.ty - 6; e.fadeDelay = 1.6; }
+      }
+    }
+    for (const p of newlyMerged) {
+      const node = view.out.get("m" + p.number);
+      if (node) setTimeout(() => burst(node.tx, node.ty, tint(p.author?.login), 34), REDUCED ? 0 : 700);
+      pushFeed({ actor: p.author?.login, text: `wprowadził PR #${p.number} na main: ${p.title}`, at: new Date().toISOString(), fresh: true });
+    }
+    prevMerged = new Set((st.merged || []).map(p => p.number));
+    firstLoad = false;
+
+    // header stats
+    const c = view.counts;
+    setText("s-ready", c.ready); setText("s-work", c.work); setText("s-review", c.review);
+    setText("s-blocked", c.blocked); setText("s-merged", (st.merged || []).length);
+  }
+  const setText = (id, v) => { const el = document.getElementById(id); if (el.textContent !== String(v)) el.textContent = v; };
+
+  function burst(x, y, color, n) {
+    if (REDUCED) return;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, s = 60 + Math.random() * 160;
+      particles.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 60, life: 1, color: Math.random() < .3 ? C.text : color, size: 2 + Math.random() * 3 });
+    }
+  }
+
+  // ---------- drawing ----------
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+  const fitCache = new Map();
+  function fit(text, maxW, font) {
+    const k = font + "|" + maxW + "|" + text;
+    if (fitCache.has(k)) return fitCache.get(k);
+    ctx.font = font; let s = text || "";
+    if (ctx.measureText(s).width > maxW) { while (s.length > 1 && ctx.measureText(s + "…").width > maxW) s = s.slice(0, -1); s += "…"; }
+    if (fitCache.size > 2000) fitCache.clear();
+    fitCache.set(k, s); return s;
+  }
+
+  function drawZones(t) {
+    for (const [k, z] of Object.entries(Z)) {
+      rr(z.x, z.y, z.w, z.h, 14); ctx.fillStyle = C.zone; ctx.fill();
+      ctx.strokeStyle = C["zone-edge"]; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = C.muted; ctx.font = "600 13px system-ui, sans-serif";
+      ctx.fillText(z.t.toUpperCase(), z.x + 16, z.y + 28);
+      const n = view ? (k === "main" ? (lastState?.merged || []).length : k === "team" ? null : view.counts[k]) : null;
+      if (n != null) { ctx.textAlign = "right"; ctx.fillStyle = C.faint; ctx.fillText(String(n), z.x + z.w - 16, z.y + 28); ctx.textAlign = "left"; }
+      const over = view?.overflow?.[k];
+      if (over) { ctx.fillStyle = C.faint; ctx.font = "12px system-ui, sans-serif"; ctx.fillText(`+${over} więcej`, z.x + 16, z.y + z.h - 14); }
+    }
+    // board pins grid
+    ctx.fillStyle = "rgb(255 255 255 / .035)";
+    for (let x = Z.ready.x + 20; x < Z.ready.x + Z.ready.w - 10; x += 22)
+      for (let y = Z.ready.y + 46; y < Z.ready.y + Z.ready.h - 10; y += 22) ctx.fillRect(x, y, 2, 2);
+    // workshop desks (empty ones too)
+    const Wk = Z.work, cw = Wk.w / 3, ch = (Wk.h - 44) / 3;
+    for (let k = 0; k < 9; k++) {
+      const cx = Wk.x + cw * (k % 3) + cw / 2, cy = Wk.y + 44 + ch * Math.floor(k / 3);
+      rr(cx - 86, cy + 8, 172, 92, 10); ctx.fillStyle = "rgb(255 255 255 / .025)"; ctx.fill();
+      ctx.strokeStyle = "rgb(255 255 255 / .05)"; ctx.stroke();
+      // monitor stand
+      ctx.fillStyle = "rgb(255 255 255 / .05)"; ctx.fillRect(cx - 3, cy + 62, 6, 20); ctx.fillRect(cx - 22, cy + 82, 44, 4);
+    }
+    // blocked hazard stripes
+    const B = Z.blocked;
+    ctx.save(); rr(B.x + 1, B.y + B.h - 10, B.w - 2, 9, [0, 0, 13, 13]); ctx.clip();
+    for (let x = B.x - 20; x < B.x + B.w + 20; x += 18) {
+      ctx.fillStyle = "rgb(224 165 38 / .35)"; ctx.beginPath();
+      ctx.moveTo(x, B.y + B.h); ctx.lineTo(x + 9, B.y + B.h - 10); ctx.lineTo(x + 18, B.y + B.h - 10); ctx.lineTo(x + 9, B.y + B.h); ctx.fill();
+    }
+    ctx.restore();
+    // main branch line
+    const M = Z.main, lx = M.x + 30;
+    const g = ctx.createLinearGradient(0, M.y + 50, 0, M.y + M.h - 20);
+    g.addColorStop(0, C.accent); g.addColorStop(1, "rgb(138 150 255 / .08)");
+    ctx.strokeStyle = g; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(lx, M.y + 50); ctx.lineTo(lx, M.y + M.h - 20); ctx.stroke();
+    // review column labels
+    const Rv = Z.review; ctx.fillStyle = C.faint; ctx.font = "600 11px system-ui, sans-serif"; ctx.textAlign = "center";
+    ["CI", "AI", "Ty"].forEach((s, i) => ctx.fillText(s, Rv.x + 254 + i * 30, Rv.y + 54)); ctx.textAlign = "left";
+  }
+
+  function drawCard(e, t) {
+    const w = e.w || CARD_W, it = e.it;
+    ctx.globalAlpha = e.alpha;
+    // shadow + body
+    ctx.fillStyle = "rgb(0 0 0 / .25)"; rr(e.x + 2, e.y + 4, w, CARD_H, 8); ctx.fill();
+    rr(e.x, e.y, w, CARD_H, 8); ctx.fillStyle = C.card; ctx.fill();
+    ctx.strokeStyle = e.zone === "blocked" ? "rgb(242 86 75 / .55)" : C["card-edge"]; ctx.lineWidth = 1; ctx.stroke();
+    // owner strip
+    ctx.fillStyle = it.owner ? tint(it.owner) : C.off; rr(e.x, e.y, 4, CARD_H, [8, 0, 0, 8]); ctx.fill();
+    ctx.fillStyle = C.muted; ctx.font = "600 11px ui-monospace, SFMono-Regular, Menlo, monospace";
+    ctx.fillText((it.isPR ? "PR " : "") + "#" + it.n, e.x + 12, e.y + 16);
+    if (e.zone === "blocked") { ctx.fillStyle = C.bad; ctx.fillText(it.labels?.has("status:needs-decision") ? "decyzja" : "blokada", e.x + w - 54, e.y + 16); }
+    else if (it.pr && e.zone !== "review") { ctx.fillStyle = C.accent; ctx.fillText("PR", e.x + w - 24, e.y + 16); }
+    ctx.fillStyle = C.text; const f = "13px system-ui, sans-serif";
+    ctx.font = f; ctx.fillText(fit(it.title, w - 22, f), e.x + 12, e.y + 34);
+    // review lamps
+    if (e.lamps && e.zone === "review" && !e.dying) {
+      e.lamps.forEach((s, i) => {
+        const lx = Z.review.x + 254 + i * 30, ly = e.y + CARD_H / 2;
+        if (s === "WAIT" && !REDUCED) { ctx.fillStyle = `rgb(224 165 38 / ${.18 + .14 * Math.sin(t * 4 + i)})`; ctx.beginPath(); ctx.arc(lx, ly, 11, 0, 7); ctx.fill(); }
+        ctx.fillStyle = lampColor(s); ctx.beginPath(); ctx.arc(lx, ly, 6.5, 0, 7); ctx.fill();
+      });
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawNode(e, t, idx) {
+    ctx.globalAlpha = e.alpha;
+    const it = e.it, col = tint(it.owner);
+    if (idx === 0 && !REDUCED) { ctx.strokeStyle = `rgb(138 150 255 / ${.35 + .3 * Math.sin(t * 3)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e.x, e.y, 13, 0, 7); ctx.stroke(); }
+    ctx.fillStyle = C.zone; ctx.beginPath(); ctx.arc(e.x, e.y, 8.5, 0, 7); ctx.fill();
+    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = C.muted; ctx.font = "600 11px ui-monospace, Menlo, monospace"; ctx.fillText("#" + it.n, e.x + 18, e.y - 4);
+    const f = "12px system-ui, sans-serif"; ctx.fillStyle = C.text; ctx.font = f; ctx.fillText(fit(it.title, 128, f), e.x + 18, e.y + 12);
+    ctx.globalAlpha = 1;
+  }
+
+  function drawHuman(e, t) {
+    const it = e.it, col = tint(it.owner, 46);
+    const active = [...ents.values()].filter(b => b.kind === "bot" && !b.dying && b.owner === it.owner).length;
+    ctx.globalAlpha = e.alpha;
+    ctx.fillStyle = "rgb(0 0 0 / .28)"; ctx.beginPath(); ctx.ellipse(e.x, e.y + 30, 24, 6, 0, 0, 7); ctx.fill();
+    if (active && !REDUCED) { ctx.strokeStyle = tint(it.owner, 62, .35 + .2 * Math.sin(t * 2.4 + e.seed)); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(e.x, e.y, 30, 0, 7); ctx.stroke(); }
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(e.x, e.y, 25, 0, 7); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.font = "700 15px system-ui, sans-serif"; ctx.textAlign = "center";
+    ctx.fillText((it.owner || "?").slice(0, 2).toUpperCase(), e.x, e.y + 5);
+    ctx.fillStyle = C.muted; ctx.font = "12px system-ui, sans-serif";
+    ctx.fillText(fit(it.owner, 130, "12px system-ui, sans-serif"), e.x, e.y + 50);
+    if (it.isOwner) { ctx.fillStyle = C.wait; ctx.font = "600 11px system-ui, sans-serif"; ctx.fillText("właściciel", e.x, e.y + 66); }
+    if (active) {
+      ctx.fillStyle = C.accent; ctx.beginPath(); ctx.arc(e.x + 20, e.y - 19, 10, 0, 7); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = "700 11px system-ui, sans-serif"; ctx.fillText(String(active), e.x + 20, e.y - 15);
+    }
+    ctx.textAlign = "left"; ctx.globalAlpha = 1;
+  }
+
+  function drawBot(e, t) {
+    const moving = Math.hypot(e.tx - e.x, e.ty - e.y) > 3;
+    const working = e.zone === "work" && !moving && !e.dying;
+    const ph = t * 10 + e.seed;
+    const bob = REDUCED ? 0 : moving ? -Math.abs(Math.sin(ph)) * 5 : working ? Math.sin(t * 5 + e.seed) * 1.2 : Math.sin(t * 2 + e.seed) * 1;
+    const x = e.x, y = e.y + bob, col = tint(e.owner, 60), dark = tint(e.owner, 30);
+    ctx.globalAlpha = e.alpha;
+    ctx.fillStyle = "rgb(0 0 0 / .3)"; ctx.beginPath(); ctx.ellipse(e.x, e.y + 2, 13, 4, 0, 0, 7); ctx.fill();
+    // legs
+    const step = moving && !REDUCED ? Math.sin(ph) * 3 : 0;
+    ctx.fillStyle = dark; ctx.fillRect(x - 8, y - 8 + step, 5, 8 - step); ctx.fillRect(x + 3, y - 8 - step, 5, 8 + step);
+    // body
+    rr(x - 14, y - 34, 28, 27, 8); ctx.fillStyle = col; ctx.fill();
+    // visor + eyes (blink)
+    rr(x - 10, y - 29, 20, 11, 5); ctx.fillStyle = "#0b0e14"; ctx.fill();
+    const blink = !REDUCED && ((t + e.seed) % 4) < .12;
+    ctx.fillStyle = e.zone === "blocked" ? C.bad : "#bff3ff";
+    if (blink) { ctx.fillRect(x - 6, y - 24, 4, 1.5); ctx.fillRect(x + 2, y - 24, 4, 1.5); }
+    else { ctx.fillRect(x - 6, y - 26, 4, 5); ctx.fillRect(x + 2, y - 26, 4, 5); }
+    // antenna
+    ctx.strokeStyle = dark; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y - 34); ctx.lineTo(x, y - 41); ctx.stroke();
+    ctx.fillStyle = working && !REDUCED && Math.sin(t * 8 + e.seed) > 0 ? C.wait : col; ctx.beginPath(); ctx.arc(x, y - 43, 3, 0, 7); ctx.fill();
+    // arms typing on the desk
+    if (working) {
+      const a = REDUCED ? 0 : Math.sin(t * 18 + e.seed) * 2;
+      ctx.fillStyle = dark; ctx.fillRect(x - 19, y - 24 + a, 5, 10); ctx.fillRect(x + 14, y - 24 - a, 5, 10);
+      // floating code glyphs
+      if (!REDUCED) {
+        ctx.font = "600 11px ui-monospace, Menlo, monospace"; ctx.textAlign = "center";
+        for (let i = 0; i < 2; i++) {
+          const p = ((t * .6 + e.seed + i * .5) % 1);
+          ctx.fillStyle = tint(e.owner, 75, (1 - p) * .8);
+          ctx.fillText(["{ }", "</>", "01", "fn", "=>", "++"][Math.floor(e.seed * 3 + i + t * .6) % 6], x + (i ? 22 : -24), y - 46 - p * 28);
+        }
+        ctx.textAlign = "left";
+      }
+    }
+    // speech bubbles
+    if (!moving && !e.dying && (e.zone === "review" || e.zone === "blocked")) {
+      const bx = x + 12, by = y - 58;
+      rr(bx, by, 28, 18, 7); ctx.fillStyle = C.card; ctx.fill(); ctx.strokeStyle = C["card-edge"]; ctx.stroke();
+      ctx.fillStyle = e.zone === "blocked" ? C.bad : C.muted; ctx.font = "700 12px system-ui, sans-serif"; ctx.textAlign = "center";
+      const dots = REDUCED ? 3 : 1 + Math.floor(t * 2.5 % 3);
+      ctx.fillText(e.zone === "blocked" ? "?" : ".".repeat(dots), bx + 14, by + 13);
+      ctx.textAlign = "left";
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawEmpty() {
+    if (!lastState || DEMO) return;
+    if ((lastState.issues || []).length || (lastState.prs || []).length) return;
+    const R = Z.ready;
+    ctx.fillStyle = C.muted; ctx.font = "600 15px system-ui, sans-serif";
+    ctx.fillText("Brak otwartych zadań", R.x + 20, R.y + 80);
+    ctx.fillStyle = C.faint; ctx.font = "13px system-ui, sans-serif";
+    ["Uruchom planera:", "coord/prompts/planner.md", "", "albo włącz Demo (przycisk u góry),", "żeby zobaczyć animację."].forEach((s, i) => ctx.fillText(s, R.x + 20, R.y + 108 + i * 20));
+  }
+
+  // ---------- loop ----------
+  let last = now(), lastRaf = 0;
+  function loop() { lastRaf = performance.now(); frame(); requestAnimationFrame(loop); }
+  // Fallback clock: keeps animating when rAF is paused (hidden pane, background screen).
+  setInterval(() => { if (performance.now() - lastRaf > 250) frame(); }, 100);
+  function frame() {
+    const t = now(), dt = Math.min(.1, t - last); last = t;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(scale, 0, 0, scale, ox, oy);
+    drawZones(t);
+    // move
+    for (const [key, e] of ents) {
+      const speed = e.kind === "bot" ? 300 : e.kind === "human" ? 400 : 700;
+      const dx = e.tx - e.x, dy = e.ty - e.y, d = Math.hypot(dx, dy);
+      if (REDUCED || d < 1) { e.x = e.tx; e.y = e.ty; }
+      else { const s = Math.min(d, speed * dt * (e.kind === "bot" ? 1 : Math.max(.25, Math.min(1.6, d / 160)))); e.x += dx / d * s; e.y += dy / d * s; }
+      const target = e.dying ? (t - e.diedAt > (e.fadeDelay || 0) ? 0 : 1) : 1;
+      e.alpha += (target - e.alpha) * Math.min(1, dt * (REDUCED ? 60 : 5));
+      if (e.dying && e.alpha < .02 && t - e.diedAt > (e.fadeDelay || 0)) ents.delete(key);
+    }
+    const list = [...ents.values()];
+    const nodes = list.filter(e => e.kind === "node").sort((a, b) => a.ty - b.ty);
+    nodes.forEach((e, i) => drawNode(e, t, i));
+    list.filter(e => e.kind === "human").forEach(e => drawHuman(e, t));
+    list.filter(e => e.kind === "card").sort((a, b) => (a.dying - b.dying) || a.y - b.y).forEach(e => drawCard(e, t));
+    list.filter(e => e.kind === "bot").sort((a, b) => a.y - b.y).forEach(e => drawBot(e, t));
+    // particles
+    particles = particles.filter(p => (p.life -= dt * .9) > 0);
+    for (const p of particles) {
+      p.vy += 240 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+    ctx.globalAlpha = 1;
+    drawEmpty();
+  }
+
+  // ---------- activity feed ----------
+  const feed = document.getElementById("feed");
+  let feedItems = [];
+  function rel(iso) {
+    const s = Math.max(0, (Date.now() - new Date(iso)) / 1000);
+    if (s < 45) return "przed chwilą"; if (s < 3600) return Math.round(s / 60) + " min temu";
+    if (s < 86400) return Math.round(s / 3600) + " godz. temu"; return Math.round(s / 86400) + " dni temu";
+  }
+  function evText(e) {
+    const p = e.payload || {}, n = p.number ? "#" + p.number : "", ti = p.title ? `: ${p.title}` : "";
+    const branch = (p.ref || "").replace("refs/heads/", "");
+    switch (e.type) {
+      case "PushEvent": return `wypchnął ${p.size || 1} commit(y) na ${branch}`;
+      case "PullRequestEvent":
+        if (p.action === "closed") return p.merged ? `zmergował PR ${n}${ti}` : `zamknął PR ${n}`;
+        return ({ opened: "otworzył PR", reopened: "otworzył ponownie PR", ready_for_review: "oddał do recenzji PR" })[p.action] ? `${({ opened: "otworzył PR", reopened: "otworzył ponownie PR", ready_for_review: "oddał do recenzji PR" })[p.action]} ${n}${ti}` : null;
+      case "PullRequestReviewEvent": return `zrecenzował PR ${n} (${({ approved: "zatwierdzone", changes_requested: "poprawki", commented: "komentarz" })[p.review] || p.review || "?"})`;
+      case "PullRequestReviewCommentEvent": return `skomentował kod w PR ${n}`;
+      case "IssueCommentEvent": return `skomentował ${p.isPR ? "PR" : "zadanie"} ${n}`;
+      case "IssuesEvent": return ({ opened: `dodał zadanie ${n}${ti}`, closed: `zamknął zadanie ${n}`, reopened: `otworzył ponownie ${n}`,
+        assigned: `wziął zadanie ${n}`, labeled: p.label?.startsWith("status:") ? `${n} → ${p.label.slice(7)}` : null })[p.action] || null;
+      case "CreateEvent": return p.refType === "branch" ? `utworzył gałąź ${p.ref}` : null;
+      case "DeleteEvent": return p.refType === "branch" ? `usunął gałąź ${p.ref}` : null;
+    }
+    return null;
+  }
+  function pushFeed(item) { feedItems.unshift(item); feedItems = feedItems.slice(0, 40); renderFeed(); }
+  function setFeedFromEvents(events) {
+    const local = feedItems.filter(i => i.local);
+    const remote = (events || []).map(e => ({ actor: e.actor, text: evText(e), at: e.at, id: e.type + e.at + e.actor })).filter(i => i.text);
+    const seen = new Set(feed.dataset.ids ? feed.dataset.ids.split("|") : []);
+    remote.forEach(i => { i.fresh = seen.size > 0 && !seen.has(i.id); });
+    feedItems = [...local, ...remote].sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 40);
+    feed.dataset.ids = remote.map(i => i.id).join("|");
+    renderFeed();
+  }
+  function renderFeed() {
+    const frag = document.createDocumentFragment();
+    if (!feedItems.length) { const li = document.createElement("li"); li.textContent = "Brak aktywności."; li.style.color = C.faint; frag.append(li); }
+    for (const i of feedItems) {
+      const li = document.createElement("li"); if (i.fresh) li.className = "fresh";
+      const dot = document.createElement("span"); dot.className = "who"; dot.style.background = tint(i.actor);
+      const txt = document.createElement("span"); txt.className = "txt";
+      const b = document.createElement("b"); b.textContent = i.actor || "?"; txt.append(b, " " + i.text);
+      const tm = document.createElement("time"); tm.dateTime = i.at; tm.textContent = rel(i.at);
+      li.append(dot, txt, tm); frag.append(li);
+      i.fresh = false;
+    }
+    feed.replaceChildren(frag);
+  }
+
+  // ---------- data sources ----------
+  const dot = document.getElementById("dot"), status = document.getElementById("status"), errEl = document.getElementById("err");
+  const modeBtn = document.getElementById("mode");
+  modeBtn.textContent = DEMO ? "Pokaż prawdziwe dane" : "Demo";
+  modeBtn.addEventListener("click", () => { const u = new URL(location.href); DEMO ? u.searchParams.delete("demo") : u.searchParams.set("demo", "1"); location.href = u; });
+
+  async function pollLive() {
+    try {
+      const r = await fetch("/api/state", { cache: "no-store" });
+      const st = await r.json();
+      if (!r.ok || st.error) throw new Error(st.error || r.statusText);
+      apply(st); setFeedFromEvents(st.events);
+      dot.className = "dot on"; status.textContent = `${st.repo} · odświeżono ${new Date().toLocaleTimeString("pl-PL")}`; errEl.textContent = "";
+    } catch (e) {
+      dot.className = "dot err"; status.textContent = "brak połączenia z GitHubem";
+      errEl.textContent = location.protocol === "file:"
+        ? "Otwórz przez serwer: python3 dashboard/server.py (albo kliknij Demo)."
+        : "Nie udało się pobrać danych: " + e.message + ". Sprawdź gh auth status.";
+    }
+  }
+
+  // Demo: a simulated swarm with the same data shape as /api/state.
+  function makeDemo() {
+    const team = ["KNixt0", "TeoJa1", "mateusz-dylewski", "anusiaaa", "mario000777", "th6lalo"];
+    const titles = ["Ekran logowania", "API wyników", "Mapa przystanków Bydgoszczy", "Model danych użytkownika", "Testy e2e logowania",
+      "Powiadomienia push", "Panel administratora", "Import danych z CSV", "Wykres aktywności", "Tryb ciemny", "Wyszukiwarka miejsc",
+      "Cache odpowiedzi API", "Onboarding nowego użytkownika", "Eksport do PDF", "Integracja z mapą", "Pipeline CI", "Strona demo na finał",
+      "Ranking drużyn", "Formularz zgłoszeń", "Walidacja formularzy"];
+    let next = 2, prNext = 40;
+    const S = { repo: "demo/Hackathon-Bydgoszcz", owner: "KNixt0", collaborators: team, issues: [], prs: [], merged: [], events: [] };
+    const L = n => [{ name: n }];
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    const ev = (actor, text) => pushFeed({ actor, text, at: new Date().toISOString(), fresh: true, local: true });
+    for (let i = 0; i < 6; i++) S.issues.push({ number: next++, title: titles[i], labels: L("status:ready"), assignees: [] });
+    const claimed = n => S.issues.find(i => i.number === n);
+    function tick() {
+      const ready = S.issues.filter(i => i.labels[0].name === "status:ready");
+      const work = S.issues.filter(i => i.labels[0].name === "status:claimed" && !S.prs.some(p => p.closingIssuesReferences[0].number === i.number));
+      const blocked = S.issues.filter(i => i.labels[0].name === "status:blocked");
+      const roll = Math.random();
+      if (ready.length < 3 || roll < .12) {
+        const i = { number: next++, title: titles[(next * 7) % titles.length], labels: L("status:ready"), assignees: [] };
+        S.issues.push(i); ev("KNixt0", `dodał zadanie #${i.number}: ${i.title}`);
+      }
+      if (ready.length && work.length < 6 && Math.random() < .7) {
+        const i = pick(ready), who = pick(team); i.labels = L("status:claimed"); i.assignees = [{ login: who }]; ev(who, `wziął zadanie #${i.number}`);
+      }
+      if (work.length && Math.random() < .45) {
+        const i = pick(work), who = i.assignees[0].login;
+        if (Math.random() < .12) { i.labels = L("status:blocked"); ev(who, `#${i.number} → zablokowane (czeka na kontrakt)`); }
+        else {
+          const pr = { number: prNext++, title: i.title, author: { login: who }, isDraft: false, closingIssuesReferences: [{ number: i.number }],
+            checks: [{ name: "check", state: "IN_PROGRESS" }, { name: "claude-review", state: who === "KNixt0" ? "SKIPPED" : "IN_PROGRESS" }, { name: "owner-approval", state: "FAILURE" }] };
+          S.prs.push(pr); i.labels = L("status:review"); ev(who, `otworzył PR #${pr.number}: ${pr.title}`);
+        }
+      }
+      if (blocked.length && Math.random() < .25) { const i = pick(blocked); i.labels = L("status:claimed"); ev("KNixt0", `odblokował #${i.number}`); }
+      for (const p of S.prs) {
+        const [ci, ai, own] = p.checks;
+        if (ci.state === "IN_PROGRESS" && Math.random() < .5) { ci.state = Math.random() < .88 ? "SUCCESS" : "FAILURE"; if (ci.state === "FAILURE") ev(p.author.login, `CI czerwone w PR #${p.number}`); }
+        else if (ci.state === "FAILURE" && Math.random() < .4) { ci.state = "IN_PROGRESS"; ev(p.author.login, `poprawił PR #${p.number}`); }
+        if (ai.state === "IN_PROGRESS" && Math.random() < .45) { ai.state = "SUCCESS"; ev("claude", `zrecenzował PR #${p.number}: claude-verdict: APPROVE`); }
+        if (own.state === "FAILURE" && ci.state === "SUCCESS" && ai.state !== "IN_PROGRESS" && Math.random() < .35) { own.state = "SUCCESS"; ev("KNixt0", `zatwierdził PR #${p.number}`); }
+      }
+      const done = S.prs.filter(p => p.checks.every(c => ["SUCCESS", "SKIPPED"].includes(c.state)) || (p.author.login === "KNixt0" && p.checks[0].state === "SUCCESS"));
+      if (done.length && Math.random() < .6) {
+        const p = done[0]; S.prs = S.prs.filter(x => x !== p);
+        S.issues = S.issues.filter(i => i.number !== p.closingIssuesReferences[0].number);
+        S.merged.unshift({ number: p.number, title: p.title, author: p.author, closingIssuesReferences: p.closingIssuesReferences });
+        S.merged = S.merged.slice(0, 16);
+      }
+      apply(JSON.parse(JSON.stringify(S)));
+    }
+    return tick;
+  }
+
+  // ---------- start ----------
+  resize();
+  if (DEMO) {
+    dot.className = "dot demo"; status.textContent = "tryb demo: symulowany swarm";
+    const tick = makeDemo(); tick(); setInterval(tick, POLL_MS);
+  } else {
+    pollLive(); setInterval(pollLive, POLL_MS);
+    setInterval(() => renderFeed(), 30000);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

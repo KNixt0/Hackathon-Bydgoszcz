@@ -49,6 +49,24 @@ Useful scripts:
 - `./scripts/next-task.sh`: prints the next claimable issue number. It skips issues that are assigned or whose dependencies are still open.
 - `./scripts/claim.sh <issue>`: locks the issue, creates branch `agent/<login>/<issue>` and worktree `.worktrees/<issue>`.
 
+## Live view (2D)
+
+```bash
+python3 dashboard/server.py
+```
+
+Open http://127.0.0.1:8787. It's an animated map of the swarm that refreshes every 10 s from GitHub, using your own `gh` login (no token reaches the browser):
+
+- **Do wzięcia** (to take): `status:ready` issues pinned on a board.
+- **Warsztat** (workshop): one robot per claimed issue, colored by its owner, typing at a desk.
+- **Recenzja** (review): open PRs with three lamps: CI · AI (Claude review) · Ty (owner approval).
+- **Zablokowane** (blocked): `status:blocked` / `needs-decision`.
+- **main**: merged PRs become commit nodes, with confetti on each new merge.
+- **Zespół** (team): every collaborator, with a badge showing how many agents they have running.
+- The right panel is a live activity feed.
+
+Click **Demo**, or open `?demo=1`, to see a simulated swarm when the repo has no tasks yet.
+
 ## Owner review gate
 
 Every PR from someone other than **KNixt0** goes through this before merge:
