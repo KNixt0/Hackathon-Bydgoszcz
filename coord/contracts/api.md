@@ -1,4 +1,4 @@
-version: 2
+version: 3
 
 # Service boundaries
 
@@ -120,3 +120,68 @@ One sample = `<slug>.json`, optionally next to `<slug>.html`:
 Discovery is the "wyszukiwanie" step of every module: seed pages (search results, ad libraries, listings) → candidate links → scans. Offline, `samples/discovery/index.html` is registered as a source at seed time.
 
 The dedup key is the source URL: the same URL updates the incident in place. The demo trigger deletes the previous incident of that demo case; clients refetch the list on `incident:new`.
+
+## Version 3 additions
+
+### Rendered visual audit (backend scraper → AI)
+For pages with HTML the scraper renders them in Chromium at three viewports (desktop 1920×1080, tablet 768×1024, mobile 390×844), stores one full-page screenshot per viewport, and attaches measurements to the document:
+
+```ts
+interface Document {
+  final_url?: string; redirect_chain?: string[]; affiliate_params?: string[];   // e.g. ["ref=jan20", "utm_source=yt"]
+  archive: { html_key; screenshot_key; screenshots?: {desktop?, tablet?, mobile?} };
+  visual?: {
+    dominant_font_px: number;                         // most common font size by text length (desktop)
+    viewports: { name: "desktop"|"tablet"|"mobile"; width: number; height: number; page_height: number;
+                 screenshot_key: string | null; overflow_x: boolean; clipped_texts: string[]; min_risk_font_px: number | null }[];
+    risk_elements: {                                  // elements whose text is a risk warning (matched by the scraper with a keyword list; the AI decides relevance)
+      text: string; font_px: number; ratio_to_dominant: number;
+      color: string; background: string; contrast: number;        // WCAG contrast ratio
+      opacity: number; visible: boolean; occluded: boolean;       // elementFromPoint check
+      placement: "body" | "footer" | "footnote" | "legal_section";
+      requires_interaction: "details" | "accordion" | "tooltip" | "modal" | "link" | null;
+      bbox: BBox | null;                                          // per viewport list allowed: bboxes?: BBox[]
+    }[];
+    performance_blocks: { text: string; font_px: number; area_share: number; bbox: BBox | null }[];   // past-performance claims and their share of the first viewport
+  };
+}
+```
+The AI service uses `visual` for rules 4, 5, 6, 7, 8 and 13 (`method: "rendered"`), puts `bbox` on the evidence, and falls back to static HTML analysis when `visual` is absent.
+
+### Authentication (local only)
+JWT HS256 (`JWT_SECRET` from env) in an HttpOnly, SameSite=Strict cookie `iw_session`; passwords hashed with argon2. Everything under `/api` requires a session except `/api/health`, `/api/auth/*`, `/api/public/*`; `/fixtures/*` stays open (scraper). Socket.IO connections require the same cookie.
+
+| Method + path | Request | Response |
+|---|---|---|
+| `POST /api/auth/login` | `{email, password}` | `{user: User}` + cookie · 401 |
+| `POST /api/auth/demo` | `{role: Role}` | `{user}` + cookie; only when `DEMO_LOGIN=true` · 404 otherwise |
+| `GET /api/auth/config` | | `{demo_login: boolean}` |
+| `GET /api/auth/me` | | `{user: User}` · 401 |
+| `POST /api/auth/logout` | | 204 |
+
+`User = {id, email, name, role: Role}`. Two demo accounts are seeded at start (passwords from env).
+
+### Workflow, settings, audit
+| Method + path | Request | Response |
+|---|---|---|
+| `POST /api/incidents/{id}/assign` | | `Incident` (assigns the caller) |
+| `POST /api/incidents/{id}/transition` | `{to: Status, reason?: string, escalation_path?: EscalationPath, resolution_action?: ResolutionAction}` | `Incident` · 409 invalid transition · 403 role · 422 missing reason |
+| `POST /api/incidents/{id}/label` | `{label: "true_positive"\|"false_positive"\|"unlabeled"}` | `Incident` |
+| `PATCH /api/incidents/{id}` | `{status}` | kept as an alias of transition |
+| `GET /api/incidents/{id}/history` | | `{items: AuditEntry[]}` for that case |
+| `GET /api/incidents/{id}/warning-list-request.pdf` | | PDF draft of a request to add the entity to the public warnings list (Module 3) |
+| `GET /api/settings/thresholds` | | `{flag: number, critical: number, updated_by, updated_at}` (global defaults; clients may preview other values locally) |
+| `PUT /api/settings/thresholds` | `{flag, critical}` | same · 403 unless SUPERVISOR; also sets the server `alert:high` threshold to `critical` |
+| `GET /api/audit` | `incident_id?`, `actor?`, `limit?` | `{items: AuditEntry[]}` · 403 unless SUPERVISOR |
+
+`AuditEntry = {id, at, actor_email, actor_role, action, incident_id: string|null, previous: unknown, new: unknown, reason: string|null}`; actions: `login`, `assign`, `transition`, `label`, `thresholds`, `export`, `rescan`.
+`resolution_action: "enhanced_monitoring"` adds the URL to the watchlist with a 6-hour interval.
+`GET /api/calibration` items gain `label_source: "sample" | "analyst"`: seeded ground truth plus cases labelled by analysts.
+
+### Public reports
+| Method + path | Request | Response |
+|---|---|---|
+| `POST /api/public/reports` | `{url: string, category_hint?: 1\|2\|3\|null, comment?: string (≤ 500)}` | `202 {status: "accepted", known: boolean}` · 422 · 429 |
+
+No login. The URL is normalised (tracking parameters such as `fbclid`, `gclid`, `utm_*` removed; fragment dropped) and hashed; a known URL increments `user_reports_count` and recomputes `priority_score`; a new one is queued through the normal scraper with `platform` detected as usual and `source: "user_report"` recorded on the report. Limits: one report per IP and URL per 24 h, `PUBLIC_REPORTS_PER_HOUR` per IP (default 20), a cap on queued report scans; SSRF guard applies. No browser fingerprinting.
+Events: `incident:updated` on every count change; `alert:viral` (`IncidentSummary`) when a case with `risk_score >= critical` threshold reaches 5 reports.
