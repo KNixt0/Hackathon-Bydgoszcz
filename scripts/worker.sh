@@ -49,7 +49,8 @@ run_tool() {  # <model> <effort> <prompt>   (cwd = worktree)
 
 run_one() {
   local issue out wt branch prompt labels model effort
-  issue=$(./scripts/next-task.sh) || return 1
+  git pull -q --ff-only 2>/dev/null || true   # pick up rule changes before every task
+  issue=$(./scripts/next-task.sh) || { rc=$?; [[ $rc == 3 ]] && return 3; return 1; }
   out=$(./scripts/claim.sh "$issue" "$tool") || return 2
   wt=$(sed -n 's/^WORKTREE=//p' <<<"$out")
   branch=$(sed -n 's/^BRANCH=//p' <<<"$out")
@@ -73,7 +74,9 @@ run_one() {
 
 while true; do
   rc=0; run_one || rc=$?
-  if [[ $rc == 1 ]]; then
+  if [[ $rc == 3 ]]; then
+    echo "Stopping: no assignment from KNixt0 for this login. Check in and wait (./swarm whoami)." ; exit 0
+  elif [[ $rc == 1 ]]; then
     [[ $loop == 1 ]] || exit 0
     echo "nothing for tier $SWARM_TIER, waiting 60s…"; sleep 60
   elif [[ $rc == 2 ]]; then

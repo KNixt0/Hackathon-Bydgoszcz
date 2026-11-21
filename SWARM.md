@@ -56,7 +56,9 @@ On a Mac you can also **double-click `Swarm.command`** to open the live view. On
 | `./swarm work [--loop]` | anyone | Builder · Sonnet · medium (`model:opus` → Opus/high, `size:xs` → Haiku/low) | Takes the next free task, builds it in a worktree, opens a PR |
 | `./swarm team [N]` | anyone | Builder | An Agent Team on your laptop: a lead plus N builders |
 | `./swarm plan` | KNixt0 | Planner · Opus · high | `coord/plan.md` → contracts → tasks |
-| `./swarm lead` | KNixt0 | Lead · Sonnet · medium | **Only delegates and merges.** Never writes code |
+| `./swarm lead-auto` | KNixt0 | none (0 tokens) | Mechanical lead: unblock, merge when every gate is green, release stale claims |
+| `./swarm assign <login> <areas>` | KNixt0 | — | Assign areas (ui, api, ai, devops, docs, all) to a person; agents never ask about roles |
+| `./swarm lead` | KNixt0 | Lead · Sonnet · medium | Judgment only, one pass on demand. Never writes code |
 | (automatic) | GitHub Actions | Verifier · Opus · high | Independent review of every PR from others |
 | `@claude …` on GitHub | anyone | Sonnet · medium | Small ad-hoc fixes |
 
@@ -96,6 +98,8 @@ All agents follow the same rules ([AGENTS.md](AGENTS.md); `CLAUDE.md` and `GEMIN
 - The right panel shows **Agenci** (who is online and on which tool/model), **Kto co robi** (roles, models, effort) and a live activity feed. Robots in the workshop are labeled with their tool·model.
 
 Click **Demo** to see a simulated swarm while the repo has no tasks yet.
+
+Retro and token-saving notes: [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md).
 
 ## Guidelines from the task briefs
 

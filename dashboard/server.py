@@ -67,6 +67,8 @@ class State:
             "roster": ("issue", "list", "-R", R, "--state", "open", "--label", "swarm:roster",
                        "--limit", "1", "--json", "number,comments"),
             "comments": ("api", f"repos/{R}/issues/comments?sort=created&direction=desc&per_page=30"),
+            "assignments": ("issue", "list", "-R", R, "--state", "open", "--label", "swarm:assignments",
+                            "--limit", "1", "--json", "body"),
         }
         with ThreadPoolExecutor(len(jobs)) as pool:
             futures = {k: pool.submit(gh, *a) for k, a in jobs.items()}
@@ -75,6 +77,13 @@ class State:
         for p in data["prs"]:
             p["checks"] = checks(p.pop("statusCheckRollup", None))
         data["agents"] = parse_roster(data.pop("roster") or [])
+        data["assignments"] = {}
+        for issue in (data.get("assignments") or [])[:1]:
+            for block in BLOCK.findall(issue.get("body") or ""):
+                for line in block.splitlines():
+                    k, sep, v = line.split("#", 1)[0].partition(":")
+                    if sep and k.strip():
+                        data["assignments"][k.strip()] = v.strip()
         data["comments"] = [
             {
                 "issue": int((c.get("issue_url") or "0").rsplit("/", 1)[-1] or 0),

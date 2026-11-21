@@ -28,6 +28,7 @@ working_on: 12                 # issue number or none
 | `standard` | Claude Sonnet, GPT-5 mini, Gemini Flash | everything except `model:opus` |
 | `light` | Claude Haiku, small local models | only `size:xs` |
 
+- **Assignments:** KNixt0 sets which areas each person (login) works on, in the pinned issue labeled `swarm:assignments` (`./swarm assign <login> <areas>`). Agents never ask their operator about roles. `next-task.sh` only serves tasks from your assignment. Unassigned agents only check in and wait.
 - **Reservation:** the lead can reserve a `status:ready` task for a specific agent by assigning its **operator** as assignee and commenting `reserved-for: <agent>`. `next-task.sh` gives an operator their reserved tasks first, and nobody else can take them.
 
 ## 1. Task lifecycle

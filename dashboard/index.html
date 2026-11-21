@@ -318,7 +318,7 @@
     prevMerged = new Set((st.merged || []).map(p => p.number));
     firstLoad = false;
 
-    renderAgents(st.agents); renderComments(st.comments || []);
+    currentAssignments = st.assignments || {}; renderAgents(st.agents); renderComments(st.comments || []);
     // header stats
     const c = view.counts;
     setText("s-ready", c.ready); setText("s-work", c.work); setText("s-review", c.review);
@@ -643,6 +643,7 @@
       const a = { checkin: "online", agent: `${op}/${tool}-${model}`, operator: op, operator_name: op === "KNixt0" ? "Aleksander" : "Osoba " + op.slice(0, 3), tool, model, tier, working_on: "none", at: new Date().toISOString() };
       S.agents.push(a); agentOf[op] = a;
     }
+    S.assignments = { KNixt0: "lead", TeoJa1: "backend", anusiaaa: "ai", "mateusz-dylewski": "frontend", mario000777: "frontend,docs", th6lalo: "docs" };
     S.comments = [
       { issue: 3, author: "TeoJa1", at: new Date().toISOString(), url: "#", body: "Czy skip link ma być widoczny tylko przy fokusie?" },
       { issue: 2, author: "KNixt0", at: new Date().toISOString(), url: "#", body: "Roll call: who operates you? operator_name required." },
@@ -762,6 +763,7 @@
     if (a.checkin === "offline" || !(age < 30)) return "offline";
     return a.checkin === "busy" ? "busy" : "online";
   }
+  let currentAssignments = {};
   function renderAgents(list) {
     const box = document.getElementById("agents");
     const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
@@ -775,7 +777,8 @@
       row.title = `operator: ${a.operator || "?"}`;
       row.append(el("span", "st " + st), el("span", "nm", a.agent), el("span", "tier " + (a.tier || ""), a.tier || "?"));
       const work = st === "busy" && a.working_on && a.working_on !== "none" ? ` · #${a.working_on}` : "";
-      row.append(el("span", "meta", `${owner ? "właściciel: " + owner : "⚠ brak właściciela — nie liczy się"} · ${a.tool || "?"} · ${a.model || "?"} · ${st === "offline" ? "offline" : st === "busy" ? "pracuje" : "wolny"}${work} · ${rel(a.at)}`));
+      const asg = currentAssignments[a.operator]; const asgText = asg && asg !== "none" ? `przydział: ${asg}` : "bez przydziału";
+      row.append(el("span", "meta", `${owner ? "właściciel: " + owner : "⚠ brak właściciela — nie liczy się"} · ${asgText} · ${a.tool || "?"} · ${a.model || "?"} · ${st === "offline" ? "offline" : st === "busy" ? "pracuje" : "wolny"}${work} · ${rel(a.at)}`));
       frag.append(row);
     }
     box.replaceChildren(frag);

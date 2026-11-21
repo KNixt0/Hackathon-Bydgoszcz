@@ -2,7 +2,7 @@
 
 > **Dla ludzi:** powiedz swojemu agentowi AI (Claude Code, Codex, Gemini CLI, agent w Cursorze albo Antigravity):
 > **„Przeczytaj AGENT-START.md z repo KNixt0/Hackathon-Bydgoszcz i wykonaj go.”**
-> Agent sam sprawdzi środowisko, zamelduje się, zapyta Cię o imię (wymagane) i 2 rzeczy, a potem zacznie brać zadania.
+> Agent sam sprawdzi środowisko, zapyta Cię tylko o imię (wymagane), zamelduje się i weźmie zadania z obszarów, które **przydzielił mu KNixt0**. Bez przydziału tylko się melduje i czeka.
 >
 > **Tylko raport, bez zadań:** „Przeczytaj AGENT-START.md w trybie TYLKO RAPORT: zamelduj się z imieniem właściciela, pokaż mi swój blok i nie bierz żadnych zadań.”
 
@@ -63,24 +63,19 @@ Read `AGENTS.md`, then `coord/GUIDELINES.md` (hard rules), then sections 0–3 o
 - Product code never uses paid AI APIs (OpenAI, Anthropic, Gemini…). Only MIT, Apache, BSD or ISC dependencies. Secrets go only in `.env`. No `console.log` in the frontend.
 - If a rule blocks you, comment `status: needs-decision` on the issue and move on.
 
-## Step 5: Check in and ask the operator
+## Step 5: Check in and read your assignment
 
 1. Check in on the roster:
    ```bash
    ./swarm checkin --tool "$SWARM_TOOL" --model "$SWARM_MODEL" --tier "$SWARM_TIER"
    ```
-2. Look at the free tasks: `./swarm tasks`.
-3. **ASK the operator**, in one message:
-   - "Which areas should I take? (ui / api / ai / devops / docs / all)"
-   - "Keep taking tasks until none are left, or stop after one?"
-
-   Default if they say "just go": all areas, keep going.
-
-   Save the areas: `export SWARM_AREAS=<areas or empty for all>`.
+2. Read your assignment: `./swarm whoami`. **KNixt0 assigns areas** (e.g. `frontend` for UI work). **Don't ask your operator which areas or roles to take**; the assignment decides.
+   - **No assignment yet** ("BRAK"): switch to **report-only mode**. Tell the operator in one line: "Zameldowany, czekam na przydział od KNixt0." Then stop.
+   - **Assigned:** go to Step 6. Keep taking tasks until none are left. `next-task.sh` filters by your assignment and tier automatically.
 
 ## Step 6: The work loop (repeat)
 
-1. **Pick:** `./scripts/next-task.sh` prints a task number `N`.
+1. **Pull, then pick:** run `git pull --ff-only` (rules and assignments may have changed). If `AGENT-START.md` or `AGENTS.md` changed, re-read the changed parts. Then `./scripts/next-task.sh` prints a task number `N`.
    - It already filters by your tier and areas and serves tasks reserved for you first.
    - If it prints nothing, go to **Step 7**.
 2. **Claim:** `./swarm claim N`. Your branch is `agent/<operator>/N` and your folder is `.worktrees/N/`.
@@ -100,7 +95,7 @@ Read `AGENTS.md`, then `coord/GUIDELINES.md` (hard rules), then sections 0–3 o
    ```bash
    ./swarm checkin --tool "$SWARM_TOOL" --model "$SWARM_MODEL" --tier "$SWARM_TIER" --status online
    ```
-9. If the operator said "one task", go to **Step 7**. Otherwise go back to step 1.
+9. Go back to step 1. If `next-task.sh` exits with "no assignment", go to **Step 7**.
 
 **Review feedback:** if your PR gets `claude-verdict: CHANGES` or comments from the lead, the issue goes back to `status:claimed`. Fix it in the same `.worktrees/N/`, run `check.sh`, then `git -C .worktrees/N commit -am "#N address review" && git -C .worktrees/N push`. Don't open a new PR.
 

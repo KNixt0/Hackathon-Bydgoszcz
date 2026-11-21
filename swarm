@@ -16,6 +16,9 @@ $(b "./swarm") — sterowanie swarmem agentów
   $(b agents)          kto jest online: operator, narzędzie, model, poziom
   $(b checkin) [opcje] zamelduj swojego agenta (--tool --model --tier --status)
   $(b rollcall)        zapytaj wszystkich agentów „kto cię obsługuje?”
+  $(b whoami)          mój login i przydział obszarów od KNixt0
+  $(b assignments)     wszystkie przydziały
+  $(b assign) L OBSZ   (KNixt0) przydziel osobie L obszary: ui,api,ai,devops,docs | all | lead | none
 
   $(b tasks)           wolne zadania z obszarem (area:…) i trudnością
   $(b claim) N         weź zadanie N do pracy ręcznej (np. w Cursorze / Antigravity)
@@ -24,12 +27,14 @@ $(b "./swarm") — sterowanie swarmem agentów
   $(b unclaim) N       oddaj zadanie N z powrotem do puli
 
   $(b work) [opcje]    budowniczy: bierze kolejne zadania i je robi     (każdy)
-      --area ui,docs     tylko te obszary: ui|frontend, api|backend, ai, devops, docs
+      --area ui          zawęź w ramach swojego przydziału (obszary ustala KNixt0)
       --tool codex       inne narzędzie: claude (domyślnie) | codex | gemini | custom
       --model gpt-5      model;  --tier strong|standard|light;  --loop = bez końca
   $(b team) [N]        lead zespołu agentów na tym laptopie, N zadań   (każdy)
   $(b plan)            planer: plan.md → kontrakty → zadania           (KNixt0)
-  $(b lead)            lead: tylko deleguje i merguje                  (KNixt0)
+  $(b lead-auto)       lead bez LLM (0 tokenów): odblokowuje, merguje, zwalnia (KNixt0)
+      --once  --dry-run  --every 120
+  $(b lead)            lead z LLM: tylko decyzje wymagające oceny     (KNixt0)
 
   $(b setup)           sprawdza gh, claude, python i zaufanie folderu
 EOF
@@ -48,6 +53,7 @@ case "$cmd" in
   view)   exec python3 dashboard/server.py --open "$@" ;;
   plan)   run_claude planner coord/prompts/planner.md ;;
   lead)   run_claude lead coord/prompts/lead.md ;;
+  lead-auto) exec python3 scripts/lead_auto.py "$@" ;;
   team)   run_claude builder coord/prompts/team-lead.md "s/{{N:-3}}/${1:-3}/g" ;;
   work)
     args=()
@@ -68,6 +74,12 @@ case "$cmd" in
       | { out=$(cat); echo "${out:-  (brak wolnych zadań)}"; } ;;
   roles)  role table ;;
   checkin) exec ./scripts/checkin.sh "$@" ;;
+  assign)  [[ $# -ge 2 ]] || { echo "użycie: ./swarm assign <login> <ui,api,ai,devops,docs|all|lead|none>"; exit 1; }
+           exec python3 scripts/assignments.py set "$@" ;;
+  assignments) exec python3 scripts/assignments.py list ;;
+  whoami)
+    me=$(gh api user --jq .login); a=$(python3 scripts/assignments.py get "$me")
+    echo "login: $me"; echo "przydział od KNixt0: ${a:-BRAK — czekaj na przydział (tryb tylko raport)}" ;;
   preview)
     # Live preview of the PRODUCT for one task's worktree (or main checkout without N).
     # Ports are offset per task, so several previews can run side by side.
