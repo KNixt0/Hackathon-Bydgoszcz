@@ -1,0 +1,71 @@
+{
+ "registry": "knf_foreign_branches",
+ "label": "Oddziały zagranicznych firm inwestycyjnych (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych/notyfikowane_firmy_inwestycyjne_oddzialy",
+ "snapshot_date": "2026-11-21",
+ "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
+ "partial": false,
+ "synthetic_sample": false,
+ "entries": [
+  {
+   "name": "CMC Markets Germany GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: Federal Financial Supervisory Authority (BaFin); Data wpływu zawiadomienia: 2019-09-13"
+  },
+  {
+   "name": "Convera Europe Financial S.A.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Luksemburg; Organ nadzoru: Commission de Surveillance du Secteur Financier (CSSF); Data wpływu zawiadomienia: 2023-05-02"
+  },
+  {
+   "name": "EXT Ltd",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: Cyprus Securities and Exchange Commission (CySEC); Data wpływu zawiadomienia: 2024-10-30"
+  },
+  {
+   "name": "Finax, o.c.p., a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Słowacja; Organ nadzoru: Narodna Banka Slovenska (NBS); Data wpływu zawiadomienia: 2021-11-09"
+  },
+  {
+   "name": "IG Europe GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: Federal Financial Supervisory Authority (BaFin); Data wpływu zawiadomienia: 2024-03-15"
+  },
+  {
+   "name": "Instant Trading EU Ltd.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Cypr; Organ nadzoru: Cyprus Securities and Exchange Commission (CySEC); Data wpływu zawiadomienia: 2020-02-11"
+  },
+  {
+   "name": "Jefferies GmbH",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Niemcy; Organ nadzoru: Federal Financial Supervisory Authority (BaFin); Data wpływu zawiadomienia: 2021-11-19"
+  },
+  {
+   "name": "LYNX B.V.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Holandia; Organ nadzoru: Autoriteit Financiële Markten (AFM); Data wpływu zawiadomienia: 2026-06-19"
+  },
+  {
+   "name": "Tradition Financial Services España, Sociedad De Valores, S.A.U.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Hiszpania; Organ nadzoru: Comision Nacional Del Mercado De Valores (CNMV); Data wpływu zawiadomienia: 2021-12-21"
+  },
+  {
+   "name": "WOOD & Company Financial Services a.s.",
+   "aliases": [],
+   "status": "listed",
+   "detail": "Państwo macierzyste: Czechy; Organ nadzoru: Czech National Bank (CNB); Data wpływu zawiadomienia: 2008-12-17"
+  }
+ ]
+}

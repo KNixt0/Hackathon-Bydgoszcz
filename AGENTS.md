@@ -41,6 +41,7 @@ This file is shared by **every AI agent**, whatever tool or model it runs on (Cl
 ## Project facts
 
 <!-- Planner: fill these in once the stack is chosen -->
-- Stack: TBD
-- Run locally: TBD
+- Stack: see `coord/plan.md` (FastAPI + Celery/Valkey + Postgres + SeaweedFS · FastAPI AI engine · React/Vite)
+- Run locally: `cp .env.example .env && docker compose up --build` → http://localhost:3000
+- Contracts: `coord/contracts/incident.md`, `coord/contracts/api.md`
 - Test/lint: `./scripts/check.sh`

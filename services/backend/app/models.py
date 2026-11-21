@@ -1,0 +1,117 @@
+"""Tables. The full Analysis lives in `payload` (JSONB); filterable fields are mirrored in indexed columns."""
+
+from __future__ import annotations
+
+import uuid
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db import Base, JSONType
+
+
+def new_id() -> str:
+    return str(uuid.uuid4())
+
+
+def utcnow() -> datetime:
+    return datetime.now(UTC)
+
+
+class Incident(Base):
+    __tablename__ = "incidents"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    payload: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    risk_score: Mapped[float] = mapped_column(Float, index=True)
+    primary_module: Mapped[int] = mapped_column(Integer, index=True)
+    modules_mask: Mapped[int] = mapped_column(Integer, default=0)  # bit n-1 set = module n has findings
+    platform: Mapped[str] = mapped_column(String(32), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True, default="new")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    ground_truth: Mapped[str | None] = mapped_column(String(16), index=True, nullable=True)
+    demo_case: Mapped[str | None] = mapped_column(String(32), index=True, nullable=True)
+    content_hash: Mapped[str] = mapped_column(String(64), index=True)
+    source_url: Mapped[str] = mapped_column(Text)
+    source_url_hash: Mapped[str] = mapped_column(String(64), index=True)
+    synthetic: Mapped[bool] = mapped_column(Boolean, default=False)
+    search_text: Mapped[str] = mapped_column(Text, default="")
+    # how to fetch it again (periodic re-scan)
+    origin: Mapped[str] = mapped_column(String(16), default="scan")  # scan | sample | watchlist
+    fetch_url: Mapped[str] = mapped_column(Text, default="")
+    render: Mapped[bool] = mapped_column(Boolean, default=False)
+    module_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+class IncidentVersion(Base):
+    __tablename__ = "incident_versions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    incident_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("incidents.id", ondelete="CASCADE"), index=True
+    )
+    content_hash: Mapped[str] = mapped_column(String(64))
+    risk_score: Mapped[float] = mapped_column(Float)
+    changed: Mapped[bool] = mapped_column(Boolean, default=False)  # content differs from previous version
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ScanJob(Base):
+    __tablename__ = "scan_jobs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    url: Mapped[str] = mapped_column(Text)  # canonical url shown to the user
+    fetch_url: Mapped[str] = mapped_column(Text)  # what the scraper really requests
+    state: Mapped[str] = mapped_column(String(16), index=True, default="queued")
+    incident_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, default=utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    origin: Mapped[str] = mapped_column(String(16), default="scan")
+    render: Mapped[bool] = mapped_column(Boolean, default=False)
+    module_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    meta: Mapped[dict] = mapped_column(JSONType, default=dict)  # sample meta
+    context: Mapped[dict] = mapped_column(JSONType, default=dict)  # AI Context
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class Blob(Base):
+    """Object-storage fallback when S3 is unreachable."""
+
+    __tablename__ = "blobs"
+
+    key: Mapped[str] = mapped_column(String(255), primary_key=True)
+    content_type: Mapped[str] = mapped_column(String(64))
+    data: Mapped[bytes] = mapped_column(LargeBinary)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class WatchlistItem(Base):
+    __tablename__ = "watchlist"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    url: Mapped[str] = mapped_column(Text)
+    url_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    module_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    render: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    last_scanned_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class RegistrySnapshot(Base):
+    """Last successfully scraped KNF register (kept when a refresh fails)."""
+
+    __tablename__ = "registry_snapshots"
+
+    name: Mapped[str] = mapped_column("registry", String(64), primary_key=True)
+    label: Mapped[str] = mapped_column(String(255))
+    url: Mapped[str] = mapped_column(Text)
+    snapshot_date: Mapped[str] = mapped_column(String(32))
+    entries: Mapped[list] = mapped_column(JSONType, default=list)
+    pushed_to_ai: Mapped[bool] = mapped_column(Boolean, default=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+Index("ix_incidents_score_created", Incident.risk_score.desc(), Incident.created_at.desc())
