@@ -8,6 +8,7 @@ Loop over `gh pr list --search "label:status:review" ` and every open PR whose b
    - contracts are unchanged, or there is an approved decision for the change,
    - CI is green (`gh pr checks <n>`),
    - the handoff block is present.
+   - **Owner gate:** if the PR author is not KNixt0, the check `owner-approval` must be green, meaning KNixt0 approved the latest commit. If it's red, don't merge. Comment the block with `status: blocked`, `blockers: ["waiting for KNixt0 approval"]` and move on to the next PR.
 2. If it all passes: `gh pr merge <n> --squash --delete-branch`, then comment the handoff block with `status: merged`.
 3. If not: `gh pr review <n> --request-changes` with at most 5 concrete points and the block `status: changes-requested`. On the issue, put back `status:claimed`.
 4. After each merge, look at the `status:blocked` issues. If every issue in its `Depends on:` is closed, move it to `status:ready`.

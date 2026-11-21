@@ -1,0 +1,44 @@
+name: main-guard
+# GitHub Free can't block pushes on private repos, so this catches anything that
+# lands on main without the owner's approval and opens an issue for the owner.
+on:
+  push:
+    branches: [main]
+
+env:
+  OWNER: KNixt0
+
+jobs:
+  alert:
+    if: github.actor != 'KNixt0'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SHA: ${{ github.sha }}
+      ACTOR: ${{ github.actor }}
+      COMPARE: ${{ github.event.compare }}
+    steps:
+      - name: Check owner approval
+        run: |
+          pr=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].number // empty')
+          if [ -n "$pr" ]; then
+            head=$(gh api "repos/$REPO/pulls/$pr" --jq .head.sha)
+            ok=$(gh api "repos/$REPO/pulls/$pr/reviews" --paginate \
+              --jq "[.[] | select(.user.login == \"$OWNER\" and .state != \"COMMENTED\")] | last | select(.state == \"APPROVED\" and .commit_id == \"$head\") | .id")
+            if [ -n "$ok" ]; then echo "PR #$pr was approved by $OWNER."; exit 0; fi
+            how="merged PR #$pr without $OWNER's approval of its last commit"
+          else
+            how="pushed directly to main (no PR)"
+          fi
+
+          gh issue create -R "$REPO" \
+            --title "Unreviewed change on main by $ACTOR" \
+            --assignee "$OWNER" --label "needs:owner-review" \
+            --body "$(printf '%s %s.\n\nCommit: %s\nDiff: %s\n\nReview it, then close this issue or revert the commit.' "$ACTOR" "$how" "$SHA" "$COMPARE")"
+          echo "::error::$ACTOR $how"
+          exit 1
