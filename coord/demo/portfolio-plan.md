@@ -27,3 +27,5 @@ python3 -m http.server 8080 --directory demo/portfolio
 All paths are relative to `demo/portfolio/`. The contract is in [coord/contracts/portfolio.md](../contracts/portfolio.md).
 
 Parallelism: tasks 1 and 5 start immediately. After 1, five tasks (2, 3, 4, 6, 7) run in parallel. Task 8 runs last.
+
+Issues: skeleton #3, data #4, nav #5, hero #6, about #7, grid #8, contact #9, QA #10.
