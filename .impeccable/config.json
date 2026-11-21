@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "services/frontend/src/styles/ui.css"
+        ],
+        "createdAt": "2026-11-21T18:43:28.835Z",
+        "reason": "design spec (DESIGN.md, chosen by owner: Urzędowy): the 4px left rule is the government-design-system callout pattern, sanctioned only for .callout and .notice in this file"
+      }
+    ]
+  }
+}

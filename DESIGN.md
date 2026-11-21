@@ -479,3 +479,4 @@ Not checked on the page (its own "Czego nie sprawdzono"): behaviour on real data
 7. **No dark theme.** Below 960 px the header's second row scrolls horizontally and the queue table becomes a list; phone layout is best effort, not a demo target.
 8. **Trend strip:** last 30 days, stacked by level at the current thresholds, 120 px tall, on the queue page.
 9. Charts inside "Szczegóły dla analityka" mount on first open; tests open the disclosure first.
+10. **Calibration slider is plain (owner, 2026-11-21, overrides section 5):** one native range slider 0–100 with its value next to the label and "0" / "100" end labels. No − / + buttons, no separate number field, no ruled tick axis, no distribution marks around it. The sentence, the two opposing counts, the recommended-threshold action and the details disclosure stay.
