@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../.."
 P=docs/presentation
 mkdir -p $P/img
 docker compose exec -T backend python - < $P/shots.py
-for f in 01_kolejka 02_sprawa2_werdykt 03a_macierz 03b_graf 03c_opinie 04_argumenty 05_dowod 06_sprawa3_werdykt 07a_kalibracja_20 07b_kalibracja_35; do
+for f in 01_kolejka 02_sprawa2_werdykt 03a_macierz 03b_graf 04_argumenty 05_dowod 05b_dowod_zoom 06_workflow 06b_historia 07a_kalibracja_20 07b_kalibracja_35 08_audyt 09_zglos 10_logowanie; do
   docker compose cp backend:/tmp/$f.png $P/img/
 done
 D=deck-$(date +%s)  # fresh dir: files copied in by docker cp are root-owned and cannot be removed
