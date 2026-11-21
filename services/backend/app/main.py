@@ -12,6 +12,7 @@ import socketio
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import TimeoutError as SQLAlchemyTimeoutError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
@@ -94,6 +95,14 @@ def create_api() -> FastAPI:
     async def _http(_: Request, exc: StarletteHTTPException) -> JSONResponse:
         detail = exc.detail if isinstance(exc.detail, str) else "error"
         return JSONResponse({"detail": detail}, status_code=exc.status_code, headers=exc.headers)
+
+    @api.exception_handler(SQLAlchemyTimeoutError)
+    async def _busy(request: Request, exc: SQLAlchemyTimeoutError) -> JSONResponse:
+        # every database connection is busy: shed load quickly instead of queueing until the proxy times out
+        log.warning("database pool exhausted", extra={"path": request.url.path})
+        return JSONResponse(
+            {"detail": "service busy, retry shortly"}, status_code=503, headers={"Retry-After": "2"}
+        )
 
     @api.exception_handler(Exception)
     async def _unhandled(request: Request, exc: Exception) -> JSONResponse:

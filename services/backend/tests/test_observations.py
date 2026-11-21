@@ -119,3 +119,25 @@ def test_cases_from_before_v4_get_their_evidence_frozen_on_start(client):
     _upgrade_data()  # idempotent
     with session_scope() as db:
         assert db.get(Incident, case["id"]).evidence_version_id == evidence
+
+
+def test_db_session_is_closed_when_the_request_is_cancelled(client):
+    """Regression (scripts/stress.py): a cancelled request must not leak its connection."""
+    import asyncio
+
+    from sqlalchemy import text
+
+    from app.db import get_db
+
+    async def scenario() -> bool:
+        gen = get_db()
+        session = await gen.__anext__()
+        session.execute(text("SELECT 1"))  # a transaction is open now
+        assert session.in_transaction()
+        try:
+            await gen.athrow(asyncio.CancelledError())
+        except asyncio.CancelledError:
+            pass
+        return session.in_transaction()
+
+    assert asyncio.run(scenario()) is False

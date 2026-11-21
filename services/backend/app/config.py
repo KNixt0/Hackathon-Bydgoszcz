@@ -20,6 +20,9 @@ class Settings(BaseSettings):
 
     # --- dependencies ---
     database_url: str = "sqlite:///./investwatch.db"
+    db_pool_size: int = 20
+    db_max_overflow: int = 10
+    db_pool_timeout: float = 10.0
     redis_url: str = ""  # Valkey; empty = no broker (only valid with TASK_MODE != celery)
     ai_url: str = "http://ai:8001"
     ai_timeout_seconds: float = 180.0

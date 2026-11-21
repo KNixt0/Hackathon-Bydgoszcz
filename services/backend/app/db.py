@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
 from contextlib import contextmanager
 
 from sqlalchemy import JSON, create_engine, inspect, text
@@ -35,7 +35,16 @@ def make_engine(url: str) -> Engine:
         if ":memory:" in url or url in ("sqlite://", "sqlite:///"):
             kwargs["poolclass"] = StaticPool
         return create_engine(url, **kwargs)
-    return create_engine(url, pool_pre_ping=True, pool_size=5, max_overflow=10)
+    # Sized for one API process (the threadpool runs up to 40 sync endpoints) and a few workers;
+    # under overload a request fails fast (503 after DB_POOL_TIMEOUT) instead of piling up.
+    settings = get_settings()
+    return create_engine(
+        url,
+        pool_pre_ping=True,
+        pool_size=settings.db_pool_size,
+        max_overflow=settings.db_max_overflow,
+        pool_timeout=settings.db_pool_timeout,
+    )
 
 
 def get_engine() -> Engine:
@@ -70,10 +79,26 @@ def session_scope() -> Iterator[Session]:
         session.close()
 
 
-def get_db() -> Iterator[Session]:
-    """FastAPI dependency."""
-    with session_scope() as session:
+async def get_db() -> AsyncIterator[Session]:
+    """FastAPI dependency.
+
+    Deliberately an *async* generator: a sync generator dependency is closed in the threadpool, and
+    when the client disconnects (e.g. a proxy timeout under load) that teardown is cancelled, the
+    session is never closed and its connection stays "idle in transaction" for good. Fifteen of those
+    exhaust the pool and the API stops answering (found by scripts/stress.py). Here the teardown runs
+    on the event loop and always completes, also on cancellation.
+    """
+    get_engine()
+    assert _factory is not None
+    session = _factory()
+    try:
         yield session
+        session.commit()
+    except BaseException:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 
 def _add_missing_columns() -> None:
