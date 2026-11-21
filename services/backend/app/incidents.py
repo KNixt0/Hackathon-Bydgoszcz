@@ -314,6 +314,7 @@ def store_observation(
         row.content_state = "changed" if changed else "online"
         if flagged:
             row.evidence_version_id, detected = version.id, True
+    row.published_at = row.published_at or published  # learnt later (e.g. a parser that now finds it)
     row.last_checked_at = now
     row.updated_at = now
     _prune(db, row)
