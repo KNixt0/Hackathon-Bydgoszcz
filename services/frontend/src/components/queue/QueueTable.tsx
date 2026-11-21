@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { formatDateTime, hostOf, relativeTime, reportsLabel } from "../../domain/format";
-import { PLATFORM_LABEL, STATUS_LABEL } from "../../domain/labels";
+import { FOLLOW_UP_OUTCOME_LABEL, PLATFORM_LABEL, STATUS_LABEL } from "../../domain/labels";
 import { deriveLevel, type Thresholds } from "../../domain/levels";
 import { reportsOf, tierOf } from "../../domain/priority";
 import type { IncidentSummary } from "../../types/incident";
@@ -76,6 +76,10 @@ export function QueueRow({ incident: it, thresholds, fresh }: RowProps) {
           <span className="queue__sub truncate" title={it.workflow?.assigned_to ?? undefined}>
             {it.workflow?.assigned_to ?? "nieprzypisana"}
           </span>
+          {it.follow_up?.outcome && (
+            <span className="queue__sub" data-testid="follow-up">{FOLLOW_UP_OUTCOME_LABEL[it.follow_up.outcome]}</span>
+          )}
+          {it.in_scope === false && <span className="queue__sub" data-testid="out-of-scope-row">Poza właściwością UKNF</span>}
         </span>
       </td>
       <td className="queue__when" title={formatDateTime(it.created_at)}>{relativeTime(it.created_at)}</td>

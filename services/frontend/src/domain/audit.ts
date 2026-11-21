@@ -7,6 +7,8 @@ const FIELD_LABEL: Record<string, string> = {
   escalation_path: "Ścieżka eskalacji",
   resolution_action: "Działanie końcowe",
   resolution_note: "Notatka",
+  intervention_note: "Interwencja",
+  follow_up_due: "Termin weryfikacji",
   label: "Ocena",
   flag: "Próg flagowania",
   critical: "Próg krytyczny",
@@ -28,8 +30,14 @@ const VALUE_LABEL: Record<string, string> = {
   ...CASE_LABEL_LABEL,
   password: "hasło",
   demo: "konto demo",
-  evidence_package: "pakiet dowodowy",
-  warning_list_request: "wniosek o wpis na listę ostrzeżeń",
+  evidence_package: "raport z wykrycia",
+  detection_report: "raport z wykrycia",
+  // entries written before contract v4
+  warning_list_request: "raport z wykrycia (dawny wniosek)",
+  enhanced_monitoring: "monitorowanie",
+  SUPERVISION_RISK_DEPT: "ryzyko informacyjne",
+  LEGAL_WARNING_LIST: "działalność bez zezwolenia",
+  THIRD_PARTY_AUDIT: "reklama podmiotu trzeciego",
   list: "lista spraw",
 };
 // the same key means different things per field

@@ -29,14 +29,14 @@ describe("case detail", () => {
     expect(verdict.getByTestId("verdict-sentence")).toHaveTextContent(/Naruszone kryteria: [\d, ]+ i \d+\.$/);
     expect(verdict.getByText(/Odczyt: ryzyko/)).toHaveTextContent("Odczyt: ryzyko 58 z 100, Compliance Score 42. Progi na skali ryzyka: oznaczenie od 20, krytyczne od 70.");
     const reco = within(screen.getByRole("region", { name: /Rekomendacja/ }));
-    expect(reco.getByText("Wezwać firmę do wyjaśnień")).toBeInTheDocument();
+    expect(reco.getByText("Wymaga oceny analityka")).toBeInTheDocument();
     expect(reco.getByText(/Następne działanie/)).toBeInTheDocument();
     expect(screen.getByText("Dane syntetyczne")).toBeInTheDocument();
     const files = within(screen.getByRole("region", { name: "Pliki do pobrania" }));
-    expect(files.getByRole("link", { name: /Pakiet dowodowy PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
+    expect(files.getByRole("link", { name: /Raport z wykrycia PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
     expect(files.getByRole("link", { name: /Dane sprawy CSV/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.csv`);
     expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
-      "Ocena", "Rekomendacja: wezwać do wyjaśnień", "Postępowanie", "Rejestry", "Podmioty", "Pliki do pobrania", "Historia decyzji",
+      "Ocena", "Rekomendacja: wymaga oceny analityka", "Postępowanie", "Materiał i weryfikacja", "Rejestry", "Podmioty", "Pliki do pobrania", "Historia decyzji",
       "Analiza", "Argumenty „za” i „przeciw”", "Źródła dowodowe", "Zgłoszenia użytkowników",
     ]);
   });

@@ -1,4 +1,4 @@
-import { Download, FlaskConical, OctagonAlert } from "lucide-react";
+import { Download, FlaskConical, OctagonAlert, Scale } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
@@ -12,6 +12,7 @@ import { SourcesBlock } from "../components/case/SourcesBlock";
 import { VerdictBlock } from "../components/case/VerdictBlock";
 import { VISUAL_TABS, VisualsBlock, type VisualTab } from "../components/case/VisualsBlock";
 import { WorkflowPanel } from "../components/case/WorkflowPanel";
+import { ObservationPanel } from "../components/case/ObservationPanel";
 import { PartiesCard } from "../components/case/PartiesCard";
 import { RecommendationCard } from "../components/case/RecommendationCard";
 import { RegistryChecks } from "../components/case/RegistryChecks";
@@ -19,7 +20,7 @@ import { caseRef } from "../components/queue/QueueTable";
 import { Badge } from "../components/ui/Badge";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { formatDateTime, hostOf, safeHref } from "../domain/format";
-import { MODULE_LABEL, PLATFORM_LABEL } from "../domain/labels";
+import { MODULE_LABEL, PLATFORM_LABEL, SCOPE_CATEGORY_LABEL } from "../domain/labels";
 import { deriveLevel } from "../domain/levels";
 import { reportsOf, tierOf } from "../domain/priority";
 import { useUser } from "../hooks/useAuth";
@@ -61,6 +62,8 @@ export function CasePage() {
   const { refresh: refreshHistory } = history;
   const reports = useResource((signal) => api.incidentReports(id, signal), `reports:${id}`);
   const { refresh: refreshReports } = reports;
+  const versions = useResource((signal) => api.versions(id, signal), `versions:${id}`);
+  const { refresh: refreshVersions } = versions;
   const [notFound, setNotFound] = useState(false);
 
   const { resource, reload, refresh, setData } = useResource(
@@ -83,6 +86,7 @@ export function CasePage() {
       refresh();
       refreshHistory();
       refreshReports();
+      refreshVersions();
     }
   });
 
@@ -135,6 +139,14 @@ export function CasePage() {
   );
   const onTransition = useCallback((body: TransitionRequest) => act(() => transition(id, body), "Nie zmieniono etapu sprawy."), [act, transition, id]);
   const onAssign = useCallback(() => act(() => assign(id), "Nie przejęto sprawy."), [act, assign, id]);
+  const onRescan = useCallback(async (): Promise<string | null> => {
+    try {
+      await api.rescan(id);
+      return null;
+    } catch (err) {
+      return `Nie zlecono sprawdzenia. ${err instanceof Error ? err.message : ""}`.trim();
+    }
+  }, [id]);
   const onLabel = useCallback((label: CaseLabel) => act(() => setLabel(id, label), "Nie zapisano oceny."), [act, setLabel, id]);
 
   if (resource.phase === "loading") return <CaseSkeleton />;
@@ -181,6 +193,7 @@ export function CasePage() {
             <span className="muted">Na tej stronie:</span>
             <a href="#werdykt">Ocena</a>
             <a href="#workflow-h">Postępowanie</a>
+            <a href="#obserwacja">Weryfikacja</a>
             <a href="#wizualizacje">Analiza</a>
             <a href="#argumenty">Argumenty</a>
             <a href="#zrodla">Źródła dowodowe</a>
@@ -193,7 +206,7 @@ export function CasePage() {
           <div className="case-col">
             <dl className="kv case-meta" aria-label="Dane sprawy">
               <dt>Sygnatura</dt><dd><span className="num">{caseRef(inc.id)}</span> <span className="muted">({inc.id})</span></dd>
-              <dt>Wykryto</dt><dd>{formatDateTime(inc.created_at)}</dd>
+              <dt>Pierwsze wykrycie</dt><dd>{formatDateTime(inc.created_at)}</dd>
               <dt>Podmiot</dt>
               <dd>{parties.length ? parties.map((p) => p && `${p.name}${p.krs ? `, KRS ${p.krs}` : ""}`).join("; ") : <span className="muted">nieustalony</span>}</dd>
               <dt>Źródło</dt>
@@ -206,9 +219,25 @@ export function CasePage() {
               <dt>Silnik</dt>
               <dd>{inc.engine.version}{inc.engine.llm_used && inc.engine.model ? `, model ${inc.engine.model}` : ", bez modelu językowego"}, {(inc.engine.duration_ms / 1000).toFixed(1).replace(".", ",")} s</dd>
             </dl>
+            {inc.scope && !inc.scope.in_scope && (
+              <div className="callout callout--compact" data-testid="out-of-scope" role="note">
+                <p className="callout__lead"><Scale aria-hidden="true" />Poza właściwością UKNF</p>
+                <p>
+                  {SCOPE_CATEGORY_LABEL[inc.scope.category]}. {inc.scope.reason}
+                  {inc.scope.authority_hint ? ` Wskazówka: ${inc.scope.authority_hint}` : ""}
+                </p>
+              </div>
+            )}
             <VerdictBlock incident={inc} thresholds={thresholds} />
             <RecommendationCard recommendation={inc.recommendation} />
             <WorkflowPanel incident={inc} user={user} busy={statusBusy} onTransition={onTransition} onAssign={onAssign} onLabel={onLabel} />
+            <ObservationPanel
+              incident={inc}
+              versions={versions.resource.phase === "ready" ? versions.resource.data.items ?? [] : null}
+              error={versions.resource.phase === "error" ? versions.resource.error : null}
+              onRetry={versions.reload}
+              onRescan={onRescan}
+            />
           </div>
           <div className="case-col">
             <section className="csec csec--first" aria-labelledby="rejestry-h">
@@ -223,8 +252,8 @@ export function CasePage() {
               <h2 className="section-title" id="pliki-h">Pliki do pobrania</h2>
               <ul className="files">
                 <li>
-                  <a href={exportPdfUrl(inc.id)} download={`pakiet-dowodowy-${inc.id}.pdf`}><Download aria-hidden="true" />Pakiet dowodowy PDF</a>
-                  <span>PDF: ocena, dowody, rejestry i historia decyzji</span>
+                  <a href={exportPdfUrl(inc.id)} download={`raport-z-wykrycia-${inc.id}.pdf`}><Download aria-hidden="true" />Raport z wykrycia PDF</a>
+                  <span>PDF: wykrycie, dowody, rejestry, stan materiału i historia decyzji</span>
                 </li>
                 <li>
                   <a href={exportCsvUrl(inc.id)} download={`sprawa-${inc.id}.csv`}><Download aria-hidden="true" />Dane sprawy CSV</a>

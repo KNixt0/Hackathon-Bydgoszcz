@@ -1,6 +1,7 @@
 import type {
   EvidenceKind, GraphEdge, GraphNodeType, ModuleId, Platform, RegistryStatus, RiskLevel, RuleStatus, Status, Claim,
   Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role, RuleMethod,
+  ContentState, FollowUpOutcome, ScopeCategory,
 } from "../types/incident";
 import type { AuditAction, ReportCategory, ScanState } from "../types/api";
 import type { PriorityTier } from "./priority";
@@ -16,25 +17,51 @@ export const STATUS_LABEL: Record<Status, string> = {
   in_review: "W weryfikacji",
   escalation_requested: "Wniosek o eskalację",
   escalated: "Eskalowane",
-  resolved: "Zamknięte: naruszenie",
+  awaiting_correction: "Po interwencji: weryfikacja",
+  resolved: "Zamknięte: potwierdzone przez analityka",
   false_positive: "Zamknięte: fałszywy alarm",
 };
-export const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
+export const STATUSES: Status[] = [
+  "new", "in_review", "escalation_requested", "escalated", "awaiting_correction", "resolved", "false_positive",
+];
 
 export const ROLE_LABEL: Record<Role, string> = { ANALYST: "Analityk", SUPERVISOR: "Kierownik" };
 
 export const ESCALATION_PATH_LABEL: Record<EscalationPath, string> = {
-  SUPERVISION_RISK_DEPT: "Departament nadzoru: informacja o ryzyku",
-  LEGAL_WARNING_LIST: "Departament Prawny: lista ostrzeżeń publicznych",
-  THIRD_PARTY_AUDIT: "Audyt współpracy z podmiotem trzecim",
+  RISK_INFORMATION: "Ryzyko informacyjne (moduł 2)",
+  UNLICENSED_ACTIVITY: "Działalność bez zezwolenia (moduł 3)",
+  THIRD_PARTY_ADVERTISING: "Reklama podmiotu trzeciego (moduł 1)",
 };
 export const ESCALATION_PATHS = Object.keys(ESCALATION_PATH_LABEL) as EscalationPath[];
 
 export const RESOLUTION_ACTION_LABEL: Record<ResolutionAction, string> = {
-  evidence_report: "Raport dowodowy",
-  warning_list_request: "Wniosek o wpis na listę ostrzeżeń",
-  enhanced_monitoring: "Wzmożony monitoring (co 6 godzin)",
+  evidence_report: "Raport z wykrycia przekazany dalej",
+  content_removed: "Treść usunięta",
+  content_corrected: "Treść poprawiona",
   false_positive: "Fałszywy alarm",
+};
+
+// Contract v4
+export const CONTENT_STATE_LABEL: Record<ContentState, string> = {
+  online: "Dostępna, bez zmian od wykrycia",
+  changed: "Zmieniona od wykrycia",
+  removed: "Usunięta (strona zwraca błąd 404/410)",
+  unreachable: "Niedostępna przy ostatnim sprawdzeniu",
+};
+export const FOLLOW_UP_OUTCOME_LABEL: Record<FollowUpOutcome, string> = {
+  removed: "Treść usunięta",
+  corrected: "Treść poprawiona, wynik poniżej progu",
+  persisting: "Naruszenie trwa",
+};
+export const SCOPE_CATEGORY_LABEL: Record<ScopeCategory, string> = {
+  investment: "Instrumenty i usługi inwestycyjne",
+  consumer_credit: "Kredyt konsumencki",
+  deposit: "Produkt depozytowy",
+  crypto: "Kryptoaktywa",
+  insurance: "Produkt ubezpieczeniowy",
+  tax_legal: "Doradztwo podatkowe lub prawne",
+  foreign_market: "Rynek zagraniczny",
+  no_financial_offer: "Brak oferty finansowej",
 };
 
 export const CASE_LABEL_LABEL: Record<CaseLabel, string> = {
@@ -170,8 +197,8 @@ export const SEVERITY_LABEL: Record<Finding["severity"], string> = {
 export const ACTION_LABEL: Record<Recommendation["action"], string> = {
   none: "Bez działań",
   monitor: "Monitorować",
-  explain: "Wezwać do wyjaśnień",
-  escalate: "Eskalować",
+  explain: "Wymaga oceny analityka",
+  escalate: "Wysoki priorytet",
 };
 
 export const SCAN_STATE_LABEL: Record<ScanState, string> = {

@@ -80,6 +80,8 @@
 /* ── Workflow */
 .workflow__wait { color: var(--c-amb); font-weight: 500; }
 .workflow__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.observation__acts { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; margin: var(--sp-4) 0; }
+.observation__acts p { margin: 0; }
 .workflow__row { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end; }
 .workflow__label { width: 260px; }
 .workflow__dl { min-height: 40px; }

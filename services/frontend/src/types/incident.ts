@@ -3,10 +3,13 @@
 export type ModuleId = 1 | 2 | 3;
 export type RiskLevel = "red" | "orange" | "green";
 // Contract v3: the case workflow (old closed_violation → resolved, closed_ok → false_positive).
-export type Status = "new" | "in_review" | "escalation_requested" | "escalated" | "resolved" | "false_positive";
+// Contract v4: awaiting_correction = an intervention was recorded, the source is re-checked.
+export type Status =
+  | "new" | "in_review" | "escalation_requested" | "escalated" | "awaiting_correction" | "resolved" | "false_positive";
 export type Role = "ANALYST" | "SUPERVISOR";
-export type EscalationPath = "SUPERVISION_RISK_DEPT" | "LEGAL_WARNING_LIST" | "THIRD_PARTY_AUDIT";
-export type ResolutionAction = "evidence_report" | "warning_list_request" | "enhanced_monitoring" | "false_positive";
+// Contract v4: neutral paths; the system detects and reports, it drafts no formal motions.
+export type EscalationPath = "RISK_INFORMATION" | "UNLICENSED_ACTIVITY" | "THIRD_PARTY_ADVERTISING";
+export type ResolutionAction = "evidence_report" | "content_removed" | "content_corrected" | "false_positive";
 export type CaseLabel = "unlabeled" | "true_positive" | "false_positive";
 
 export interface Workflow {
@@ -39,6 +42,8 @@ export interface Source {
   final_url?: string;
   redirect_chain?: string[];
   affiliate_params?: string[];
+  /** Contract v4: when the material was published (the post), not when it was detected. */
+  published_at?: string | null;
 }
 
 // Contract v3: rendered visual audit.
@@ -248,6 +253,47 @@ export interface Analysis {
   evidence: Evidence[];
   recommendation: Recommendation;
   engine: EngineInfo;
+  /** Contract v4: is the material within UKNF's remit as covered by modules 1-3? */
+  scope?: Scope | null;
+}
+
+export type ScopeCategory =
+  | "investment" | "consumer_credit" | "deposit" | "crypto" | "insurance" | "tax_legal" | "foreign_market" | "no_financial_offer";
+export interface Scope {
+  in_scope: boolean;
+  category: ScopeCategory;
+  basis: "supervised_entity" | "warning_listed" | "investment_offer" | "out_of_scope";
+  reason: string;
+  authority_hint?: string | null;
+}
+
+// Contract v4: publication, detection and later checks are three different facts.
+export type ContentState = "online" | "changed" | "removed" | "unreachable";
+export type FollowUpOutcome = "removed" | "corrected" | "persisting";
+export interface Observation {
+  published_at: string | null;
+  detected_at: string;
+  evidence_version_id: number | null;
+  content_state: ContentState;
+  last_checked_at: string;
+}
+export interface FollowUp {
+  intervention_at: string;
+  note: string;
+  due: string | null;
+  outcome: FollowUpOutcome | null;
+}
+export interface ObservationVersion {
+  id: number;
+  content_hash: string;
+  risk_score: number;
+  changed: boolean;
+  created_at: string;
+  outcome: "content" | "removed" | "unreachable";
+  http_status: number | null;
+  published_at: string | null;
+  is_evidence: boolean;
+  has_snapshot: boolean;
 }
 
 export interface Incident extends Analysis {
@@ -259,6 +305,10 @@ export interface Incident extends Analysis {
   /** Contract v3: public reports linked to the case, and risk × reports (server-computed, threshold-free). */
   user_reports_count: number;
   priority_score: number;
+  /** Contract v4 (optional: older backends and fixtures omit them). */
+  observation?: Observation;
+  follow_up?: FollowUp | null;
+  previous_incident_id?: string | null;
 }
 
 export type IncidentSummary = Pick<
@@ -273,4 +323,8 @@ export type IncidentSummary = Pick<
   workflow: Pick<Workflow, "assigned_to" | "label">;
   user_reports_count: number;
   priority_score: number;
+  /** Contract v4 */
+  in_scope?: boolean | null;
+  content_state?: ContentState;
+  follow_up?: { due: string | null; outcome: FollowUpOutcome | null } | null;
 };

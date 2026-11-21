@@ -106,7 +106,7 @@ const ENTRIES: AuditEntry[] = [
   {
     id: 2, at: "2026-11-21T10:00:00Z", actor_email: analystUser.email, actor_role: "ANALYST", action: "transition",
     incident_id: orangeCase.id, previous: { status: "in_review", escalation_path: null },
-    new: { status: "escalation_requested", escalation_path: "THIRD_PARTY_AUDIT" }, reason: "Brak oznaczenia współpracy",
+    new: { status: "escalation_requested", escalation_path: "THIRD_PARTY_ADVERTISING" }, reason: "Brak oznaczenia współpracy",
   },
   {
     id: 1, at: "2026-11-21T09:00:00Z", actor_email: analystUser.email, actor_role: "ANALYST", action: "login",

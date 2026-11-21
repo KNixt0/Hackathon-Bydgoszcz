@@ -1,7 +1,7 @@
 import type {
   AuditEntry, AuthConfig, CalibrationSet, CaseReport, Health, IncidentList, PublicReportAccepted, PublicReportRequest, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
 } from "../types/api";
-import type { CaseLabel, Incident, Role } from "../types/incident";
+import type { CaseLabel, Incident, ObservationVersion, Role } from "../types/incident";
 import { request, requestText } from "./client";
 
 const post = (body?: unknown): RequestInit => ({ method: "POST", ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
@@ -28,6 +28,9 @@ export const api = {
   assign: (incidentId: string) => request<Incident>(`/api/incidents/${id(incidentId)}/assign`, post()),
   label: (incidentId: string, label: CaseLabel) => request<Incident>(`/api/incidents/${id(incidentId)}/label`, post({ label })),
   history: (incidentId: string, signal?: AbortSignal) => request<{ items: AuditEntry[] }>(`/api/incidents/${id(incidentId)}/history`, { signal }),
+  versions: (incidentId: string, signal?: AbortSignal) =>
+    request<{ items: ObservationVersion[] }>(`/api/incidents/${id(incidentId)}/versions`, { signal }),
+  rescan: (incidentId: string) => request<{ job_id: string }>(`/api/incidents/${id(incidentId)}/rescan`, post()),
   incidentReports: (incidentId: string, signal?: AbortSignal) => request<{ items: CaseReport[] }>(`/api/incidents/${id(incidentId)}/reports`, { signal }),
   /** Public: no session needed. */
   submitReport: (body: PublicReportRequest) => request<PublicReportAccepted>("/api/public/reports", post(body)),
@@ -56,5 +59,4 @@ export function evidenceUrl(key: string): string {
 }
 export const exportPdfUrl = (incidentId: string) => `/api/incidents/${id(incidentId)}/export.pdf`;
 export const exportCsvUrl = (incidentId: string) => `/api/incidents/${id(incidentId)}/export.csv`;
-export const warningListRequestUrl = (incidentId: string) => `/api/incidents/${id(incidentId)}/warning-list-request.pdf`;
 export const exportListCsvUrl = (query: string) => `/api/incidents/export.csv${query}`;
