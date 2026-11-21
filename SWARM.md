@@ -76,6 +76,16 @@ Lower-level scripts: `./scripts/next-task.sh` (next claimable issue) and `./scri
 
 Click **Demo** to see a simulated swarm while the repo has no tasks yet.
 
+## Guidelines from the task briefs
+
+The hard rules from the HackNation briefs ([coord/briefs/](coord/briefs/)) are in [coord/GUIDELINES.md](coord/GUIDELINES.md). They are enforced by:
+
+- `scripts/guard.sh`, run as part of `check.sh`: no paid AI APIs in `services/`, no `.env`/secrets, no `console.log` in the frontend, a Dockerfile per service plus docker compose;
+- the CI workflow `security.yml`: gitleaks, pip-audit / npm audit, and a license scan that blocks GPL/AGPL/LGPL;
+- the verifier, which also checks PRs against GUIDELINES.
+
+The process description for the jury (20% of the score) is [docs/AI-PROCESS.md](docs/AI-PROCESS.md).
+
 ## Owner review gate
 
 Every PR from someone other than **KNixt0** goes through this before merge:

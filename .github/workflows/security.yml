@@ -1,0 +1,80 @@
+name: security
+# Supply chain + secrets gate (coord/GUIDELINES.md #2 #4 #5).
+# Scans every service under services/ that has Python or Node dependencies.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hard rules (guard.sh)
+        run: bash scripts/guard.sh
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks (secret scan)
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz | tar -xz gitleaks
+          ./gitleaks detect --source . --redact --no-banner --exit-code 1
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: pip-audit + licenses (no GPL/AGPL/LGPL)
+        run: |
+          set -e
+          found=0
+          for req in $(find services -name requirements.txt -not -path '*/node_modules/*' 2>/dev/null); do
+            found=1; dir=$(dirname "$req"); echo "::group::$dir"
+            python -m venv "/tmp/venv-$$" && . "/tmp/venv-$$/bin/activate"
+            pip install -q -r "$req" pip-audit pip-licenses
+            pip-audit -r "$req" --strict
+            pip-licenses --partial-match --fail-on "GPL;AGPL;LGPL;GNU General Public;GNU Affero;GNU Lesser" \
+              --ignore-packages pip-audit pip-licenses
+            pip-licenses --format=markdown --ignore-packages pip-audit pip-licenses > "/tmp/licenses-$(basename $dir)-python.md"
+            deactivate; rm -rf "/tmp/venv-$$"; echo "::endgroup::"
+          done
+          [ $found = 1 ] || echo "No Python services yet."
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-licenses
+          path: /tmp/licenses-*.md
+          if-no-files-found: ignore
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: npm audit + licenses (no GPL/AGPL/LGPL)
+        run: |
+          set -e
+          found=0
+          for lock in $(find services -name package-lock.json -not -path '*/node_modules/*' 2>/dev/null); do
+            found=1; dir=$(dirname "$lock"); echo "::group::$dir"
+            (cd "$dir" && npm ci --ignore-scripts --no-fund --no-audit \
+              && npm audit --audit-level=critical --omit=dev \
+              && npx --yes license-checker-rseidelsohn@4.4.2 --production --excludePrivatePackages \
+                   --failOn "GPL-2.0;GPL-3.0;AGPL-3.0;LGPL-2.1;LGPL-3.0;GPL-2.0-only;GPL-3.0-only;GPL-2.0-or-later;GPL-3.0-or-later;AGPL-3.0-only;AGPL-3.0-or-later;LGPL-2.1-only;LGPL-3.0-only" \
+                   --summary)
+            echo "::endgroup::"
+          done
+          [ $found = 1 ] || echo "No Node services yet."
