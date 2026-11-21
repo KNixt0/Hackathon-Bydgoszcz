@@ -56,6 +56,26 @@ class Incident(Base):
     user_reports_count: Mapped[int | None] = mapped_column(Integer, nullable=True, default=0)
     priority_score: Mapped[float | None] = mapped_column(Float, index=True, nullable=True, default=0.0)
     norm_url_hash: Mapped[str | None] = mapped_column(String(64), index=True, nullable=True)
+    # contract v4: detection vs publication vs later observations (all nullable: in-place upgrade)
+    evidence_version_id: Mapped[int | None] = mapped_column(Integer, nullable=True)  # the frozen detection
+    published_at: Mapped[str | None] = mapped_column(
+        String(64), nullable=True
+    )  # when the material was posted
+    content_state: Mapped[str | None] = mapped_column(
+        String(16), nullable=True
+    )  # online|changed|removed|unreachable
+    last_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    in_scope: Mapped[bool | None] = mapped_column(Boolean, index=True, nullable=True)  # UKNF remit (AI scope)
+    # contract v4: follow-up after an intervention recorded by an analyst
+    intervention_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    intervention_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    follow_up_due: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    follow_up_outcome: Mapped[str | None] = mapped_column(
+        String(16), nullable=True
+    )  # removed|corrected|persisting
+    previous_incident_id: Mapped[str | None] = mapped_column(
+        String(36), nullable=True
+    )  # recurrence after closure
 
 
 class UserReport(Base):
@@ -89,6 +109,14 @@ class IncidentVersion(Base):
     risk_score: Mapped[float] = mapped_column(Float)
     changed: Mapped[bool] = mapped_column(Boolean, default=False)  # content differs from previous version
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    # contract v4: an observation is immutable; the first flagged one is the case's evidence
+    outcome: Mapped[str | None] = mapped_column(String(16), nullable=True)  # content|removed|unreachable
+    http_status: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    job_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    published_at: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    payload: Mapped[dict | None] = mapped_column(
+        JSONType, nullable=True
+    )  # full Analysis when the content changed
 
 
 class ScanJob(Base):

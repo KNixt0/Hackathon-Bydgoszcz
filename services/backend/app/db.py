@@ -94,6 +94,12 @@ def _add_missing_columns() -> None:
 
 # Contract v3 replaced the five case statuses: old values are rewritten in place on start.
 STATUS_RENAMES = {"closed_violation": "resolved", "closed_ok": "false_positive"}
+# Contract v4: neutral escalation paths (no "warning list" step: the system detects and reports).
+ESCALATION_RENAMES = {
+    "SUPERVISION_RISK_DEPT": "RISK_INFORMATION",
+    "LEGAL_WARNING_LIST": "UNLICENSED_ACTIVITY",
+    "THIRD_PARTY_AUDIT": "THIRD_PARTY_ADVERTISING",
+}
 
 _PG_AUDIT_GUARD = [
     """CREATE OR REPLACE FUNCTION audit_logs_append_only() RETURNS trigger AS $$
@@ -131,6 +137,11 @@ def _upgrade_data() -> None:
             )
             if result.rowcount:
                 log.info("migrated status", extra={"from": old, "to": new, "rows": result.rowcount})
+        for old, new in ESCALATION_RENAMES.items():
+            connection.execute(
+                text("UPDATE incidents SET escalation_path = :new WHERE escalation_path = :old"),
+                {"new": new, "old": old},
+            )
         for statement in (
             "UPDATE incidents SET user_reports_count = 0 WHERE user_reports_count IS NULL",
             "UPDATE incidents SET priority_score = risk_score WHERE priority_score IS NULL",

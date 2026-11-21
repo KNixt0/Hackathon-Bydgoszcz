@@ -31,6 +31,9 @@ SUMMARY_KEYS = {
     "firm",
     "failed_rules",
     "workflow",
+    "in_scope",  # contract v4
+    "content_state",
+    "follow_up",
 }
 
 
@@ -224,7 +227,7 @@ def test_pdf_html_has_polish_labels_and_everything(seeded):
     red = seeded.get("/api/incidents?source=instagram").json()["items"][0]
     html = render_html(seeded.get(f"/api/incidents/{red['id']}").json())
     for needle in (
-        "Pakiet dowodowy",
+        "Raport z wykrycia",
         "Dane syntetyczne",
         "WYSOKIE RYZYKO",
         "Macierz 19 kryteriów",

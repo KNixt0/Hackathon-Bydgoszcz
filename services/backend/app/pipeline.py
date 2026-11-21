@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from app import ai_client, events
 from app.config import get_settings
 from app.db import session_scope
-from app.incidents import level_for, to_summary, upsert_incident
+from app.incidents import level_for, record_unavailable, store_observation, to_summary
 from app.jobs import set_state
 from app.models import ScanJob, utcnow
 from app.public_reports import crossed_viral, link_pending
@@ -23,7 +23,7 @@ from app.scraper.parsers import GENERIC, detect_platform, select_parser
 from app.scraper.ssrf import is_fixture_url
 from app.scraper.visual_audit import attach_visual
 from app.storage import get_store
-from app.thresholds import alert_threshold
+from app.thresholds import alert_threshold, get_thresholds
 
 log = logging.getLogger(__name__)
 
@@ -176,6 +176,8 @@ def _run(job_id: str) -> None:
             raise _Retry(str(exc)) from exc
         raise _Fail(str(exc)) from exc
     if page.status >= 400:
+        if _observe_unavailable(job, job_id, page.status):
+            return
         raise _Fail(f"source answered with http status {page.status}")
 
     document = build_document(job, page, fetcher)
@@ -202,7 +204,7 @@ def _run(job_id: str) -> None:
         created_at = utcnow() - timedelta(days=float(days_ago))
 
     with session_scope() as db:
-        row, created = upsert_incident(
+        stored = store_observation(
             db,
             payload,
             created_at=created_at,
@@ -212,7 +214,10 @@ def _run(job_id: str) -> None:
             fetch_url=job.fetch_url,
             render=job.render,
             module_hint=job.module_hint,
+            job_id=job_id,
+            flag_threshold=float(get_thresholds(db)["flag"]),
         )
+        row, created = stored.row, stored.created
         linked = link_pending(db, row, job_id)  # reports that were waiting for this scan
         summary = to_summary(row)
         incident_id = row.id
@@ -220,7 +225,8 @@ def _run(job_id: str) -> None:
     set_state(job_id, "done", incident_id=incident_id)
     events.emit("incident:new" if created else "incident:updated", summary)
     critical = alert_threshold()  # global "critical" threshold
-    if created and summary["risk_score"] >= critical:
+    # alert on a detection: a new case, or a known source that only now reaches the threshold
+    if (created or stored.detected) and summary["risk_score"] >= critical:
         events.emit("alert:high", summary)
     if linked and crossed_viral(*linked) and summary["risk_score"] >= critical:
         events.emit("alert:viral", summary)
@@ -233,6 +239,22 @@ def _run(job_id: str) -> None:
             "risk_score": summary["risk_score"],
         },
     )
+
+
+def _observe_unavailable(job: ScanJob, job_id: str, status: int) -> bool:
+    """404/410 or another error page from a source that is already a case: record the observation
+    (contract v4: `removed` / `unreachable`) and finish the job, instead of failing it."""
+    with session_scope() as db:
+        row = record_unavailable(db, job.url, status, job_id)
+        if row is None:
+            return False
+        summary, incident_id = to_summary(row), row.id
+    set_state(job_id, "done", incident_id=incident_id)
+    events.emit("incident:updated", summary)
+    log.info(
+        "source unavailable", extra={"job_id": job_id, "incident_id": incident_id, "http_status": status}
+    )
+    return True
 
 
 def process_job(job_id: str) -> float | None:

@@ -1,12 +1,19 @@
 """Case workflow (contract v3): allowed transitions, role checks, required reasons, side effects.
 
-new → in_review · in_review → escalation_requested | resolved | false_positive ·
-escalation_requested → escalated (SUPERVISOR) | in_review · escalated → resolved | false_positive
+new → in_review · in_review → escalation_requested | awaiting_correction | resolved | false_positive ·
+escalation_requested → escalated (SUPERVISOR) | in_review ·
+escalated → awaiting_correction | resolved | false_positive ·
+awaiting_correction → resolved | in_review | escalation_requested   (contract v4: follow-up)
+
+The system detects and reports. `awaiting_correction` records that UKNF intervened (the analyst
+describes how, outside this tool) and schedules a re-check of the source; the outcome of each
+re-check (removed / corrected / persisting) is written by the pipeline, the analyst closes.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -18,17 +25,19 @@ from app.models import Incident, WatchlistItem, utcnow
 
 TRANSITIONS: dict[str, tuple[str, ...]] = {
     "new": ("in_review",),
-    "in_review": ("escalation_requested", "resolved", "false_positive"),
+    "in_review": ("escalation_requested", "awaiting_correction", "resolved", "false_positive"),
     "escalation_requested": ("escalated", "in_review"),
-    "escalated": ("resolved", "false_positive"),
+    "escalated": ("awaiting_correction", "resolved", "false_positive"),
+    "awaiting_correction": ("resolved", "in_review", "escalation_requested"),
     "resolved": (),
     "false_positive": (),
 }
 SUPERVISOR_ONLY = {("escalation_requested", "escalated")}
-REASON_REQUIRED = {"resolved", "false_positive"}
+REASON_REQUIRED = {"resolved", "false_positive", "awaiting_correction"}
 CLOSED = {"resolved", "false_positive"}
-DEFAULT_ESCALATION_PATH = {1: "THIRD_PARTY_AUDIT", 2: "SUPERVISION_RISK_DEPT", 3: "LEGAL_WARNING_LIST"}
+DEFAULT_ESCALATION_PATH = {1: "THIRD_PARTY_ADVERTISING", 2: "RISK_INFORMATION", 3: "UNLICENSED_ACTIVITY"}
 MONITORING_INTERVAL_HOURS = 6.0
+DEFAULT_FOLLOW_UP_DAYS = 14
 
 
 class WorkflowError(Exception):
@@ -44,10 +53,16 @@ class TransitionInput:
     reason: str | None = None
     escalation_path: str | None = None
     resolution_action: str | None = None
+    follow_up_days: int | None = None
 
 
 def _snapshot(row: Incident) -> dict:
-    return {"status": row.status, **workflow_dict(row)}
+    return {
+        "status": row.status,
+        **workflow_dict(row),
+        "intervention_note": row.intervention_note,
+        "follow_up_due": row.follow_up_due.isoformat() if row.follow_up_due else None,
+    }
 
 
 def _changed(before: dict, after: dict) -> tuple[dict, dict]:
@@ -89,6 +104,10 @@ def _watch(db: Session, row: Incident) -> None:
     item.interval_hours = MONITORING_INTERVAL_HOURS
 
 
+def _unwatch(db: Session, row: Incident) -> None:
+    db.query(WatchlistItem).filter(WatchlistItem.url_hash == url_hash(row.source_url)).delete()
+
+
 def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) -> None:
     """Validates (409 edge, 403 role, 422 payload), applies, and writes one audit row."""
     current, target = row.status, body.to
@@ -108,6 +127,8 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
         raise WorkflowError(422, "a false positive is closed with resolution_action false_positive")
     if target == "resolved" and action == "false_positive":
         raise WorkflowError(422, "use the false_positive status for a false positive")
+    if body.follow_up_days is not None and target != "awaiting_correction":
+        raise WorkflowError(422, "follow_up_days only applies to awaiting_correction")
 
     before = _snapshot(row)
     row.status = target
@@ -118,7 +139,7 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
             row.escalation_path = None
     elif target == "escalation_requested":
         row.escalation_path = body.escalation_path or DEFAULT_ESCALATION_PATH.get(
-            row.primary_module, "SUPERVISION_RISK_DEPT"
+            row.primary_module, "RISK_INFORMATION"
         )
     elif target == "escalated":
         if body.escalation_path:
@@ -127,11 +148,18 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
         row.resolution_action = "false_positive"
         row.resolution_note = reason
         row.label = "false_positive"
+    elif target == "awaiting_correction":
+        now = utcnow()
+        row.intervention_at = now
+        row.intervention_note = reason
+        row.follow_up_due = now + timedelta(days=body.follow_up_days or DEFAULT_FOLLOW_UP_DAYS)
+        row.follow_up_outcome = None
+        _watch(db, row)  # re-checked by the scheduler until the case is closed
     elif target == "resolved":
         row.resolution_action = action or "evidence_report"
         row.resolution_note = reason
-        if row.resolution_action == "enhanced_monitoring":
-            _watch(db, row)
+    if target in CLOSED and row.intervention_at is not None:
+        _unwatch(db, row)  # the follow-up ends with the case
     row.updated_at = utcnow()
     previous, new = _changed(before, _snapshot(row))
     previous["status"], new["status"] = current, target

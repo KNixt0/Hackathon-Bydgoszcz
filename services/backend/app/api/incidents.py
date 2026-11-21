@@ -219,7 +219,7 @@ def rescan_incident(incident_id: str, db: Db, user: Actor) -> dict:
 
 @router.get("/incidents/{incident_id}/versions")
 def incident_versions(incident_id: str, db: Db) -> dict:
-    """Extra (not in the contract): re-scan history used for diffing."""
+    """Contract v4: observations of the source, newest first. `is_evidence` marks the frozen detection."""
     row = _get_or_404(db, incident_id)
     versions = (
         db.query(IncidentVersion)
@@ -230,13 +230,34 @@ def incident_versions(incident_id: str, db: Db) -> dict:
     return {
         "items": [
             {
+                "id": v.id,
                 "content_hash": v.content_hash,
                 "risk_score": v.risk_score,
                 "changed": v.changed,
                 "created_at": iso(v.created_at),
+                "outcome": v.outcome or "content",
+                "http_status": v.http_status,
+                "published_at": v.published_at,
+                "is_evidence": v.id == row.evidence_version_id,
+                "has_snapshot": v.payload is not None,
             }
             for v in versions
         ]
+    }
+
+
+@router.get("/incidents/{incident_id}/versions/{version_id}")
+def incident_version(incident_id: str, version_id: int, db: Db) -> dict:
+    """Contract v4: one stored observation with its full analysis (for a before / after comparison)."""
+    row = _get_or_404(db, incident_id)
+    version = db.get(IncidentVersion, version_id)
+    if version is None or version.incident_id != row.id or version.payload is None:
+        raise HTTPException(404, "observation not found")
+    return {
+        "id": version.id,
+        "created_at": iso(version.created_at),
+        "is_evidence": version.id == row.evidence_version_id,
+        "analysis": version.payload,
     }
 
 
@@ -248,46 +269,38 @@ def export_incident_csv(incident_id: str, db: Db, user: Actor) -> Response:
     return _csv_response(body, f"investwatch-{row.id}.csv")
 
 
-def _render(kind: str, incident_id: str, db: Session, user: Actor) -> Response:
-    from app.exports.pdf import render_pdf, render_warning_list_pdf
+def _render(incident_id: str, db: Session, user: Actor) -> Response:
+    from app.exports.pdf import render_pdf
     from app.scraper.browser import BrowserUnavailable
 
     row = _get_or_404(db, incident_id)
     incident = to_incident(row)
-    if kind == "warning_list_request" and not (
-        3 in (incident.get("modules") or []) or row.primary_module == 3 or row.resolution_action == kind
-    ):
-        raise HTTPException(409, "the warning-list request is only available for Module 3 cases")
     history = audit.incident_history(db, row.id, audit.DECISION_ACTIONS)
     reports = _report_items(db, row.id, 20)
     db.close()  # do not hold a connection while Chromium renders
     try:
-        if kind == "warning_list_request":
-            pdf = render_warning_list_pdf(incident, history)
-        else:
-            pdf = render_pdf(incident, history, reports)
+        pdf = render_pdf(incident, history, reports)
     except BrowserUnavailable as exc:
         raise HTTPException(503, "PDF renderer is not available") from exc
     with session_scope() as audit_db:  # only a document that was really produced is logged
         audit.record(
-            audit_db, user, "export", incident_id=incident["id"], new={"format": "pdf", "document": kind}
+            audit_db,
+            user,
+            "export",
+            incident_id=incident["id"],
+            new={"format": "pdf", "document": "detection_report"},
         )
-    name = "wniosek-lista-ostrzezen" if kind == "warning_list_request" else "investwatch"
     return Response(
         pdf,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{name}-{incident["id"]}.pdf"'},
+        headers={"Content-Disposition": f'attachment; filename="raport-z-wykrycia-{incident["id"]}.pdf"'},
     )
 
 
 @router.get("/incidents/{incident_id}/export.pdf")
 def export_incident_pdf(incident_id: str, db: Db, user: Actor) -> Response:
-    return _render("evidence_package", incident_id, db, user)
-
-
-@router.get("/incidents/{incident_id}/warning-list-request.pdf")
-def warning_list_request_pdf(incident_id: str, db: Db, user: Actor) -> Response:
-    return _render("warning_list_request", incident_id, db, user)
+    """Contract v4: the detection report (replaces the evidence package; no warning-list request)."""
+    return _render(incident_id, db, user)
 
 
 @router.get("/stats/trends")

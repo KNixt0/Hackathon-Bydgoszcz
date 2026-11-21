@@ -214,9 +214,13 @@ def test_rescan_keeps_count_and_recomputes_priority(client, anon):
     case = incident(client)
     client.world.pages[URL] = CALM
     client.post(f"/api/incidents/{case['id']}/rescan")
-    after = incident(client)
+    after = client.get(f"/api/incidents/{case['id']}").json()
     assert after["user_reports_count"] == 1
-    assert after["priority_score"] == priority_score(after["risk_score"], 1) != case["priority_score"]
+    # contract v4: a detected case keeps its evidence; the calmer page is a later observation
+    assert after["risk_score"] == case["risk_score"] and after["priority_score"] == case["priority_score"]
+    assert after["observation"]["content_state"] == "changed"
+    versions = client.get(f"/api/incidents/{case['id']}/versions").json()["items"]
+    assert versions[0]["risk_score"] != case["risk_score"] and versions[-1]["is_evidence"] is True
 
 
 def test_sort_and_min_reports(client, anon):
