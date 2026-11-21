@@ -1,32 +1,22 @@
-import { BadgeCheck, Building2, CircleAlert, CircleHelp, Megaphone, UserRound, type LucideIcon } from "lucide-react";
+import { CircleCheck, CircleMinus, TriangleAlert, type LucideIcon } from "lucide-react";
 import type { Entities, Party, RegistryCheck } from "../../types/incident";
 import { REGISTRY_STATUS_LABEL } from "../../domain/labels";
-import { Badge, type Tone } from "../ui/Badge";
+import { Mark, type MarkTone } from "../ui/Mark";
 
 const KIND_LABEL: Record<Party["kind"], string> = {
   investment_firm: "Firma inwestycyjna", advertiser: "Reklamujący", influencer: "Influencer", pr_agency: "Agencja PR",
   advisor: "Doradca", lawyer: "Prawnik", company: "Spółka", person: "Osoba",
 };
 
-const STATUS_TONE: Record<RegistryCheck["status"], Tone> = {
-  listed: "green", not_listed: "neutral", warning_listed: "red", inactive: "orange", not_checked: "neutral",
-};
-
-function iconFor(kind: Party["kind"]): LucideIcon {
-  if (kind === "influencer" || kind === "advertiser") return Megaphone;
-  if (kind === "person" || kind === "advisor" || kind === "lawyer") return UserRound;
-  return Building2;
-}
-
 interface Verification {
   key: string;
-  tone: Tone;
+  tone: MarkTone;
   icon: LucideIcon;
   text: string;
   title: string;
 }
 
-/** Only the register results that change how the analyst reads this party; the full list lives in the matrix tab. */
+/** Only the register results that change how the analyst reads this party; the full list is the register table. */
 export function verifications(party: Party, checks: RegistryCheck[]): Verification[] {
   const name = party.name.toLowerCase();
   // Registers are searched by name or a shortened name, so match in both directions.
@@ -38,44 +28,34 @@ export function verifications(party: Party, checks: RegistryCheck[]): Verificati
   const out: Verification[] = [];
   for (const c of mine) {
     const base = { key: `${c.registry}-${c.subject}`, title: `${c.label}: ${c.detail}` };
-    if (c.status === "listed") out.push({ ...base, tone: STATUS_TONE.listed, icon: BadgeCheck, text: `${REGISTRY_STATUS_LABEL.listed}: ${c.label}` });
-    else if (c.status === "warning_listed") out.push({ ...base, tone: "red", icon: CircleAlert, text: "Na liście ostrzeżeń publicznych KNF" });
-    else if (c.status === "inactive") out.push({ ...base, tone: "orange", icon: CircleAlert, text: `${REGISTRY_STATUS_LABEL.inactive}: ${c.label}` });
-    else if (c.status === "not_listed" && c.registry === "knf_public_warnings") out.push({ ...base, tone: "neutral", icon: CircleHelp, text: "Brak ostrzeżeń KNF" });
-    else if (c.status === "not_listed" && c.registry === "uknf_cooperation_notice") out.push({ ...base, tone: "orange", icon: CircleAlert, text: "Brak zgłoszenia współpracy do UKNF" });
-    else if (c.status === "not_listed" && c.registry === "knf_investment_firms" && !licensed) out.push({ ...base, tone: "orange", icon: CircleAlert, text: "Poza rejestrem firm inwestycyjnych" });
+    if (c.status === "listed") out.push({ ...base, tone: "grn", icon: CircleCheck, text: `${REGISTRY_STATUS_LABEL.listed}: ${c.label}` });
+    else if (c.status === "warning_listed") out.push({ ...base, tone: "red", icon: TriangleAlert, text: "Na liście ostrzeżeń publicznych KNF" });
+    else if (c.status === "inactive") out.push({ ...base, tone: "amb", icon: TriangleAlert, text: `${REGISTRY_STATUS_LABEL.inactive}: ${c.label}` });
+    else if (c.status === "not_listed" && c.registry === "knf_public_warnings") out.push({ ...base, tone: "ink", icon: CircleMinus, text: "Brak ostrzeżeń KNF" });
+    else if (c.status === "not_listed" && c.registry === "uknf_cooperation_notice") out.push({ ...base, tone: "amb", icon: CircleMinus, text: "Brak zgłoszenia współpracy do UKNF" });
+    else if (c.status === "not_listed" && c.registry === "knf_investment_firms" && !licensed) out.push({ ...base, tone: "amb", icon: CircleMinus, text: "Poza rejestrem firm inwestycyjnych" });
   }
   return out;
 }
 
 function PartyRow({ role, party, checks }: { role: string; party: Party; checks: RegistryCheck[] }) {
-  const Icon = iconFor(party.kind);
-  const badges = verifications(party, checks);
+  const marks = verifications(party, checks);
+  const meta = [party.handle, party.krs && `KRS ${party.krs}`, party.nip && `NIP ${party.nip}`, party.country && `kraj: ${party.country}`].filter(Boolean);
   return (
     <li className="party">
-      <span className="party__avatar" aria-hidden="true"><Icon /></span>
-      <div className="party__body">
-        <p className="party__role">{role}</p>
-        <p className="party__name">{party.name}</p>
-        <p className="party__meta">
-          {party.handle && <span>{party.handle}</span>}
-          {party.krs && <span>KRS {party.krs}</span>}
-          {party.nip && <span>NIP {party.nip}</span>}
-          {party.country && <span>Kraj: {party.country}</span>}
-        </p>
-        {badges.length > 0 && (
-          <div className="party__badges">
-            {badges.map((v) => (
-              <Badge key={v.key} tone={v.tone} title={v.title}><v.icon aria-hidden="true" />{v.text}</Badge>
-            ))}
-          </div>
-        )}
-      </div>
+      <span className="party__role">{role}</span>
+      <span className="party__name">{party.name}</span>
+      {meta.length > 0 && <span className="party__meta">{meta.join(", ")}</span>}
+      {marks.length > 0 && (
+        <span className="party__marks">
+          {marks.map((v) => <Mark key={v.key} tone={v.tone} icon={v.icon} title={v.title}>{v.text}</Mark>)}
+        </span>
+      )}
     </li>
   );
 }
 
-/** Who is involved, with register verification badges next to each name. */
+/** Who is involved, with the register results that matter next to each name. */
 export function PartiesCard({ entities, registryChecks }: { entities: Entities; registryChecks: RegistryCheck[] }) {
   const rows: { role: string; party: Party }[] = [];
   if (entities.investment_firm) rows.push({ role: "Firma inwestycyjna (reklamowana)", party: entities.investment_firm });
@@ -83,7 +63,7 @@ export function PartiesCard({ entities, registryChecks }: { entities: Entities; 
   for (const p of entities.others) rows.push({ role: KIND_LABEL[p.kind] ?? "Podmiot powiązany", party: p });
   if (rows.length === 0) return <p className="muted">Silnik nie ustalił podmiotów w tym materiale.</p>;
   return (
-    <ul>
+    <ul className="parties">
       {rows.map((r) => <PartyRow key={`${r.role}-${r.party.name}`} role={r.role} party={r.party} checks={registryChecks} />)}
     </ul>
   );

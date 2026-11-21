@@ -17,19 +17,17 @@ interface Props {
 /** Public reports linked to the case: the count, the tier and what people wrote (plain text, escaped by React). */
 export function UserReports({ count, tier, items, error, onRetry }: Props) {
   return (
-    <section className="panel block" id="zgloszenia" aria-labelledby="zgloszenia-h">
-      <header className="panel__head">
-        <div>
-          <h2 className="panel__title" id="zgloszenia-h">Zgłoszenia użytkowników</h2>
-          <p className="panel__hint" data-testid="case-report-count">{count === 0 ? "Nikt nie zgłosił tej sprawy." : reportsLabel(count)}</p>
-        </div>
+    <section className="csec" id="zgloszenia" aria-labelledby="zgloszenia-h">
+      <div className="csec__head">
+        <h2 className="section-title" id="zgloszenia-h">Zgłoszenia użytkowników</h2>
         <PriorityTierTag tier={tier} />
-      </header>
+      </div>
+      <p className="csec__lead" data-testid="case-report-count">{count === 0 ? "Nikt nie zgłosił tej sprawy." : reportsLabel(count)}</p>
       {tier === "crowd_anomaly" && <p className="reports__note">{TIER_HINT.crowd_anomaly}</p>}
       {count === 0 ? null : error ? (
         <ErrorState compact title="Nie udało się wczytać zgłoszeń" message={error} onRetry={onRetry} />
       ) : items === null ? (
-        <div className="panel__body" aria-busy="true"><Skeleton height={14} width="60%" /></div>
+        <div aria-busy="true"><Skeleton height={14} width="60%" /></div>
       ) : items.length === 0 ? (
         <EmptyState compact title="Brak szczegółów zgłoszeń" text="Zgłoszenia zostały policzone, ale nie mają treści do pokazania." />
       ) : (
@@ -37,7 +35,8 @@ export function UserReports({ count, tier, items, error, onRetry }: Props) {
           {items.map((r, i) => (
             <li key={`${r.created_at}-${i}`} className="reports__item">
               <span className="reports__meta">
-                {formatDateTime(r.created_at)} · {r.category_hint ? REPORT_CATEGORY_LABEL[r.category_hint] : "Kategoria: nie wiem"}
+                {formatDateTime(r.created_at)}
+                <span className="reports__cat">{r.category_hint ? REPORT_CATEGORY_LABEL[r.category_hint] : "Kategoria: nie wiem"}</span>
               </span>
               <span className="reports__comment">{r.comment ? r.comment : <span className="muted">Bez uwag.</span>}</span>
             </li>

@@ -3,6 +3,7 @@ const dateTimeFmt = new Intl.DateTimeFormat("pl-PL", {
   day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
 });
 const shortDayFmt = new Intl.DateTimeFormat("pl-PL", { day: "numeric", month: "short" });
+const dayMonthFmt = new Intl.DateTimeFormat("pl-PL", { day: "2-digit", month: "2-digit" });
 const plnFmt = new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN", maximumFractionDigits: 0 });
 const compactFmt = new Intl.NumberFormat("pl-PL", { notation: "compact", maximumFractionDigits: 1 });
 
@@ -23,6 +24,11 @@ export const formatDateTime = (v: string | null | undefined) => {
 export const formatShortDay = (v: string) => {
   const d = parse(v);
   return d ? shortDayFmt.format(d) : v;
+};
+/** "21.11" for chart axes. */
+export const formatDayMonth = (v: string) => {
+  const d = parse(v);
+  return d ? dayMonthFmt.format(d) : v;
 };
 export const formatPln = (v: number | null | undefined) => (v === null || v === undefined ? "brak danych" : plnFmt.format(v));
 export const formatCompact = (v: number) => compactFmt.format(v);

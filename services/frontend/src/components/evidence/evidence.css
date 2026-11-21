@@ -1,22 +1,29 @@
-/* Screenshot evidence (contract v3: Evidence.bbox on an archived viewport screenshot). Plain: 1px rules, no shadows. */
-.ev-shot { display: grid; gap: var(--sp-2); }
-.ev-shot__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+/* Screenshot evidence (contract v3: Evidence.bbox on an archived viewport screenshot). 1px frame, no radius, no shadow. */
+.ev-shot { display: grid; gap: 8px; }
+.ev-shot__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .ev-shot__head .drawer__section-title { margin: 0; }
-.ev-shot__switch { display: inline-flex; border: 1px solid var(--line-strong); }
-.ev-shot__tab { border: 0; background: var(--surface); color: var(--ink-2); font: inherit; font-size: var(--fs-sm); padding: 4px 10px; cursor: pointer; }
-.ev-shot__tab + .ev-shot__tab { border-left: 1px solid var(--line-strong); }
+.ev-shot__switch { display: inline-flex; gap: 4px; }
+.ev-shot__tab { min-height: 36px; padding: 0 12px; border: 0; background: var(--tint); color: var(--ink); font-size: var(--fs-14); font-weight: 500; cursor: pointer; }
+.ev-shot__tab:hover { background: var(--sel); }
 .ev-shot__tab[aria-pressed="true"] { background: var(--accent); color: #fff; }
-.ev-shot__tab:focus-visible, .ev-shot__frame:focus-visible, .ev-shot__link:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.ev-shot__frame { max-height: 420px; overflow: auto; border: 1px solid var(--line); background: var(--surface-sunken); }
+.ev-shot__frame { max-height: 440px; overflow: auto; border: 1px solid var(--line); background: var(--surface); }
 .ev-shot__canvas { position: relative; line-height: 0; }
 .ev-shot__img { display: block; width: 100%; height: auto; }
-/* The violation marker is the one functional colour here. */
-.ev-shot__box { position: absolute; box-sizing: border-box; border: 2px solid var(--red); pointer-events: none; min-width: 6px; min-height: 6px; }
-.ev-shot__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); }
+/* The violation box: 2px red outline, no fill, a square numeral in the corner (identified by number, not by colour). */
+.ev-shot__box { position: absolute; box-sizing: border-box; border: 2px solid var(--c-red); pointer-events: none; min-width: 6px; min-height: 6px; }
+.ev-shot__num {
+  position: absolute; left: -2px; top: -2px; width: 20px; height: 20px; display: grid; place-items: center;
+  background: var(--c-red); color: #fff; font-size: var(--fs-14); font-weight: 700; line-height: 1;
+}
+@media (forced-colors: active) {
+  .ev-shot__box { border-color: CanvasText; }
+  .ev-shot__num { background: CanvasText; color: Canvas; forced-color-adjust: none; }
+}
+.ev-shot__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: var(--fs-14); }
 .ev-shot__coords { font-variant-numeric: tabular-nums; }
-.ev-shot__link { border: 0; background: none; padding: 0; color: var(--accent-ink); text-decoration: underline; font: inherit; cursor: pointer; }
-.ev-shot__rules { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.ev-shot__rules li { display: grid; gap: 2px; border: 1px solid var(--line); padding: 6px 10px; }
-.ev-shot__rule { font-weight: 600; display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
-.ev-shot__method { font-weight: 400; font-size: var(--fs-sm); color: var(--muted); }
-.ev-shot__method::before { content: "· "; }
+.ev-shot__link { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font: inherit; cursor: pointer; }
+.ev-shot__rules { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); font-size: var(--fs-14); }
+.ev-shot__rules li { display: grid; gap: 2px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.ev-shot__rule { font-weight: 700; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.ev-shot__rule::before { content: "1."; color: var(--muted); font-weight: 700; }
+.ev-shot__method { font-weight: 400; color: var(--muted); }

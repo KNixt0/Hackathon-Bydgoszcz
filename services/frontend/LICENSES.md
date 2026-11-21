@@ -7,7 +7,7 @@ Versions are pinned in `package.json` and `package-lock.json`. Regenerate this f
 
 | Package | Version | Licence | Used for |
 |---|---|---|---|
-| @fontsource/ibm-plex-sans | 5.3.0 | OFL-1.1 | Self-hosted UI typeface (IBM Plex Sans, latin + latin-ext) |
+| @fontsource/public-sans | 5.3.0 | OFL-1.1 | Self-hosted UI typeface (Public Sans 400, 500, 700; latin + latin-ext) |
 | @radix-ui/react-dialog | 1.3.1 | MIT | Accessible dialog / drawer primitive |
 | @radix-ui/react-dropdown-menu | 2.2.1 | MIT | Accessible menu primitive |
 | @radix-ui/react-slider | 1.6.1 | MIT | Threshold slider primitive |
@@ -22,7 +22,7 @@ Versions are pinned in `package.json` and `package-lock.json`. Regenerate this f
 
 Notes:
 
-- **IBM Plex Sans** is licensed under the SIL Open Font License 1.1 (OFL-1.1), an open font licence. The font files are bundled into the build and served from the same origin; nothing is loaded from a CDN.
+- **Public Sans** is licensed under the SIL Open Font License 1.1 (OFL-1.1), an open font licence. The font files are bundled into the build and served from the same origin; nothing is loaded from a CDN.
 - **lucide-react** icons are ISC (a few icons derived from Feather are MIT).
 
 ## Runtime dependencies (transitive)

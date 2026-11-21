@@ -21,25 +21,42 @@ describe("case detail", () => {
     mockApi();
     renderApp({ route: orangeUrl });
     await caseReady(/Recenzja platformy CFD Tradeon/);
-    const verdict = within(screen.getByRole("region", { name: /Werdykt/ }));
+    const verdict = within(screen.getByRole("region", { name: "Ocena" }));
     expect(verdict.getByText("Do weryfikacji")).toBeInTheDocument();
     expect(verdict.getByTestId("compliance-score")).toHaveTextContent("42");
-    expect(verdict.getByText(/Surowy wynik ryzyka/)).toHaveTextContent("58");
-    expect(verdict.getByText("Wezwać firmę do wyjaśnień")).toBeInTheDocument();
-    expect(verdict.getByText(/Następne działanie/)).toBeInTheDocument();
-    expect(verdict.getByText("Dane syntetyczne")).toBeInTheDocument();
-    expect(verdict.getByRole("link", { name: /Pakiet dowodowy PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
-    expect(verdict.getByRole("link", { name: "CSV" })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.csv`);
+    // the verdict is a sentence first: the finding word, then the engine's summary, then the violated criteria
+    expect(verdict.getByTestId("verdict-sentence")).toHaveTextContent(/^Wymaga weryfikacji\. Influencer promuje platformę CFD/);
+    expect(verdict.getByTestId("verdict-sentence")).toHaveTextContent(/Naruszone kryteria: [\d, ]+ i \d+\.$/);
+    expect(verdict.getByText(/Odczyt: ryzyko/)).toHaveTextContent("Odczyt: ryzyko 58 z 100, Compliance Score 42. Progi na skali ryzyka: oznaczenie od 20, krytyczne od 70.");
+    const reco = within(screen.getByRole("region", { name: /Rekomendacja/ }));
+    expect(reco.getByText("Wezwać firmę do wyjaśnień")).toBeInTheDocument();
+    expect(reco.getByText(/Następne działanie/)).toBeInTheDocument();
+    expect(screen.getByText("Dane syntetyczne")).toBeInTheDocument();
+    const files = within(screen.getByRole("region", { name: "Pliki do pobrania" }));
+    expect(files.getByRole("link", { name: /Pakiet dowodowy PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
+    expect(files.getByRole("link", { name: /Dane sprawy CSV/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.csv`);
     expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
-      "1Werdykt", "2Wykresy i wizualizacje", "3Argumenty „za” i „przeciw”", "4Źródła dowodowe", "Zgłoszenia użytkowników", "5Historia decyzji",
+      "Ocena", "Rekomendacja: wezwać do wyjaśnień", "Postępowanie", "Rejestry", "Podmioty", "Pliki do pobrania", "Historia decyzji",
+      "Analiza", "Argumenty „za” i „przeciw”", "Źródła dowodowe", "Zgłoszenia użytkowników",
     ]);
+  });
+
+  it("draws the dual ruled scale with the thresholds from the threshold context", async () => {
+    mockApi();
+    renderApp({ route: orangeUrl, thresholds: { red: 65, orange: 25 } });
+    await caseReady(/Recenzja platformy CFD Tradeon/);
+    const scale = screen.getByTestId("score-scale");
+    expect(scale).toHaveTextContent("oznaczenie od 25, krytyczne od 65");
+    expect(within(scale).getByText("oznaczenie")).toHaveStyle({ left: "25%" });
+    expect(within(scale).getByText("krytyczne")).toHaveStyle({ left: "65%" });
   });
 
   it("recomputes the level on the case from the analyst's threshold", async () => {
     mockApi();
     renderApp({ route: orangeUrl, thresholds: { red: 50, orange: 20 } });
     await caseReady(/Recenzja platformy CFD Tradeon/);
-    expect(within(screen.getByRole("region", { name: /Werdykt/ })).getByText("Krytyczne")).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Ocena" })).getByText("Krytyczne")).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Ocena" })).getByTestId("verdict-sentence")).toHaveTextContent(/^Naruszenie\./);
   });
 
   it("opens the evidence drawer from a citation chip with the quote highlighted in the source text", async () => {
@@ -171,7 +188,8 @@ describe("case detail", () => {
     renderApp({ route: `/sprawy/${greenCase.id}` });
     await caseReady(/Strona produktowa rachunku maklerskiego/);
     expect(screen.getByTestId("compliance-score")).toHaveTextContent("92");
-    expect(within(screen.getByRole("region", { name: /Werdykt/ })).getByText("Zgodne")).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Ocena" })).getByText("Zgodne")).toBeInTheDocument();
+    expect(screen.getByTestId("verdict-sentence")).toHaveTextContent(/^Brak naruszeń\./);
 
     await user.click(screen.getByRole("tab", { name: /Graf powiązań/ }));
     expect(await screen.findByText("Brak danych o powiązaniach")).toBeInTheDocument();
@@ -238,7 +256,7 @@ describe("case sub-panels with empty or partial data", () => {
     renderWithRouter(<FinancialsPanel financials={orangeCase.financials} />);
     expect(screen.getByText("02.03.2026")).toBeInTheDocument();
     expect(screen.getByText("Spółka młodsza niż 12 miesięcy")).toBeInTheDocument();
-    expect(screen.getAllByText("Nie złożono")).toHaveLength(2);
+    expect(screen.getAllByText("nie złożono")).toHaveLength(2);
   });
   it("ComplianceMatrix and RegistryChecks: empty", () => {
     renderWithRouter(<><ComplianceMatrix rules={[]} /><RegistryChecks checks={[]} /></>);
@@ -256,10 +274,13 @@ describe("party verification badges", () => {
     mockApi((call) => (call.path === `/api/incidents/${redCase.id}` ? { json: redCase } : undefined));
     renderApp({ route: `/sprawy/${redCase.id}` });
     await caseReady(/Aurum Family Office/);
-    const verdict = within(screen.getByRole("region", { name: /Werdykt/ }));
-    expect(verdict.getByText("Na liście ostrzeżeń publicznych KNF")).toBeInTheDocument();
-    expect(verdict.getByText("Poza rejestrem firm inwestycyjnych")).toBeInTheDocument();
+    const parties = within(screen.getByRole("region", { name: "Podmioty" }));
+    expect(parties.getByText("Na liście ostrzeżeń publicznych KNF")).toBeInTheDocument();
+    expect(parties.getByText("Poza rejestrem firm inwestycyjnych")).toBeInTheDocument();
+    const verdict = within(screen.getByRole("region", { name: "Ocena" }));
     expect(verdict.getByText("Krytyczne")).toBeInTheDocument();
     expect(verdict.getByTestId("compliance-score")).toHaveTextContent("11");
+    // the one filled badge in the header
+    expect(screen.getAllByText("Krytyczne").some((el) => el.closest(".badge--red"))).toBe(true);
   });
 });

@@ -1,6 +1,6 @@
 import type {
   EvidenceKind, GraphEdge, GraphNodeType, ModuleId, Platform, RegistryStatus, RiskLevel, RuleStatus, Status, Claim,
-  Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role,
+  Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role, RuleMethod,
 } from "../types/incident";
 import type { AuditAction, ReportCategory, ScanState } from "../types/api";
 import type { PriorityTier } from "./priority";
@@ -105,6 +105,23 @@ export const REGISTRY_STATUS_LABEL: Record<RegistryStatus, string> = {
   warning_listed: "Lista ostrzeżeń",
   inactive: "Wpis nieaktywny",
   not_checked: "Nie sprawdzono",
+};
+
+/** Words in the register table's "Wynik" column. */
+export const REGISTRY_RESULT_LABEL: Record<RegistryStatus, string> = {
+  listed: "wpis aktywny",
+  not_listed: "brak wpisu",
+  warning_listed: "na liście ostrzeżeń",
+  inactive: "wpis nieaktywny",
+  not_checked: "nie sprawdzono",
+};
+
+/** How a criterion was assessed (contract v3 RuleResult.method). */
+export const RULE_METHOD_LABEL: Record<RuleMethod, string> = {
+  rendered: "pomiar w przeglądarce",
+  static: "analiza HTML",
+  text: "tekst",
+  llm: "model językowy",
 };
 
 export const NODE_TYPE_LABEL: Record<GraphNodeType, string> = {

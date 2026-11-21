@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { ESCALATION_PATH_LABEL, ESCALATION_PATHS, RESOLUTION_ACTION_LABEL } from "../../domain/labels";
 import type { WorkflowAction } from "../../domain/workflow";
 import type { EscalationPath, ResolutionAction } from "../../types/incident";
+import { useRestoreFocus } from "../../hooks/useRestoreFocus";
 import { Button } from "../ui/Button";
 
 export interface TransitionInput {
@@ -27,6 +28,7 @@ const RESOLUTIONS: ResolutionAction[] = ["evidence_report", "warning_list_reques
 /** Asks for what the step needs (reason, escalation path, resolution action) before it is sent. */
 export function TransitionDialog({ action, defaultPath, defaultResolution, onCancel, onConfirm }: Props) {
   const spec = action?.dialog;
+  const focus = useRestoreFocus("workflow-h");
   return (
     <Dialog.Root open={Boolean(spec)} onOpenChange={(open) => { if (!open) onCancel(); }}>
       <Dialog.Portal>
@@ -35,7 +37,9 @@ export function TransitionDialog({ action, defaultPath, defaultResolution, onCan
           <Dialog.Content
             className="dialog" data-testid="transition-dialog"
             // start in the reason field (Radix would focus the first control, the path select)
+            onCloseAutoFocus={focus.restore}
             onOpenAutoFocus={(e) => {
+              focus.remember();
               const reason = document.getElementById("transition-reason");
               if (reason) {
                 e.preventDefault();
@@ -106,19 +110,20 @@ function DialogForm({ action, defaultPath, defaultResolution, onConfirm }: Omit<
             </select>
           </label>
         )}
-        <label className="field">
-          <span className="field__label">Uzasadnienie{required ? " (wymagane)" : " (opcjonalnie)"}</span>
+        <div className="field">
+          <label className="field__label" htmlFor="transition-reason">Uzasadnienie decyzji{required ? " (wymagane)" : " (opcjonalnie)"}</label>
+          <span className="field__hint" id="transition-hint">Wpis trafia do historii decyzji i do dziennika audytu.</span>
           <textarea
             id="transition-reason" className="input textarea" rows={4} maxLength={2000} value={reason}
-            aria-required={required || undefined} aria-invalid={error ? true : undefined} aria-describedby={error ? "transition-error" : undefined}
+            aria-required={required || undefined} aria-invalid={error ? true : undefined} aria-describedby={error ? "transition-hint transition-error" : "transition-hint"}
             onChange={(e) => { setReason(e.target.value); if (error) setError(null); }}
           />
-        </label>
+        </div>
         {error && <p className="form-error" id="transition-error" role="alert"><CircleAlert aria-hidden="true" />{error}</p>}
       </div>
       <div className="dialog__foot">
-        <Dialog.Close asChild><Button>Anuluj</Button></Dialog.Close>
         <Button type="submit" variant="primary" disabled={busy}>{busy ? "Zapisywanie…" : spec.confirm}</Button>
+        <Dialog.Close asChild><Button>Anuluj</Button></Dialog.Close>
       </div>
     </form>
   );

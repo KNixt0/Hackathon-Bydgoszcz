@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { AuditEntry } from "../../src/types/api";
@@ -57,6 +57,21 @@ describe("case workflow", () => {
       to: "escalation_requested", reason: "Rekomendacje bez licencji", escalation_path: "LEGAL_WARNING_LIST",
     }));
     await waitFor(() => expect(screen.queryByTestId("transition-dialog")).not.toBeInTheDocument());
+  });
+
+  it("closing the transition dialog with Escape returns focus to the action button", async () => {
+    const user = userEvent.setup();
+    const inReview = { ...structuredClone(redCase), status: "in_review" as const };
+    mockApi(withCase(inReview));
+    renderApp({ route: redUrl });
+    const wf = await caseReady(redCase.title);
+    const action = wf.getByRole("button", { name: "Wnioskuj o eskalację" });
+    await user.click(action);
+    const dialog = within(await screen.findByTestId("transition-dialog"));
+    expect(dialog.getByLabelText(/Uzasadnienie/)).toHaveFocus();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByTestId("transition-dialog")).not.toBeInTheDocument());
+    await waitFor(() => expect(action).toHaveFocus());
   });
 
   it("a pending escalation: the analyst waits or withdraws, the supervisor approves or rejects", async () => {
@@ -128,8 +143,8 @@ describe("case workflow", () => {
     renderApp({ route: redUrl });
     const wf = await caseReady(redCase.title);
     const list = within(await screen.findByTestId("decision-history"));
-    expect(list.getAllByRole("listitem")).toHaveLength(2); // exports are in the audit log, not in the decisions
-    expect(list.getByText("Uzasadnienie: Pilne")).toBeInTheDocument();
+    expect(list.getAllByTestId("decision-row")).toHaveLength(2); // exports are in the audit log, not in the decisions
+    expect(list.getAllByTestId("decision-row")[0]).toHaveTextContent("Pilne"); // newest first
     expect(list.getByText(/Etap: Nowe →/)).toHaveTextContent("Etap: Nowe → W weryfikacji");
 
     expect(wf.getByRole("link", { name: /Wniosek o wpis na listę ostrzeżeń/ })).toHaveAttribute("href", `/api/incidents/${redCase.id}/warning-list-request.pdf`);
@@ -148,19 +163,19 @@ describe("case workflow", () => {
 
 describe("global thresholds", () => {
   it("an analyst previews locally and sees who set the global values; no save button", async () => {
-    const user = userEvent.setup();
     const { calls } = mockApi((call) => (call.path === "/api/settings/thresholds" ? { json: { flag: 30, critical: 80, updated_by: supervisorUser.email, updated_at: "2026-11-20T08:00:00Z" } } : undefined));
     renderApp({ route: "/kalibracja" });
     const box = await screen.findByTestId("global-thresholds");
-    await waitFor(() => expect(screen.getByLabelText("Flagowanie od")).toHaveValue(30));
-    expect(box).toHaveTextContent(`Ustawił ${supervisorUser.email}`);
-    expect(within(box).getByText("Progi globalne zmienia kierownik.")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByLabelText("Próg flagowania")).toHaveValue("30"));
+    expect(box).toHaveTextContent(`Obowiązują progi globalne: oznaczenie od 30, krytyczne od 80. Ustawił ${supervisorUser.email}, 20.11.2026.`);
+    expect(screen.getByTestId("global-owner")).toHaveTextContent(`Progi globalne ustawił ${supervisorUser.email}, 20.11.2026. Zmienia je kierownik.`);
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
-    const handle = screen.getByRole("slider", { name: "Próg flagowania" });
-    handle.focus();
-    await user.keyboard("{ArrowRight}");
-    expect(screen.getByLabelText("Flagowanie od")).toHaveValue(31);
-    expect(box).toHaveTextContent("Podgląd lokalny: 31 / 80");
+    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "31" } });
+    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("31");
+    expect(box).toHaveTextContent("Podgląd, niezapisane. Progi globalne to 30 i 80, a w tym podglądzie 31 i 80.");
+    expect(within(box).getByText("Progi globalne zapisuje kierownik.")).toBeInTheDocument();
+    expect(within(box).getByRole("button", { name: "Przywróć globalne (30 / 80)" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
     expect(calls.some((c) => c.method === "PUT")).toBe(false);
   });
 
@@ -168,24 +183,36 @@ describe("global thresholds", () => {
     const user = userEvent.setup();
     const { calls } = mockApi(undefined, { user: supervisorUser });
     renderApp({ route: "/kalibracja" });
-    const save = await screen.findByRole("button", { name: "Zapisz jako progi globalne" });
-    expect(save).toBeDisabled(); // nothing changed yet
-    const handle = screen.getByRole("slider", { name: "Próg flagowania" });
-    handle.focus();
-    await user.keyboard("{PageUp}"); // 20 → 30
-    await user.click(save);
+    await screen.findByTestId("global-thresholds");
+    expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument(); // nothing changed yet
+    expect(screen.queryByTestId("global-owner")).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "30" } }); // 20 → 30
+    await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     await waitFor(() => expect(calls.find((c) => c.method === "PUT")?.body).toEqual({ flag: 30, critical: 70 }));
     expect(await screen.findByText(/Ustawił kierownik@uknf.local/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Zapisz jako progi globalne" })).toBeDisabled();
+    expect(await screen.findByText(/Zapisano progi globalne: oznaczenie od 30, krytyczne od 70/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
     expect(window.localStorage.getItem("investwatch.thresholds.v2")).toBeNull();
+  });
+
+  it("a failed save keeps the preview and says what to do", async () => {
+    const user = userEvent.setup();
+    mockApi((call) => (call.method === "PUT" && call.path === "/api/settings/thresholds" ? { status: 500, json: { detail: "Baza danych jest niedostępna." } } : undefined), { user: supervisorUser });
+    renderApp({ route: "/kalibracja" });
+    await screen.findByTestId("global-thresholds");
+    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "21" } });
+    await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Nie zapisano progów. Baza danych jest niedostępna. Spróbuj ponownie.");
+    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("21");
   });
 
   it("marks analyst-labelled cases in the calibration set", async () => {
     const items = calibrationSet.items.map((it, i) => (i < 2 ? { ...it, label_source: "analyst" as const } : it));
     mockApi((call) => (call.path === "/api/calibration" ? { json: { items } } : undefined));
     renderApp({ route: "/kalibracja" });
+    await userEvent.setup().click(await screen.findByText("Szczegóły dla analityka"));
     const list = within(await screen.findByTestId("analyst-labelled"));
-    expect(list.getAllByRole("listitem")).toHaveLength(2);
-    expect(screen.getByText(/w tym 2 oznaczonych przez analityków/)).toBeInTheDocument();
+    expect(list.getAllByRole("row")).toHaveLength(3); // header + 2
+    expect(screen.getByText(/w tym 2 oznaczone przez analityków/)).toBeInTheDocument();
   });
 });

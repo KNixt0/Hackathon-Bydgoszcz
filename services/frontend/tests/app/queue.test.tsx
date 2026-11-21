@@ -32,7 +32,8 @@ describe("triage queue", () => {
     expect(count("red")).toBe(String(expected.red));
     expect(count("orange")).toBe(String(expected.orange));
     expect(count("green")).toBe(String(expected.green));
-    expect(screen.getByTestId("nav-flagged")).toHaveTextContent(String(expected.red + expected.orange));
+    expect(within(screen.getByTestId("count-all")).getByText(String(incidentSummaries.length))).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Wszystkie/ })).toHaveAttribute("aria-selected", "true");
   });
 
   it("derives levels from the analyst's thresholds, not from the stored risk_level", async () => {
@@ -55,19 +56,42 @@ describe("triage queue", () => {
     expect(rows()).toHaveLength(m3);
     expect(screen.getByTestId("queue-count")).toHaveTextContent(`Pokazano ${m3} z 30 spraw`);
 
-    await user.selectOptions(screen.getByLabelText("Poziom ryzyka"), "red");
+    await user.click(screen.getByRole("tab", { name: /Krytyczne/ }));
+    expect(screen.getByRole("tab", { name: /Krytyczne/ })).toHaveAttribute("aria-selected", "true");
     expect(rows().every((r) => r.dataset.level === "red")).toBe(true);
 
-    await user.type(screen.getByLabelText("Szukaj"), "telegram");
+    await user.type(screen.getByLabelText("Szukaj w kolejce"), "telegram");
     expect(rows()).toHaveLength(1);
     expect(rows()[0]).toHaveTextContent("Kanał Telegram");
 
-    await user.type(screen.getByLabelText("Szukaj"), "zzz");
+    await user.type(screen.getByLabelText("Szukaj w kolejce"), "zzz");
     expect(screen.queryAllByTestId("queue-row")).toHaveLength(0);
     expect(screen.getByText("Żadna sprawa nie spełnia filtrów")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Wyczyść filtry" }));
     expect(rows()).toHaveLength(30);
+  });
+
+  it("level tabs: roving focus, arrows select, the panel is labelled by the selected tab", async () => {
+    const user = userEvent.setup();
+    mockApi();
+    renderApp();
+    await ready();
+    const all = screen.getByRole("tab", { name: /Wszystkie/ });
+    expect(all).toHaveAttribute("tabindex", "0");
+    expect(screen.getByRole("tab", { name: /Krytyczne/ })).toHaveAttribute("tabindex", "-1");
+    all.focus();
+    await user.keyboard("{ArrowRight}");
+    const red = screen.getByRole("tab", { name: /Krytyczne/ });
+    expect(red).toHaveFocus();
+    expect(red).toHaveAttribute("aria-selected", "true");
+    expect(rows().every((r) => r.dataset.level === "red")).toBe(true);
+    expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", red.id);
+    await user.keyboard("{End}");
+    expect(screen.getByRole("tab", { name: /Zgodne/ })).toHaveFocus();
+    expect(rows().every((r) => r.dataset.level === "green")).toBe(true);
+    await user.keyboard("{Home}");
+    expect(rows()).toHaveLength(incidentSummaries.length);
   });
 
   it("reads filters from the URL (deep link, command palette)", async () => {
@@ -201,13 +225,27 @@ describe("triage queue", () => {
     const socket = new FakeSocket();
     renderApp({ socket });
     await ready();
-    await waitFor(() => expect(screen.getByText("Połączono na żywo")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Połączono")).toBeInTheDocument());
     act(() => socket.emit("disconnect", "transport close"));
-    expect(screen.getByText("Brak połączenia na żywo")).toBeInTheDocument();
+    expect(screen.getByText("Brak połączenia")).toBeInTheDocument();
   });
 });
 
 describe("scan, demo and jobs", () => {
+  it("the scan dialog focuses the address field and returns focus to the header button on Escape", async () => {
+    const user = userEvent.setup();
+    mockApi();
+    renderApp();
+    await ready();
+    const trigger = screen.getByRole("button", { name: "Skanuj URL" });
+    await user.click(trigger);
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByLabelText("Adres materiału")).toHaveFocus();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
   it("validates the URL, posts the scan and tracks scan:progress", async () => {
     const user = userEvent.setup();
     const { calls } = mockApi();
@@ -253,7 +291,7 @@ describe("scan, demo and jobs", () => {
     const { calls } = mockApi();
     renderApp();
     await ready();
-    await user.click(screen.getByRole("button", { name: "Demo" }));
+    await user.click(screen.getByRole("button", { name: "Dane demo" }));
     await user.click(await screen.findByRole("menuitem", { name: /Uruchom próbkę demo/ }));
     await waitFor(() => expect(calls.find((c) => c.path === "/api/demo/trigger")?.body).toEqual({ case: "case3" }));
     expect(await screen.findByText(/Próbka demo została przekazana/)).toBeInTheDocument();

@@ -1,81 +1,32 @@
-import * as Slider from "@radix-ui/react-slider";
-import { RotateCcw, Target } from "lucide-react";
-import type { CSSProperties } from "react";
-import type { Thresholds } from "../../domain/levels";
-import { Button } from "../ui/Button";
-
 interface Props {
-  thresholds: Thresholds;
-  onChange: (next: Partial<Thresholds>) => void;
-  onReset: () => void;
-  /** The values equal the global thresholds (nothing to reset). */
-  isGlobal: boolean;
-  globalThresholds: Thresholds;
-  /** Threshold with the best F1 on the labelled set, if computable. */
-  suggested: number | null;
+  /** flag threshold (risk_score >= value is flagged) */
+  value: number;
+  onChange: (next: number) => void;
 }
 
-function NumberField({ label, value, onCommit, id }: { label: string; value: number; onCommit: (n: number) => void; id: string }) {
-  return (
-    <label className="field" htmlFor={id}>
-      <span className="field__label">{label}</span>
-      <input
-        id={id} className="input num" type="number" min={0} max={100} step={1} value={value}
-        onChange={(e) => {
-          const n = Number(e.target.value);
-          if (e.target.value !== "" && Number.isFinite(n)) onCommit(n);
-        }}
-      />
-    </label>
-  );
-}
+const clamp = (n: number) => Math.min(100, Math.max(0, Math.round(n)));
 
 /**
- * Primary slider: the flag threshold (T_orange), on which the whole calibration panel works
- * (flagged = risk_score >= T_orange). Secondary slider: the critical threshold (T_red >= T_orange).
+ * The one control of the screen (owner decision: "a simple slider"): a native range input, 0–100, step 1.
+ * Arrow keys step by 1, Page Up/Down by 10, Home/End jump to the ends; the value sits next to the label.
  */
-export function ThresholdControl({ thresholds, onChange, onReset, isGlobal, globalThresholds, suggested }: Props) {
-  const style = { "--t-orange": `${thresholds.orange}%`, "--t-red": `${thresholds.red}%` } as CSSProperties;
+export function ThresholdControl({ value, onChange }: Props) {
   return (
-    <>
-      <div className="thr__slider-wrap">
-        <Slider.Root
-          className="thr__slider"
-          min={0} max={100} step={1}
-          value={[thresholds.orange]}
-          onValueChange={([orange]) => {
-            if (orange !== undefined) onChange({ orange });
-          }}
-        >
-          <Slider.Track className="thr__track" style={style} />
-          <Slider.Thumb className="thr__thumb" aria-label="Próg flagowania" data-value={thresholds.orange} />
-        </Slider.Root>
-        <div className="thr__scale" aria-hidden="true"><span>0 · brak ryzyka</span><span>50</span><span>100 · ryzyko maksymalne</span></div>
-        <div className="thr__secondary">
-          <span className="thr__secondary-label">Próg krytyczny (od niego sprawa jest „krytyczna”, nie tylko „do weryfikacji”)</span>
-          <Slider.Root
-            className="thr__slider thr__slider--secondary"
-            min={0} max={100} step={1}
-            value={[thresholds.red]}
-            onValueChange={([red]) => {
-              if (red !== undefined) onChange({ red });
-            }}
-          >
-            <Slider.Track className="thr__track thr__track--secondary" />
-            <Slider.Thumb className="thr__thumb thr__thumb--secondary" aria-label="Próg krytyczny" data-value={thresholds.red} />
-          </Slider.Root>
-        </div>
+    <div className="thc">
+      <p className="thc__head">
+        <label className="thc__label" htmlFor="thr-flag">Próg flagowania</label>
+        <span className="thc__value num" aria-hidden="true">: {value}</span>
+      </p>
+      <p className="thc__hint" id="thr-flag-hint">Od tego wyniku ryzyka sprawa trafia do kolejki. Strzałki na klawiaturze zmieniają próg o 1.</p>
+      <div className="thc__row">
+        <span className="thc__end" aria-hidden="true">0</span>
+        <input
+          id="thr-flag" className="thc__range" type="range" min={0} max={100} step={1} value={value}
+          aria-describedby="thr-flag-hint"
+          onChange={(e) => onChange(clamp(Number(e.target.value)))}
+        />
+        <span className="thc__end" aria-hidden="true">100</span>
       </div>
-      <div className="thr__inputs">
-        <NumberField id="thr-orange" label="Flagowanie od" value={thresholds.orange} onCommit={(orange) => onChange({ orange })} />
-        <NumberField id="thr-red" label="Krytyczne od" value={thresholds.red} onCommit={(red) => onChange({ red })} />
-        {suggested !== null && (
-          <Button onClick={() => onChange({ orange: suggested })} disabled={suggested === thresholds.orange} title="Ustawia próg flagowania na wartość o najwyższym F1 w zbiorze oznaczonym">
-            <Target aria-hidden="true" />Najlepszy F1: {suggested}
-          </Button>
-        )}
-        <Button variant="ghost" onClick={onReset} disabled={isGlobal} title="Wraca do progów globalnych"><RotateCcw aria-hidden="true" />Przywróć {globalThresholds.orange} / {globalThresholds.red}</Button>
-      </div>
-    </>
+    </div>
   );
 }

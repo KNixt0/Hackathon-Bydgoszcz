@@ -1,11 +1,11 @@
-import { CircleAlert, FileWarning, UserRound } from "lucide-react";
+import { CircleAlert, FileWarning } from "lucide-react";
 import { useState } from "react";
 import { warningListRequestUrl } from "../../api/endpoints";
 import { CASE_LABEL_LABEL, ESCALATION_PATH_LABEL, RESOLUTION_ACTION_LABEL, STATUS_LABEL } from "../../domain/labels";
-import { availableActions, CLOSED, DEFAULT_ESCALATION_PATH, STEPS, type WorkflowAction } from "../../domain/workflow";
+import { availableActions, CLOSED, DEFAULT_ESCALATION_PATH, type WorkflowAction } from "../../domain/workflow";
 import type { TransitionRequest, User } from "../../types/api";
 import type { CaseLabel, Incident } from "../../types/incident";
-import { Button, ButtonLink } from "../ui/Button";
+import { Button } from "../ui/Button";
 import { TransitionDialog, type TransitionInput } from "./TransitionDialog";
 
 const LABELS: CaseLabel[] = ["unlabeled", "true_positive", "false_positive"];
@@ -28,7 +28,6 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
   const [pending, setPending] = useState<WorkflowAction | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { status, workflow } = incident;
-  const current = STEPS.findIndex((s) => s.statuses.includes(status));
   const actions = availableActions(status, user.role, workflow.assigned_to, user.email);
   const closed = CLOSED.includes(status);
   const defaultPath = workflow.escalation_path ?? DEFAULT_ESCALATION_PATH[incident.primary_module];
@@ -54,21 +53,15 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
   };
 
   return (
-    <div className="workflow" data-testid="workflow">
-      <ol className="stepper" aria-label="Etap sprawy">
-        {STEPS.map((s, i) => (
-          <li key={s.key} className={`step${i < current ? " step--done" : i === current ? " step--current" : ""}`} aria-current={i === current ? "step" : undefined}>
-            <span className="step__bar" aria-hidden="true" />
-            <span>{i === current ? STATUS_LABEL[status] : s.label}</span>
-          </li>
-        ))}
-      </ol>
-
+    <section className="csec workflow" data-testid="workflow" aria-labelledby="workflow-h">
+      <h2 className="section-title" id="workflow-h" tabIndex={-1}>Postępowanie</h2>
       <dl className="kv workflow__facts">
+        <dt>Status</dt>
+        <dd><b>{STATUS_LABEL[status] ?? status}</b></dd>
         <dt>Prowadzi</dt>
         <dd data-testid="assignee">
           {workflow.assigned_to ? (
-            <span className="workflow__assignee"><UserRound aria-hidden="true" />{workflow.assigned_to === user.email ? `${workflow.assigned_to} (Ty)` : workflow.assigned_to}</span>
+            workflow.assigned_to === user.email ? `${workflow.assigned_to} (Ty)` : workflow.assigned_to
           ) : <span className="muted">nikt, sprawa nieprzypisana</span>}
         </dd>
         {workflow.escalation_path && (
@@ -86,9 +79,9 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
         <p className="workflow__wait">Wniosek czeka na decyzję kierownika.</p>
       )}
       {actions.length > 0 && (
-        <div className="stepper-actions" role="group" aria-label="Działania w sprawie">
+        <div className="workflow__actions" role="group" aria-label="Działania w sprawie">
           {actions.map((a) => (
-            <Button key={a.id} size="sm" variant={a.primary ? "primary" : "default"} disabled={busy} onClick={() => run(a)}>
+            <Button key={a.id} variant={a.primary ? "primary" : "default"} disabled={busy} onClick={() => run(a)}>
               {a.label}
             </Button>
           ))}
@@ -100,14 +93,14 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
       <div className="workflow__row">
         <label className="field workflow__label">
           <span className="field__label">Ocena trafności alarmu</span>
-          <select className="select select--sm" value={workflow.label} disabled={busy} onChange={(e) => { const next = e.target.value as CaseLabel; void direct(() => onLabel(next)); }}>
+          <select className="select" value={workflow.label} disabled={busy} onChange={(e) => { const next = e.target.value as CaseLabel; void direct(() => onLabel(next)); }}>
             {LABELS.map((l) => <option key={l} value={l}>{CASE_LABEL_LABEL[l]}</option>)}
           </select>
         </label>
         {offersWarningList(incident) && (
-          <ButtonLink size="sm" href={warningListRequestUrl(incident.id)} download={`wniosek-lista-ostrzezen-${incident.id}.pdf`}>
+          <a className="dl workflow__dl" href={warningListRequestUrl(incident.id)} download={`wniosek-lista-ostrzezen-${incident.id}.pdf`}>
             <FileWarning aria-hidden="true" />Wniosek o wpis na listę ostrzeżeń (projekt PDF)
-          </ButtonLink>
+          </a>
         )}
       </div>
 
@@ -118,6 +111,6 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
         onCancel={() => setPending(null)}
         onConfirm={confirm}
       />
-    </div>
+    </section>
   );
 }

@@ -54,12 +54,12 @@ describe("queue with public reports", () => {
     await ready();
     const titles = () => rows().map((r) => r.querySelector(".queue__title")?.textContent);
     const byRisk = titles();
-    await user.selectOptions(screen.getByLabelText("Sortuj według"), "priority");
+    await user.selectOptions(screen.getByLabelText("Sortowanie"), "priority");
     const byPriority = titles();
     expect(byPriority).not.toEqual(byRisk);
     const expectedFirst = [...incidentSummaries].sort((a, b) => b.priority_score - a.priority_score)[0];
     expect(byPriority[0]).toBe(expectedFirst?.title);
-    await user.selectOptions(screen.getByLabelText("Sortuj według"), "risk");
+    await user.selectOptions(screen.getByLabelText("Sortowanie"), "risk");
     expect(titles()).toEqual(byRisk);
   });
 

@@ -1,8 +1,9 @@
-import { CircleAlert, CircleCheck, Send } from "lucide-react";
+import { CircleAlert, CircleCheck } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { ApiError, errorMessage } from "../api/client";
 import { api } from "../api/endpoints";
+import { PublicHeader } from "../components/layout/PublicHeader";
 import { Button } from "../components/ui/Button";
 import { CATEGORY_CHOICES, categoryOf, COMMENT_MAX, validateReportUrl, type CategoryChoice } from "../domain/reportForm";
 
@@ -59,29 +60,36 @@ export function ReportPage() {
   };
 
   return (
-    <main className="report" id="tresc">
-      <div className="report__card panel">
-        <p className="report__org">InvestWatch · UKNF</p>
-        <h1 className="report__title">Zgłoś ofertę lub reklamę</h1>
+    <div className="shell">
+      <PublicHeader />
+      <main className="report" id="tresc">
+        <h1 className="page__title">Zgłoś ofertę lub reklamę</h1>
         {sent ? (
-          <div className="report__done" role="status">
-            <p className="report__done-title"><CircleCheck aria-hidden="true" />Zgłoszenie przyjęte</p>
+          <div className="callout report__done" role="status">
+            <h2 className="callout__title report__done-title"><CircleCheck aria-hidden="true" />Zgłoszenie przyjęte</h2>
             <p>Dziękujemy. Pracownicy UKNF sprawdzą wskazany materiał. Nie odpowiadamy indywidualnie na zgłoszenia i nie podajemy informacji o prowadzonych sprawach.</p>
-            <Button onClick={again}>Wyślij kolejne zgłoszenie</Button>
+            <div className="callout__acts"><Button onClick={again}>Wyślij kolejne zgłoszenie</Button></div>
           </div>
         ) : (
           <>
-            <p>
+            <p className="page__sub">
               Możesz zgłosić adres strony lub posta, który wygląda na reklamę inwestycji bez wymaganych ostrzeżeń, ofertę
               „pewnego zysku”, promocję produktu finansowego przez influencera albo doradztwo inwestycyjne bez zezwolenia.
-              Zgłoszenie nie wymaga logowania ani podawania danych osobowych.
+              Zgłoszenie trafi do kolejki analityków UKNF. Nie wymaga logowania ani podawania danych osobowych.
             </p>
-            <form className="report__form" onSubmit={submit} noValidate aria-busy={busy}>
+            <form className="panel report__form" onSubmit={submit} noValidate aria-busy={busy}>
+              {formError && (
+                <div className="callout callout--error callout--compact" role="alert">
+                  <span className="callout__lead"><CircleAlert aria-hidden="true" />{formError}</span>
+                </div>
+              )}
               <div className="field">
                 <label className="field__label" htmlFor="report-url">Adres strony lub posta (URL)</label>
+                <span className="field__hint" id="report-url-hint">Wymagane. Pełny adres, np. https://przyklad.pl/oferta</span>
                 <input
                   id="report-url" className="input" type="url" name="url" inputMode="url" autoComplete="off" autoFocus value={url} maxLength={2048}
-                  aria-required="true" aria-invalid={urlError ? true : undefined} aria-describedby={urlError ? "report-url-error" : undefined}
+                  aria-required="true" aria-invalid={urlError ? true : undefined}
+                  aria-describedby={urlError ? "report-url-hint report-url-error" : "report-url-hint"}
                   onChange={(e) => { setUrl(e.target.value); if (urlError) setUrlError(null); }}
                   onBlur={() => setUrlError(url ? validateReportUrl(url) : null)}
                 />
@@ -101,16 +109,15 @@ export function ReportPage() {
               <div className="field">
                 <label className="field__label" htmlFor="report-comment">Uwagi (opcjonalnie)</label>
                 <textarea
-                  id="report-comment" className="input report__comment" name="comment" rows={4} maxLength={COMMENT_MAX} value={comment}
+                  id="report-comment" className="input textarea" name="comment" rows={4} maxLength={COMMENT_MAX} value={comment}
                   aria-describedby="report-comment-count" onChange={(e) => setComment(e.target.value)}
                 />
                 <span className="report__count" id="report-comment-count" aria-live="off">{comment.length} / {COMMENT_MAX} znaków</span>
               </div>
 
-              {formError && <p className="form-error" role="alert"><CircleAlert aria-hidden="true" />{formError}</p>}
-              <Button type="submit" variant="primary" disabled={busy}>
-                <Send aria-hidden="true" />{busy ? "Wysyłanie…" : "Wyślij zgłoszenie"}
-              </Button>
+              <div>
+                <Button type="submit" variant="primary" disabled={busy}>{busy ? "Wysyłanie…" : "Wyślij zgłoszenie"}</Button>
+              </div>
             </form>
             <p className="report__privacy">
               Twój adres IP nie jest zapisywany. Przechowujemy wyłącznie jego skrót (hash), którego używamy tylko do ograniczania nadużyć, na przykład
@@ -119,7 +126,7 @@ export function ReportPage() {
           </>
         )}
         <p className="report__foot"><Link to="/logowanie">Logowanie dla pracowników UKNF</Link></p>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

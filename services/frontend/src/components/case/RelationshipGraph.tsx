@@ -1,9 +1,9 @@
-import { ChevronRight, Network, Waypoints } from "lucide-react";
+import { ChevronRight, TriangleAlert, Waypoints } from "lucide-react";
 import { useMemo, useState } from "react";
 import { edgeKey, layoutGraph, NODE_H, NODE_W, pathEdgeKeys, type PositionedNode } from "../../domain/graphLayout";
 import { EDGE_TYPE_LABEL, NODE_TYPE_LABEL } from "../../domain/labels";
 import type { Graph, GraphEdge } from "../../types/incident";
-import { Badge } from "../ui/Badge";
+import { Mark } from "../ui/Mark";
 import { EmptyState } from "../ui/States";
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
@@ -66,7 +66,6 @@ export function RelationshipGraph({ graph }: Props) {
   if (graph.nodes.length === 0) {
     return (
       <EmptyState
-        icon={<Network />}
         title="Brak danych o powiązaniach"
         text="Dla tego materiału nie zebrano relacji kapitałowych ani osobowych (KRS, CRBR, umowy). Graf pojawi się po uzupełnieniu kontekstu."
       />
@@ -103,10 +102,10 @@ export function RelationshipGraph({ graph }: Props) {
         <svg style={{ width: "100%", maxWidth: layout.width, minWidth: Math.min(layout.width, 640) }} viewBox={`0 0 ${layout.width} ${layout.height}`} role="group" aria-label="Graf powiązań między podmiotami">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#aab1bd" />
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-2)" />
             </marker>
             <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--red)" />
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--m-red)" />
             </marker>
           </defs>
           <g aria-hidden="true">
@@ -151,8 +150,10 @@ export function RelationshipGraph({ graph }: Props) {
                 onFocus={() => setHovered(n.id)}
                 onBlur={() => setHovered(null)}
               >
-                <rect width={NODE_W} height={NODE_H} rx={7} />
-                <text x={12} y={18} className="gnode__type">{NODE_TYPE_LABEL[n.type] ?? n.type}</text>
+                <rect width={NODE_W} height={NODE_H} />
+                {flagged && <rect className="gnode__flag" x={0} y={0} width={16} height={16} />}
+                {flagged && <text className="gnode__flag-t" x={8} y={12} textAnchor="middle">!</text>}
+                <text x={flagged ? 22 : 12} y={18} className="gnode__type">{NODE_TYPE_LABEL[n.type] ?? n.type}</text>
                 <text x={12} y={35} className="gnode__label">{clip(n.label, 23)}</text>
               </g>
             );
@@ -164,11 +165,11 @@ export function RelationshipGraph({ graph }: Props) {
         <div className="graph__main">
         {selectedNode ? (
           <div data-testid="node-details">
-            <p className="muted" style={{ fontSize: "var(--fs-sm)" }}>{NODE_TYPE_LABEL[selectedNode.type] ?? selectedNode.type}</p>
-            <h4 style={{ fontSize: "var(--fs-md)", fontWeight: 600, marginBottom: 8 }}>{selectedNode.label}</h4>
-            {flaggedNodes.has(selectedNode.id) && <p style={{ marginBottom: 8 }}><Badge tone="red">Na oznaczonej ścieżce</Badge></p>}
+            <p className="muted" style={{ fontSize: "var(--fs-14)" }}>{NODE_TYPE_LABEL[selectedNode.type] ?? selectedNode.type}</p>
+            <h3 className="subhead" style={{ marginBottom: 8 }}>{selectedNode.label}</h3>
+            {flaggedNodes.has(selectedNode.id) && <p style={{ marginBottom: 8 }}><Mark tone="red" icon={TriangleAlert}>Na oznaczonej ścieżce</Mark></p>}
             {selectedNode.meta && Object.keys(selectedNode.meta).length > 0 && (
-              <dl className="kv" style={{ marginBottom: 12 }}>
+              <dl className="kv kv--compact" style={{ marginBottom: 16 }}>
                 {Object.entries(selectedNode.meta).map(([k, v]) => (
                   <div key={k} style={{ display: "contents" }}><dt>{k}</dt><dd>{typeof v === "number" ? v.toLocaleString("pl-PL") : v}</dd></div>
                 ))}
@@ -177,10 +178,10 @@ export function RelationshipGraph({ graph }: Props) {
             <p className="subhead">Relacje ({selectedEdges.length})</p>
             <ul style={{ display: "grid", gap: 4 }}>
               {selectedEdges.map((e, i) => (
-                <li key={i} style={{ fontSize: "var(--fs-sm)" }}>
+                <li key={i} style={{ fontSize: "var(--fs-14)" }}>
                   {label(e.source)} <ChevronRight size={11} aria-hidden="true" style={{ verticalAlign: -1 }} /> {label(e.target)}
                   <span className="muted">: {e.label || EDGE_TYPE_LABEL[e.type]}</span>
-                  {e.suspicious && <span style={{ color: "var(--red-ink)", fontWeight: 600 }}> (podejrzane)</span>}
+                  {e.suspicious && <span style={{ color: "var(--c-red)", fontWeight: 700 }}> (podejrzane)</span>}
                 </li>
               ))}
             </ul>
@@ -198,7 +199,7 @@ export function RelationshipGraph({ graph }: Props) {
                       {p.node_ids.map((id, j) => (
                         <span key={`${id}-${j}`} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                           {j > 0 && <ChevronRight aria-hidden="true" />}
-                          <strong style={{ fontWeight: 600 }}>{label(id)}</strong>
+                          <strong>{label(id)}</strong>
                         </span>
                       ))}
                     </span>
@@ -210,14 +211,15 @@ export function RelationshipGraph({ graph }: Props) {
             ) : (
               <p className="muted">Silnik nie oznaczył żadnej ścieżki powiązań jako podejrzanej.</p>
             )}
-            <p className="muted" style={{ fontSize: "var(--fs-sm)" }}>Wybierz węzeł, aby zobaczyć szczegóły i jego relacje.</p>
+            <p className="muted" style={{ fontSize: "var(--fs-14)" }}>Wybierz węzeł (kliknij albo Enter), aby zobaczyć szczegóły i jego relacje.</p>
           </>
         )}
         </div>
         <div className="graph__legend" aria-hidden="true">
-          <span><i />relacja</span>
-          <span><i className="sus" />relacja podejrzana</span>
-          <span><i className="path" />oznaczona ścieżka</span>
+          <span><i />relacja: linia ciągła 1 px</span>
+          <span><i className="sus" />relacja podejrzana: linia przerywana</span>
+          <span><i className="path" />oznaczona ścieżka: linia gruba</span>
+          <span><b className="graph__legend-flag">!</b>węzeł na oznaczonej ścieżce</span>
         </div>
       </div>
     </div>

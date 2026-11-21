@@ -39,7 +39,7 @@ describe("login and session", () => {
     expect(calls.find((c) => c.path === "/api/auth/demo")?.body).toEqual({ role: "ANALYST" });
     const chip = within(screen.getByTestId("user-chip"));
     expect(chip.getByText(analystUser.name)).toBeInTheDocument();
-    expect(chip.getByText("Analityk")).toBeInTheDocument();
+    expect(chip.getByText("analityk")).toBeInTheDocument();
     await waitFor(() => expect(socket.connected).toBe(true));
     expect(screen.queryByRole("link", { name: /Dziennik audytu/ })).not.toBeInTheDocument();
 
@@ -58,7 +58,7 @@ describe("login and session", () => {
     await user.type(screen.getByLabelText("Hasło"), "haslo-demo");
     await user.click(screen.getByRole("button", { name: "Zaloguj się" }));
     expect(await screen.findByRole("heading", { level: 1, name: "Kolejka spraw" })).toBeInTheDocument();
-    expect(within(screen.getByTestId("user-chip")).getByText("Kierownik")).toBeInTheDocument();
+    expect(within(screen.getByTestId("user-chip")).getByText("kierownik")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Dziennik audytu/ })).toHaveAttribute("href", "/audyt");
   });
 

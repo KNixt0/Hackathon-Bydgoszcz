@@ -3,11 +3,11 @@ import { ChevronLeft, ChevronRight, ExternalLink, FolderSearch, X } from "lucide
 import { useState } from "react";
 import { api, evidenceUrl } from "../../api/endpoints";
 import { formatDate, formatDateTime, formatPln, safeHref } from "../../domain/format";
-import { EVIDENCE_KIND_LABEL, REGISTRY_STATUS_LABEL } from "../../domain/labels";
+import { EVIDENCE_KIND_LABEL, REGISTRY_RESULT_LABEL } from "../../domain/labels";
 import { useResource } from "../../hooks/useResource";
+import { useRestoreFocus } from "../../hooks/useRestoreFocus";
 import { hasScreenshotBox, ScreenshotEvidence } from "../evidence";
 import type { Evidence, Incident } from "../../types/incident";
-import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { ErrorState, Skeleton } from "../ui/States";
 import { EVIDENCE_ICON } from "./EvidenceChips";
@@ -74,12 +74,12 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
         <>
           {ev.quote && (
             <Section title="Cytat">
-              <blockquote className="quote" style={{ margin: 0 }}>„{ev.quote}”</blockquote>
+              <blockquote className="quote">„{ev.quote}”</blockquote>
             </Section>
           )}
           <Section title="Miejsce w zarchiwizowanym tekście">
             <SourceText text={incident.source.text} span={ev.span} quote={ev.quote} />
-            {ev.span && <p className="muted" style={{ fontSize: "var(--fs-sm)", marginTop: 4 }}>Znaki {ev.span.start}–{ev.span.end} znormalizowanego tekstu, pobranego {formatDateTime(incident.source.fetched_at)}.</p>}
+            {ev.span && <p className="muted" style={{ fontSize: "var(--fs-14)", marginTop: 8 }}>Znaki {ev.span.start}–{ev.span.end} znormalizowanego tekstu, pobranego {formatDateTime(incident.source.fetched_at)}.</p>}
           </Section>
         </>
       )}
@@ -97,10 +97,10 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
             <p className="muted">Brak szczegółów sprawdzenia dla tego rejestru.</p>
           ) : (
             registry.map((c, i) => (
-              <dl key={i} className="kv" style={{ marginBottom: 10 }}>
+              <dl key={i} className="kv kv--compact" style={{ marginBottom: 16 }}>
                 <dt>Rejestr</dt><dd>{c.label}</dd>
                 <dt>Szukano</dt><dd>{c.subject}</dd>
-                <dt>Wynik</dt><dd><Badge tone={c.status === "listed" ? "green" : c.status === "warning_listed" ? "red" : "neutral"}>{REGISTRY_STATUS_LABEL[c.status] ?? c.status}</Badge></dd>
+                <dt>Wynik</dt><dd className={`reg-result reg-result--${c.status}`}>{REGISTRY_RESULT_LABEL[c.status] ?? c.status}</dd>
                 <dt>Szczegóły</dt><dd>{c.detail}</dd>
                 <dt>Stan na</dt><dd>{c.snapshot_date ? formatDate(c.snapshot_date) : "brak migawki"}</dd>
               </dl>
@@ -112,7 +112,7 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
       {ev.kind === "krs" && (
         <Section title="Dane z KRS">
           {fin ? (
-            <dl className="kv">
+            <dl className="kv kv--compact">
               <dt>Spółka</dt><dd>{fin.company}</dd>
               <dt>Numer KRS</dt><dd className="num">{fin.krs ?? "brak danych"}</dd>
               <dt>Data rejestracji</dt><dd>{fin.incorporated_on ? formatDate(fin.incorporated_on) : "brak danych"}</dd>
@@ -143,7 +143,7 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
       {archiveKey && (
         <Section title={isImage(archiveKey) ? "Zarchiwizowany zrzut ekranu" : "Zarchiwizowany kod HTML"}>
           <Archive storageKey={archiveKey} label={ev.label} />
-          <p className="muted" style={{ fontSize: "var(--fs-sm)", marginTop: 4 }}>Klucz w magazynie obiektów: {archiveKey}</p>
+          <p className="muted" style={{ fontSize: "var(--fs-14)", marginTop: 8, overflowWrap: "anywhere" }}>Klucz w magazynie obiektów: {archiveKey}</p>
         </Section>
       )}
 
@@ -152,7 +152,7 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
       )}
 
       <Section title="Materiał źródłowy">
-        <dl className="kv">
+        <dl className="kv kv--compact">
           <dt>Adres</dt><dd><ExternalUrl url={incident.source.url} /></dd>
           <dt>Pobrano</dt><dd>{formatDateTime(incident.source.fetched_at)}</dd>
         </dl>
@@ -184,15 +184,16 @@ export function EvidenceDrawer({ incident, evidenceId, onClose, onNavigate }: Pr
   const prev = index > 0 ? incident.evidence[index - 1] : undefined;
   const next = index >= 0 ? incident.evidence[index + 1] : undefined;
   const Icon = ev ? EVIDENCE_ICON[ev.kind] ?? FolderSearch : FolderSearch;
+  const focus = useRestoreFocus();
 
   return (
     <Dialog.Root open={evidenceId !== null} onOpenChange={(open) => { if (!open) onClose(); }}>
       <Dialog.Portal>
         <Dialog.Overlay className="overlay" />
-        <Dialog.Content className="drawer" aria-describedby={undefined} data-testid="evidence-drawer">
+        <Dialog.Content className="drawer" aria-describedby={undefined} data-testid="evidence-drawer" onOpenAutoFocus={focus.remember} onCloseAutoFocus={focus.restore}>
           <header className="drawer__head">
             <div style={{ minWidth: 0 }}>
-              <p className="drawer__kind"><Icon aria-hidden="true" />{ev ? `${EVIDENCE_KIND_LABEL[ev.kind] ?? "Dowód"} · ${index + 1} z ${incident.evidence.length}` : "Dowód"}</p>
+              <p className="drawer__kind"><Icon aria-hidden="true" />{ev ? `${EVIDENCE_KIND_LABEL[ev.kind] ?? "Dowód"}, ${index + 1} z ${incident.evidence.length}` : "Dowód"}</p>
               <Dialog.Title className="drawer__title">{ev ? ev.label : "Nie znaleziono dowodu"}</Dialog.Title>
             </div>
             <div className="drawer__nav">

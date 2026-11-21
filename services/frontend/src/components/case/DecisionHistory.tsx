@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { describeChange } from "../../domain/audit";
 import { formatDateTime } from "../../domain/format";
 import { AUDIT_ACTION_LABEL, ROLE_LABEL } from "../../domain/labels";
 import type { AuditEntry } from "../../types/api";
-import { EmptyState, ErrorState, Skeleton } from "../ui/States";
+import { ErrorState, Skeleton } from "../ui/States";
 
 const DECISIONS = new Set(["assign", "transition", "label"]);
+const PAGE = 10;
 
 interface Props {
   items: AuditEntry[] | null;
@@ -12,45 +14,57 @@ interface Props {
   onRetry: () => void;
 }
 
-/** Block 5: who decided what and why, oldest first (from GET /api/incidents/{id}/history). */
+/** Who decided what and why (GET /api/incidents/{id}/history), newest first, as a ruled table. */
 export function DecisionHistory({ items, error, onRetry }: Props) {
   return (
-    <section className="panel block" id="historia" aria-labelledby="historia-h">
-      <header className="panel__head">
-        <h2 className="panel__title" id="historia-h"><span className="block__n">5</span>Historia decyzji</h2>
-      </header>
+    <section className="csec" id="historia" aria-labelledby="historia-h">
+      <h2 className="section-title" id="historia-h">Historia decyzji</h2>
       {error ? (
         <ErrorState compact title="Nie udało się wczytać historii" message={error} onRetry={onRetry} />
       ) : items === null ? (
-        <div className="panel__body" aria-busy="true"><Skeleton height={14} width="60%" /><Skeleton height={14} width="45%" style={{ marginTop: 8 }} /></div>
+        <div aria-busy="true" style={{ display: "grid", gap: 8 }}><Skeleton height={14} width="60%" /><Skeleton height={14} width="45%" /></div>
       ) : (
-        <HistoryList items={items.filter((e) => DECISIONS.has(e.action))} />
+        <HistoryTable items={items.filter((e) => DECISIONS.has(e.action))} />
       )}
     </section>
   );
 }
 
-function HistoryList({ items }: { items: AuditEntry[] }) {
-  if (items.length === 0) return <EmptyState compact title="Brak decyzji" text="Przejęcie sprawy, zmiany etapu i ocena trafności pojawią się tutaj." />;
+function HistoryTable({ items }: { items: AuditEntry[] }) {
+  const [all, setAll] = useState(false);
+  if (items.length === 0) return <p className="muted">Brak decyzji. Pierwszy wpis powstanie po przejęciu sprawy lub zmianie statusu.</p>;
+  const newestFirst = [...items].sort((a, b) => b.at.localeCompare(a.at));
+  const shown = all ? newestFirst : newestFirst.slice(0, PAGE);
   return (
-    <ol className="history" data-testid="decision-history">
-      {items.map((e) => (
-        <li key={e.id} className="history__item">
-          <span className="history__when">{formatDateTime(e.at)}</span>
-          <span className="history__body">
-            <span className="history__what">
-              <strong>{AUDIT_ACTION_LABEL[e.action] ?? e.action}</strong>
-              <span className="muted"> · {e.actor_email} ({ROLE_LABEL[e.actor_role] ?? e.actor_role})</span>
-            </span>
-            {describeChange(e).map((c) => (
-              <span key={c.field} className="history__change">
-                {c.label}: {c.before !== null && <>{c.before} → </>}<strong>{c.after}</strong>
-              </span>
+    <>
+      <div className="table-wrap">
+        <table className="rt history" data-testid="decision-history">
+          <caption className="sr-only">Historia decyzji, od najnowszych</caption>
+          <thead><tr><th scope="col">Data i kto</th><th scope="col">Decyzja</th><th scope="col">Uzasadnienie</th></tr></thead>
+          <tbody>
+            {shown.map((e) => (
+              <tr key={e.id} data-testid="decision-row">
+                <td className="history__who">
+                  <span className="nowrap">{formatDateTime(e.at)}</span>
+                  <span className="rt__sub">{e.actor_email}, {(ROLE_LABEL[e.actor_role] ?? e.actor_role).toLowerCase()}</span>
+                </td>
+                <td>
+                  <span className="history__what">{AUDIT_ACTION_LABEL[e.action] ?? e.action}</span>
+                  {describeChange(e).map((c) => (
+                    <span key={c.field} className="history__change">
+                      {c.label}: {c.before !== null && <>{c.before} → </>}<b>{c.after}</b>
+                    </span>
+                  ))}
+                </td>
+                <td className="history__reason">{e.reason ?? <span className="muted">brak</span>}</td>
+              </tr>
             ))}
-            {e.reason && <span className="history__reason">Uzasadnienie: {e.reason}</span>}
-          </span>
-        </li>
-      ))}
-    </ol>
+          </tbody>
+        </table>
+      </div>
+      {newestFirst.length > PAGE && (
+        <button type="button" className="linkbtn" onClick={() => setAll((v) => !v)}>{all ? "Pokaż tylko najnowsze" : "Pokaż starsze"}</button>
+      )}
+    </>
   );
 }

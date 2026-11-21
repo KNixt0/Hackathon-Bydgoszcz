@@ -2,7 +2,6 @@ import { Crosshair } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { evidenceUrl } from "../../api/endpoints";
 import type { BBox, Evidence, Incident, RuleMethod, Viewport } from "../../types/incident";
-import { Button } from "../ui/Button";
 import "./evidence.css";
 
 const DESKTOP = { id: "desktop" as Viewport, label: "Komputer", size: "1920×1080" };
@@ -109,7 +108,11 @@ export function ScreenshotEvidence({ evidence: ev, incident }: Props) {
                 onLoad={(e) => setNatural({ key, w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
                 onError={() => setFailed(key)}
               />
-              {style && <div ref={boxRef} className="ev-shot__box" style={style} aria-hidden="true" data-testid="violation-box" />}
+              {style && (
+                <div ref={boxRef} className="ev-shot__box" style={style} aria-hidden="true" data-testid="violation-box">
+                  <span className="ev-shot__num">1</span>
+                </div>
+              )}
             </div>
           </div>
         )
@@ -119,9 +122,9 @@ export function ScreenshotEvidence({ evidence: ev, incident }: Props) {
 
       <div className="ev-shot__foot">
         {showBox && style && (
-          <Button variant="ghost" size="sm" onClick={() => boxRef.current?.scrollIntoView({ block: "center", inline: "nearest" })}>
-            <Crosshair size={14} aria-hidden="true" /> Pokaż zaznaczenie
-          </Button>
+          <button type="button" className="linkbtn" onClick={() => boxRef.current?.scrollIntoView({ block: "center", inline: "nearest" })}>
+            <Crosshair aria-hidden="true" />Pokaż zaznaczenie
+          </button>
         )}
         {showBox && size && !style && <p className="muted">Zaznaczony fragment leży poza zapisaną częścią zrzutu (zrzut jest przycięty).</p>}
         {!showBox && homeMeta && (
@@ -138,7 +141,7 @@ export function ScreenshotEvidence({ evidence: ev, incident }: Props) {
       </div>
 
       {rules.length > 0 && (
-        <ul className="ev-shot__rules" aria-label="Wynik pomiaru">
+        <ul className="ev-shot__rules" aria-label="Pole 1 na zrzucie: wynik pomiaru">
           {rules.map((r) => (
             <li key={r.id}>
               <span className="ev-shot__rule">

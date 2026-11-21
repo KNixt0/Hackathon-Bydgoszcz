@@ -5,6 +5,7 @@ import { deriveLevel, type Thresholds } from "../../domain/levels";
 import { LEVEL_LABEL, MODULE_LABEL, MODULES } from "../../domain/labels";
 import { LEVELS } from "../../domain/levels";
 import type { IncidentSummary } from "../../types/incident";
+import { useRestoreFocus } from "../../hooks/useRestoreFocus";
 import { LevelBadge } from "../ui/LevelBadge";
 
 export type PaletteCommand =
@@ -29,6 +30,7 @@ export function paletteFilter(value: string, search: string): number {
 }
 
 export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCommand }: Props) {
+  const focus = useRestoreFocus();
   const run = (command: PaletteCommand) => {
     onOpenChange(false);
     onCommand(command);
@@ -37,12 +39,12 @@ export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCo
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="overlay" />
-        <Dialog.Content className="dialog palette" aria-describedby={undefined}>
+        <Dialog.Content className="dialog palette" aria-describedby={undefined} onOpenAutoFocus={focus.remember} onCloseAutoFocus={focus.restore}>
           <Dialog.Title className="sr-only">Paleta poleceń</Dialog.Title>
           <Command label="Paleta poleceń" loop filter={paletteFilter}>
             <div className="palette__input-row">
               <Search aria-hidden="true" />
-              <Command.Input className="palette__input" placeholder="Wpisz tytuł sprawy, podmiot lub polecenie" autoFocus />
+              <Command.Input className="palette__input" placeholder="Wpisz tytuł sprawy, podmiot lub polecenie" />
             </div>
             <Command.List className="palette__list">
               <Command.Empty className="palette__empty">Brak wyników. Spróbuj innej frazy.</Command.Empty>

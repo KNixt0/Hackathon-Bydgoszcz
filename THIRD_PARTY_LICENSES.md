@@ -109,7 +109,7 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 
 | Package | Version | Licence | Scope |
 |---|---|---|---|
-| @fontsource/ibm-plex-sans | 5.3.0 | OFL-1.1 | runtime |
+| @fontsource/public-sans | 5.3.0 | OFL-1.1 | runtime |
 | @radix-ui/react-dialog | 1.3.1 | MIT | runtime |
 | @radix-ui/react-dropdown-menu | 2.2.1 | MIT | runtime |
 | @radix-ui/react-slider | 1.6.1 | MIT | runtime |
@@ -248,7 +248,7 @@ None of these is GPL, AGPL or LGPL. Each one is listed with the reason it is pre
 | greenlet | 3.5.6 | MIT AND PSF-2.0 | Backend | transitive dependency; permissive |
 | scramp | 1.5.0 | MIT-0 | Backend | transitive dependency; permissive (MIT No Attribution) |
 | tslib | 2.9.1 | 0BSD | Frontend | transitive runtime dependency of the frontend; permissive (Zero-Clause BSD) |
-| @fontsource/ibm-plex-sans | 5.3.0 | OFL-1.1 | Frontend | self-hosted UI typeface, bundled into the build |
+| @fontsource/public-sans | 5.3.0 | OFL-1.1 | Frontend | self-hosted UI typeface, bundled into the build |
 | lightningcss | - | MPL-2.0 | Frontend | CSS minifier binary used by Vite at build time; not distributed (build-only) |
 | caniuse-lite | - | CC-BY-4.0 | Frontend | browser data used at build time; not distributed |
 | minimatch | - | BlueOak-1.0.0 | Frontend | build-time only; not distributed |

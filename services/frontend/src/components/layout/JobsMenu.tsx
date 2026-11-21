@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ListChecks } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SCAN_STATE_LABEL } from "../../domain/labels";
 import type { ScanJob, ScanState } from "../../types/api";
@@ -33,18 +33,17 @@ interface Props {
   onClearFinished: () => void;
 }
 
+/** Link-style trigger "Zadania (2)": the count in brackets only while scans run. */
 export function JobsMenu({ jobs, activeCount, onClearFinished }: Props) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" aria-label={`Zadania skanowania, aktywne: ${activeCount}`}>
-          <ListChecks aria-hidden="true" />
-          <span className="btn__label--wide">Zadania</span>
-          {activeCount > 0 && <span className="jobs-badge" aria-hidden="true">{activeCount}</span>}
-        </Button>
+        <button type="button" className="linkbtn hd__menu" aria-label={`Zadania skanowania, aktywne: ${activeCount}`}>
+          Zadania{activeCount > 0 && <span className="num"> ({activeCount})</span>}<ChevronDown aria-hidden="true" />
+        </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="menu jobs" align="end" sideOffset={6}>
+        <DropdownMenu.Content className="menu jobs" align="end" sideOffset={8}>
           <div className="jobs__head">
             <span>Zadania skanowania</span>
             {jobs.some((j) => j.state === "done" || j.state === "failed") && (
