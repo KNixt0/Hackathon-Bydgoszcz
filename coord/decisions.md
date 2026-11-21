@@ -8,3 +8,4 @@ Append only. One line per decision. Agents read this before starting work.
 | 2 | 2026-11-21 | Hard rules from both briefs in coord/GUIDELINES.md, enforced by guard.sh + security.yml | Briefs forbid paid AI APIs, copyleft licenses and secrets in code | KNixt0 |
 | 3 | 2026-11-21 | Warm-up demo: portfolio site in demo/portfolio/ (issues labeled demo), plan in coord/demo/portfolio-plan.md | Test the full swarm flow before the real task | KNixt0 |
 | 4 | 2026-11-21 | Demo paused (status:paused on #5–#10); open demo PRs not merged; agents asked for owner names + improvement notes | Retro and token optimisation before the real task | KNixt0 |
+| 5 | 2026-11-21 | Every PR from others needs KNixt0 approval, including size:xs (no auto-merge without the owner) | Owner keeps full human review | KNixt0 |
