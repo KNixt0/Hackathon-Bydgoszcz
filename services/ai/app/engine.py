@@ -216,6 +216,8 @@ class Engine:
         ent, doc = ctx.entities, ctx.document
         firm = ent.firm.name if ent.firm else None
         where = PLATFORM_PL[doc.platform]
+        if not ctx.scope.in_scope:
+            return f"Materiał poza właściwością UKNF: {firm or ctx.host or 'podmiot nieustalony'} ({where})"
         if primary == 3:
             return f"Oferta doradztwa inwestycyjnego: {firm or ctx.host or 'podmiot nieustalony'}"
         if primary == 1 and firm and ent.advertiser:

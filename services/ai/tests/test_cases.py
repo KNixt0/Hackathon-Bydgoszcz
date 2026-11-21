@@ -115,10 +115,12 @@ def test_cases_are_ordered_and_separated(analyze_sample):
 def test_eval_set_shape():
     samples = [json.loads(p.read_text(encoding="utf-8")) for p in EVAL]
     labels = [s["context"]["ground_truth"] for s in samples]
-    assert 38 <= len(samples) <= 50 and set(labels) == {"violation", "ok"}
+    assert 38 <= len(samples) <= 60 and set(labels) == {"violation", "ok"}
     assert min(labels.count("violation"), labels.count("ok")) >= 15
     assert all(s["context"]["synthetic"] is True for s in samples)
-    assert {s["context"]["module_hint"] for s in samples} == {1, 2, 3}
+    assert {s["context"].get("module_hint") for s in samples} - {None} == {1, 2, 3}
+    # contract v4: out-of-remit negatives carry no module (nothing to flag), all labelled "ok"
+    assert all(s["context"]["ground_truth"] == "ok" for s in samples if "module_hint" not in s["context"])
     assert len({s["meta"]["platform"] for s in samples}) >= 6
     days = [s["meta"]["detected_days_ago"] for s in samples]
     assert min(days) <= 1 and max(days) >= 25 and all(0 <= d < 30 for d in days)

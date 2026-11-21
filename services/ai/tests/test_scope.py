@@ -31,6 +31,7 @@ OUT_OF_SCOPE = {
 def test_out_of_scope_material_is_not_flagged(engine, category, text):
     a = analyze(engine, text)
     assert a.scope.in_scope is False and a.scope.category == category
+    assert a.title.startswith("Materiał poza właściwością UKNF")
     assert a.risk_score < W.T_ORANGE and a.risk_level == "green"
     assert a.recommendation.action == "none" and a.recommendation.label == "Poza właściwością UKNF"
     assert all(r.status == "na" for r in a.rules) and len(a.rules) == 19
