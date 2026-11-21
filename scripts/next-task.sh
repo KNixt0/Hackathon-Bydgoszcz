@@ -5,14 +5,25 @@
 #   strong   : everything
 #   standard : everything except model:opus
 #   light    : only size:xs
-# Area filter (SWARM_AREAS, comma separated, default: all): only tasks with one of
-#   the labels area:<name>. Aliases: ui → frontend, api → backend, model → ai.
-#   e.g. SWARM_AREAS=ui,docs ./scripts/next-task.sh
+# Area filter: the owner's assignment for my login (only tasks labeled area:<name>).
+#   SWARM_AREAS may narrow it. Aliases: ui → frontend, api → backend, model → ai.
 set -euo pipefail
 
 me=$(gh api user --jq .login)
 tier="${SWARM_TIER:-standard}"
-areas="${SWARM_AREAS:-}"
+# Areas come from the owner's assignment (issue swarm:assignments, ./swarm whoami).
+# SWARM_AREAS can only narrow it down. Unassigned or "lead" → no tasks (exit 3).
+assigned=$(python3 scripts/assignments.py get "$me" 2>/dev/null || true)
+case "$assigned" in
+  ""|none) echo "no assignment for $me yet — KNixt0 assigns areas (./swarm assign $me <areas>)" >&2; exit 3 ;;
+  lead)    echo "$me is assigned as lead — leads don't take build tasks" >&2; exit 3 ;;
+  all)     areas="${SWARM_AREAS:-}" ;;
+  *)       if [[ -n "${SWARM_AREAS:-}" ]]; then
+             areas=$(python3 -c 'import sys
+a={x.strip() for x in sys.argv[1].split(",")}; al={"ui":"frontend","api":"backend","model":"ai"}
+w={al.get(x.strip(),x.strip()) for x in sys.argv[2].split(",")}; print(",".join(sorted(a & w)) or "-none-")' "$assigned" "$SWARM_AREAS")
+           else areas="$assigned"; fi ;;
+esac
 
 candidates=$(gh issue list --state open --label "status:ready" --limit 100 \
   --json number,assignees,labels,createdAt \

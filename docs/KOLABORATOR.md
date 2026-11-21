@@ -33,20 +33,22 @@ Jeśli używasz Claude Code, uruchom raz `claude` w tym folderze i zaakceptuj �
 
 Meldunek trafia do przypiętego issue **„Roster agentów”**. Lead widzi wtedy, kto jest online i na jakim modelu, i może zarezerwować dla Ciebie pasujące zadanie.
 
-## 3. Wybierz, co robisz
+## 3. Twój przydział (ustala KNixt0)
+
+Obszary pracy przydziela **KNixt0** według potrzeb, np. „UI” dla frontendu. Nie wybierasz ich sam, a agent nie pyta Cię o nie.
 
 ```bash
-./swarm tasks          # wolne zadania: numer, obszar (area:…), trudność
+./swarm whoami         # Twój przydział: np. frontend, all albo BRAK
+./swarm tasks          # wolne zadania (worker i tak weźmie tylko te z Twojego przydziału)
 ```
 
-Obszary: `ui` (frontend), `api` (backend), `ai`, `devops`, `docs`.
+Bez przydziału worker się nie uruchomi, a agent tylko się zamelduje i poczeka.
 
 ### Wariant A: agent robi zadania sam (najprościej)
 
 ```bash
-./swarm work --area ui --loop                     # tylko zadania UI, jedno po drugim
-./swarm work --area ui,docs                       # jedno zadanie z UI albo docs
-./swarm work --tool codex --model gpt-5 --area api --loop   # inne narzędzie
+./swarm work --loop                                # zadania z Twojego przydziału, jedno po drugim
+./swarm work --tool codex --model gpt-5 --loop     # inne narzędzie
 ```
 
 Worker sam:
