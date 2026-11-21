@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-52-gielda-krypto",
+  "platform": "tiktok",
+  "title": "Kupuj krypto",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 4
+ },
+ "text": "KryptoEx Przykład: kupuj Bitcoin i Ethereum w aplikacji. Nasi klienci zarobili 200% w rok! Opiekun podpowie, które kryptowaluty kupić.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

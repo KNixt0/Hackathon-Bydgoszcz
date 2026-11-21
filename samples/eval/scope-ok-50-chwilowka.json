@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-50-chwilowka",
+  "platform": "facebook",
+  "title": "Pożyczka w 15 minut – reklama",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 2
+ },
+ "text": "SzybkaKasa Przykładowa sp. z o.o. Pożyczka do 5000 zł w 15 minut! Pierwsza pożyczka za 0 zł, RRSO 0%. Bez BIK i zaświadczeń. Zyskaj gotówkę już dziś.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

@@ -38,6 +38,9 @@ class RiskDisclosurePlugin(Plugin):
         "wg rozporządzenia delegowanego 2017/565 i MiFID II."
     )
 
+    def applies(self, ctx: AnalysisContext) -> bool:
+        return ctx.scope.in_scope
+
     def run(self, ctx: AnalysisContext) -> PluginResult:
         rules = run_rules(ctx)
         findings: list[PluginFinding] = []

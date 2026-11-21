@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ..context import AnalysisContext
 from ._affiliate import affiliate_links
-from ._registers import check_professionals, lookup_firm, make_check, registry_evidence
+from ._registers import check_professionals, lookup_firm
 from .base import Plugin, PluginFinding, PluginResult
 
 REGISTER_NAMES = {
@@ -21,12 +21,13 @@ class FinfluencerPlugin(Plugin):
     module = 1
     description = (
         "Moduł 1: reklamy firm inwestycyjnych publikowane przez podmioty trzecie (finfluencerów): "
-        "status firmy w rejestrach KNF, zgłoszenie współpracy do UKNF, oznaczenie reklamy."
+        "status firmy w rejestrach KNF, rozpoznawalność komunikatu marketingowego (art. 24 ust. 3 MiFID II), "
+        "linki partnerskie."
     )
 
     def applies(self, ctx: AnalysisContext) -> bool:
         ent = ctx.entities
-        return bool(ent.firm and ent.advertiser and ent.third_party)
+        return bool(ctx.scope.in_scope and ent.firm and ent.advertiser and ent.third_party)
 
     def run(self, ctx: AnalysisContext) -> PluginResult:
         ent, facts = ctx.entities, ctx.facts
@@ -61,6 +62,18 @@ class FinfluencerPlugin(Plugin):
                     {"entry": lookup.listed.entry["name"]},
                 )
             )
+        elif lookup.other_licence:
+            findings.append(
+                PluginFinding(
+                    "FIRM_REGISTERED",
+                    "info",
+                    f"Promowany podmiot „{firm}” figuruje w rejestrze towarzystw funduszy inwestycyjnych KNF "
+                    "(nadzorowany przez UKNF, inna kategoria zezwolenia niż firma inwestycyjna).",
+                    lookup.evidence_ids,
+                    0.95,
+                    {"entry": lookup.other_licence.entry["name"]},
+                )
+            )
         else:
             similar = (
                 f" Nazwa jest podobna do zarejestrowanego podmiotu „{lookup.similar.entry['name']}”."
@@ -79,35 +92,9 @@ class FinfluencerPlugin(Plugin):
                 )
             )
 
-        notified = ctx.context.cooperation_notified
-        subject = f"{firm} ↔ {publisher}"
-        reg = "uknf_cooperation_notice"
-        if notified is True:
-            checks.append(make_check(ctx, reg, subject, "listed", "Współpraca zgłoszona do UKNF (dane z kontekstu)"))
-            findings.append(
-                PluginFinding(
-                    "COOPERATION_NOTIFIED",
-                    "info",
-                    f"Współpraca „{subject}” została zgłoszona do UKNF.",
-                    [registry_evidence(ctx, reg, subject, "współpraca zgłoszona")],
-                    0.95,
-                )
-            )
-        elif notified is False:
-            checks.append(
-                make_check(ctx, reg, subject, "not_listed", "Brak zgłoszenia współpracy w UKNF (dane z kontekstu)")
-            )
-            findings.append(
-                PluginFinding(
-                    "COOPERATION_NOT_NOTIFIED",
-                    "medium",
-                    f"UKNF nie ma zgłoszenia współpracy reklamowej „{subject}”, mimo że materiał promuje firmę.",
-                    [registry_evidence(ctx, reg, subject, "brak zgłoszenia"), *mention_ev],
-                    0.8,
-                )
-            )
-        else:
-            checks.append(make_check(ctx, reg, subject, "not_checked", "Brak danych o zgłoszeniu współpracy"))
+        # No cooperation-notice check: no legal duty to notify UKNF of an advertising cooperation was
+        # confirmed, so it must not influence the score (decision #21). `context.cooperation_notified` is
+        # accepted for compatibility and ignored.
 
         open_markers = [h for h in facts.ad_markers if not _concealed(ctx, h.start, h.end)]
         promo = facts.cta or facts.profit_claims
@@ -129,7 +116,9 @@ class FinfluencerPlugin(Plugin):
                     "DISGUISED_AD",
                     "medium",
                     f"Materiał „{publisher}” zachęca do oferty „{firm}”, nie jest oznaczony jako reklama i przedstawia "
-                    "się jako niezależna opinia lub recenzja, co może ukrywać współpracę z firmą.",
+                    "się jako niezależna opinia lub recenzja, co może ukrywać współpracę z firmą. Dla UKNF istotne: "
+                    "komunikat marketingowy firmy inwestycyjnej musi być rozpoznawalny jako taki (art. 24 ust. 3 "
+                    "MiFID II); samo oznaczanie treści przez twórcę ocenia UOKiK.",
                     [
                         ctx.quote(denial[0], label="Deklaracja niezależności"),
                         ctx.quote(promo[0], label="Zachęta do skorzystania z oferty"),
@@ -143,7 +132,8 @@ class FinfluencerPlugin(Plugin):
                     "UNMARKED_THIRD_PARTY_AD",
                     "medium",
                     f"Materiał „{publisher}” zachęca do oferty „{firm}”, ale nie jest oznaczony jako reklama ani "
-                    "współpraca komercyjna.",
+                    "współpraca komercyjna. Dla UKNF istotne: komunikat marketingowy firmy inwestycyjnej musi być "
+                    "rozpoznawalny jako taki (art. 24 ust. 3 MiFID II); samo oznaczanie treści przez twórcę ocenia UOKiK.",
                     [ctx.quote(promo[0], label="Zachęta do skorzystania z oferty")],
                     0.8,
                 )

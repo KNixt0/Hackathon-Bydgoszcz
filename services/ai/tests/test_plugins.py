@@ -44,11 +44,12 @@ def test_m1_compliant_campaign(make_ctx):
         synthetic=True,
         companies=[{"name": BUR, "role": "investment_firm"}],
     )
-    assert {"FIRM_REGISTERED", "COOPERATION_NOTIFIED", "AD_MARKED"} <= codes(res)
+    assert {"FIRM_REGISTERED", "AD_MARKED"} <= codes(res)
+    assert "COOPERATION_NOTIFIED" not in codes(res)  # no confirmed duty to notify UKNF (decision #21)
     assert all(f.severity == "info" for f in res.findings)
     by_reg = {c.registry: c for c in res.registry_checks}
     assert by_reg["knf_brokerage_houses"].status == "listed" and by_reg["knf_banks_brokerage"].status == "not_listed"
-    assert by_reg["uknf_cooperation_notice"].status == "listed"
+    assert "uknf_cooperation_notice" not in by_reg
     assert by_reg["knf_public_warnings"].status == "not_listed"
 
 
@@ -61,8 +62,9 @@ def test_m1_unmarked_unnotified_ad_of_unlisted_firm(make_ctx):
         text="Testowa Platforma Zysku Ltd wypłaca zyski co tydzień. Załóż konto z mojego linku.",
         cooperation_notified=False,
     )
-    assert {"PROMOTED_FIRM_NOT_LISTED", "COOPERATION_NOT_NOTIFIED", "UNMARKED_THIRD_PARTY_AD"} <= codes(res)
-    assert next(c for c in res.registry_checks if c.registry == "uknf_cooperation_notice").status == "not_listed"
+    assert {"PROMOTED_FIRM_NOT_LISTED", "UNMARKED_THIRD_PARTY_AD"} <= codes(res)
+    assert "COOPERATION_NOT_NOTIFIED" not in codes(res)
+    assert all(c.registry != "uknf_cooperation_notice" for c in res.registry_checks)
 
 
 def test_m1_disguised_ad_and_unknown_notification(make_ctx):
@@ -75,7 +77,7 @@ def test_m1_disguised_ad_and_unknown_notification(make_ctx):
         companies=[{"name": BUR, "role": "investment_firm"}],
     )
     assert "DISGUISED_AD" in codes(res) and "UNMARKED_THIRD_PARTY_AD" not in codes(res)
-    assert next(c for c in res.registry_checks if c.registry == "uknf_cooperation_notice").status == "not_checked"
+    assert all(c.registry != "uknf_cooperation_notice" for c in res.registry_checks)
 
 
 def test_m1_warning_list_and_inactive_legal_adviser(make_ctx):

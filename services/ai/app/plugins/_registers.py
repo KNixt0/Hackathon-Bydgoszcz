@@ -5,8 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..context import ATTACHMENT_REGISTERS, AnalysisContext
-from ..registries import KNF_FIRM_REGISTERS, REGISTRIES, Match
+from ..registries import KNF_FIRM_REGISTERS, KNF_OTHER_LICENSED, REGISTRIES, Match
 from ..schemas import RegistryCheck
+from ..scope import is_tfi_name
 from .base import PluginFinding
 
 
@@ -36,6 +37,8 @@ class FirmLookup:
     listed_in: list[str] = field(default_factory=list)
     similar: Match | None = None  # a registered entity with a similar name / the same brand
     warning: Match | None = None
+    other_licence: Match | None = None  # e.g. a TFI: supervised by KNF, but not an investment firm
+    other_licence_in: str | None = None
     evidence_ids: list[str] = field(default_factory=list)
 
 
@@ -64,7 +67,21 @@ def lookup_firm(ctx: AnalysisContext, name: str) -> FirmLookup:
                 if res.similar is None or match.score > res.similar.score:
                     res.similar = match
             res.checks.append(make_check(ctx, registry, name, "not_listed", detail))
-    if not res.listed:
+    for registry in KNF_OTHER_LICENSED:
+        match = ctx.registries.lookup(registry, name)
+        if match and match.listed:
+            res.other_licence, res.other_licence_in = match, registry
+            res.checks.append(make_check(ctx, registry, name, "listed", f"Dopasowano wpis: {match.entry['name']}"))
+            res.evidence_ids.append(registry_evidence(ctx, registry, name, "figuruje"))
+        elif is_tfi_name(name):
+            status = (
+                "not_checked"
+                if _sample_miss(ctx, registry) or not ctx.registries.snapshot(registry).entries
+                else "not_listed"
+            )
+            detail = "Nazwa wskazuje na TFI, a nie ma jej w rejestrze TFI" if status == "not_listed" else SAMPLE_DETAIL
+            res.checks.append(make_check(ctx, registry, name, status, detail))
+    if not res.listed and not res.other_licence:
         res.evidence_ids.append(registry_evidence(ctx, "knf_investment_firms", name, "brak wpisu"))
     res.evidence_ids.append(
         ctx.evidence.legal(
@@ -101,6 +118,8 @@ def lookup_firm(ctx: AnalysisContext, name: str) -> FirmLookup:
     cache[name] = res
     return res
 
+
+OUTSIDE_UKNF = " Informacja dla samorządu zawodowego (KIRP/KIDP), poza właściwością UKNF; nie wpływa na wynik."
 
 SAMPLE_DETAIL = (
     "Migawka tego rejestru jest próbką (niepełną lub demonstracyjną); brak wpisu nie oznacza, że podmiotu "
@@ -177,8 +196,8 @@ def check_professionals(
             findings.append(
                 PluginFinding(
                     "LEGAL_ADVISER_NOT_FOUND",
-                    "medium",
-                    f"Radca prawny powołany w materiale ({subject}) nie figuruje w rejestrze KIRP.",
+                    "info",
+                    f"Radca prawny powołany w materiale ({subject}) nie figuruje w rejestrze KIRP." + OUTSIDE_UKNF,
                     [registry_evidence(ctx, reg, subject, "brak wpisu")],
                     0.75,
                     {"partial_snapshot": _partial(ctx, reg)},
@@ -189,8 +208,9 @@ def check_professionals(
             findings.append(
                 PluginFinding(
                     "LEGAL_ADVISER_INACTIVE",
-                    "medium",
-                    f"Radca prawny powołany w materiale ({subject}) ma w rejestrze KIRP status „{entry['status']}”.",
+                    "info",
+                    f"Radca prawny powołany w materiale ({subject}) ma w rejestrze KIRP status „{entry['status']}”."
+                    + OUTSIDE_UKNF,
                     [registry_evidence(ctx, reg, subject, entry["status"])],
                     0.9,
                 )
@@ -219,8 +239,8 @@ def check_professionals(
             findings.append(
                 PluginFinding(
                     "TAX_ADVISER_NOT_FOUND",
-                    "medium",
-                    f"Deklarowany {subject} nie figuruje w rejestrze KIDP.",
+                    "info",
+                    f"Deklarowany {subject} nie figuruje w rejestrze KIDP." + OUTSIDE_UKNF,
                     [registry_evidence(ctx, reg, subject, "brak wpisu")],
                     0.7,
                     {"partial_snapshot": _partial(ctx, reg)},
@@ -231,8 +251,8 @@ def check_professionals(
             findings.append(
                 PluginFinding(
                     "TAX_ADVISER_INACTIVE",
-                    "medium",
-                    f"Deklarowany {subject} ma w rejestrze KIDP status „{entry['status']}”.",
+                    "info",
+                    f"Deklarowany {subject} ma w rejestrze KIDP status „{entry['status']}”." + OUTSIDE_UKNF,
                     [registry_evidence(ctx, reg, subject, entry["status"])],
                     0.85,
                 )

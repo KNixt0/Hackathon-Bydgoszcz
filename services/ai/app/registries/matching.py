@@ -296,7 +296,9 @@ def find_brands_in_text(text: str, folded: str, entries: list[dict]) -> list[tup
     index: dict[str, dict] = {}
     for entry in entries:
         for key, _ in _keys(entry):
-            if len(key) >= 3 and key not in GENERIC_TOKENS:
+            # A key made only of generic words ("dom maklerski" left of "DOM MAKLERSKI INC S.A.")
+            # names no brand and would match every brokerage house mentioned in a text.
+            if len(key) >= 3 and not set(key.split()) <= (GENERIC_TOKENS | NEUTRAL_DESCRIPTORS):
                 index.setdefault(key, entry)
     words = [(m.start(), m.end(), m.group(0)) for m in re.finditer(r"[^\W_]+", folded)]
     hits: list[tuple[int, int, dict]] = []

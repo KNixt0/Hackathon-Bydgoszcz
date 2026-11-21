@@ -23,10 +23,12 @@ from .schemas import (
     Finding,
     Graph,
     ModuleResult,
+    Recommendation,
     RegistryCheck,
     Source,
 )
-from .scoring import plugin_weight
+from .scoring import plugin_weight, risk_level
+from .scoring import weights as W
 
 PLATFORM_PL = {
     "web": "strona WWW",
@@ -152,15 +154,27 @@ class Engine:
 
         ent = ctx.entities
         score = verdict.breakdown.risk_score
+        level, recommendation = verdict.level, verdict.recommendation
+        scope = ctx.scope
+        if not scope.in_scope:
+            # Outside UKNF's remit nothing is flagged: the score stays below the flag threshold and
+            # the case carries the reason and a hint for the analyst instead of a recommendation.
+            score = round(min(score, W.T_ORANGE - 1.0), 1)
+            level = risk_level(score)
+            recommendation = Recommendation(
+                action="none",
+                label="Poza właściwością UKNF",
+                next_step=scope.reason + (f" Wskazówka: {scope.authority_hint}" if scope.authority_hint else ""),
+            )
         failed = [r.id for r in rules if r.status == "fail"]
         return Analysis(
             title=self._title(ctx, primary),
-            summary=self._summary(outcome, failed),
+            summary=self._summary(outcome, failed) if scope.in_scope else f"Poza właściwością UKNF: {scope.reason}",
             modules=modules,
             primary_module=primary,
             risk_score=score,
             compliance_score=round(100.0 - score, 1),
-            risk_level=verdict.level,
+            risk_level=level,
             synthetic=bool(context.synthetic),
             ground_truth=context.ground_truth,
             demo_case=context.demo_case,
@@ -168,6 +182,7 @@ class Engine:
                 platform=doc.platform,
                 url=doc.url,
                 fetched_at=doc.fetched_at,
+                published_at=doc.published_at,
                 language=page.language,
                 content_hash=page.content_hash,
                 text=page.text,
@@ -185,7 +200,7 @@ class Engine:
             financials=graph_res.financials if graph_res else None,
             debate=outcome.to_schema(rationale, self.llm.model if llm_used else None),
             evidence=ctx.evidence.items,
-            recommendation=verdict.recommendation,
+            recommendation=recommendation,
             engine=EngineInfo(
                 version=__version__,
                 plugins=[r.plugin for r in results],
@@ -193,6 +208,7 @@ class Engine:
                 model=self.llm.model if llm_used else None,
                 duration_ms=round((time.perf_counter() - started) * 1000, 1),
             ),
+            scope=scope,
         )
 
     @staticmethod

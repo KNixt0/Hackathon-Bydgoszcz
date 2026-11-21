@@ -41,6 +41,7 @@ RegistryId = Literal[
     "knf_foreign_branches",
     "knf_foreign_cross_border",
     "knf_public_warnings",
+    "knf_tfi",
     "knf_investment_advisors",
     "kirp_legal_advisers",
     "kidp_tax_advisers",
@@ -91,6 +92,7 @@ class Source(SparseOut):
     platform: Platform
     url: str
     fetched_at: str
+    published_at: str | None = None  # contract v4: when the material was published (the "wpis"), not detected
     language: str
     content_hash: str
     text: str
@@ -334,6 +336,30 @@ class Recommendation(Out):
     next_step: str
 
 
+class Scope(Out):
+    """Contract v4: is the material within UKNF's remit as covered by modules 1-3?"""
+
+    in_scope: bool
+    category: Literal[
+        "investment",
+        "consumer_credit",
+        "deposit",
+        "crypto",
+        "insurance",
+        "tax_legal",
+        "foreign_market",
+        "no_financial_offer",
+    ]
+    basis: Literal[
+        "supervised_entity",
+        "warning_listed",
+        "investment_offer",
+        "out_of_scope",
+    ]
+    reason: str  # Polish, user-facing
+    authority_hint: str | None = None  # Polish; only a hint for the analyst, never a legal qualification
+
+
 class EngineInfo(Out):
     version: str
     plugins: list[str]
@@ -365,6 +391,7 @@ class Analysis(Out):
     evidence: list[Evidence]
     recommendation: Recommendation
     engine: EngineInfo
+    scope: Scope | None = None  # contract v4
 
 
 # ---------------------------------------------------------------- input

@@ -32,7 +32,8 @@ def test_case1_green(analyze_sample):
     assert failed(a) == [] and {1, 2} <= set(a.modules) and a.primary_module == 1
     assert a.entities.investment_firm.name == "Dom Maklerski Bursztyn Przykładowy S.A."
     listed = {c.registry for c in a.registry_checks if c.status == "listed"}
-    assert {"knf_investment_firms", "knf_brokerage_houses", "uknf_cooperation_notice"} <= listed
+    assert {"knf_investment_firms", "knf_brokerage_houses"} <= listed
+    assert "uknf_cooperation_notice" not in {c.registry for c in a.registry_checks}  # decision #21
     assert a.graph.flagged_paths == [] and a.forensics.anomalies == []
     assert a.forensics.accounts.share_younger_14d == 0
     # only verifiable facts about the real firm: no invented KRS data or figures
@@ -53,7 +54,7 @@ def test_case2_orange(analyze_sample):
     a = analyze_sample(CASES["case2"])
     assert a.risk_level == "orange" and abs(a.compliance_score - 52) <= 3
     assert failed(a) == ["2", "4", "6", "7", "12a", "18"]
-    assert a.recommendation.action == "explain" and a.recommendation.label == "Postępowanie wyjaśniające"
+    assert a.recommendation.action == "explain" and a.recommendation.label == "Wymaga oceny analityka"
     assert a.financials.age_months == 11 and a.financials.share_capital_pln == 5000
     assert "Brak pełnego sprawozdania finansowego" in a.financials.flags
     path = a.graph.flagged_paths[0]

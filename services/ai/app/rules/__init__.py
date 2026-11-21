@@ -50,7 +50,28 @@ def _score(outcome: RuleOutcome) -> float:
     return 0.1 if outcome.status == "unknown" else 0.0
 
 
+def _out_of_scope_rows(ctx: AnalysisContext) -> list[RuleResult]:
+    """Outside UKNF's remit the risk-information criteria do not apply: all 19 rows are "na"."""
+    why = f"Nie dotyczy: materiał poza właściwością UKNF w zakresie modułów InvestWatch ({ctx.scope.reason})"
+    return [
+        RuleResult(
+            id=spec.id,
+            name=spec.name,
+            legal_basis=spec.legal_basis,
+            status="na",
+            confidence=1.0,
+            explanation=why,
+            evidence_ids=[],
+            method="text",
+            score=0.0,
+        )
+        for spec, _ in REGISTRY
+    ]
+
+
 def run_rules(ctx: AnalysisContext) -> list[RuleResult]:
+    if not ctx.scope.in_scope:
+        return _out_of_scope_rows(ctx)
     view = RuleView(ctx)
     results = []
     for spec, check in REGISTRY:
