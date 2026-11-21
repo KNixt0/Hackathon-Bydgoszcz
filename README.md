@@ -1,1 +1,2 @@
 # Hackathon-Bydgoszcz
+Jebać Bydgoszcz
