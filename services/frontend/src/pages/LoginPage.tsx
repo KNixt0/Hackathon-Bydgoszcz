@@ -1,6 +1,6 @@
 import { CircleAlert, LogIn, ScanEye, ShieldCheck, UserRound } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import type { Role } from "../types/incident";
@@ -98,6 +98,7 @@ export function LoginPage() {
             </Button>
           </section>
         )}
+        <p className="login__foot"><Link to="/zglos">Zgłoś ofertę lub reklamę</Link></p>
         <p className="login__foot">Dostęp tylko dla pracowników UKNF. Logowania i decyzje w sprawach są zapisywane w dzienniku audytu.</p>
       </div>
     </main>

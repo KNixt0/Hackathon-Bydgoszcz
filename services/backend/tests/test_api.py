@@ -10,6 +10,8 @@ from tests.conftest import GREEN_HTML, events_named
 from tests.test_pipeline import ARTICLE, job, scan
 
 SUMMARY_KEYS = {
+    "user_reports_count",
+    "priority_score",
     "id",
     "title",
     "summary",

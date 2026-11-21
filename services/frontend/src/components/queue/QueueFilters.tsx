@@ -1,5 +1,6 @@
 import { Download, Search, X } from "lucide-react";
-import { LEVEL_LABEL, MODULE_SHORT, MODULES, PLATFORM_LABEL, PLATFORMS, STATUS_LABEL, STATUSES } from "../../domain/labels";
+import { LEVEL_LABEL, MODULE_SHORT, MODULES, PLATFORM_LABEL, PLATFORMS, STATUS_LABEL, STATUSES, TIER_FILTER_LABEL } from "../../domain/labels";
+import { TIERS, type PriorityTier } from "../../domain/priority";
 import { LEVELS } from "../../domain/levels";
 import { activeFilterCount, type QueueFilters as Filters } from "../../domain/queue";
 import type { ModuleId, Platform, RiskLevel, Status } from "../../types/incident";
@@ -29,6 +30,20 @@ export function QueueFilters({ filters, onChange, onReset, shown, total, exportH
           <select className="select" value={filters.level} onChange={(e) => onChange({ level: e.target.value as RiskLevel | "" })}>
             <option value="">Wszystkie</option>
             {LEVELS.map((l) => <option key={l} value={l}>{LEVEL_LABEL[l]}</option>)}
+          </select>
+        </label>
+        <label className="field">
+          <span className="field__label">Priorytet zgłoszeń</span>
+          <select className="select" value={filters.tier} onChange={(e) => onChange({ tier: e.target.value as PriorityTier | "" })}>
+            <option value="">Wszystkie</option>
+            {TIERS.map((t) => <option key={t} value={t}>{TIER_FILTER_LABEL[t]}</option>)}
+          </select>
+        </label>
+        <label className="field">
+          <span className="field__label">Sortuj według</span>
+          <select className="select" value={filters.sort} onChange={(e) => onChange({ sort: e.target.value as Filters["sort"] })}>
+            <option value="risk">Poziomu ryzyka</option>
+            <option value="priority">Priorytetu (ryzyko i zgłoszenia)</option>
           </select>
         </label>
         <label className="field">
@@ -63,7 +78,7 @@ export function QueueFilters({ filters, onChange, onReset, shown, total, exportH
       </form>
       <div className="filters__meta">
         <span role="status" data-testid="queue-count">
-          {active > 0 ? `Pokazano ${shown} z ${total} spraw` : `${total} spraw`} · od najgroźniejszych
+          {active > 0 ? `Pokazano ${shown} z ${total} spraw` : `${total} spraw`} · {filters.sort === "priority" ? "od najwyższego priorytetu" : "od najgroźniejszych"}
         </span>
         <span className="filters__meta-actions">
           {active > 0 && (

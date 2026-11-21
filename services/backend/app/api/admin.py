@@ -47,6 +47,7 @@ def audit_log(
     _: Supervisor,
     incident_id: Annotated[str | None, Query(max_length=36)] = None,
     actor: Annotated[str | None, Query(max_length=255)] = None,
+    action: Annotated[str | None, Query(max_length=32)] = None,
     limit: Annotated[int, Query(ge=1, le=1000)] = 200,
 ) -> dict:
     """Newest first. There is deliberately no endpoint that updates or deletes audit rows."""
@@ -55,5 +56,7 @@ def audit_log(
         query = query.filter(AuditLog.incident_id == incident_id)
     if actor:
         query = query.filter(AuditLog.actor_email == actor.strip().lower())
+    if action:
+        query = query.filter(AuditLog.action == action)
     rows = query.order_by(AuditLog.at.desc(), AuditLog.id.desc()).limit(limit).all()
     return {"items": [audit.entry_dict(row) for row in rows]}

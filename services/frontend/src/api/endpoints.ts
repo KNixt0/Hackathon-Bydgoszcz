@@ -1,5 +1,5 @@
 import type {
-  AuditEntry, AuthConfig, CalibrationSet, Health, IncidentList, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
+  AuditEntry, AuthConfig, CalibrationSet, CaseReport, Health, IncidentList, PublicReportAccepted, PublicReportRequest, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
 } from "../types/api";
 import type { CaseLabel, Incident, Role } from "../types/incident";
 import { request, requestText } from "./client";
@@ -28,6 +28,9 @@ export const api = {
   assign: (incidentId: string) => request<Incident>(`/api/incidents/${id(incidentId)}/assign`, post()),
   label: (incidentId: string, label: CaseLabel) => request<Incident>(`/api/incidents/${id(incidentId)}/label`, post({ label })),
   history: (incidentId: string, signal?: AbortSignal) => request<{ items: AuditEntry[] }>(`/api/incidents/${id(incidentId)}/history`, { signal }),
+  incidentReports: (incidentId: string, signal?: AbortSignal) => request<{ items: CaseReport[] }>(`/api/incidents/${id(incidentId)}/reports`, { signal }),
+  /** Public: no session needed. */
+  submitReport: (body: PublicReportRequest) => request<PublicReportAccepted>("/api/public/reports", post(body)),
   trends: (days = 30, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?days=${days}`, { signal }),
   calibration: (signal?: AbortSignal) => request<CalibrationSet>("/api/calibration", { signal }),
   startScan: (body: ScanRequest) => request<{ job_id: string }>("/api/scans", post(body)),

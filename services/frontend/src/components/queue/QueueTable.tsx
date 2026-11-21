@@ -1,13 +1,15 @@
 import { SearchX } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { formatDateTime, hostOf, relativeTime } from "../../domain/format";
+import { formatDateTime, hostOf, relativeTime, reportsLabel } from "../../domain/format";
 import { PLATFORM_LABEL, STATUS_LABEL } from "../../domain/labels";
 import { deriveLevel, type Thresholds } from "../../domain/levels";
+import { reportsOf, tierOf } from "../../domain/priority";
 import type { IncidentSummary } from "../../types/incident";
 import { Badge } from "../ui/Badge";
 import { LevelBadge } from "../ui/LevelBadge";
 import { ModuleTag } from "../ui/ModuleTag";
+import { PriorityTierTag } from "../ui/PriorityTierTag";
 import { ScoreRail } from "../ui/ScoreRail";
 import { EmptyState, Skeleton } from "../ui/States";
 
@@ -21,6 +23,8 @@ export function QueueRow({ incident: it, thresholds, fresh }: RowProps) {
   const level = deriveLevel(it.risk_score, thresholds);
   const parties = [it.advertiser, it.firm && it.firm !== it.advertiser ? it.firm : null].filter(Boolean).join(" → ");
   const shownRules = it.failed_rules.slice(0, 5);
+  const reports = reportsOf(it);
+  const tier = tierOf(it, thresholds);
   return (
     <tr className={`queue__row--${level}${fresh ? " queue__row--fresh" : ""}`} data-testid="queue-row" data-level={level}>
       <td>
@@ -35,6 +39,12 @@ export function QueueRow({ incident: it, thresholds, fresh }: RowProps) {
           {parties || "Podmiot nieustalony"}
           {fresh && <span className="queue__new"><Badge tone="accent">Nowa</Badge></span>}
         </span>
+        {(reports > 0 || tier !== "low_watch") && (
+          <span className="queue__crowd">
+            <PriorityTierTag tier={tier} />
+            {reports > 0 && <span className="queue__reports" data-testid="report-count">{reportsLabel(reports)}</span>}
+          </span>
+        )}
       </td>
       <td>
         <span className="queue__modules">

@@ -51,6 +51,8 @@ LIST_HEADER = [
     "firma_inwestycyjna",
     "naruszone_reguly",
     "etykieta",
+    "liczba_zgloszen",
+    "priorytet",
     "dane_syntetyczne",
     "wykryto",
     "zaktualizowano",
@@ -76,6 +78,8 @@ def incidents_csv(summaries: Iterable[dict]) -> bytes:
                 s["firm"],
                 ",".join(s["failed_rules"]),
                 s["ground_truth"],
+                s["user_reports_count"],
+                s["priority_score"],
                 s["synthetic"],
                 s["created_at"],
                 s["updated_at"],
@@ -99,7 +103,10 @@ DETAIL_HEADER = [
 ]
 
 
-def incident_csv(incident: dict) -> bytes:
+CATEGORY_NAMES = {1: "moduł 1", 2: "moduł 2", 3: "moduł 3"}
+
+
+def incident_csv(incident: dict, reports: list[dict] | None = None) -> bytes:
     """One incident: a header row, then the 19 rules and the evidence list."""
     source = incident.get("source") or {}
     rows: list[list[Any]] = [
@@ -144,6 +151,21 @@ def incident_csv(incident: dict) -> bytes:
                 item.get("quote"),
                 item.get("storage_key"),
                 item.get("url"),
+            ]
+        )
+    for report in reports or []:  # citizens' free text: safe_cell neutralises formulas
+        rows.append(
+            [
+                "zgloszenie",
+                "",
+                CATEGORY_NAMES.get(report.get("category_hint"), "nie wiem"),
+                "",
+                "",
+                "",
+                report.get("comment"),
+                "",
+                "",
+                report.get("created_at"),
             ]
         )
     return render_csv(DETAIL_HEADER, rows)

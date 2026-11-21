@@ -71,6 +71,7 @@ EVIDENCE_KIND = {
     "url": "URL",
     "krs": "KRS",
 }
+REPORT_CATEGORIES = {1: "reklama influencera", 2: "materiał firmy", 3: "doradztwo bez zezwolenia"}
 VERDICTS = {"upheld": "utrzymany", "weakened": "osłabiony", "rejected": "odrzucony"}
 
 
@@ -88,7 +89,7 @@ def _history_context(history: list[dict] | None) -> dict:
     }
 
 
-def render_html(incident: dict, history: list[dict] | None = None) -> str:
+def render_html(incident: dict, history: list[dict] | None = None, reports: list[dict] | None = None) -> str:
     """The evidence package as a self-contained HTML document (no external resources)."""
     settings = get_settings()
     debate = incident.get("debate") or {}
@@ -117,12 +118,14 @@ def render_html(incident: dict, history: list[dict] | None = None) -> str:
         verdicts=VERDICTS,
         generated_at=datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
         backend_version=__version__,
+        reports=reports or [],
+        report_categories=REPORT_CATEGORIES,
         **_history_context(history),
     )
 
 
-def render_pdf(incident: dict, history: list[dict] | None = None) -> bytes:
-    return html_to_pdf(render_html(incident, history))
+def render_pdf(incident: dict, history: list[dict] | None = None, reports: list[dict] | None = None) -> bytes:
+    return html_to_pdf(render_html(incident, history, reports))
 
 
 def render_warning_list_html(incident: dict, history: list[dict] | None = None) -> str:

@@ -84,7 +84,7 @@ describe("login and session", () => {
     renderApp();
     expect(await screen.findByRole("heading", { level: 1, name: "Kolejka spraw" })).toBeInTheDocument();
     expired = true;
-    await user.click(screen.getAllByRole("link", { name: orangeCase.title })[0] as HTMLElement);
+    await user.click((await screen.findAllByRole("link", { name: orangeCase.title }))[0] as HTMLElement);
     await onLoginPage();
     expect(screen.getByRole("status")).toHaveTextContent("Sesja wygasła");
   });

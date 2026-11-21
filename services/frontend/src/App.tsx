@@ -16,6 +16,7 @@ import { CasePage } from "./pages/CasePage";
 import { LoginPage } from "./pages/LoginPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { QueuePage } from "./pages/QueuePage";
+import { ReportPage } from "./pages/ReportPage";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -71,6 +72,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="logowanie" element={<LoginPage />} />
+      <Route path="zglos" element={<ReportPage />} />
       <Route element={<RequireSession />}>
         <Route index element={<QueuePage />} />
         <Route path="sprawy/:id" element={<CasePage />} />

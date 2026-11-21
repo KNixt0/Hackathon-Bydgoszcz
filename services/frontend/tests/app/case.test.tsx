@@ -31,7 +31,7 @@ describe("case detail", () => {
     expect(verdict.getByRole("link", { name: /Pakiet dowodowy PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
     expect(verdict.getByRole("link", { name: "CSV" })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.csv`);
     expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
-      "1Werdykt", "2Wykresy i wizualizacje", "3Argumenty „za” i „przeciw”", "4Źródła dowodowe", "5Historia decyzji",
+      "1Werdykt", "2Wykresy i wizualizacje", "3Argumenty „za” i „przeciw”", "4Źródła dowodowe", "Zgłoszenia użytkowników", "5Historia decyzji",
     ]);
   });
 

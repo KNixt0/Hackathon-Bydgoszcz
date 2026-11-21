@@ -115,6 +115,15 @@
   {% endfor %}
 </table>
 
+{% if i.user_reports_count %}
+<h2>Zgłoszenia użytkowników ({{ i.user_reports_count }})</h2>
+<table>
+  {% for r in reports %}
+  <tr><td style="width:34mm" class="small">{{ r.created_at }}</td><td style="width:44mm">{{ report_categories.get(r.category_hint, 'nie wiem') }}</td><td>{{ r.comment or '—' }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
 <h2>Historia decyzji</h2>
 {% include '_history.html' %}
 

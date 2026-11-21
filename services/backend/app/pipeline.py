@@ -16,6 +16,7 @@ from app.db import session_scope
 from app.incidents import level_for, to_summary, upsert_incident
 from app.jobs import set_state
 from app.models import ScanJob, utcnow
+from app.public_reports import crossed_viral, link_pending
 from app.schemas import PLATFORMS, AnalysisIn
 from app.scraper import BlockedURL, FetchedPage, Fetcher, FetchError
 from app.scraper.parsers import GENERIC, detect_platform, select_parser
@@ -212,13 +213,17 @@ def _run(job_id: str) -> None:
             render=job.render,
             module_hint=job.module_hint,
         )
+        linked = link_pending(db, row, job_id)  # reports that were waiting for this scan
         summary = to_summary(row)
         incident_id = row.id
 
     set_state(job_id, "done", incident_id=incident_id)
     events.emit("incident:new" if created else "incident:updated", summary)
-    if created and summary["risk_score"] >= alert_threshold():  # global "critical" threshold
+    critical = alert_threshold()  # global "critical" threshold
+    if created and summary["risk_score"] >= critical:
         events.emit("alert:high", summary)
+    if linked and crossed_viral(*linked) and summary["risk_score"] >= critical:
+        events.emit("alert:viral", summary)
     log.info(
         "incident stored",
         extra={

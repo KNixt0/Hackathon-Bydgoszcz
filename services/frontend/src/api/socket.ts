@@ -6,6 +6,7 @@ export interface ServerEvents {
   "incident:new": IncidentSummary;
   "incident:updated": IncidentSummary;
   "alert:high": IncidentSummary;
+  "alert:viral": IncidentSummary;
   "scan:progress": ScanJob;
 }
 export type ServerEventName = keyof ServerEvents;

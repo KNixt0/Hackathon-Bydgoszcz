@@ -78,7 +78,7 @@ describe("applyQueue on the fixture queue", () => {
 
 describe("filters ↔ URL", () => {
   it("round-trips through search params", () => {
-    const f = { q: "cfd", from: "2026-11-01", to: "2026-11-20", platform: "youtube" as const, level: "red" as const, module: 2 as const, status: "new" as const };
+    const f = { q: "cfd", from: "2026-11-01", to: "2026-11-20", platform: "youtube" as const, level: "red" as const, module: 2 as const, status: "new" as const, tier: "" as const, sort: "risk" as const };
     expect(filtersFromSearch(filtersToSearch(f))).toEqual(f);
     expect(activeFilterCount(f)).toBe(7);
   });

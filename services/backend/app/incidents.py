@@ -34,6 +34,14 @@ def workflow_dict(row: Incident) -> dict[str, Any]:
     }
 
 
+def _priority(row: Incident) -> float:
+    if row.priority_score is not None:
+        return row.priority_score
+    from app.public_reports import priority_score
+
+    return priority_score(row.risk_score, row.user_reports_count)
+
+
 def to_incident(row: Incident) -> dict[str, Any]:
     return {
         **row.payload,
@@ -42,6 +50,8 @@ def to_incident(row: Incident) -> dict[str, Any]:
         "created_at": iso(row.created_at),
         "updated_at": iso(row.updated_at),
         "workflow": workflow_dict(row),
+        "user_reports_count": row.user_reports_count or 0,
+        "priority_score": _priority(row),
     }
 
 
@@ -71,6 +81,8 @@ def to_summary(row: Incident) -> dict[str, Any]:
         "firm": _party_name(p, "investment_firm"),
         "failed_rules": [str(r.get("id")) for r in p.get("rules") or [] if r.get("status") == "fail"],
         "workflow": {"assigned_to": row.assigned_to, "label": row.label or "unlabeled"},
+        "user_reports_count": row.user_reports_count or 0,
+        "priority_score": _priority(row),
     }
 
 
@@ -108,6 +120,10 @@ def apply_payload(row: Incident, payload: dict) -> None:
     row.source_url_hash = url_hash(row.source_url)
     row.synthetic = bool(payload.get("synthetic", False))
     row.search_text = _search_text(payload)
+    from app.public_reports import normalized_hash, priority_score
+
+    row.norm_url_hash = normalized_hash(row.source_url)
+    row.priority_score = priority_score(row.risk_score, row.user_reports_count)  # risk moved: recompute
 
 
 def upsert_incident(

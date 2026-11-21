@@ -256,6 +256,9 @@ export interface Incident extends Analysis {
   created_at: string;
   updated_at: string;
   workflow: Workflow;
+  /** Contract v3: public reports linked to the case, and risk × reports (server-computed, threshold-free). */
+  user_reports_count: number;
+  priority_score: number;
 }
 
 export type IncidentSummary = Pick<
@@ -268,4 +271,6 @@ export type IncidentSummary = Pick<
   firm: string | null;
   failed_rules: RuleId[];
   workflow: Pick<Workflow, "assigned_to" | "label">;
+  user_reports_count: number;
+  priority_score: number;
 };

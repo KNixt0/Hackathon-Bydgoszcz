@@ -7,7 +7,7 @@ import { AppProviders, AppRoutes } from "../src/App";
 import type { Thresholds } from "../src/domain/levels";
 import type { User } from "../src/types/api";
 import {
-  analystUser, calibrationSet, globalThresholds, incidentsById, incidentSummaries, minimalIncident, supervisorUser, trends,
+  analystUser, calibrationSet, globalThresholds, incidentsById, incidentSummaries, minimalIncident, reportsForCase, supervisorUser, trends,
 } from "./fixtures/data.mjs";
 
 type Handler = (payload: never) => void;
@@ -90,6 +90,7 @@ export function mockApi(override?: Route, { user = analystUser, demoLogin = true
       session = (call.body as { role: string }).role === "SUPERVISOR" ? supervisorUser : analystUser;
       return json({ user: session });
     }
+    if (path === "/api/public/reports") return json({ status: "accepted", known: false }, 202);
     if (path.startsWith("/api/") && !session) return json({ detail: "authentication required" }, 401);
     if (path === "/api/settings/thresholds" && call.method === "PUT") {
       if (session?.role !== "SUPERVISOR") return json({ detail: "supervisor role required" }, 403);
@@ -99,6 +100,11 @@ export function mockApi(override?: Route, { user = analystUser, demoLogin = true
     if (path === "/api/settings/thresholds") return json(globalThresholds);
     if (path === "/api/audit") return session?.role === "SUPERVISOR" ? json({ items: [] }) : json({ detail: "supervisor role required" }, 403);
     if (/^\/api\/incidents\/[^/]+\/history$/.test(path)) return json({ items: [] });
+    const reportsOf = path.match(/^\/api\/incidents\/([^/]+)\/reports$/);
+    if (reportsOf?.[1]) {
+      const found = incidentsById[reportsOf[1]] ?? incidentSummaries.find((s) => s.id === reportsOf[1]);
+      return found ? json({ items: reportsForCase(found) }) : json({ detail: "Nie znaleziono zasobu." }, 404);
+    }
     if (path === "/api/incidents") return json({ items: incidentSummaries, total: incidentSummaries.length });
     if (path === "/api/stats/trends") return json(trends);
     if (path === "/api/calibration") return json(calibrationSet);

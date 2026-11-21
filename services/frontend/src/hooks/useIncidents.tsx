@@ -11,6 +11,7 @@ const FRESH_MS = 12000;
 interface IncidentsContextValue extends IncidentsState {
   reload: () => void;
   dismissAlert: (id: string) => void;
+  dismissViralAlert: (id: string) => void;
   /** Workflow calls; each resolves with the full incident or throws an Error with a Polish message. */
   transition: (id: string, body: TransitionRequest) => Promise<Incident>;
   assign: (id: string) => Promise<Incident>;
@@ -30,6 +31,7 @@ export function toSummary(inc: Incident): IncidentSummary {
     advertiser: inc.entities.advertiser?.name ?? null, firm: inc.entities.investment_firm?.name ?? null,
     failed_rules: inc.rules.filter((r) => r.status === "fail").map((r) => r.id),
     workflow: { assigned_to: inc.workflow.assigned_to, label: inc.workflow.label },
+    user_reports_count: inc.user_reports_count ?? 0, priority_score: inc.priority_score ?? inc.risk_score,
   };
 }
 
@@ -90,6 +92,8 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
     markFresh(incident.id);
   });
 
+  useLiveEvent("alert:viral", (incident) => dispatch({ type: "alert:viral", incident }));
+
   const run = useCallback(async (call: () => Promise<Incident>) => {
     try {
       const updated = await call();
@@ -106,9 +110,11 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
   const reload = useCallback(() => load(), [load]);
   const dismissAlert = useCallback((id: string) => dispatch({ type: "alert:dismiss", id }), []);
 
+  const dismissViralAlert = useCallback((id: string) => dispatch({ type: "alert:viral:dismiss", id }), []);
+
   const value = useMemo(
-    () => ({ ...state, reload, dismissAlert, transition, assign, setLabel, revision }),
-    [state, reload, dismissAlert, transition, assign, setLabel, revision],
+    () => ({ ...state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision }),
+    [state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision],
   );
   return <IncidentsContext.Provider value={value}>{children}</IncidentsContext.Provider>;
 }

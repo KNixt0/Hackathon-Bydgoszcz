@@ -107,6 +107,20 @@ FOR EACH ROW EXECUTE FUNCTION audit_logs_append_only()""",
 ]
 
 
+def _backfill_norm_hash(engine: Engine) -> None:
+    from app.public_reports import normalized_hash
+
+    with engine.begin() as connection:
+        rows = connection.execute(
+            text("SELECT id, source_url FROM incidents WHERE norm_url_hash IS NULL")
+        ).fetchall()
+        for row_id, source_url in rows:
+            connection.execute(
+                text("UPDATE incidents SET norm_url_hash = :h WHERE id = :id"),
+                {"h": normalized_hash(source_url or ""), "id": row_id},
+            )
+
+
 def _upgrade_data() -> None:
     """Idempotent value migrations that create_all cannot express."""
     engine = get_engine()
@@ -117,6 +131,12 @@ def _upgrade_data() -> None:
             )
             if result.rowcount:
                 log.info("migrated status", extra={"from": old, "to": new, "rows": result.rowcount})
+        for statement in (
+            "UPDATE incidents SET user_reports_count = 0 WHERE user_reports_count IS NULL",
+            "UPDATE incidents SET priority_score = risk_score WHERE priority_score IS NULL",
+        ):
+            connection.execute(text(statement))
+    _backfill_norm_hash(engine)
     if engine.dialect.name == "postgresql":
         try:
             with engine.begin() as connection:

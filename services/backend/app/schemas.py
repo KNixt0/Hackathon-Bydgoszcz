@@ -61,6 +61,30 @@ class ScanRequest(Strict):
         return value
 
 
+class PublicReportRequest(Strict):
+    """POST /api/public/reports. The comment is stored as plain text and escaped wherever it is shown."""
+
+    url: str = Field(min_length=1, max_length=2048)
+    category_hint: ModuleId | None = None
+    comment: str | None = Field(default=None, max_length=500)
+
+    @field_validator("url")
+    @classmethod
+    def _http_url(cls, value: str) -> str:
+        value = value.strip()
+        if not value.lower().startswith(("http://", "https://")):
+            raise ValueError("only http and https addresses are accepted")
+        return value
+
+    @field_validator("comment")
+    @classmethod
+    def _plain(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = "".join(ch for ch in value if ch in "\n\t" or ch.isprintable()).strip()
+        return cleaned or None
+
+
 class StatusPatch(Strict):
     """PATCH /api/incidents/{id}: alias of the transition endpoint."""
 

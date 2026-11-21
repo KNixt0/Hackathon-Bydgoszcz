@@ -75,6 +75,7 @@
   .overview { grid-template-columns: minmax(0, 1fr); }
   .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .alert { flex-wrap: wrap; }
+  .alert__body { flex: 1 1 220px; }
 }
 
 /* ── Status column: status link + assignee (contract v3 workflow) */
@@ -93,3 +94,15 @@
 .audit__case a { display: block; }
 .audit__change { display: block; color: var(--ink-2); }
 .audit__reason { max-width: 320px; overflow-wrap: anywhere; }
+
+/* ── Public reports: crowd signal and priority tier in the queue */
+.alert--viral { background: var(--orange-soft); border-color: var(--orange-line); border-left-width: 1px; }
+.alert--viral > svg { color: var(--orange-ink); }
+.alert--viral .alert__title { color: var(--orange-ink); }
+.queue__crowd { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 4px; font-size: var(--fs-sm); }
+.queue__reports { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tier { display: inline-flex; align-items: center; gap: 5px; padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); font-size: var(--fs-xs); font-weight: 500; color: var(--ink-2); background: var(--surface); }
+.tier svg { width: 12px; height: 12px; flex: none; }
+.tier--critical_viral { border-color: var(--red-line); color: var(--red-ink); background: var(--red-soft); }
+.tier--high_risk_early { border-color: var(--orange-line); color: var(--orange-ink); background: var(--orange-soft); }
+.tier--crowd_anomaly { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }

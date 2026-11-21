@@ -36,7 +36,10 @@ export function QueuePage() {
   );
   const resetFilters = useCallback(() => setParams(filtersToSearch(EMPTY_FILTERS), { replace: true }), [setParams]);
 
-  const pinned = useMemo(() => incidents.alerts.map((a) => a.id), [incidents.alerts]);
+  const pinned = useMemo(
+    () => [...incidents.alerts, ...incidents.viralAlerts.filter((v) => !incidents.alerts.some((a) => a.id === v.id))].map((a) => a.id),
+    [incidents.alerts, incidents.viralAlerts],
+  );
   const visible = useMemo(() => applyQueue(incidents.items, filters, thresholds, pinned), [incidents.items, filters, thresholds, pinned]);
 
   // Tiles count everything that matches the other filters, so they stay useful while a level is selected.
@@ -62,7 +65,7 @@ export function QueuePage() {
         </div>
       </div>
 
-      <AlertBanner alerts={incidents.alerts} onDismiss={incidents.dismissAlert} />
+      <AlertBanner alerts={incidents.alerts} onDismiss={incidents.dismissAlert} viral={incidents.viralAlerts} onDismissViral={incidents.dismissViralAlert} />
 
       {incidents.phase === "error" ? (
         <div className="panel"><ErrorState message={incidents.error ?? ""} onRetry={incidents.reload} /></div>

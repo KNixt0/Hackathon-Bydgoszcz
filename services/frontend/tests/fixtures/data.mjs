@@ -94,6 +94,7 @@ const orangeEvidence = [
 export const orangeCase = {
   id: "3f6c1c1e-5b0a-4f0e-9a51-0c2d1e7a9b01",
   status: "in_review",
+  user_reports_count: 3,
   created_at: "2026-11-19T08:42:00Z",
   updated_at: "2026-11-20T10:05:00Z",
   workflow: { assigned_to: "analityk@uknf.local", escalation_path: null, resolution_action: null, resolution_note: "", label: "unlabeled" },
@@ -500,8 +501,27 @@ export function toSummary(inc) {
     advertiser: inc.entities.advertiser?.name ?? null, firm: inc.entities.investment_firm?.name ?? null,
     failed_rules: inc.rules.filter((r) => r.status === "fail").map((r) => r.id),
     workflow: { assigned_to: inc.workflow.assigned_to, label: inc.workflow.label },
+    user_reports_count: inc.user_reports_count ?? 0, priority_score: inc.priority_score ?? priorityScore(inc.risk_score, inc.user_reports_count ?? 0),
   };
 }
+
+/** contract v3: min(100, risk × (1 + 0.25 × log2(1 + reports))) */
+export function priorityScore(risk, reports) {
+  return Math.round(Math.min(100, risk * (1 + 0.25 * Math.log2(1 + reports))) * 100) / 100;
+}
+
+/** Public reports per labelled item (by title prefix): a critical case that went viral, early high-risk cases,
+ *  and low-score cases that users keep reporting (the crowd anomaly = a possible false negative of the model). */
+const REPORT_COUNTS = {
+  "„Podwój kapitał": 7,
+  "Kanał Telegram": 2,
+  "Webinar: emerytura": 5,
+  "Poradnik inwestycyjny": 9,
+  "Shorts:": 6,
+  "Ukryta rekomendacja": 1,
+  "Strona „O nas”": 3,
+  "Reklama IKE": 8,
+};
 
 // ───────────────────────── 30 labelled items: the calibration set (and the bulk of the queue)
 // [title, risk_score, ground_truth, module, platform, advertiser, firm, daysAgo, status, failed_rules]
@@ -539,6 +559,8 @@ const LABELLED = [
 const NOW = Date.parse("2026-11-21T09:00:00Z");
 const pad = (n) => String(n).padStart(2, "0");
 
+const reportsFor = (title) => Object.entries(REPORT_COUNTS).find(([prefix]) => title.startsWith(prefix))?.[1] ?? 0;
+
 const generated = LABELLED.map(([title, risk, gt, module, platform, advertiser, firm, daysAgo, status, failed], i) => {
   const created = new Date(NOW - daysAgo * 86400000 - (i % 7) * 3600000).toISOString();
   return {
@@ -550,6 +572,8 @@ const generated = LABELLED.map(([title, risk, gt, module, platform, advertiser, 
     status, created_at: created, updated_at: created, synthetic: true, ground_truth: gt, demo_case: null,
     source: { platform, url: `https://przyklad-${i + 1}.example/material` }, advertiser, firm, failed_rules: failed,
     workflow: { assigned_to: status === "new" ? null : "analityk@uknf.local", label: status === "false_positive" ? "false_positive" : "unlabeled" },
+    user_reports_count: reportsFor(title),
+    priority_score: priorityScore(risk, reportsFor(title)),
   };
 });
 
@@ -587,6 +611,8 @@ export function minimalIncident(summary) {
   return {
     ...summary,
     advertiser: undefined, firm: undefined, failed_rules: undefined,
+    user_reports_count: summary.user_reports_count ?? 0,
+    priority_score: summary.priority_score ?? summary.risk_score,
     workflow: {
       assigned_to: summary.workflow?.assigned_to ?? null, escalation_path: summary.status === "escalated" ? DEFAULT_PATH[summary.primary_module] : null,
       resolution_action: summary.status === "false_positive" ? "false_positive" : null, resolution_note: "", label: summary.workflow?.label ?? "unlabeled",
@@ -620,3 +646,21 @@ export const incidentsById = { [orangeCase.id]: orangeCase, [greenCase.id]: gree
 export const analystUser = { id: "u-analyst", email: "analityk@uknf.local", name: "Analityk (demo)", role: "ANALYST" };
 export const supervisorUser = { id: "u-supervisor", email: "kierownik@uknf.local", name: "Kierownik zespołu (demo)", role: "SUPERVISOR" };
 export const globalThresholds = { flag: 20, critical: 70, updated_by: null, updated_at: null };
+
+const REPORT_COMMENTS = [
+  "Widziałem tę reklamę kilka razy w tym tygodniu, obiecują zysk bez ryzyka.",
+  "Znajomy stracił pieniądze po wpłacie na tę stronę.",
+  null,
+  "Autor twierdzi, że ma zezwolenie, ale nie podaje numeru.",
+  "<b>Uwaga</b>: link prowadzi do formularza z prośbą o dane karty.",
+];
+
+/** GET /api/incidents/{id}/reports for any summary or incident: newest first, no reporter data. */
+export function reportsForCase(item, now = NOW) {
+  const count = item.user_reports_count ?? 0;
+  return Array.from({ length: Math.min(count, 50) }, (_, i) => ({
+    created_at: new Date(now - (i + 1) * 5400000).toISOString(),
+    category_hint: [1, 3, null, 2][i % 4],
+    comment: REPORT_COMMENTS[i % REPORT_COMMENTS.length],
+  }));
+}

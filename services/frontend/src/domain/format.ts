@@ -28,6 +28,14 @@ export const formatPln = (v: number | null | undefined) => (v === null || v === 
 export const formatCompact = (v: number) => compactFmt.format(v);
 export const formatPercent = (v: number | null | undefined, digits = 0) =>
   v === null || v === undefined ? "n/d" : `${(v * 100).toFixed(digits).replace(".", ",")}%`;
+/** "1 zgłoszenie", "3 zgłoszenia", "5 zgłoszeń", "22 zgłoszenia". */
+export function reportsLabel(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (n === 1) return "1 zgłoszenie";
+  if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return `${n} zgłoszenia`;
+  return `${n} zgłoszeń`;
+}
 export const formatScore = (v: number) => (Math.round(v * 10) / 10).toString().replace(".", ",");
 
 export function relativeTime(v: string, now: Date = new Date()): string {

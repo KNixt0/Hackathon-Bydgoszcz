@@ -269,3 +269,11 @@
 .history__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .history__change { font-size: var(--fs-sm); color: var(--ink-2); }
 .history__reason { font-size: var(--fs-sm); color: var(--ink); background: var(--surface-sunken); border-left: 3px solid var(--line-strong); padding: 4px 8px; margin-top: 2px; overflow-wrap: anywhere; }
+
+/* ── Public reports on the case page */
+.reports__note { margin: 0; padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.reports { list-style: none; margin: 0; padding: 0; }
+.reports__item { display: flex; flex-direction: column; gap: 2px; padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--line); }
+.reports__item:last-child { border-bottom: 0; }
+.reports__meta { font-size: var(--fs-sm); color: var(--muted); }
+.reports__comment { white-space: pre-wrap; overflow-wrap: anywhere; }

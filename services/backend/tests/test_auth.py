@@ -134,7 +134,7 @@ def protected_routes() -> list[tuple[str, str]]:
     """Every documented /api operation (routers are mounted lazily, so read the OpenAPI schema)."""
     found = []
     for path, operations in api.openapi()["paths"].items():
-        if path.startswith("/api/") and path not in PUBLIC:
+        if path.startswith("/api/") and path not in PUBLIC and not path.startswith("/api/public/"):
             found.extend((method.upper(), _concrete(path)) for method in sorted(operations))
     return found
 
@@ -168,7 +168,7 @@ def test_public_routes_stay_open(anon, samples_dir):
     assert anon.get("/api/health").status_code == 200
     assert anon.get("/api/auth/config").status_code == 200
     assert anon.get("/fixtures/green.html").status_code == 200  # the scraper's sample origin
-    assert anon.get("/api/public/anything").status_code == 404  # not guarded (no route yet)
+    assert anon.get("/api/public/anything").status_code == 404  # not guarded (no such route)
 
 
 def test_forged_or_expired_tokens_are_rejected(client, monkeypatch):

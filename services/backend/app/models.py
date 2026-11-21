@@ -52,6 +52,30 @@ class Incident(Base):
     resolution_action: Mapped[str | None] = mapped_column(String(32), nullable=True)
     resolution_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     label: Mapped[str | None] = mapped_column(String(16), index=True, nullable=True)  # None = unlabeled
+    # public reports (contract v3): nullable so existing volumes are upgraded in place (NULL = 0 / risk_score)
+    user_reports_count: Mapped[int | None] = mapped_column(Integer, nullable=True, default=0)
+    priority_score: Mapped[float | None] = mapped_column(Float, index=True, nullable=True, default=0.0)
+    norm_url_hash: Mapped[str | None] = mapped_column(String(64), index=True, nullable=True)
+
+
+class UserReport(Base):
+    """A public report. The raw IP is never stored: `reporter_hash` is a salted HMAC of it."""
+
+    __tablename__ = "user_reports"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    url: Mapped[str] = mapped_column(Text)  # as submitted
+    normalized_url: Mapped[str] = mapped_column(Text)
+    url_hash: Mapped[str] = mapped_column(String(64), index=True)  # sha256 of normalized_url
+    category_hint: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    comment: Mapped[str | None] = mapped_column(Text, nullable=True)  # plain text, escaped on output
+    reporter_hash: Mapped[str] = mapped_column(String(64), index=True)
+    incident_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("incidents.id", ondelete="SET NULL"), index=True, nullable=True
+    )
+    source: Mapped[str] = mapped_column(String(16), default="user_report")
+    job_id: Mapped[str | None] = mapped_column(String(36), index=True, nullable=True)  # scan queued for it
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, default=utcnow)
 
 
 class IncidentVersion(Base):

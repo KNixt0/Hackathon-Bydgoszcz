@@ -7,7 +7,7 @@ from datetime import UTC, date, datetime, time, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Query as SAQuery
 from sqlalchemy.orm import Session
 
@@ -17,7 +17,7 @@ from app.db import get_db, session_scope
 from app.exports import csv_export
 from app.incidents import rescan_options, to_incident, to_summary
 from app.jobs import create_job, dispatch
-from app.models import Incident, IncidentVersion, utcnow
+from app.models import Incident, IncidentVersion, UserReport, utcnow
 from app.schemas import PLATFORMS, STATUSES, LabelRequest, StatusPatch, TransitionRequest, iso
 from app.workflow import TransitionInput, WorkflowError, set_label, transition
 from app.workflow import assign as assign_case
@@ -50,7 +50,12 @@ class IncidentFilters:
         from_: Annotated[str | None, Query(alias="from", max_length=40)] = None,
         to: Annotated[str | None, Query(max_length=40)] = None,
         q: Annotated[str | None, Query(max_length=200)] = None,
+        sort: Annotated[str, Query(max_length=16)] = "risk",
+        min_reports: Annotated[int, Query(ge=0, le=100000)] = 0,
     ) -> None:
+        if sort not in ("risk", "priority"):
+            raise HTTPException(422, "'sort' must be one of: risk, priority")
+        self.sort, self.min_reports = sort, min_reports
         if source is not None and source not in PLATFORMS:
             raise HTTPException(422, f"'source' must be one of: {', '.join(PLATFORMS)}")
         if status is not None and status not in STATUSES:
@@ -74,13 +79,22 @@ class IncidentFilters:
             query = query.filter(
                 Incident.created_at <= self.end if self.end_inclusive else Incident.created_at < self.end
             )
+        if self.min_reports:
+            query = query.filter(func.coalesce(Incident.user_reports_count, 0) >= self.min_reports)
         if self.q and self.q.strip():
             needle = self.q.strip().lower().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
             query = query.filter(Incident.search_text.like(f"%{needle}%", escape="\\"))
         return query
 
 
-def _ordered(query: SAQuery) -> SAQuery:
+def _ordered(query: SAQuery, sort: str = "risk") -> SAQuery:
+    if sort == "priority":
+        return query.order_by(
+            func.coalesce(Incident.priority_score, Incident.risk_score).desc(),
+            Incident.risk_score.desc(),
+            Incident.created_at.desc(),
+            Incident.id,
+        )
     return query.order_by(Incident.risk_score.desc(), Incident.created_at.desc(), Incident.id)
 
 
@@ -100,14 +114,14 @@ def list_incidents(
 ) -> dict:
     query = filters.apply(db.query(Incident))
     total = query.count()
-    rows = _ordered(query).offset(offset).limit(limit).all()
+    rows = _ordered(query, filters.sort).offset(offset).limit(limit).all()
     return {"items": [to_summary(row) for row in rows], "total": total}
 
 
 # declared before /incidents/{incident_id} so "export.csv" is not taken for an id
 @router.get("/incidents/export.csv")
 def export_list_csv(db: Db, user: Actor, filters: Annotated[IncidentFilters, Depends()]) -> Response:
-    rows = _ordered(filters.apply(db.query(Incident))).limit(5000).all()
+    rows = _ordered(filters.apply(db.query(Incident)), filters.sort).limit(5000).all()
     body = csv_export.incidents_csv(to_summary(row) for row in rows)
     audit.record(db, user, "export", new={"format": "csv", "scope": "list", "rows": len(rows)})
     return _csv_response(body, f"investwatch-incydenty-{utcnow():%Y%m%d}.csv")
@@ -162,6 +176,27 @@ def label_incident(incident_id: str, body: LabelRequest, db: Db, user: Actor) ->
     return _commit_and_announce(db, row)
 
 
+@router.get("/incidents/{incident_id}/reports")
+def incident_reports(incident_id: str, db: Db) -> dict:
+    """Logged-in only: what citizens wrote about the case (no reporter data)."""
+    row = _get_or_404(db, incident_id)
+    return {"items": _report_items(db, row.id)}
+
+
+def _report_items(db: Session, incident_id: str, limit: int = 50) -> list[dict]:
+    reports = (
+        db.query(UserReport)
+        .filter(UserReport.incident_id == incident_id)
+        .order_by(UserReport.created_at.desc(), UserReport.id)
+        .limit(limit)
+        .all()
+    )
+    return [
+        {"created_at": iso(r.created_at), "category_hint": r.category_hint, "comment": r.comment}
+        for r in reports
+    ]
+
+
 @router.get("/incidents/{incident_id}/history")
 def incident_history(incident_id: str, db: Db) -> dict:
     row = _get_or_404(db, incident_id)
@@ -208,7 +243,7 @@ def incident_versions(incident_id: str, db: Db) -> dict:
 @router.get("/incidents/{incident_id}/export.csv")
 def export_incident_csv(incident_id: str, db: Db, user: Actor) -> Response:
     row = _get_or_404(db, incident_id)
-    body = csv_export.incident_csv(to_incident(row))
+    body = csv_export.incident_csv(to_incident(row), _report_items(db, row.id))
     audit.record(db, user, "export", incident_id=row.id, new={"format": "csv"})
     return _csv_response(body, f"investwatch-{row.id}.csv")
 
@@ -224,9 +259,13 @@ def _render(kind: str, incident_id: str, db: Session, user: Actor) -> Response:
     ):
         raise HTTPException(409, "the warning-list request is only available for Module 3 cases")
     history = audit.incident_history(db, row.id, audit.DECISION_ACTIONS)
+    reports = _report_items(db, row.id, 20)
     db.close()  # do not hold a connection while Chromium renders
     try:
-        pdf = (render_warning_list_pdf if kind == "warning_list_request" else render_pdf)(incident, history)
+        if kind == "warning_list_request":
+            pdf = render_warning_list_pdf(incident, history)
+        else:
+            pdf = render_pdf(incident, history, reports)
     except BrowserUnavailable as exc:
         raise HTTPException(503, "PDF renderer is not available") from exc
     with session_scope() as audit_db:  # only a document that was really produced is logged

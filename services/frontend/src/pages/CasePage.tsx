@@ -7,6 +7,7 @@ import { DebateBlock } from "../components/case/DebateBlock";
 import { DecisionHistory } from "../components/case/DecisionHistory";
 import { EvidenceDrawer } from "../components/case/EvidenceDrawer";
 import { EvidenceProvider } from "../components/case/EvidenceContext";
+import { UserReports } from "../components/case/UserReports";
 import { SourcesBlock } from "../components/case/SourcesBlock";
 import { VerdictBlock } from "../components/case/VerdictBlock";
 import { VISUAL_TABS, VisualsBlock, type VisualTab } from "../components/case/VisualsBlock";
@@ -14,6 +15,7 @@ import { WorkflowPanel } from "../components/case/WorkflowPanel";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { formatDateTime, hostOf } from "../domain/format";
 import { PLATFORM_LABEL } from "../domain/labels";
+import { reportsOf, tierOf } from "../domain/priority";
 import { useUser } from "../hooks/useAuth";
 import { useIncidents } from "../hooks/useIncidents";
 import { useLiveEvent } from "../hooks/useLive";
@@ -52,6 +54,8 @@ export function CasePage() {
   const [statusBusy, setStatusBusy] = useState(false);
   const history = useResource((signal) => api.history(id, signal), `history:${id}`);
   const { refresh: refreshHistory } = history;
+  const reports = useResource((signal) => api.incidentReports(id, signal), `reports:${id}`);
+  const { refresh: refreshReports } = reports;
   const [notFound, setNotFound] = useState(false);
 
   const { resource, reload, refresh, setData } = useResource(
@@ -73,6 +77,7 @@ export function CasePage() {
     if (summary.id === id) {
       refresh();
       refreshHistory();
+      refreshReports();
     }
   });
 
@@ -168,6 +173,7 @@ export function CasePage() {
           <a href="#wizualizacje">Wykresy i wizualizacje</a>
           <a href="#argumenty">Argumenty</a>
           <a href="#zrodla">Źródła dowodowe</a>
+          <a href="#zgloszenia">Zgłoszenia użytkowników</a>
           <a href="#historia">Historia decyzji</a>
         </nav>
 
@@ -179,6 +185,13 @@ export function CasePage() {
         <VisualsBlock incident={inc} tab={tab} onTabChange={setTab} />
         <DebateBlock debate={inc.debate} />
         <SourcesBlock evidence={inc.evidence} source={inc.source} onOpen={openEvidence} />
+        <UserReports
+          count={inc.user_reports_count ?? 0}
+          tier={tierOf({ risk_score: inc.risk_score, user_reports_count: reportsOf(inc) }, thresholds)}
+          items={reports.resource.phase === "ready" ? reports.resource.data.items ?? [] : null}
+          error={reports.resource.phase === "error" ? reports.resource.error : null}
+          onRetry={reports.reload}
+        />
         <DecisionHistory
           items={history.resource.phase === "ready" ? history.resource.data.items ?? [] : null}
           error={history.resource.phase === "error" ? history.resource.error : null}

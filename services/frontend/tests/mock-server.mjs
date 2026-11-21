@@ -5,7 +5,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { deflateSync, crc32 } from "node:zlib";
 import { Server } from "socket.io";
 import {
-  analystUser, globalThresholds, incidentSummaries, incidentsById, minimalIncident, redCase, supervisorUser, toSummary, trendsFrom,
+  analystUser, globalThresholds, incidentSummaries, incidentsById, minimalIncident, priorityScore, redCase, reportsForCase, supervisorUser, toSummary, trendsFrom,
 } from "./fixtures/data.mjs";
 
 const PORT = Number(process.env.MOCK_PORT) || 8000;
@@ -64,6 +64,60 @@ function transition(user, inc, body) {
   const keys = Object.keys(after).filter((k) => k === "status" || before[k] !== after[k]);
   record(user, "transition", inc.id, Object.fromEntries(keys.map((k) => [k, before[k]])), Object.fromEntries(keys.map((k) => [k, after[k]])), reason);
   return [200, updated];
+}
+
+// Public reports: remembered by url so that the second report of the same page counts (known: true).
+const publicReports = new Map(); // normalised url -> { incidentId | null, items: [] }
+const reporters = new Map(); // ip -> { hits: number[], urls: Set }
+function normalise(raw) {
+  const u = new URL(raw);
+  for (const key of [...u.searchParams.keys()]) if (/^(utm_|fbclid$|gclid$|mc_eid$|igshid$)/i.test(key)) u.searchParams.delete(key);
+  u.searchParams.sort();
+  u.hash = "";
+  return u.toString();
+}
+function handleReport(io, req, body) {
+  const ip = String(req.headers["x-real-ip"] ?? req.socket.remoteAddress ?? "");
+  const state = reporters.get(ip) ?? { hits: [], urls: new Set() };
+  reporters.set(ip, state);
+  const now = Date.now();
+  state.hits = state.hits.filter((t) => now - t < 3600000);
+  if (state.hits.length >= 20) return [429, { detail: "too many reports" }, { "Retry-After": "600" }];
+  let url;
+  try {
+    if (typeof body?.url !== "string" || !/^https?:\/\//i.test(body.url)) throw new Error("scheme");
+    url = normalise(body.url);
+  } catch {
+    return [422, { detail: "url: invalid" }, {}];
+  }
+  if (typeof body.comment === "string" && body.comment.length > 500) return [422, { detail: "comment: too long" }, {}];
+  if (/localhost|127\.0\.0\.1|\.local\b/.test(new URL(url).hostname)) return [422, { detail: "url: this address cannot be checked" }, {}];
+  state.hits.push(now);
+  const existing = [...summaries.values()].find((s) => { try { return normalise(s.source.url) === url; } catch { return false; } });
+  if (state.urls.has(url)) return [202, { status: "accepted", known: Boolean(existing) }, {}];
+  state.urls.add(url);
+  if (existing) {
+    const count = (existing.user_reports_count ?? 0) + 1;
+    const items = [...(details.get(existing.id)?.__reports ?? reportsForCase(existing))];
+    items.unshift({ created_at: new Date().toISOString(), category_hint: body.category_hint ?? null, comment: body.comment || null });
+    const updated = { ...(detailOf(existing.id)), user_reports_count: count, priority_score: priorityScore(existing.risk_score, count), __reports: items };
+    store(io, updated);
+    const summary = summaries.get(existing.id);
+    if (count === 5 && summary.risk_score >= thresholds.critical) io.emit("alert:viral", summary);
+    return [202, { status: "accepted", known: true }, {}];
+  }
+  const entry = publicReports.get(url) ?? { items: [] };
+  entry.items.unshift({ category_hint: body.category_hint ?? null, comment: body.comment || null });
+  publicReports.set(url, entry);
+  if (entry.items.length === 1) {
+    runJob(io, url, () => {
+      const incident = scannedIncident(url, body.category_hint ?? undefined);
+      const items = publicReports.get(url).items.map((r) => ({ created_at: new Date().toISOString(), ...r }));
+      const count = items.length;
+      return { ...incident, user_reports_count: count, priority_score: priorityScore(incident.risk_score, count), __reports: items };
+    });
+  }
+  return [202, { status: "accepted", known: false }, {}];
 }
 
 const send = (res, status, body, type = "application/json; charset=utf-8") => {
@@ -195,9 +249,12 @@ function filtered(query) {
   if (query.get("status")) items = items.filter((s) => s.status === query.get("status"));
   if (query.get("from")) items = items.filter((s) => s.created_at.slice(0, 10) >= query.get("from"));
   if (query.get("to")) items = items.filter((s) => s.created_at.slice(0, 10) <= query.get("to"));
+  const minReports = Number(query.get("min_reports")) || 0;
+  if (minReports) items = items.filter((s) => (s.user_reports_count ?? 0) >= minReports);
   const q = (query.get("q") ?? "").toLowerCase();
   if (q) items = items.filter((s) => `${s.title} ${s.summary} ${s.advertiser} ${s.firm}`.toLowerCase().includes(q));
-  return items.sort((a, b) => b.risk_score - a.risk_score);
+  const key = query.get("sort") === "priority" ? "priority_score" : "risk_score";
+  return items.sort((a, b) => b[key] - a[key]);
 }
 
 const csvCell = (v) => `"${String(v ?? "").replaceAll('"', '""')}"`;
@@ -236,6 +293,11 @@ const server = createServer(async (req, res) => {
     startSession(res, found);
     return send(res, 200, { user: found });
   }
+  if (path === "/api/public/reports" && method === "POST") {
+    const [status, out, headers] = handleReport(io, req, await readJson(req));
+    res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers });
+    return res.end(JSON.stringify(out));
+  }
   if (path.startsWith("/api/") && !path.startsWith("/api/public/") && !user) return send(res, 401, { detail: "authentication required" });
 
   if (path === "/api/settings/thresholds") {
@@ -256,6 +318,12 @@ const server = createServer(async (req, res) => {
     const actor = url.searchParams.get("actor");
     const items = audit.filter((e) => (!incidentId || e.incident_id === incidentId) && (!actor || e.actor_email === actor));
     return send(res, 200, { items: items.slice(0, Number(url.searchParams.get("limit")) || 200) });
+  }
+  const reportsCall = path.match(/^\/api\/incidents\/([^/]+)\/reports$/);
+  if (reportsCall) {
+    const inc = detailOf(reportsCall[1]);
+    if (!inc) return notFound(res);
+    return send(res, 200, { items: inc.__reports ?? reportsForCase(inc) });
   }
   const wfCall = path.match(/^\/api\/incidents\/([^/]+)\/(transition|assign|label|history|warning-list-request\.pdf)$/);
   if (wfCall) {

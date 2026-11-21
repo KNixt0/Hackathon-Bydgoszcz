@@ -17,6 +17,8 @@ const FIELD_LABEL: Record<string, string> = {
   rows: "Wierszy",
   url: "Adres",
   job_ids: "Zadania",
+  user_reports_count: "Liczba zgłoszeń",
+  priority_score: "Priorytet",
 };
 
 const VALUE_LABEL: Record<string, string> = {

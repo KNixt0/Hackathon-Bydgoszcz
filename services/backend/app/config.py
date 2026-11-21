@@ -64,6 +64,12 @@ class Settings(BaseSettings):
     csv_delimiter: str = ";"
     registry_max_pages: int = 60
 
+    # --- public reports (POST /api/public/reports) ---
+    public_reports_per_hour: int = 20  # per reporter (salted hash of the client IP)
+    public_reports_max_queued: int = 50  # scans started by reports that are still waiting or running
+    public_reports_salt: str = ""  # empty = derived from JWT_SECRET
+    public_reports_viral_threshold: int = 5
+
     # --- authentication ---
     app_env: Literal["development", "production"] = "development"
     jwt_secret: str = ""  # HS256 key; empty/placeholder -> refused in production, random with DEMO_LOGIN

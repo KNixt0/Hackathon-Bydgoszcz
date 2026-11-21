@@ -2,7 +2,8 @@ import type {
   EvidenceKind, GraphEdge, GraphNodeType, ModuleId, Platform, RegistryStatus, RiskLevel, RuleStatus, Status, Claim,
   Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role,
 } from "../types/incident";
-import type { AuditAction, ScanState } from "../types/api";
+import type { AuditAction, ReportCategory, ScanState } from "../types/api";
+import type { PriorityTier } from "./priority";
 
 export const LEVEL_LABEL: Record<RiskLevel, string> = {
   red: "Krytyczne",
@@ -50,6 +51,25 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   thresholds: "Zmiana progów",
   export: "Eksport",
   rescan: "Ponowne skanowanie",
+  public_report: "Zgłoszenie użytkownika",
+};
+
+export const TIER_LABEL: Record<Exclude<PriorityTier, "low_watch">, string> = {
+  critical_viral: "Krytyczne i zgłaszane",
+  high_risk_early: "Wysokie ryzyko",
+  crowd_anomaly: "Rozbieżność: zgłaszane przez użytkowników",
+};
+export const TIER_FILTER_LABEL: Record<PriorityTier, string> = { ...TIER_LABEL, low_watch: "Niskie ryzyko, mało zgłoszeń" };
+export const TIER_HINT: Record<Exclude<PriorityTier, "low_watch">, string> = {
+  critical_viral: "Wysoki wynik silnika i co najmniej 5 zgłoszeń użytkowników.",
+  high_risk_early: "Wysoki wynik silnika, jeszcze mało zgłoszeń użytkowników.",
+  crowd_anomaly: "Silnik ocenił materiał nisko, a użytkownicy zgłaszają go masowo. To możliwy fałszywie ujemny wynik modelu: warto zweryfikować ręcznie.",
+};
+
+export const REPORT_CATEGORY_LABEL: Record<ReportCategory, string> = {
+  1: "Reklama influencera lub podmiotu trzeciego",
+  2: "Materiał firmy inwestycyjnej",
+  3: "Doradztwo bez zezwolenia",
 };
 
 export const MODULE_LABEL: Record<ModuleId, string> = {

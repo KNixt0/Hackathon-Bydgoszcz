@@ -85,7 +85,7 @@ export interface ThresholdSettings {
   updated_at: string | null;
 }
 
-export type AuditAction = "login" | "assign" | "transition" | "label" | "thresholds" | "export" | "rescan";
+export type AuditAction = "login" | "assign" | "transition" | "label" | "thresholds" | "export" | "rescan" | "public_report";
 
 export interface AuditEntry {
   id: number | string;
@@ -97,4 +97,27 @@ export interface AuditEntry {
   previous: unknown;
   new: unknown;
   reason: string | null;
+}
+
+// ── Contract v3: public reports
+
+/** 1 = influencer / third-party ad, 2 = investment firm material, 3 = advice without a licence, null = unknown. */
+export type ReportCategory = 1 | 2 | 3;
+
+export interface PublicReportRequest {
+  url: string;
+  category_hint?: ReportCategory | null;
+  comment?: string;
+}
+
+export interface PublicReportAccepted {
+  status: "accepted";
+  known: boolean;
+}
+
+/** GET /api/incidents/{id}/reports (logged in only). */
+export interface CaseReport {
+  created_at: string;
+  category_hint: ReportCategory | null;
+  comment: string | null;
 }
