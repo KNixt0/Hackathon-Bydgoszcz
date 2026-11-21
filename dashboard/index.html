@@ -45,6 +45,16 @@
   li time { grid-column: 2; color: var(--faint); font-size: 12px; }
   li.fresh { animation: fresh 1.6s ease-out; }
   @keyframes fresh { from { background: rgb(138 150 255 / .14); } to { background: transparent; } }
+  .agents { display: grid; margin-bottom: 22px; }
+  .agent { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid #1a2030; }
+  .agent .st { width: 8px; height: 8px; border-radius: 50%; background: var(--off); }
+  .agent .st.online { background: var(--ok); } .agent .st.busy { background: var(--wait); }
+  .agent .nm { font-weight: 600; overflow-wrap: anywhere; }
+  .agent .meta { grid-column: 2 / -1; color: var(--muted); font-size: 12px; }
+  .agent.off { opacity: .55; }
+  .tier { font: 600 10px ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 5px; border: 1px solid var(--card-edge); color: var(--muted); }
+  .tier.strong { color: #c9a7ff; } .tier.light { color: #9be3b0; }
+  .empty { color: var(--faint); font-size: 13px; padding: 4px 0 8px; }
   .roles { display: grid; gap: 2px; margin-bottom: 22px; }
   .role { display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; padding: 8px 0; border-bottom: 1px solid #1a2030; }
   .role b { font-weight: 600; }
@@ -87,6 +97,8 @@
     <p id="err" class="err" role="alert"></p>
   </div>
   <aside>
+    <h2>Agenci</h2>
+    <div id="agents" class="agents"></div>
     <h2>Kto co robi</h2>
     <div id="roles" class="roles"></div>
     <h2>Aktywność</h2>
@@ -153,6 +165,11 @@
   // layout: returns Map key -> {kind, tx, ty, ...}
   function layout(st) {
     const out = new Map();
+    const agentByIssue = {};
+    for (const a of st.agents || []) {
+      const n = parseInt(a.working_on, 10);
+      if (n && agentStatus(a) !== "offline" && !agentByIssue[n]) agentByIssue[n] = a;
+    }
     const prByIssue = {}, loose = [];
     for (const p of st.prs || []) {
       const refs = (p.closingIssuesReferences || []).map(r => r.number);
@@ -216,8 +233,10 @@
       review: Math.max(0, zones.review.length - 8), blocked: Math.max(0, zones.blocked.length - 6) } };
 
     function item(i, pr) {
+      const ag = agentByIssue[i.number];
       return { key: "i" + i.number, n: i.number, title: i.title,
-        owner: (i.assignees || [])[0]?.login || pr?.author?.login || null, pr, labels: labelsOf(i) };
+        owner: (i.assignees || [])[0]?.login || pr?.author?.login || ag?.operator || null, pr, labels: labelsOf(i),
+        agentLabel: ag ? `${ag.tool}·${ag.model}` : null };
     }
   }
   function teamList(st) {
@@ -276,6 +295,7 @@
     prevMerged = new Set((st.merged || []).map(p => p.number));
     firstLoad = false;
 
+    renderAgents(st.agents);
     // header stats
     const c = view.counts;
     setText("s-ready", c.ready); setText("s-work", c.work); setText("s-review", c.review);
@@ -438,6 +458,12 @@
         ctx.textAlign = "left";
       }
     }
+    // which tool/model runs this agent
+    if (e.it?.agentLabel && !moving) {
+      ctx.fillStyle = C.muted; ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.textAlign = "center";
+      ctx.fillText(fit(e.it.agentLabel, 120, "600 10px ui-monospace, Menlo, monospace"), e.x, e.y + 16);
+      ctx.textAlign = "left";
+    }
     // speech bubbles
     if (!moving && !e.dying && (e.zone === "review" || e.zone === "blocked")) {
       const bx = x + 12, by = y - 58;
@@ -576,7 +602,18 @@
       "Cache odpowiedzi API", "Onboarding nowego użytkownika", "Eksport do PDF", "Integracja z mapą", "Pipeline CI", "Strona demo na finał",
       "Ranking drużyn", "Formularz zgłoszeń", "Walidacja formularzy"];
     let next = 2, prNext = 40;
-    const S = { repo: "demo/Hackathon-Bydgoszcz", owner: "KNixt0", collaborators: team, issues: [], prs: [], merged: [], events: [] };
+    const S = { repo: "demo/Hackathon-Bydgoszcz", owner: "KNixt0", collaborators: team, issues: [], prs: [], merged: [], events: [], agents: [] };
+    // A mixed fleet: different tools and models per operator (PROTOCOL §0).
+    const fleet = [
+      ["KNixt0", "claude", "opus", "strong"], ["TeoJa1", "codex", "gpt-5", "strong"], ["anusiaaa", "gemini", "2.5-pro", "strong"],
+      ["mateusz-dylewski", "claude", "sonnet", "standard"], ["mario000777", "codex", "gpt-5-mini", "standard"], ["th6lalo", "ollama", "qwen2.5-coder", "light"],
+    ];
+    const agentOf = {};
+    for (const [op, tool, model, tier] of fleet) {
+      const a = { checkin: "online", agent: `${op}/${tool}-${model}`, operator: op, tool, model, tier, working_on: "none", at: new Date().toISOString() };
+      S.agents.push(a); agentOf[op] = a;
+    }
+    const busy = (op, n) => Object.assign(agentOf[op], { checkin: n ? "busy" : "online", working_on: n ? String(n) : "none", at: new Date().toISOString() });
     const L = n => [{ name: n }];
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const ev = (actor, text) => pushFeed({ actor, text, at: new Date().toISOString(), fresh: true, local: true });
@@ -592,15 +629,16 @@
         S.issues.push(i); ev("KNixt0", `dodał zadanie #${i.number}: ${i.title}`);
       }
       if (ready.length && work.length < 6 && Math.random() < .7) {
-        const i = pick(ready), who = pick(team); i.labels = L("status:claimed"); i.assignees = [{ login: who }]; ev(who, `wziął zadanie #${i.number}`);
+        const free = team.filter(op => agentOf[op].checkin !== "busy");
+        if (free.length) { const i = pick(ready), who = pick(free), ag = agentOf[who]; i.labels = L("status:claimed"); i.assignees = [{ login: who }]; busy(who, i.number); ev(who, `wziął zadanie #${i.number} (${ag.tool}·${ag.model})`); }
       }
       if (work.length && Math.random() < .45) {
         const i = pick(work), who = i.assignees[0].login;
-        if (Math.random() < .12) { i.labels = L("status:blocked"); ev(who, `#${i.number} → zablokowane (czeka na kontrakt)`); }
+        if (Math.random() < .12) { busy(who, 0); i.labels = L("status:blocked"); ev(who, `#${i.number} → zablokowane (czeka na kontrakt)`); }
         else {
           const pr = { number: prNext++, title: i.title, author: { login: who }, isDraft: false, closingIssuesReferences: [{ number: i.number }],
             checks: [{ name: "check", state: "IN_PROGRESS" }, { name: "claude-review", state: who === "KNixt0" ? "SKIPPED" : "IN_PROGRESS" }, { name: "owner-approval", state: "FAILURE" }] };
-          S.prs.push(pr); i.labels = L("status:review"); ev(who, `otworzył PR #${pr.number}: ${pr.title}`);
+          S.prs.push(pr); i.labels = L("status:review"); busy(who, 0); ev(who, `otworzył PR #${pr.number}: ${pr.title}`);
         }
       }
       if (blocked.length && Math.random() < .25) { const i = pick(blocked); i.labels = L("status:claimed"); ev("KNixt0", `odblokował #${i.number}`); }
@@ -618,9 +656,34 @@
         S.merged.unshift({ number: p.number, title: p.title, author: p.author, closingIssuesReferences: p.closingIssuesReferences });
         S.merged = S.merged.slice(0, 16);
       }
+      for (const a of S.agents) a.at = new Date().toISOString();
       apply(JSON.parse(JSON.stringify(S)));
     }
     return tick;
+  }
+
+  // ---------- agents panel (roster issue, PROTOCOL §0) ----------
+  function agentStatus(a) {
+    const age = (Date.now() - new Date(a.at || 0)) / 60000;
+    if (a.checkin === "offline" || !(age < 30)) return "offline";
+    return a.checkin === "busy" ? "busy" : "online";
+  }
+  function renderAgents(list) {
+    const box = document.getElementById("agents");
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+    const rank = { busy: 0, online: 1, offline: 2 };
+    const sorted = [...(list || [])].sort((a, b) => rank[agentStatus(a)] - rank[agentStatus(b)]);
+    const frag = document.createDocumentFragment();
+    if (!sorted.length) frag.append(el("div", "empty", "Nikt się jeszcze nie zameldował. Agent melduje się przez ./scripts/checkin.sh."));
+    for (const a of sorted) {
+      const st = agentStatus(a), row = el("div", "agent" + (st === "offline" ? " off" : ""));
+      row.title = `operator: ${a.operator || "?"}`;
+      row.append(el("span", "st " + st), el("span", "nm", a.agent), el("span", "tier " + (a.tier || ""), a.tier || "?"));
+      const work = st === "busy" && a.working_on && a.working_on !== "none" ? ` · #${a.working_on}` : "";
+      row.append(el("span", "meta", `${a.tool || "?"} · ${a.model || "?"} · ${st === "offline" ? "offline" : st === "busy" ? "pracuje" : "wolny"}${work} · ${rel(a.at)}`));
+      frag.append(row);
+    }
+    box.replaceChildren(frag);
   }
 
   // ---------- roles panel (coord/roles.json) ----------

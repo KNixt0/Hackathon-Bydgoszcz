@@ -39,3 +39,15 @@ plan.md ─▶ Planer (Opus/high) ─▶ issues status:ready
                                      ▼
                          Lead merges ─▶ main ─▶ unblocks the next tasks
 ```
+
+## Other models (Codex, Gemini, local)
+
+The roles stay the same. Only the tool behind them changes. A non-Claude agent:
+
+1. checks in on the roster (`./swarm checkin --tool codex --model gpt-5 --tier strong`),
+2. works through `SWARM_TOOL=codex SWARM_MODEL=gpt-5 SWARM_TIER=strong ./swarm work --loop`,
+3. takes tasks matching its tier: `strong` everything, `standard` everything except `model:opus`, `light` only `size:xs`.
+
+The lead reads the roster, does roll calls and adjusts tasks to whoever is online (PROTOCOL §0, `coord/prompts/lead.md`).
+**The product itself still uses no paid APIs.** Other models are developer tools, just like Claude.
+

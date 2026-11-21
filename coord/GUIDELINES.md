@@ -20,7 +20,7 @@ Tags: **[obie]** = applies to both tasks · **[IW]** = InvestWatch (UKNF) · **[
 ## Documentation
 
 11. **[IW] No AI slop.** The README is short and technical: Quick Start (one command), hardware requirements, service configuration. Nothing else.
-12. **[obie] Documented human contribution** ([KK] §2 pt 7). AI is a support tool. Every human decision about architecture or scope goes into `coord/decisions.md`. Every PR from someone else is approved by a person (owner gate). The `Co-Authored-By` lines in commits show where AI helped.
+12. **[obie] Documented human contribution** ([KK] §2 pt 7). AI is a support tool. Every human decision about architecture or scope goes into `coord/decisions.md`. Every PR from someone else is approved by a person (owner gate). The `Co-Authored-By` lines in commits show where AI helped. Every PR has `agent:` and `model:` in its handoff block. **Every operator checks that their AI tool's terms (Claude, Codex, Gemini…) give full commercial rights to the generated code** ([KK]).
 
 ## People (not agents)
 
