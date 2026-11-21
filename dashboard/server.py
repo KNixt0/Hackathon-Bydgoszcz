@@ -77,8 +77,8 @@ class State:
         for p in data["prs"]:
             p["checks"] = checks(p.pop("statusCheckRollup", None))
         data["agents"] = parse_roster(data.pop("roster") or [])
-        data["assignments"] = {}
-        for issue in (data.get("assignments") or [])[:1]:
+        raw_assign, data["assignments"] = data.pop("assignments") or [], {}
+        for issue in raw_assign[:1]:
             for block in BLOCK.findall(issue.get("body") or ""):
                 for line in block.splitlines():
                     k, sep, v = line.split("#", 1)[0].partition(":")
