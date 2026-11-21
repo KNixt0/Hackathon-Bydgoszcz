@@ -149,6 +149,18 @@ FIVE_YEARS = rx(
     r"\bod (?:uruchomienia|debiutu)",
     r"\bcaly okres (?:dzialalnosci|oferowania)",
 )
+# A product younger than 5 years may show a shorter history if the whole offering period is covered.
+WHOLE_OFFER_PERIOD = rx(
+    r"\bcal\w+ okres\w* (?:oferowania|dzialania|istnienia|funkcjonowania|dostepnosci)",
+    r"\bod (?:poczatku|momentu|chwili|dnia) (?:oferowania|wprowadzenia|uruchomienia|startu|debiutu|powstania)",
+    r"\bod wprowadzenia (?:produktu|funduszu|strategii|oferty|na rynek)",
+    r"\bokres oferowania (?:produktu |funduszu |strategii )?(?:jest |wynosi |to )?krotsz\w+ (?:niz|od) (?:5|piec)",
+    r"\b(?:krocej|mniej) niz (?:5|piec) lat\b.{0,80}\b(?:cal\w+|pelen|pelny|wszystk\w+) (?:okres|lata)",
+)
+OFFERED_SINCE = rx(
+    r"\b(?:oferowan\w+|dostepn\w+|istni\w+|dziala\w*|notowan\w+|wprowadzon\w+|uruchomion\w+|oferujemy)"
+    r"(?: \w+){0,3} od (?:\w+ ){0,2}?(20[012]\d)\b",
+)
 SOURCE_GIVEN = rx(
     r"\bzrodlo\b",
     r"\bna podstawie danych",

@@ -33,12 +33,12 @@ export function MisclassifiedList({ data }: { data: Misclassified<CalibrationIte
   return (
     <div className="miss">
       <Column
-        testId="false-positives" title="Fałszywe alarmy" hint="zgodne, a oznaczone jako krytyczne"
-        items={data.falsePositives} empty="Przy tym progu żadna zgodna sprawa nie jest oznaczona jako krytyczna."
+        testId="false-positives" title="Fałszywe alarmy" hint="zgodne, a oflagowane"
+        items={data.falsePositives} empty="Przy tym progu żadna zgodna sprawa nie jest oflagowana."
       />
       <Column
-        testId="false-negatives" title="Przeoczone naruszenia" hint="naruszenia poniżej progu krytycznego"
-        items={data.falseNegatives} empty="Przy tym progu żadne naruszenie nie zostaje poniżej progu krytycznego."
+        testId="false-negatives" title="Przeoczone naruszenia" hint="naruszenia poniżej progu flagowania"
+        items={data.falseNegatives} empty="Przy tym progu żadne naruszenie nie zostaje poniżej progu flagowania."
       />
     </div>
   );

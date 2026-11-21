@@ -6,8 +6,8 @@ export function ConfusionMatrix({ confusion }: { confusion: Confusion }) {
     <div className="cm" role="table" aria-label="Macierz pomyłek">
       <div role="row" style={{ display: "contents" }}>
         <span className="cm__corner" role="columnheader"><span className="sr-only">Stan faktyczny</span></span>
-        <span className="cm__col" role="columnheader">Oznaczone jako krytyczne</span>
-        <span className="cm__col" role="columnheader">Poniżej progu</span>
+        <span className="cm__col" role="columnheader">Oflagowane</span>
+        <span className="cm__col" role="columnheader">Poniżej progu flagowania</span>
       </div>
       <div role="row" style={{ display: "contents" }}>
         <span className="cm__row" role="rowheader">Faktyczne naruszenie</span>

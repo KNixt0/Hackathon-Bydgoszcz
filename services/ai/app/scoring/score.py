@@ -11,6 +11,8 @@
      pattern never produces a red incident without a regulatory finding.
 4. Mitigation by upheld counter-arguments: M = min(cap, sum_j m_j * c_j)
      risk_score = 100 * raw * (1 - M)
+5. Optional LLM term (only when a model ran): + min(LLM_MAX_POINTS, LLM_CLAIM_POINTS * sum(c_k)) over
+   grounded LLM-proposed claims, capped at 100. Absent a model this term is exactly 0.
 
 Everything is monotone: a new finding never lowers the score, a new mitigating
 circumstance never raises it. No value depends on which sample is analysed.
@@ -57,7 +59,8 @@ def plugin_weight(plugin_id: str) -> float:
 class ScoreBreakdown:
     raw: float  # 0-1 before mitigation
     mitigation: float  # 0-cap
-    risk_score: float  # 0-100
+    risk_score: float  # 0-100, including the LLM term
+    llm_points: float = 0.0  # points added by grounded LLM claims (0 when no model ran)
 
 
 def aggregate(plugin_scores: dict[str, float], mitigations: list[tuple[str, float]]) -> ScoreBreakdown:
@@ -68,6 +71,12 @@ def aggregate(plugin_scores: dict[str, float], mitigations: list[tuple[str, floa
     raw = 1.0 - survive
     mitigation = min(W.MITIGATION_CAP, sum(W.MITIGATION_WEIGHTS.get(k, 0.0) * c for k, c in mitigations))
     return ScoreBreakdown(raw=raw, mitigation=mitigation, risk_score=round(100.0 * raw * (1.0 - mitigation), 1))
+
+
+def llm_adjustment(confidences: list[float]) -> float:
+    """Points added to the risk score by grounded LLM-proposed claims (capped, never negative)."""
+    total = sum(W.LLM_CLAIM_POINTS * max(0.0, min(1.0, c)) for c in confidences)
+    return round(min(W.LLM_MAX_POINTS, total), 1)
 
 
 def risk_level(risk_score: float, t_orange: float = W.T_ORANGE, t_red: float = W.T_RED) -> str:

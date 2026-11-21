@@ -29,8 +29,8 @@ REGISTRIES: dict[str, tuple[str, str]] = {
         "Lista doradców inwestycyjnych (KNF)",
         f"{_KNF}/lista_doradcow_inwestycyjnych",
     ),
-    "kirp_legal_advisers": ("Rejestr radców prawnych (KIRP)", "https://kirp.pl/"),
-    "kidp_tax_advisers": ("Rejestr doradców podatkowych (KIDP)", "https://kidp.pl/"),
+    "kirp_legal_advisers": ("Rejestr radców prawnych (KIRP)", "https://kirp.pl/krajowa-wyszukiwarka-radcow-prawnych/"),
+    "kidp_tax_advisers": ("Rejestr doradców podatkowych (KIDP)", "https://kidp.pl/wyszukaj-doradce-podatkowego"),
     # Internal UKNF source: there is no public URL and no bundled snapshot. It is fed only by
     # `context.cooperation_notified` of the analysed document.
     "uknf_cooperation_notice": ("Zgłoszenia współpracy reklamowej (źródło wewnętrzne UKNF)", ""),

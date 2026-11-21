@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 # Incident: the one schema every module ends in
 
@@ -8,7 +8,8 @@ The AI service returns an `Analysis`. The backend stores it, adds `id`, `status`
 
 - `risk_score`: continuous `0–100`, **higher = more dangerous**. This is the raw engine output and the only number the threshold slider works on.
 - `compliance_score = 100 - risk_score`, shown as "Compliance Score" (so the green demo case shows 92/100, the red one 11/100).
-- `risk_level` is derived, never stored as truth: `red` if `risk_score >= T_red`, `orange` if `>= T_orange`, else `green`. Defaults `T_red = 70`, `T_orange = 35`. The dashboard recomputes levels client-side from `risk_score` whenever the slider moves.
+- `risk_level` is derived, never stored as truth: `red` if `risk_score >= T_red`, `orange` if `>= T_orange`, else `green`. Defaults `T_red = 70`, `T_orange = 20`. The dashboard recomputes levels client-side from `risk_score` whenever the slider moves.
+- **Flagged** (what the calibration panel counts as a detection) = `risk_score >= T_orange`, i.e. orange or red. `T_orange` is the calibration threshold; `T_red` only separates "needs review" from "critical" and drives the live alert.
 
 ## Types
 

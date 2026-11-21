@@ -1,10 +1,13 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { DEFAULT_THRESHOLDS, normalizeThresholds, type Thresholds } from "../domain/levels";
 
-const STORAGE_KEY = "investwatch.thresholds.v1";
+// v2: the default orange (flag) threshold moved from 35 to 20 with incident contract v2; v1 values are ignored.
+const STORAGE_KEY = "investwatch.thresholds.v2";
+const LEGACY_KEYS = ["investwatch.thresholds.v1"];
 
 export function readStoredThresholds(): Thresholds {
   try {
+    for (const key of LEGACY_KEYS) window.localStorage.removeItem(key);
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_THRESHOLDS;
     const parsed: unknown = JSON.parse(raw);
@@ -38,8 +41,9 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
   const setThresholds = useCallback((next: Partial<Thresholds>) => {
     setState((prev) => {
       let merged = { ...prev, ...next };
-      // Moving one handle past the other pushes the other along instead of blocking.
-      if (next.red !== undefined && next.orange === undefined && merged.orange > merged.red) merged = { ...merged, orange: merged.red };
+      // The flag threshold is primary: the critical threshold never drops below it, and raising
+      // the flag threshold past the critical one pushes the critical one along.
+      if (next.red !== undefined && next.orange === undefined && merged.red < merged.orange) merged = { ...merged, red: merged.orange };
       if (next.orange !== undefined && next.red === undefined && merged.orange > merged.red) merged = { ...merged, red: merged.orange };
       const normalized = normalizeThresholds(merged);
       store(normalized);

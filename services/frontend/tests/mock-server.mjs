@@ -123,9 +123,9 @@ function scannedIncident(url, moduleHint) {
   return minimalIncident({
     id: randomUUID(), title: `Skan: ${host}`, summary: "Materiał pobrany na żądanie analityka i oceniony przez silnik.",
     modules: [module], primary_module: module, risk_score: risk, compliance_score: 100 - risk,
-    risk_level: risk >= 70 ? "red" : risk >= 35 ? "orange" : "green", status: "new", created_at: now, updated_at: now,
+    risk_level: risk >= 70 ? "red" : risk >= 20 ? "orange" : "green", status: "new", created_at: now, updated_at: now,
     synthetic: false, ground_truth: null, demo_case: null, source: { platform: "web", url }, advertiser: host, firm: null,
-    failed_rules: risk >= 35 ? ["4"] : [],
+    failed_rules: risk >= 20 ? ["4"] : [],
   });
 }
 

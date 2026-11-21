@@ -39,6 +39,20 @@ def comparisons(v: RuleView) -> RuleOutcome:
     return passed("Wykryto porównanie; podano źródło informacji i przyjęte założenia.", 0.7, ev)
 
 
+def _covers_whole_offer(v: RuleView, hist: str) -> bool:
+    """Product younger than 5 years: a stated shorter period is enough if it spans the whole offering time."""
+    folded = v.page.folded
+    if lx.WHOLE_OFFER_PERIOD.search(folded):
+        return True
+    since = lx.OFFERED_SINCE.search(folded)
+    # the year of the offering start is not a performance year
+    years = {int(y) for y in _YEAR.findall(lx.OFFERED_SINCE.sub(" ", hist))}
+    if since and years:
+        start = int(since.group(1))
+        return min(years) <= start and max(years) - start < 5  # history starts with the offer, offer < 5 years old
+    return False
+
+
 @rule("12a", "Wyniki historyczne: okres i zakres", "art. 44 ust. 4 rozporządzenia del. 2017/565")
 def history_period(v: RuleView) -> RuleOutcome:
     if not v.facts.historical:
@@ -47,8 +61,9 @@ def history_period(v: RuleView) -> RuleOutcome:
     years = {int(y) for y in _YEAR.findall(hist)}
     spans = [int(b) - int(a) + 1 for a, b in _YEAR_RANGE.findall(hist)]  # "2021–2025" covers 5 years
     five_years = bool(lx.FIVE_YEARS.search(hist)) or len(years) >= 5 or any(n >= 5 for n in spans)
+    whole_offer = _covers_whole_offer(v, hist)
     missing = []
-    if not five_years:
+    if not (five_years or whole_offer):
         missing.append("wyniki nie obejmują ostatnich 5 lat (ani całego okresu oferowania)")
     if lx.SUB_YEAR_PERIOD.search(hist):
         missing.append("wyniki nie są oparte o pełne okresy 12-miesięczne")
@@ -59,6 +74,13 @@ def history_period(v: RuleView) -> RuleOutcome:
     if missing:
         return failed(
             "Niekompletna prezentacja wyników historycznych: " + "; ".join(missing) + ".", 0.8, _history_ev(v)
+        )
+    if not five_years:
+        return passed(
+            "Produkt jest oferowany krócej niż 5 lat, a wskazany okres wyników obejmuje cały okres jego oferowania; "
+            "podano okres referencyjny i źródło.",
+            0.7,
+            _history_ev(v),
         )
     return passed(
         "Wyniki historyczne obejmują 5 lat w pełnych okresach 12-miesięcznych, ze wskazaniem okresu "

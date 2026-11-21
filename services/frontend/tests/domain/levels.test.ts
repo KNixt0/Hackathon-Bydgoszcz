@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { complianceScore, countLevels, DEFAULT_THRESHOLDS, deriveLevel, normalizeThresholds } from "../../src/domain/levels";
+import { complianceScore, countLevels, DEFAULT_THRESHOLDS, deriveLevel, isFlagged, normalizeThresholds } from "../../src/domain/levels";
 
 describe("deriveLevel", () => {
-  it("uses the contract defaults (red >= 70, orange >= 35)", () => {
-    expect(DEFAULT_THRESHOLDS).toEqual({ red: 70, orange: 35 });
+  it("uses the contract defaults (red >= 70, orange >= 20)", () => {
+    expect(DEFAULT_THRESHOLDS).toEqual({ red: 70, orange: 20 });
     expect(deriveLevel(70)).toBe("red");
     expect(deriveLevel(69.9)).toBe("orange");
-    expect(deriveLevel(35)).toBe("orange");
-    expect(deriveLevel(34.9)).toBe("green");
+    expect(deriveLevel(20)).toBe("orange");
+    expect(deriveLevel(19.9)).toBe("green");
     expect(deriveLevel(0)).toBe("green");
     expect(deriveLevel(100)).toBe("red");
   });
@@ -49,10 +49,26 @@ describe("normalizeThresholds", () => {
 describe("countLevels", () => {
   const scores = [96, 72, 70, 58, 35, 34, 8];
   it("counts at the default thresholds", () => {
-    expect(countLevels(scores, DEFAULT_THRESHOLDS)).toEqual({ red: 3, orange: 2, green: 2 });
+    expect(countLevels(scores, DEFAULT_THRESHOLDS)).toEqual({ red: 3, orange: 3, green: 1 });
   });
   it("recounts when the threshold moves", () => {
     expect(countLevels(scores, { red: 50, orange: 35 })).toEqual({ red: 4, orange: 1, green: 2 });
     expect(countLevels(scores, { red: 97, orange: 0 })).toEqual({ red: 0, orange: 7, green: 0 });
+  });
+});
+
+describe("isFlagged", () => {
+  it("flags orange and red, i.e. risk_score >= orange, independently of the red threshold", () => {
+    expect(isFlagged(20)).toBe(true);
+    expect(isFlagged(19.9)).toBe(false);
+    expect(isFlagged(95, { red: 100, orange: 90 })).toBe(true);
+    expect(isFlagged(35, { red: 70, orange: 36 })).toBe(false);
+  });
+  it("agrees with deriveLevel: flagged exactly when the level is not green", () => {
+    for (const t of [DEFAULT_THRESHOLDS, { red: 50, orange: 35 }, { red: 90, orange: 10 }]) {
+      for (const score of [0, 9.9, 10, 19.9, 20, 35, 49.9, 50, 69.9, 70, 100]) {
+        expect(isFlagged(score, t)).toBe(deriveLevel(score, t) !== "green");
+      }
+    }
   });
 });

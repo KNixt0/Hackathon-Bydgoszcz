@@ -8,7 +8,7 @@ import time
 from . import __version__
 from .config import Settings
 from .context import SOCIAL_PLATFORMS, AnalysisContext
-from .debate import DebateOutcome, run_debate
+from .debate import Arbiter, DebateOutcome, run_debate
 from .llm import OllamaClient, propose_claims, rewrite_rationale
 from .plugins import get_plugins
 from .preprocess import build_embedder, preprocess
@@ -49,7 +49,9 @@ class Engine:
     def __init__(self, settings: Settings, registries: RegistryStore | None = None) -> None:
         self.settings = settings
         self.registries = registries or RegistryStore(settings.data_dir, settings.demo_overlay)
-        self.embedder = build_embedder(settings.embeddings_backend, settings.ollama_url, settings.ollama_embed_model)
+        self.embedder = build_embedder(
+            settings.embeddings_backend, settings.ollama_url, settings.ollama_embed_model, settings.llm_timeout_s
+        )
         self.plugins = get_plugins()
         self.llm = OllamaClient(settings)
 
@@ -68,6 +70,8 @@ class Engine:
             if extra:
                 outcome.extra_claims = extra
                 llm_used = True
+                # grounded model claims add a few capped points (scoring/weights.py); re-run the arbiter
+                outcome.verdict = Arbiter().decide(outcome.reports, outcome.against, extra)
             rationale = await rewrite_rationale(self.llm, outcome.verdict.rationale)
             llm_used = llm_used or rationale is not None
 
@@ -171,7 +175,7 @@ class Engine:
             graph=graph,
             forensics=forensic_res.forensics if forensic_res else None,
             financials=graph_res.financials if graph_res else None,
-            debate=outcome.to_schema(rationale),
+            debate=outcome.to_schema(rationale, self.llm.model if llm_used else None),
             evidence=ctx.evidence.items,
             recommendation=verdict.recommendation,
             engine=EngineInfo(

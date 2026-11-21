@@ -1,8 +1,8 @@
 {
  "meta": {
-  "url": "https://youtube.example/watch?v=zmyslony-portfel-xtb",
+  "url": "https://youtube.example/watch?v=zmyslony-portfel-bursztyn",
   "platform": "youtube",
-  "title": "Jak wybrać rachunek maklerski? Przegląd oferty XTB S.A. [REKLAMA]",
+  "title": "Jak wybrać rachunek maklerski? Przegląd oferty Dom Maklerski Bursztyn Przykładowy S.A. [REKLAMA]",
   "published_at": "2026-11-08",
   "author": {
    "name": "Zmyślony Portfel",
@@ -11,7 +11,7 @@
   "seed": true,
   "detected_days_ago": 6
  },
- "html_file": "case1-xtb-licencjonowana-kampania.html",
+ "html_file": "case1-bursztyn-licencjonowana-kampania.html",
  "context": {
   "synthetic": true,
   "ground_truth": null,
@@ -20,7 +20,7 @@
   "cooperation_notified": true,
   "companies": [
    {
-    "name": "XTB S.A.",
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
     "role": "investment_firm"
    }
   ],
@@ -29,7 +29,7 @@
     {
      "id": "firm",
      "type": "company",
-     "label": "XTB S.A.",
+     "label": "Dom Maklerski Bursztyn Przykładowy S.A.",
      "meta": {
       "role": "investment_firm"
      }
@@ -45,7 +45,7 @@
     {
      "id": "ad",
      "type": "ad",
-     "label": "Film: przegląd oferty XTB S.A. [REKLAMA]"
+     "label": "Film: przegląd oferty Dom Maklerski Bursztyn Przykładowy S.A. [REKLAMA]"
     }
    ],
    "edges": [

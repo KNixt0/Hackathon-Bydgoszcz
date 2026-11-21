@@ -6,10 +6,15 @@ import asyncio
 import itertools
 import json
 
+import httpx
+
 from app.config import load_settings
 from app.engine import Engine
 from app.llm import OllamaClient, propose_claims, rewrite_rationale
+from app.preprocess import HashEmbedder, OllamaEmbedder, build_embedder
 from app.schemas import Context, Document
+from app.scoring import llm_adjustment
+from app.scoring import weights as W
 
 TEXT = "Zarabiaj 20% rocznie bez ryzyka. Załóż konto już dziś, zanim będzie za późno."
 DOC = Document(url="https://test.example/x", platform="web", fetched_at="2026-11-21T12:00:00Z", text=TEXT)
@@ -79,17 +84,91 @@ def test_rewrite_rejects_new_numbers():
     assert asyncio.run(rewrite_rationale(FakeLLM("{}", None), rationale)) is None
 
 
-def test_llm_output_does_not_change_the_score(engine, registries):
-    baseline = asyncio.run(engine.analyze(DOC, Context()))
+def _llm_engine(registries, claims_json: str, rewrite: str | None) -> Engine:
     eng = Engine(load_settings(), registries)
-    eng.llm = FakeLLM(
-        json.dumps({"claims": [{"text": "Presja czasu", "quote": "zanim będzie za późno"}]}),
-        "Materiał obiecuje zysk bez ryzyka i nie zawiera ostrzeżenia, dlatego wymaga reakcji nadzoru.",
-    )
-    with_llm = asyncio.run(eng.analyze(DOC, Context()))
+    eng.llm = FakeLLM(claims_json, rewrite)
+    return eng
+
+
+GROUNDED = json.dumps({"claims": [{"text": "Presja czasu", "quote": "zanim będzie za późno"}]})
+REWRITE = "Materiał obiecuje zysk bez ryzyka i nie zawiera ostrzeżenia, dlatego wymaga reakcji nadzoru."
+
+
+def test_grounded_llm_claims_add_a_small_capped_score(engine, registries):
+    baseline = asyncio.run(engine.analyze(DOC, Context()))
+    with_llm = asyncio.run(_llm_engine(registries, GROUNDED, REWRITE).analyze(DOC, Context()))
     assert with_llm.engine.llm_used is True and with_llm.engine.model == "fake-model"
-    assert with_llm.risk_score == baseline.risk_score
+    delta = round(with_llm.risk_score - baseline.risk_score, 1)
+    assert 0 < delta <= W.LLM_MAX_POINTS
+    assert delta == llm_adjustment([0.5])
     assert with_llm.debate.arbiter_rationale.startswith("Materiał obiecuje")
     llm_claims = [c for c in with_llm.debate.claims if c.text == "Presja czasu"]
     assert len(llm_claims) == 1 and llm_claims[0].verdict == "weakened"
-    assert any(r.agent == "Model językowy (Ollama)" for r in with_llm.debate.rounds)
+    assert llm_claims[0].id in with_llm.debate.arguments_for
+    assert any(r.agent == "Model językowy (fake-model)" for r in with_llm.debate.rounds)
+    arbiter = with_llm.debate.rounds[-1]
+    assert "fake-model" in arbiter.role
+
+
+def test_ungrounded_llm_claims_do_not_move_the_score(engine, registries):
+    baseline = asyncio.run(engine.analyze(DOC, Context()))
+    fake = json.dumps({"claims": [{"text": "Zmyślona teza", "quote": "gwarantujemy 500% zysku w tydzień"}]})
+    out = asyncio.run(_llm_engine(registries, fake, None).analyze(DOC, Context()))
+    assert out.risk_score == baseline.risk_score and out.engine.llm_used is False and out.engine.model is None
+
+
+def test_llm_adjustment_is_capped_and_never_negative():
+    assert llm_adjustment([]) == 0.0
+    assert llm_adjustment([1.0] * 10) == W.LLM_MAX_POINTS == 5.0
+    assert llm_adjustment([0.0, -1.0]) == 0.0
+    assert llm_adjustment([0.5]) == 1.5
+
+
+def test_rule_based_roles_are_labelled_and_no_model_is_claimed_without_one(engine):
+    a = asyncio.run(engine.analyze(DOC, Context()))
+    assert a.engine.llm_used is False and a.engine.model is None
+    assert all(r.role.startswith("agent regułowy") for r in a.debate.rounds)
+    blob = " ".join(f"{r.agent} {r.role} {r.summary}" for r in a.debate.rounds) + a.debate.arbiter_rationale
+    assert "model" not in blob.lower() and "ollama" not in blob.lower() and "LLM" not in blob
+
+
+# ---------------------------------------------------------------- embeddings backend
+class _Resp:
+    def __init__(self, payload, status=200):
+        self._payload, self.status_code = payload, status
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise httpx.HTTPStatusError("x", request=None, response=None)
+
+    def json(self):
+        return self._payload
+
+
+def test_ollama_embedder_uses_model_vectors_and_falls_back(monkeypatch):
+    calls = []
+
+    def fake_post(url, json=None, timeout=None):
+        calls.append((url, json))
+        vec = [1.0, 0.0, 0.0] if "polecam" in json["input"] else [0.0, 1.0, 0.0]
+        return _Resp({"embeddings": [vec]})
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+    emb = build_embedder("ollama", "http://x:11434", "emb-test")
+    assert isinstance(emb, OllamaEmbedder) and emb.active == "ollama" and emb.probe()
+    assert emb.similarity("Polecam!", "polecam to") == 1.0 and emb.similarity("Polecam!", "opłaty") == 0.0
+    assert calls and calls[0][0].endswith("/api/embed") and calls[0][1]["model"] == "emb-test"
+    assert emb.similar_threshold == 0.72
+
+    def broken(url, json=None, timeout=None):
+        raise httpx.ConnectError("down")
+
+    monkeypatch.setattr(httpx, "post", broken)
+    assert emb.embed("zupełnie nowy tekst")  # hash fallback answers
+    assert emb.active == "hash-ngram" and emb.probe() is False
+    assert emb.similar_threshold == HashEmbedder().similar_threshold
+
+
+def test_hash_backend_is_default_and_ollama_needs_a_model():
+    assert isinstance(build_embedder("hash", "http://x", None), HashEmbedder)
+    assert isinstance(build_embedder("ollama", "http://x", None), HashEmbedder)

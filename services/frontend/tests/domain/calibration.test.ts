@@ -17,6 +17,14 @@ describe("confusionAt", () => {
   it("counts at threshold 50 (boundary is inclusive)", () => {
     expect(confusionAt(SET, 50)).toEqual({ tp: 3, fp: 2, fn: 1, tn: 2 });
   });
+  it("counts at the default flag threshold 20 (boundary is inclusive: the 20 ok item is a false positive)", () => {
+    expect(confusionAt(SET, 20)).toEqual({ tp: 4, fp: 3, fn: 0, tn: 1 });
+  });
+  it("counts at flag thresholds 35 and 31 on the shared overlap", () => {
+    expect(confusionAt(SET, 35)).toEqual({ tp: 3, fp: 2, fn: 1, tn: 2 });
+    expect(confusionAt(SET, 31)).toEqual({ tp: 3, fp: 2, fn: 1, tn: 2 });
+    expect(confusionAt(SET, 30)).toEqual({ tp: 4, fp: 2, fn: 0, tn: 2 });
+  });
   it("flags everything at 0 and nothing above the maximum", () => {
     expect(confusionAt(SET, 0)).toEqual({ tp: 4, fp: 4, fn: 0, tn: 0 });
     expect(confusionAt(SET, 91)).toEqual({ tp: 0, fp: 0, fn: 4, tn: 4 });
@@ -26,6 +34,23 @@ describe("confusionAt", () => {
       const c = confusionAt(calibrationSet.items, t);
       expect(c.tp + c.fp + c.fn + c.tn).toBe(calibrationSet.items.length);
     }
+  });
+});
+
+describe("calibration fixtures", () => {
+  const scoresOf = (gt: string) => calibrationSet.items.filter((i) => i.ground_truth === gt).map((i) => i.risk_score).sort((a, b) => a - b);
+  it("overlap around 15–35 so the trade-off is visible at the default flag threshold", () => {
+    const v = scoresOf("violation");
+    const ok = scoresOf("ok");
+    expect(v[0]).toBeLessThanOrEqual(20);
+    expect(Math.max(...ok)).toBeGreaterThanOrEqual(25);
+    expect(Math.max(...ok)).toBeLessThanOrEqual(35);
+    const atDefault = metricsAt(calibrationSet.items, 20);
+    const stricter = metricsAt(calibrationSet.items, 35);
+    expect(atDefault.fp).toBeGreaterThan(0);
+    expect(atDefault.fn).toBeGreaterThan(0);
+    expect(stricter.fn).toBeGreaterThan(atDefault.fn);
+    expect(stricter.fp).toBeLessThan(atDefault.fp);
   });
 });
 

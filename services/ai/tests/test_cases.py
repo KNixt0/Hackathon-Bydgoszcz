@@ -30,7 +30,7 @@ def test_case1_green(analyze_sample):
     assert a.risk_level == "green" and abs(a.compliance_score - 92) <= 3
     assert a.demo_case == "case1" and a.synthetic is True
     assert failed(a) == [] and {1, 2} <= set(a.modules) and a.primary_module == 1
-    assert a.entities.investment_firm.name == "XTB S.A."
+    assert a.entities.investment_firm.name == "Dom Maklerski Bursztyn Przykładowy S.A."
     listed = {c.registry for c in a.registry_checks if c.status == "listed"}
     assert {"knf_investment_firms", "knf_brokerage_houses", "uknf_cooperation_notice"} <= listed
     assert a.graph.flagged_paths == [] and a.forensics.anomalies == []
@@ -107,7 +107,7 @@ def test_case3_red(analyze_sample):
 
 def test_cases_are_ordered_and_separated(analyze_sample):
     scores = [analyze_sample(CASES[c]).risk_score for c in ("case1", "case2", "case3")]
-    assert scores[0] < 35 <= scores[1] < 70 <= scores[2]
+    assert scores[0] < 20 <= scores[1] < 70 <= scores[2]
 
 
 # ---------------------------------------------------------------- calibration set

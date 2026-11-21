@@ -44,6 +44,6 @@ def test_mitigation_is_capped():
 
 
 def test_levels_and_recommendations_follow_thresholds():
-    assert [risk_level(s) for s in (0, 34.9, 35, 69.9, 70, 100)] == ["green", "green", "orange", "orange", "red", "red"]
+    assert [risk_level(s) for s in (0, 19.9, 20, 69.9, 70, 100)] == ["green", "green", "orange", "orange", "red", "red"]
     assert risk_level(40, t_orange=50) == "green"
-    assert [recommendation_action(s) for s in (5, 20, 50, 80)] == ["none", "monitor", "explain", "escalate"]
+    assert [recommendation_action(s) for s in (5, 17, 50, 80)] == ["none", "monitor", "explain", "escalate"]

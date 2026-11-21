@@ -41,6 +41,7 @@ def test_m1_compliant_campaign(make_ctx):
         author=AUTHOR,
         text=f"#reklama Współpraca reklamowa z {BUR}. Link w opisie. {RISK}",
         cooperation_notified=True,
+        synthetic=True,
         companies=[{"name": BUR, "role": "investment_firm"}],
     )
     assert {"FIRM_REGISTERED", "COOPERATION_NOTIFIED", "AD_MARKED"} <= codes(res)
@@ -85,6 +86,7 @@ def test_m1_warning_list_and_inactive_legal_adviser(make_ctx):
         author=AUTHOR,
         text="Fikcja Trade Solutions OÜ to pewny zysk. Link w bio.",
         declared={"legal_adviser_name": "Marek Nieistniejący", "legal_adviser_no": "XX-90001"},
+        synthetic=True,
     )
     assert {"WARNING_LISTED", "LEGAL_ADVISER_INACTIVE"} <= codes(res)
     kirp = next(c for c in res.registry_checks if c.registry == "kirp_legal_advisers")
@@ -159,6 +161,7 @@ def test_m3_fake_and_valid_licence(make_ctx):
         platform="instagram",
         author=AUTHOR,
         text="Mentoring inwestycyjny. Doradca inwestycyjny, licencja nr 7777, powie Ci, które spółki kupić.",
+        synthetic=True,
     )
     assert "FAKE_LICENCE" in codes(res)
     assert next(c for c in res.registry_checks if c.registry == "knf_investment_advisors").status == "not_listed"
@@ -179,7 +182,7 @@ def test_m3_brand_impersonation(make_ctx):
 
 
 def test_m3_tax_adviser_check(make_ctx):
-    res, _ = run(make_ctx, "m3_shadow_advisory", text=OFFER, declared={"tax_adviser_no": "12345"})
+    res, _ = run(make_ctx, "m3_shadow_advisory", text=OFFER, declared={"tax_adviser_no": "12345"}, synthetic=True)
     assert "TAX_ADVISER_NOT_FOUND" in codes(res)
     assert next(c for c in res.registry_checks if c.registry == "kidp_tax_advisers").status == "not_listed"
 
@@ -254,7 +257,7 @@ def test_financial_flags(make_ctx):
 
 
 def test_financials_with_unknown_data_have_no_flags(make_ctx):
-    res, _ = run(make_ctx, "graph_intel", text="x", companies=[{"name": "XTB S.A.", "role": "investment_firm"}])
+    res, _ = run(make_ctx, "graph_intel", text="x", companies=[{"name": "Dom Maklerski Bursztyn Przykładowy S.A.", "role": "investment_firm"}])
     f = res.financials
     assert (f.krs, f.incorporated_on, f.age_months, f.share_capital_pln, f.statements, f.flags) == (
         None,
@@ -344,3 +347,50 @@ def test_forensics_bot_farm(make_ctx):
 def test_forensics_makes_no_claim_on_tiny_samples(make_ctx):
     res, _ = run(make_ctx, "opinion_forensics", text="Polski tekst.", comments=BOTS[:3])
     assert res.findings == [] and res.forensics.anomalies == []
+
+
+# ---------------------------------------------------------------- sample snapshots vs real input
+LICENCE_TEXT = "Mentoring inwestycyjny. Doradca inwestycyjny, licencja nr 7777, powie Ci, które spółki kupić."
+
+
+def test_sample_snapshot_miss_is_not_checked_for_real_documents(make_ctx, registries, monkeypatch):
+    monkeypatch.setitem(registries.snapshot("knf_public_warnings").meta, "synthetic_sample", True)
+    res, _ = run(
+        make_ctx,
+        "m3_shadow_advisory",
+        platform="instagram",
+        author=AUTHOR,
+        text=LICENCE_TEXT,
+        declared={"legal_adviser_name": "Jan Brak", "legal_adviser_no": "ZZ-1", "tax_adviser_no": "12345"},
+    )
+    by_reg = {c.registry: c for c in res.registry_checks}
+    for reg in ("knf_investment_advisors", "kirp_legal_advisers", "kidp_tax_advisers", "knf_public_warnings"):
+        assert by_reg[reg].status == "not_checked", reg
+        assert "próbk" in by_reg[reg].detail
+    assert not {"FAKE_LICENCE", "LEGAL_ADVISER_NOT_FOUND", "TAX_ADVISER_NOT_FOUND"} & codes(res)
+
+
+def test_sample_snapshot_hits_still_count_for_real_documents(make_ctx):
+    res, _ = run(make_ctx, "m3_shadow_advisory", text=OFFER, declared={"advisor_licence_no": "9001"})
+    assert "ADVISOR_LICENCE_VALID" in codes(res)
+
+
+def test_sample_snapshot_miss_still_accuses_synthetic_documents(make_ctx):
+    res, _ = run(
+        make_ctx,
+        "m3_shadow_advisory",
+        text=LICENCE_TEXT,
+        synthetic=True,
+        declared={"legal_adviser_name": "Jan Brak", "legal_adviser_no": "ZZ-1", "tax_adviser_no": "12345"},
+    )
+    assert {"FAKE_LICENCE", "LEGAL_ADVISER_NOT_FOUND", "TAX_ADVISER_NOT_FOUND"} <= codes(res)
+
+
+def test_public_warnings_snapshot_is_real_and_demo_entries_are_overlay(registries):
+    snap = registries.snapshot("knf_public_warnings")
+    assert not snap.meta.get("synthetic_sample") and not snap.meta.get("partial")
+    real = [e for e in snap.entries if not e.get("synthetic")]
+    assert len(real) > 600 and snap.meta["source"].startswith("official KNF page")
+    fake = [e for e in snap.entries if e.get("synthetic")]
+    assert fake and all("fikcyjny" in e["detail"] for e in fake)
+    assert registries.lookup("knf_public_warnings", "Capital Direct sp. z o.o.").entry.get("synthetic") is None

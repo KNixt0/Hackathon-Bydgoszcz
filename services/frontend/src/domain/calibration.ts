@@ -16,7 +16,7 @@ export interface Metrics extends Confusion {
 
 type Labelled = Pick<CalibrationItem, "risk_score" | "ground_truth">;
 
-/** An item is "flagged" when risk_score >= threshold (same rule as the red level). */
+/** An item is "flagged" when risk_score >= threshold; callers pass the flag threshold (T_orange). */
 export function confusionAt(items: Labelled[], threshold: number): Confusion {
   const c: Confusion = { tp: 0, fp: 0, fn: 0, tn: 0 };
   for (const it of items) {

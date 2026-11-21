@@ -1,6 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { countLevels, DEFAULT_THRESHOLDS } from "../../src/domain/levels";
 import { incidentSummaries, redSummary } from "../fixtures/data.mjs";
 import { FakeSocket, mockApi, renderApp } from "../helpers";
 
@@ -26,9 +27,11 @@ describe("triage queue", () => {
     const levels = rows().map((r) => r.dataset.level);
     expect(levels).toEqual([...levels].sort((a, b) => ["red", "orange", "green"].indexOf(a ?? "") - ["red", "orange", "green"].indexOf(b ?? "")));
     expect(within(rows()[0] as HTMLElement).getByText("Krytyczne")).toBeInTheDocument();
-    expect(count("red")).toBe("8");
-    expect(count("orange")).toBe("11");
-    expect(count("green")).toBe("11");
+    const expected = countLevels(incidentSummaries.map((i) => i.risk_score), DEFAULT_THRESHOLDS);
+    expect(count("red")).toBe(String(expected.red));
+    expect(count("orange")).toBe(String(expected.orange));
+    expect(count("green")).toBe(String(expected.green));
+    expect(screen.getByTestId("nav-flagged")).toHaveTextContent(String(expected.red + expected.orange));
   });
 
   it("derives levels from the analyst's thresholds, not from the stored risk_level", async () => {
@@ -36,7 +39,7 @@ describe("triage queue", () => {
     renderApp({ thresholds: { red: 50, orange: 20 } });
     await ready();
     expect(count("red")).toBe(String(incidentSummaries.filter((i) => i.risk_score >= 50).length));
-    expect(count("red")).not.toBe("8");
+    expect(count("red")).not.toBe(String(countLevels(incidentSummaries.map((i) => i.risk_score), DEFAULT_THRESHOLDS).red));
     expect(Number(count("red")) + Number(count("orange")) + Number(count("green"))).toBe(30);
   });
 
@@ -85,7 +88,7 @@ describe("triage queue", () => {
     const row = screen.getByText("Nowa reklama na żywo").closest("tr") as HTMLElement;
     expect(row).toHaveClass("queue__row--fresh");
     expect(within(row).getByText("Nowa")).toBeInTheDocument();
-    expect(count("orange")).toBe("12");
+    expect(count("orange")).toBe(String(countLevels(incidentSummaries.map((i) => i.risk_score), DEFAULT_THRESHOLDS).orange + 1));
     await trendRefetched(calls);
   });
 

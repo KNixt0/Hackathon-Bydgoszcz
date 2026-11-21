@@ -60,7 +60,7 @@ async def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", type=Path, action="append")
     ap.add_argument("--verbose", action="store_true")
-    ap.add_argument("--threshold", type=float, default=35.0)
+    ap.add_argument("--threshold", type=float, default=20.0)
     ap.add_argument("--only", action="append", help="only samples whose file name contains this text")
     args = ap.parse_args()
     engine = Engine(load_settings())

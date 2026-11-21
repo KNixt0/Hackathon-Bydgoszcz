@@ -51,6 +51,8 @@ def client(tmp_path_factory):
 def test_health(client):
     body = client.get("/health").json()
     assert body["status"] == "ok" and body["llm_available"] is False and body["model"] is None
+    assert body["llm_enabled"] is False
+    assert body["embeddings"] == {"requested": "hash", "backend": "hash-ngram", "model": None}
     assert body["plugins"] == [
         "m1_finfluencer",
         "m2_risk_disclosure",
@@ -154,3 +156,34 @@ def test_put_registry_errors(client):
     assert client.put("/registries/nope", json=payload).status_code == 404
     assert client.put("/registries/uknf_cooperation_notice", json=payload).status_code == 422
     assert client.put("/registries/knf_public_warnings", json={"entries": []}).status_code == 422
+
+
+def test_health_reports_models_truthfully(client, monkeypatch):
+    from app.main import app
+    from app.preprocess import OllamaEmbedder
+
+    engine = app.state.engine
+
+    class Up:
+        enabled, model = True, "gen-test"
+
+        async def available(self):
+            return True
+
+    class Down(Up):
+        async def available(self):
+            return False
+
+    emb = OllamaEmbedder("http://x:11434", "emb-test")
+    monkeypatch.setattr(emb, "_request", lambda text: [1.0, 0.0])
+    monkeypatch.setattr(engine, "embedder", emb)
+    monkeypatch.setattr(engine, "llm", Up())
+    body = client.get("/health").json()
+    assert body["llm_available"] is True and body["model"] == "gen-test"
+    assert body["embeddings"]["backend"] == "ollama" and body["embeddings"]["model"] == "emb-test"
+
+    monkeypatch.setattr(engine, "llm", Down())
+    monkeypatch.setattr(emb, "_request", lambda text: (_ for _ in ()).throw(ValueError("down")))
+    body = client.get("/health").json()
+    assert body["llm_available"] is False and body["model"] is None
+    assert body["embeddings"]["backend"] == "hash-ngram" and body["embeddings"]["model"] is None

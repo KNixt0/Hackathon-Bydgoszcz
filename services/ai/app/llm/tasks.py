@@ -3,7 +3,8 @@
 (a) rewrite the arbiter rationale in natural Polish: accepted only if it introduces no
     number that is absent from the deterministic rationale,
 (b) propose extra claims: each must carry a quote, and is accepted only if that quote is an
-    exact substring of the source text (same grounding check as for the engine's claims).
+    exact substring of the source text (same grounding check as for the engine's claims). Accepted
+    claims add a small capped number of points to the score (scoring/weights.py: LLM_MAX_POINTS).
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ import re
 from ..context import AnalysisContext
 from ..debate.critic import grounding_error
 from ..debate.models import DebateClaim
+from ..scoring import weights as W
 from .ollama import OllamaClient
 
 MAX_SOURCE_CHARS = 6000
@@ -75,12 +77,12 @@ async def propose_claims(
             text=text[:300],
             confidence=0.5,
             evidence_ids=[ev_id],
-            agent="Model językowy (Ollama)",
+            agent=f"Model językowy ({client.model})",
             code="LLM_CLAIM",
             origin="llm",
             verdict="weakened",
-            critique="Teza zaproponowana przez model językowy; cytat zweryfikowany w źródle. Nie wpływa na wynik "
-            "liczbowy, wymaga oceny analityka.",
+            critique="Teza zaproponowana przez model językowy; cytat zweryfikowany w źródle. Wpływa na wynik "
+            f"w ograniczonym stopniu (łącznie najwyżej +{W.LLM_MAX_POINTS:.0f} pkt), wymaga oceny analityka.",
         )
         if grounding_error(ctx.evidence, claim.evidence_ids) is None:
             accepted.append(claim)

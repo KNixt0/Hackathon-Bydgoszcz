@@ -13,6 +13,8 @@ from .arbiter import Arbiter, Verdict
 from .critic import Critic, World
 from .models import AgentReport, DebateClaim
 
+RULE_BASED = "agent regułowy"
+
 
 @dataclass
 class DebateOutcome:
@@ -26,17 +28,28 @@ class DebateOutcome:
     def all_claims(self) -> list[DebateClaim]:
         return [c for r in self.reports for c in r.claims] + self.extra_claims + self.against
 
-    def to_schema(self, rationale: str | None = None) -> Debate:
+    def to_schema(self, rationale: str | None = None, model: str | None = None) -> Debate:
+        """model: name of the language model, set only when it actually wrote part of the result.
+
+        The debate agents are rule-based; their roles say so, and only the rounds a model really took
+        part in name it.
+        """
         rounds = [
-            DebateRound(round=1, agent=r.agent, role=r.role, summary=r.summary, claim_ids=[c.id for c in r.claims])
+            DebateRound(
+                round=1,
+                agent=r.agent,
+                role=f"{RULE_BASED}: {r.role}",
+                summary=r.summary,
+                claim_ids=[c.id for c in r.claims],
+            )
             for r in self.reports
         ]
         if self.extra_claims:
             rounds.append(
                 DebateRound(
                     round=1,
-                    agent="Model językowy (Ollama)",
-                    role="Dodatkowe tezy, przyjmowane tylko po weryfikacji cytatu",
+                    agent=f"Model językowy ({model or 'Ollama'})",
+                    role="Dodatkowe tezy modelu, przyjmowane tylko po weryfikacji cytatu w źródle",
                     summary=f"Zaproponowane tezy: {len(self.extra_claims)}.",
                     claim_ids=[c.id for c in self.extra_claims],
                 )
@@ -45,7 +58,7 @@ class DebateOutcome:
             DebateRound(
                 round=2,
                 agent=Critic.name,
-                role=Critic.role,
+                role=f"{RULE_BASED}: {Critic.role}",
                 summary=self.critic_summary,
                 claim_ids=[c.id for c in self.against],
             )
@@ -55,7 +68,8 @@ class DebateOutcome:
             DebateRound(
                 round=3,
                 agent=Arbiter.name,
-                role=Arbiter.role,
+                role=f"{RULE_BASED}: {Arbiter.role}"
+                + (f"; uzasadnienie zredagował model {model}" if model and rationale else ""),
                 summary=v.summary,
                 claim_ids=v.arguments_for + v.arguments_against,
             )

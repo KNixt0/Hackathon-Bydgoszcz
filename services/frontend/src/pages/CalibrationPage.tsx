@@ -28,8 +28,8 @@ export function CalibrationPage() {
   const curve = useMemo(() => metricsCurve(items), [items]);
   const bins = useMemo(() => histogram(items), [items]);
   const suggested = useMemo(() => bestF1Threshold(items), [items]);
-  const metrics = useMemo(() => metricsAt(items, thresholds.red), [items, thresholds.red]);
-  const wrong = useMemo(() => misclassifiedAt(items, thresholds.red), [items, thresholds.red]);
+  const metrics = useMemo(() => metricsAt(items, thresholds.orange), [items, thresholds.orange]);
+  const wrong = useMemo(() => misclassifiedAt(items, thresholds.orange), [items, thresholds.orange]);
   const queueCounts = useMemo(() => countLevels(incidents.items.map((i) => i.risk_score), thresholds), [incidents.items, thresholds]);
 
   return (
@@ -41,11 +41,15 @@ export function CalibrationPage() {
         </div>
       </div>
 
-      <Panel title="Progi ryzyka" hint="Przeciągnij uchwyty, użyj strzałek na klawiaturze albo wpisz wartość">
+      <Panel title="Progi ryzyka" hint="Przeciągnij suwak, użyj strzałek na klawiaturze albo wpisz wartość">
         <div className="thr">
           <ThresholdControl thresholds={thresholds} onChange={setThresholds} onReset={reset} isDefault={isDefault} suggested={suggested} />
           <div className="thr__effect" role="status" aria-label="Kolejka przy tych progach">
             <span className="muted">Kolejka przy tych progach:</span>
+            <span className="thr__effect-item">
+              <strong className="num" data-testid="queue-flagged">{queueCounts.red + queueCounts.orange}</strong>
+              <span>oflagowane</span>
+            </span>
             {LEVELS.map((level) => (
               <span key={level} className="thr__effect-item">
                 <strong className="num" data-testid={`queue-${level}`}>{queueCounts[level]}</strong>
@@ -54,7 +58,7 @@ export function CalibrationPage() {
             ))}
           </div>
           <p className="thr__explain">
-            Obniżenie progu krytycznego oznacza więcej spraw jako krytyczne: mniej przeoczonych naruszeń, ale więcej fałszywych alarmów. Podniesienie progu działa odwrotnie.
+            Sprawa jest oflagowana, gdy jej wynik ryzyka jest co najmniej równy progowi flagowania (poziom „do weryfikacji” lub „krytyczne”): obniżenie progu daje mniej przeoczonych naruszeń, ale więcej fałszywych alarmów, a podniesienie działa odwrotnie. Próg krytyczny rozdziela tylko sprawy „do weryfikacji” od „krytycznych” i nie wpływa na macierz pomyłek.
           </p>
         </div>
       </Panel>
@@ -76,10 +80,10 @@ export function CalibrationPage() {
         <>
           <div className="calib-grid">
             <div className="calib-col">
-              <Panel title="Jakość przy progu krytycznym" hint={`Próg ${thresholds.red} · ${items.length} oznaczonych spraw`} flush>
+              <Panel title="Jakość przy progu flagowania" hint={`Próg ${thresholds.orange} · ${items.length} oznaczonych spraw`} flush>
                 <MetricsRow metrics={metrics} />
               </Panel>
-              <Panel title="Macierz pomyłek" hint="Alarm = wynik ryzyka co najmniej równy progowi krytycznemu">
+              <Panel title="Macierz pomyłek" hint="Alarm = wynik ryzyka co najmniej równy progowi flagowania">
                 <ConfusionMatrix confusion={metrics} />
               </Panel>
             </div>
@@ -87,12 +91,12 @@ export function CalibrationPage() {
               <Panel title="Rozkład wyników ryzyka" hint="Liczba oznaczonych spraw w przedziałach wyniku, według stanu faktycznego" flush>
                 <ScoreHistogram bins={bins} thresholds={thresholds} />
               </Panel>
-              <Panel title="Precyzja i czułość a próg" hint="Wartości miar dla każdego możliwego progu krytycznego" flush>
-                <PrCurve curve={curve} threshold={thresholds.red} />
+              <Panel title="Precyzja i czułość a próg" hint="Wartości miar dla każdego możliwego progu flagowania" flush>
+                <PrCurve curve={curve} threshold={thresholds.orange} />
               </Panel>
             </div>
           </div>
-          <Panel title="Sprawy błędnie sklasyfikowane przy tym progu" hint="Lista zmienia się razem z progiem krytycznym" flush>
+          <Panel title="Sprawy błędnie sklasyfikowane przy tym progu" hint="Lista zmienia się razem z progiem flagowania" flush>
             <MisclassifiedList data={wrong} />
           </Panel>
         </>

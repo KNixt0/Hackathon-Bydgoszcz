@@ -30,16 +30,16 @@ export function ScoreHistogram({ bins, thresholds }: Props) {
             />
             <Bar dataKey="ok" stackId="gt" fill="var(--line-strong)" isAnimationActive={false} barSize={26} />
             <Bar dataKey="violation" stackId="gt" fill="var(--accent)" isAnimationActive={false} barSize={26} />
-            <ReferenceLine x={thresholds.orange} stroke="var(--orange)" strokeWidth={2} strokeDasharray="4 3" label={{ value: `${thresholds.orange}`, position: "top", fill: "var(--orange-ink)", fontSize: 12, fontWeight: 600 }} />
-            <ReferenceLine x={thresholds.red} stroke="var(--red)" strokeWidth={2} label={{ value: `${thresholds.red}`, position: "top", fill: "var(--red-ink)", fontSize: 12, fontWeight: 600 }} />
+            <ReferenceLine x={thresholds.orange} stroke="var(--orange)" strokeWidth={2} label={{ value: `${thresholds.orange}`, position: "top", fill: "var(--orange-ink)", fontSize: 12, fontWeight: 600 }} />
+            <ReferenceLine x={thresholds.red} stroke="var(--red)" strokeWidth={2} strokeDasharray="4 3" label={{ value: `${thresholds.red}`, position: "top", fill: "var(--red-ink)", fontSize: 12, fontWeight: 600 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="legend">
         <span className="legend__item"><span className="legend__swatch" style={{ background: "var(--accent)" }} />Faktyczne naruszenia</span>
         <span className="legend__item"><span className="legend__swatch" style={{ background: "var(--line-strong)" }} />Faktycznie zgodne</span>
-        <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "var(--red)" }} />Próg krytyczny</span>
-        <span className="legend__item"><span className="legend__swatch legend__swatch--dash" style={{ borderColor: "var(--orange)" }} />Próg „do weryfikacji”</span>
+        <span className="legend__item"><span className="legend__swatch legend__swatch--dash" style={{ borderColor: "var(--red)" }} />Próg krytyczny</span>
+        <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "var(--orange)" }} />Próg flagowania</span>
       </div>
     </>
   );

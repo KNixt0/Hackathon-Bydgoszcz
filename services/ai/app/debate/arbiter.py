@@ -6,13 +6,14 @@ rationale. All wording is assembled from the claims; nothing is invented here.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from ..schemas import Recommendation
 from ..scoring import (
     ScoreBreakdown,
     aggregate,
     finding_weight,
+    llm_adjustment,
     plugin_score,
     recommendation_action,
     risk_level,
@@ -53,7 +54,10 @@ class Arbiter:
     name = "Arbiter i agregator"
     role = "Ważenie argumentów, wynik ryzyka 0–100, rekomendacja"
 
-    def decide(self, reports: list[AgentReport], against: list[DebateClaim]) -> Verdict:
+    def decide(
+        self, reports: list[AgentReport], against: list[DebateClaim], llm_claims: list[DebateClaim] | None = None
+    ) -> Verdict:
+        """llm_claims: grounded claims proposed by the optional model; they add a capped few points."""
         for_claims = [c for r in reports for c in r.claims]
         plugin_scores: dict[str, float] = {}
         for report in reports:
@@ -65,11 +69,18 @@ class Arbiter:
                 plugin_scores[result.plugin] = round(plugin_score(signals, residual), 1)
         kept_against = [c for c in against if c.verdict != "rejected"]
         breakdown = aggregate(plugin_scores, [(c.code, c.confidence) for c in kept_against])
+        llm_for = [c for c in llm_claims or [] if c.verdict != "rejected"]
+        llm_points = llm_adjustment([c.confidence for c in llm_for])
+        if llm_points:
+            breakdown = replace(
+                breakdown, llm_points=llm_points, risk_score=round(min(100.0, breakdown.risk_score + llm_points), 1)
+            )
         score = breakdown.risk_score
         level = risk_level(score)
         action = recommendation_action(score)
         kept_for = sorted(
-            (c for c in for_claims if c.verdict != "rejected"), key=lambda c: -finding_weight(c.code) * c.confidence
+            (c for c in [*for_claims, *llm_for] if c.verdict != "rejected"),
+            key=lambda c: -finding_weight(c.code) * c.confidence,
         )
         # A grave, fully upheld finding is never closed without at least monitoring.
         if action == "none" and any(c.verdict == "upheld" and finding_weight(c.code) >= 0.6 for c in kept_for):
@@ -79,6 +90,12 @@ class Arbiter:
         recommendation = Recommendation(action=action, label=label, next_step=next_step.format(topics=topics))
 
         rejected = sum(c.verdict == "rejected" for c in for_claims)
+        llm_note = (
+            f" Model językowy dodał {len(llm_for)} ugruntowanych tez (wpływ na wynik: +{llm_points:.1f} pkt, "
+            f"limit {W.LLM_MAX_POINTS:.0f} pkt)."
+            if llm_points
+            else ""
+        )
         weakened = sum(c.verdict == "weakened" for c in for_claims)
         parts = [f"Ryzyko {LEVEL_PL[level]}: {score:.0f}/100 (zgodność {100 - score:.0f}/100)."]
         if kept_for:
@@ -89,6 +106,8 @@ class Arbiter:
             parts.append(
                 "Najmocniejsze argumenty: " + " ".join(f"({i}) {c.text}" for i, c in enumerate(kept_for[:3], 1))
             )
+            if llm_note:
+                parts.append(llm_note.strip())
         else:
             parts.append("Żadna teza o naruszeniu nie utrzymała się po weryfikacji.")
         if kept_against:
@@ -109,7 +128,9 @@ class Arbiter:
             arguments_against=[c.id for c in kept_against],
             summary=(
                 f"Wynik ryzyka {score:.1f}/100 (surowy {100 * breakdown.raw:.1f}, redukcja "
-                f"{breakdown.mitigation:.0%} za okoliczności łagodzące). Rekomendacja: {label.lower()}."
+                f"{breakdown.mitigation:.0%} za okoliczności łagodzące"
+                + (f", +{llm_points:.1f} pkt za tezy modelu" if llm_points else "")
+                + f"). Rekomendacja: {label.lower()}."
             ),
         )
 

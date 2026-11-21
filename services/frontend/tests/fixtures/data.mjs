@@ -1,4 +1,4 @@
-// Contract-valid fixtures (coord/contracts/incident.md v1). Development and tests only:
+// Contract-valid fixtures (coord/contracts/incident.md v2). Development and tests only:
 // nothing in src/ imports this file, so it never reaches the production bundle.
 
 const RULE_DEFS = [
@@ -499,34 +499,34 @@ export function toSummary(inc) {
 // ───────────────────────── 30 labelled items: the calibration set (and the bulk of the queue)
 // [title, risk_score, ground_truth, module, platform, advertiser, firm, daysAgo, status, failed_rules]
 const LABELLED = [
-  ["„Podwój kapitał w 30 dni”: reklama sygnałów forex", 96, "violation", 3, "facebook", "FX Masters Club", null, 1, "escalated", ["3", "4", "7", "17"]],
-  ["Kanał Telegram z „pewnymi” typami na akcje", 91, "violation", 3, "x", "Giełdowy Insider", null, 2, "new", ["3", "7"]],
-  ["Webinar: emerytura z krypto bez ryzyka", 87, "violation", 2, "youtube", "CoinFuture Academy", "CoinFuture OÜ", 2, "in_review", ["4", "7", "10"]],
-  ["Family office z gwarantowaną stopą zwrotu 9%", 84, "violation", 3, "web", "Prestige Wealth sp. z o.o.", null, 3, "new", ["2", "7", "12a"]],
-  ["Rolka: „CFD to najprostszy sposób na pasywny dochód”", 79, "violation", 1, "instagram", "@milioner_przed30", "TopMarkets Ltd", 4, "in_review", ["1", "4", "6", "18"]],
-  ["Reklama konta demo z obietnicą bonusu 100%", 76, "violation", 2, "google_ads", "TopMarkets Ltd", "TopMarkets Ltd", 4, "new", ["4", "6"]],
-  ["Poradnik inwestycyjny z linkiem afiliacyjnym do brokera", 73, "violation", 1, "youtube", "Kanał Finansowy Spokój", "EuroBroker AS", 5, "new", ["1", "18"]],
-  ["Porównanie brokerów: ranking sponsorowany bez oznaczenia", 72, "ok", 1, "web", "PorownajBrokera.example", "EuroBroker AS", 6, "closed_ok", ["1"]],
-  ["Oferta „doradztwa majątkowego” z rekomendacjami spółek", 68, "violation", 3, "web", "Kapitał Plus Consulting", null, 6, "in_review", ["2", "3"]],
-  ["Film: jak zarobiłem 40% na kontraktach terminowych", 66, "violation", 1, "tiktok", "@trader_bartek", "TopMarkets Ltd", 7, "new", ["8", "9", "18"]],
-  ["Baner: lokata strukturyzowana do 11% rocznie", 61, "ok", 2, "google_ads", "Bank Bursztynowy S.A.", "Bank Bursztynowy S.A.", 8, "closed_ok", ["5"]],
-  ["Post sponsorowany o ETF-ach bez informacji o kosztach", 57, "violation", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 9, "in_review", ["12a"]],
-  ["Newsletter z analizą spółek i kodem rabatowym", 54, "ok", 1, "web", "Analizy Giełdowe Pro", "DM Bałtyk S.A.", 10, "closed_ok", ["18"]],
-  ["Reklama aplikacji inwestycyjnej: ryzyko drobnym drukiem", 52, "violation", 2, "instagram", "InvestApp Europe", "InvestApp Europe UAB", 11, "in_review", ["5"]],
-  ["Wpis ekspercki doradcy podatkowego o IKE i IKZE", 47, "ok", 3, "web", "Kancelaria Podatkowa Rejtan", null, 12, "closed_ok", []],
-  ["Shorts: „3 spółki, które kupiłbym dziś”", 44, "violation", 3, "youtube", "@dywidendowy", null, 13, "new", ["3"]],
-  ["Artykuł sponsorowany o funduszach obligacji", 41, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 14, "closed_ok", []],
-  ["Relacja z konferencji z logotypem brokera", 38, "ok", 1, "instagram", "@inwestorka_ewa", "EuroBroker AS", 15, "closed_ok", []],
-  ["Kampania wizerunkowa domu maklerskiego", 33, "ok", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 16, "closed_ok", []],
-  ["Podcast edukacyjny o dywersyfikacji portfela", 29, "ok", 1, "youtube", "Podcast O Pieniądzach", null, 17, "closed_ok", []],
-  ["Kalkulator prowizji na stronie brokera", 26, "ok", 2, "web", "EuroBroker AS", "EuroBroker AS", 18, "closed_ok", []],
-  ["Oferta kancelarii: obsługa prawna funduszy", 24, "ok", 3, "web", "Kancelaria Sowa i Wspólnicy", null, 19, "closed_ok", []],
-  ["Ukryta rekomendacja w recenzji książki o inwestowaniu", 22, "violation", 1, "web", "Blog Czytam o Giełdzie", "TopMarkets Ltd", 20, "new", ["18"]],
-  ["Reklama IKE z pełną informacją o ryzyku", 19, "ok", 2, "google_ads", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 21, "closed_ok", []],
-  ["Materiał edukacyjny GPW o obligacjach", 15, "ok", 2, "web", "Fundacja Edukacji Giełdowej", null, 22, "closed_ok", []],
-  ["Komunikat prasowy o wynikach kwartalnych TFI", 13, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 23, "closed_ok", []],
-  ["Strona „O nas” licencjonowanego doradcy inwestycyjnego", 11, "ok", 3, "web", "Tomasz Brzoza, doradca nr 512", null, 24, "closed_ok", []],
-  ["Ogłoszenie o walnym zgromadzeniu spółki", 6, "ok", 2, "web", "Stalprodukt Północ S.A.", null, 26, "closed_ok", []],
+  ["„Podwój kapitał w 30 dni”: reklama sygnałów forex", 89, "violation", 3, "facebook", "FX Masters Club", null, 1, "escalated", ["3", "4", "7", "17"]],
+  ["Kanał Telegram z „pewnymi” typami na akcje", 80, "violation", 3, "x", "Giełdowy Insider", null, 2, "new", ["3", "7"]],
+  ["Webinar: emerytura z krypto bez ryzyka", 72, "violation", 2, "youtube", "CoinFuture Academy", "CoinFuture OÜ", 2, "in_review", ["4", "7", "10"]],
+  ["Family office z gwarantowaną stopą zwrotu 9%", 64, "violation", 3, "web", "Prestige Wealth sp. z o.o.", null, 3, "new", ["2", "7", "12a"]],
+  ["Rolka: „CFD to najprostszy sposób na pasywny dochód”", 48, "violation", 1, "instagram", "@milioner_przed30", "TopMarkets Ltd", 4, "in_review", ["1", "4", "6", "18"]],
+  ["Reklama konta demo z obietnicą bonusu 100%", 36, "violation", 2, "google_ads", "TopMarkets Ltd", "TopMarkets Ltd", 4, "new", ["4", "6"]],
+  ["Poradnik inwestycyjny z linkiem afiliacyjnym do brokera", 34, "violation", 1, "youtube", "Kanał Finansowy Spokój", "EuroBroker AS", 5, "new", ["1", "18"]],
+  ["Porównanie brokerów: ranking sponsorowany bez oznaczenia", 31, "ok", 1, "web", "PorownajBrokera.example", "EuroBroker AS", 6, "closed_ok", ["1"]],
+  ["Oferta „doradztwa majątkowego” z rekomendacjami spółek", 33, "violation", 3, "web", "Kapitał Plus Consulting", null, 6, "in_review", ["2", "3"]],
+  ["Film: jak zarobiłem 40% na kontraktach terminowych", 30, "violation", 1, "tiktok", "@trader_bartek", "TopMarkets Ltd", 7, "new", ["8", "9", "18"]],
+  ["Baner: lokata strukturyzowana do 11% rocznie", 27, "ok", 2, "google_ads", "Bank Bursztynowy S.A.", "Bank Bursztynowy S.A.", 8, "closed_ok", ["5"]],
+  ["Post sponsorowany o ETF-ach bez informacji o kosztach", 27, "violation", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 9, "in_review", ["12a"]],
+  ["Newsletter z analizą spółek i kodem rabatowym", 24, "ok", 1, "web", "Analizy Giełdowe Pro", "DM Bałtyk S.A.", 10, "closed_ok", ["18"]],
+  ["Reklama aplikacji inwestycyjnej: ryzyko drobnym drukiem", 22, "violation", 2, "instagram", "InvestApp Europe", "InvestApp Europe UAB", 11, "in_review", ["5"]],
+  ["Wpis ekspercki doradcy podatkowego o IKE i IKZE", 21, "ok", 3, "web", "Kancelaria Podatkowa Rejtan", null, 12, "closed_ok", []],
+  ["Shorts: „3 spółki, które kupiłbym dziś”", 18, "violation", 3, "youtube", "@dywidendowy", null, 13, "new", ["3"]],
+  ["Artykuł sponsorowany o funduszach obligacji", 19, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 14, "closed_ok", []],
+  ["Relacja z konferencji z logotypem brokera", 17, "ok", 1, "instagram", "@inwestorka_ewa", "EuroBroker AS", 15, "closed_ok", []],
+  ["Kampania wizerunkowa domu maklerskiego", 15, "ok", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 16, "closed_ok", []],
+  ["Podcast edukacyjny o dywersyfikacji portfela", 13, "ok", 1, "youtube", "Podcast O Pieniądzach", null, 17, "closed_ok", []],
+  ["Kalkulator prowizji na stronie brokera", 11, "ok", 2, "web", "EuroBroker AS", "EuroBroker AS", 18, "closed_ok", []],
+  ["Oferta kancelarii: obsługa prawna funduszy", 10, "ok", 3, "web", "Kancelaria Sowa i Wspólnicy", null, 19, "closed_ok", []],
+  ["Ukryta rekomendacja w recenzji książki o inwestowaniu", 15, "violation", 1, "web", "Blog Czytam o Giełdzie", "TopMarkets Ltd", 20, "new", ["18"]],
+  ["Reklama IKE z pełną informacją o ryzyku", 9, "ok", 2, "google_ads", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 21, "closed_ok", []],
+  ["Materiał edukacyjny GPW o obligacjach", 8, "ok", 2, "web", "Fundacja Edukacji Giełdowej", null, 22, "closed_ok", []],
+  ["Komunikat prasowy o wynikach kwartalnych TFI", 7, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 23, "closed_ok", []],
+  ["Strona „O nas” licencjonowanego doradcy inwestycyjnego", 6, "ok", 3, "web", "Tomasz Brzoza, doradca nr 512", null, 24, "closed_ok", []],
+  ["Ogłoszenie o walnym zgromadzeniu spółki", 3, "ok", 2, "web", "Stalprodukt Północ S.A.", null, 26, "closed_ok", []],
 ];
 
 const NOW = Date.parse("2026-11-21T09:00:00Z");
@@ -539,7 +539,7 @@ const generated = LABELLED.map(([title, risk, gt, module, platform, advertiser, 
     title,
     summary: `Automatyczna ocena modułu ${module}: ${failed.length ? `naruszone kryteria ${failed.join(", ")}` : "nie stwierdzono naruszeń kryteriów"}.`,
     modules: [module], primary_module: module, risk_score: risk, compliance_score: 100 - risk,
-    risk_level: risk >= 70 ? "red" : risk >= 35 ? "orange" : "green",
+    risk_level: risk >= 70 ? "red" : risk >= 20 ? "orange" : "green",
     status, created_at: created, updated_at: created, synthetic: true, ground_truth: gt, demo_case: null,
     source: { platform, url: `https://przyklad-${i + 1}.example/material` }, advertiser, firm, failed_rules: failed,
   };
@@ -593,7 +593,7 @@ export function minimalIncident(summary) {
     evidence: [],
     recommendation: summary.risk_score >= 70
       ? { action: "escalate", label: "Eskalować", next_step: "Przekazać sprawę do weryfikacji przez drugiego analityka." }
-      : summary.risk_score >= 35
+      : summary.risk_score >= 20
         ? { action: "explain", label: "Wezwać do wyjaśnień", next_step: "Zweryfikować ręcznie naruszone kryteria." }
         : { action: "none", label: "Bez działań", next_step: "Zamknąć sprawę." },
     engine: { ...ENGINE, llm_used: false, model: null, duration_ms: 610 },

@@ -177,3 +177,55 @@ def test_external_stylesheet_makes_contrast_unknown(make_ctx):
     html = f'<html><head><link rel="stylesheet" href="a.css"></head><body>{CLAIM}<p>{RISK}</p></body></html>'
     rules = {r.id: r for r in run_rules(make_ctx(html=html))}
     assert rules["5"].status == "unknown" and rules["8"].status == "unknown" and rules["4"].status == "unknown"
+
+
+# ---------------------------------------------------------------- rule 12a: products younger than 5 years
+YOUNG_COMMON = "Źródło: opracowanie własne. Wyniki po uwzględnieniu opłat. Wyniki historyczne nie stanowią gwarancji. "
+
+
+def rule_result(make_ctx, rule_id: str, **kwargs):
+    ctx = make_ctx(companies=[{"name": FIRM, "role": "investment_firm"}], **kwargs)
+    return next(r for r in run_rules(ctx) if r.id == rule_id)
+
+
+def test_rule_12a_accepts_shorter_period_covering_whole_offering(make_ctx):
+    text = (
+        f"Reklama {FIRM}. Fundusz jest oferowany od 2023 r. Stopa zwrotu w latach 2023–2025 wyniosła 8%, -4% i 11% "
+        f"(pełne lata, okres 01.01.2023–31.12.2025). {YOUNG_COMMON}{RISK}"
+    )
+    r = rule_result(make_ctx, "12a", text=text)
+    assert r.status == "pass" and "krócej niż 5 lat" in r.explanation
+    explicit = text.replace("Fundusz jest oferowany od 2023 r.", "Wyniki obejmują cały okres oferowania produktu.")
+    assert rule_result(make_ctx, "12a", text=explicit).status == "pass"
+
+
+def test_rule_12a_fails_short_period_that_does_not_cover_the_offering(make_ctx):
+    # offered since 2023 but only 2025 is shown
+    only_last = (
+        f"Reklama {FIRM}. Fundusz jest oferowany od 2023 r. Stopa zwrotu w 2025 r. wyniosła 9% "
+        f"(okres 01.01.2025–31.12.2025). {YOUNG_COMMON}{RISK}"
+    )
+    assert rule_result(make_ctx, "12a", text=only_last).status == "fail"
+    # a short period with no statement about the offering period
+    unstated = (
+        f"Reklama {FIRM}. Stopa zwrotu w latach 2023–2025 wyniosła 8%, -4% i 11% "
+        f"(okres 01.01.2023–31.12.2025). {YOUNG_COMMON}{RISK}"
+    )
+    assert rule_result(make_ctx, "12a", text=unstated).status == "fail"
+
+
+def test_rule_15_stays_pass_with_warning_but_forecast_is_reported(make_ctx, engine):
+    case = CASES["15"][0]
+    assert status(make_ctx, "15", case) == "pass"
+    from app.plugins import get_plugins
+
+    ctx = make_ctx(companies=[{"name": FIRM, "role": "investment_firm"}], **case)
+    res = get_plugins()["m2_risk_disclosure"].run(ctx)
+    info = next(f for f in res.findings if f.code == "FORECAST_DETECTED")
+    assert info.severity == "info" and "Prognozujemy wzrost indeksu o 5%" in info.text
+    quotes = [ctx.evidence.get(e).quote for e in info.evidence_ids if ctx.evidence.get(e).kind == "quote"]
+    assert any("Prognozujemy wzrost indeksu o 5%" in q for q in quotes) and all(q in ctx.page.text for q in quotes)
+    assert "RULE_15" not in {f.code for f in res.findings}
+    # no forecast, no finding
+    quiet = make_ctx(text=f"Reklama {FIRM}. {RISK}", companies=[{"name": FIRM, "role": "investment_firm"}])
+    assert "FORECAST_DETECTED" not in {f.code for f in get_plugins()["m2_risk_disclosure"].run(quiet).findings}

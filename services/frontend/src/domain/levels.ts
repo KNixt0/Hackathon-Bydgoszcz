@@ -3,11 +3,11 @@ import type { RiskLevel } from "../types/incident";
 export interface Thresholds {
   /** risk_score >= red → "red" */
   red: number;
-  /** risk_score >= orange (and < red) → "orange" */
+  /** risk_score >= orange (and < red) → "orange"; also the flag threshold: flagged = risk_score >= orange */
   orange: number;
 }
 
-export const DEFAULT_THRESHOLDS: Thresholds = { red: 70, orange: 35 };
+export const DEFAULT_THRESHOLDS: Thresholds = { red: 70, orange: 20 };
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -28,6 +28,11 @@ export function deriveLevel(riskScore: number, t: Thresholds = DEFAULT_THRESHOLD
 
 export function complianceScore(riskScore: number): number {
   return Math.round(clamp(100 - riskScore, 0, 100));
+}
+
+/** "Flagged" (a detection in the calibration panel) = orange or red = risk_score >= T_orange. */
+export function isFlagged(riskScore: number, t: Thresholds = DEFAULT_THRESHOLDS): boolean {
+  return riskScore >= t.orange;
 }
 
 export const LEVEL_ORDER: Record<RiskLevel, number> = { red: 0, orange: 1, green: 2 };

@@ -71,10 +71,16 @@ FINDING_WEIGHTS: dict[str, float] = {
     "FRESH_ACCOUNT_CLUSTER": 0.70,
     "NAME_PATTERN_CLUSTER": 0.50,
     "FOREIGN_ORIGIN_CLUSTER": 0.40,
-    # LLM-proposed claims are shown in the debate but do not move the score by default,
-    # so the score stays reproducible with and without a model.
+    # LLM-proposed claims never enter the plugin signals (the deterministic score stays reproducible
+    # without a model); they act only through the capped adjustment below.
     "LLM_CLAIM": 0.0,
 }
+# Optional LLM participation (LLM_ENABLED=true): every grounded claim (its quote is an exact substring
+# of the source) adds LLM_CLAIM_POINTS x claim confidence points to the final risk score, and the
+# total is capped at LLM_MAX_POINTS. The model can only add risk, never remove it, and never by
+# more than 5 points, so it cannot by itself turn a green material orange (or red).
+LLM_CLAIM_POINTS = 3.0
+LLM_MAX_POINTS = 5.0
 DEFAULT_FINDING_WEIGHT = 0.25
 SEVERITY_FACTOR = {"high": 1.0, "medium": 1.0, "low": 1.0, "info": 0.0}
 
@@ -107,11 +113,14 @@ MITIGATION_WEIGHTS: dict[str, float] = {
 }
 MITIGATION_CAP = 0.30
 
-# Derived level at default thresholds (the dashboard recomputes it from risk_score).
-T_ORANGE = 35.0
+# Derived level at default thresholds (contract incident.md v2; the dashboard recomputes it
+# from risk_score). "Flagged" = risk_score >= T_ORANGE.
+T_ORANGE = 20.0
 T_RED = 70.0
 
 # Recommendation thresholds on the final risk score.
-RECOMMEND_MONITOR = 18.0
+# A single clear rule violation (about 17-21 points) is at least monitored; the inquiry
+# ("postępowanie wyjaśniające") stays for the mid range.
+RECOMMEND_MONITOR = 15.0
 RECOMMEND_EXPLAIN = 35.0
 RECOMMEND_ESCALATE = 70.0

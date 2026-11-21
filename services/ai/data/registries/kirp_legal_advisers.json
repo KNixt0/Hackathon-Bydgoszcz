@@ -1,7 +1,7 @@
 {
  "registry": "kirp_legal_advisers",
  "label": "Rejestr radców prawnych (KIRP)",
- "url": "https://kirp.pl/",
+ "url": "https://kirp.pl/krajowa-wyszukiwarka-radcow-prawnych/",
  "snapshot_date": "2026-11-21",
  "source": "SYNTHETIC SAMPLE for the hackathon demo: invented entries only, not real register data",
  "partial": true,

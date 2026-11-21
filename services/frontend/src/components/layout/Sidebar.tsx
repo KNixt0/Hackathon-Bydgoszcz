@@ -26,9 +26,13 @@ export function Sidebar({ thresholds, thresholdsAreDefault, counts, connection }
         <NavLink to="/" end className="nav__link">
           <Inbox aria-hidden="true" />
           <span className="nav__label">Kolejka spraw</span>
-          {counts && counts.red > 0 && (
-            <span className="nav__count nav__count--red" title="Sprawy krytyczne przy obecnym progu">
-              {counts.red}<span className="sr-only"> krytycznych</span>
+          {counts && counts.red + counts.orange > 0 && (
+            <span
+              className={`nav__count${counts.red > 0 ? " nav__count--red" : ""}`}
+              title={`Oflagowane: ${counts.red + counts.orange} (krytyczne ${counts.red}, do weryfikacji ${counts.orange})`}
+              data-testid="nav-flagged"
+            >
+              {counts.red + counts.orange}<span className="sr-only"> oflagowanych</span>
             </span>
           )}
         </NavLink>
@@ -41,8 +45,8 @@ export function Sidebar({ thresholds, thresholdsAreDefault, counts, connection }
       <div className="sidebar__section">
         <p className="sidebar__section-title">Obowiązujące progi ryzyka</p>
         <Link to="/kalibracja" className="threshold-card">
+          <span className="threshold-card__row"><span>Flagowanie od</span><strong className="num">{thresholds.orange}</strong></span>
           <span className="threshold-card__row"><span>Krytyczne od</span><strong className="num">{thresholds.red}</strong></span>
-          <span className="threshold-card__row"><span>Do weryfikacji od</span><strong className="num">{thresholds.orange}</strong></span>
           <span className="threshold-card__note" style={{ display: "block" }}>
             {thresholdsAreDefault ? "Wartości domyślne" : "Zmienione przez analityka"}
           </span>

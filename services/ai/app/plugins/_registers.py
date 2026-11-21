@@ -92,9 +92,25 @@ def lookup_firm(ctx: AnalysisContext, name: str) -> FirmLookup:
         )
         res.evidence_ids.append(registry_evidence(ctx, "knf_public_warnings", name, "wpis na liście ostrzeżeń"))
     else:
-        res.checks.append(make_check(ctx, "knf_public_warnings", name, "not_listed", "Brak wpisu na liście ostrzeżeń"))
+        if _sample_miss(ctx, "knf_public_warnings"):
+            res.checks.append(make_check(ctx, "knf_public_warnings", name, "not_checked", SAMPLE_DETAIL))
+        else:
+            res.checks.append(
+                make_check(ctx, "knf_public_warnings", name, "not_listed", "Brak wpisu na liście ostrzeżeń")
+            )
     cache[name] = res
     return res
+
+
+SAMPLE_DETAIL = (
+    "Migawka tego rejestru jest próbką (niepełną lub demonstracyjną); brak wpisu nie oznacza, że podmiotu "
+    "nie ma w rejestrze. Sprawdź w rejestrze źródłowym."
+)
+
+
+def _sample_miss(ctx: AnalysisContext, registry: str) -> bool:
+    """A lookup miss in a sample snapshot must not be reported against a real document."""
+    return _partial(ctx, registry) and not ctx.context.synthetic
 
 
 def _partial(ctx: AnalysisContext, registry: str) -> bool:
@@ -132,6 +148,8 @@ def check_professionals(
                     0.9,
                 )
             )
+        elif _sample_miss(ctx, reg):
+            checks.append(make_check(ctx, reg, subject, "not_checked", SAMPLE_DETAIL))
         else:
             checks.append(make_check(ctx, reg, subject, "not_listed", "Numer licencji nie występuje na liście"))
             findings.append(
@@ -152,7 +170,9 @@ def check_professionals(
             match = ctx.registries.lookup(reg, declared.legal_adviser_name)
             entry = match.entry if match and match.listed else None
         subject = " / ".join(x for x in (declared.legal_adviser_name, declared.legal_adviser_no) if x)
-        if entry is None:
+        if entry is None and _sample_miss(ctx, reg):
+            checks.append(make_check(ctx, reg, subject, "not_checked", SAMPLE_DETAIL))
+        elif entry is None:
             checks.append(make_check(ctx, reg, subject, "not_listed", "Brak wpisu w rejestrze radców prawnych"))
             findings.append(
                 PluginFinding(
@@ -192,7 +212,9 @@ def check_professionals(
         reg = "kidp_tax_advisers"
         entry = ctx.registries.lookup_number(reg, declared.tax_adviser_no)
         subject = f"doradca podatkowy nr {declared.tax_adviser_no}"
-        if entry is None:
+        if entry is None and _sample_miss(ctx, reg):
+            checks.append(make_check(ctx, reg, subject, "not_checked", SAMPLE_DETAIL))
+        elif entry is None:
             checks.append(make_check(ctx, reg, subject, "not_listed", "Brak wpisu w rejestrze doradców podatkowych"))
             findings.append(
                 PluginFinding(

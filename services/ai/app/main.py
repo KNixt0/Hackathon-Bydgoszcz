@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -42,10 +43,18 @@ def _registry_rows(with_meta: bool) -> list[dict]:
 async def health() -> dict:
     engine = _engine()
     available = await engine.llm.available()
+    embedder = engine.embedder
+    embed_ok = await asyncio.to_thread(embedder.probe)  # real request for the Ollama backend
     return {
         "status": "ok",
+        "llm_enabled": engine.llm.enabled,
         "llm_available": available,
         "model": engine.llm.model if available else None,
+        "embeddings": {
+            "requested": engine.settings.embeddings_backend,
+            "backend": embedder.active if embed_ok else "hash-ngram",
+            "model": embedder.model if embedder.active == "ollama" else None,
+        },
         "plugins": list(engine.plugins),
         "registries": _registry_rows(with_meta=False),
     }

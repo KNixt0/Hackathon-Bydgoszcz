@@ -55,6 +55,28 @@ class RiskDisclosurePlugin(Plugin):
                 )
 
         facts = ctx.facts
+        # UKNF criterion 15: the tool "flaguje w raporcie wykrycie prognozy przyszłych wyników". The rule
+        # itself may pass (warning present); the detection is reported either way, with the exact quote.
+        if facts.forecasts:
+            hit = facts.forecasts[0]
+            rule15 = next((r for r in rules if r.id == "15"), None)
+            state = {"pass": "zawiera wymagane ostrzeżenie", "fail": "nie zawiera wymaganego ostrzeżenia"}.get(
+                rule15.status if rule15 else "", "wymaga oceny"
+            )
+            findings.append(
+                PluginFinding(
+                    "FORECAST_DETECTED",
+                    "info",
+                    f"Wykryto prognozę przyszłych wyników („{ctx.page.text[hit.sentence.start : hit.sentence.end].strip()}”); "
+                    f"materiał {state}.",
+                    list(rule15.evidence_ids)
+                    if rule15 and rule15.evidence_ids
+                    else [ctx.quote(hit, label="Prognoza przyszłych wyników")],
+                    1.0,
+                    {"rule": "15", "count": len(facts.forecasts)},
+                )
+            )
+
         profit_chars = sum(s.end - s.start for s in {id(h.sentence): h.sentence for h in facts.profit_claims}.values())
         risk_chars = sum(h.end - h.start for h in facts.risk)
         ratio = profit_chars / risk_chars if risk_chars else None

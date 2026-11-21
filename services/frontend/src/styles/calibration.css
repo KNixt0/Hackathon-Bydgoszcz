@@ -16,6 +16,12 @@
   content: attr(data-value); position: absolute; left: 50%; top: -24px; transform: translateX(-50%);
   font-size: var(--fs-sm); font-weight: 600; color: var(--ink); background: var(--surface); padding: 0 4px; border-radius: 3px;
 }
+.thr__secondary { margin-top: var(--sp-4); display: grid; gap: 6px; }
+.thr__secondary-label { color: var(--muted); font-size: var(--fs-xs); }
+.thr__slider--secondary { height: 18px; margin-top: 14px; }
+.thr__track--secondary { height: 6px; background: var(--red); opacity: 0.55; }
+.thr__thumb--secondary { width: 16px; height: 16px; border-color: var(--red-ink); }
+.thr__thumb--secondary::after { top: -22px; font-size: var(--fs-xs); }
 .thr__scale { display: flex; justify-content: space-between; margin-top: 8px; color: var(--muted); font-size: var(--fs-xs); }
 .thr__inputs { display: flex; gap: var(--sp-3); align-items: flex-end; flex-wrap: wrap; }
 .thr__inputs .field { width: 128px; }

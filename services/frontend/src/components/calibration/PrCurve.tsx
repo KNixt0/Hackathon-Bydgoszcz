@@ -26,7 +26,7 @@ export function PrCurve({ curve, threshold }: Props) {
             <Line dataKey="precision" stroke="var(--accent)" strokeWidth={2} dot={false} isAnimationActive={false} type="stepAfter" connectNulls={false} />
             <Line dataKey="recall" stroke="#0e8f8f" strokeWidth={2} dot={false} isAnimationActive={false} type="stepAfter" />
             <Line dataKey="f1" stroke="var(--faint)" strokeWidth={1.5} strokeDasharray="4 3" dot={false} isAnimationActive={false} type="stepAfter" />
-            <ReferenceLine x={threshold} stroke="var(--red)" strokeWidth={2} label={{ value: `${threshold}`, position: "top", fill: "var(--red-ink)", fontSize: 12, fontWeight: 600 }} />
+            <ReferenceLine x={threshold} stroke="var(--orange)" strokeWidth={2} label={{ value: `${threshold}`, position: "top", fill: "var(--orange-ink)", fontSize: 12, fontWeight: 600 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -34,7 +34,7 @@ export function PrCurve({ curve, threshold }: Props) {
         <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "var(--accent)" }} />Precyzja</span>
         <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "#0e8f8f" }} />Czułość</span>
         <span className="legend__item"><span className="legend__swatch legend__swatch--dash" style={{ borderColor: "var(--faint)" }} />F1</span>
-        <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "var(--red)" }} />Obecny próg krytyczny</span>
+        <span className="legend__item"><span className="legend__swatch legend__swatch--line" style={{ background: "var(--orange)" }} />Obecny próg flagowania</span>
       </div>
     </>
   );

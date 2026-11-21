@@ -1,7 +1,7 @@
 {
  "registry": "kidp_tax_advisers",
  "label": "Rejestr doradców podatkowych (KIDP)",
- "url": "https://kidp.pl/",
+ "url": "https://kidp.pl/wyszukaj-doradce-podatkowego",
  "snapshot_date": "2026-11-21",
  "source": "SYNTHETIC SAMPLE for the hackathon demo: invented entries only, not real register data",
  "partial": true,

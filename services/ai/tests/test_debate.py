@@ -200,7 +200,10 @@ def test_small_comment_sample_weakens_forensics(make_ctx):
 
 def test_partial_register_snapshot_weakens_missing_licence(make_ctx):
     outcome, _ = debate(
-        make_ctx, text=f"Testowa Aurora Family Office sp. z o.o. {OFFER}", declared={"advisor_licence_no": "7777"}
+        make_ctx,
+        text=f"Testowa Aurora Family Office sp. z o.o. {OFFER}",
+        declared={"advisor_licence_no": "7777"},
+        synthetic=True,
     )
     claim = by_code(outcome, "FAKE_LICENCE")
     assert claim.verdict == "weakened" and "niepełna" in claim.critique
