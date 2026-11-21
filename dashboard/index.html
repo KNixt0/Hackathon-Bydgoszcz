@@ -45,6 +45,23 @@
   li time { grid-column: 2; color: var(--faint); font-size: 12px; }
   li.fresh { animation: fresh 1.6s ease-out; }
   @keyframes fresh { from { background: rgb(138 150 255 / .14); } to { background: transparent; } }
+  .comments { list-style: none; margin: 0 0 22px; padding: 0; }
+  .comments li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 3px 10px; padding: 9px 0; border-bottom: 1px solid #1a2030; }
+  .comments .who { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
+  .comments .head { font-size: 13px; } .comments .head a { color: var(--accent); text-decoration: none; }
+  .comments .head a:hover { text-decoration: underline; }
+  .comments .cbody { grid-column: 2; color: var(--muted); font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .comments .cbody.open { -webkit-line-clamp: unset; }
+  .comments .acts { grid-column: 2; display: flex; gap: 8px; }
+  .linkbtn { font: inherit; font-size: 12px; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
+  .linkbtn:focus-visible, .reply textarea:focus-visible, .reply button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .reply { grid-column: 2; display: grid; gap: 6px; margin-top: 4px; }
+  .reply textarea { font: inherit; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--card-edge); border-radius: 8px; padding: 8px; min-height: 70px; resize: vertical; }
+  .reply .row { display: flex; gap: 8px; align-items: center; }
+  .reply button { font: inherit; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--card-edge); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+  .reply button.primary { border-color: var(--accent); }
+  .reply .msg { font-size: 12px; color: var(--muted); }
   .agents { display: grid; margin-bottom: 22px; }
   .agent { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid #1a2030; }
   .agent .st { width: 8px; height: 8px; border-radius: 50%; background: var(--off); }
@@ -97,6 +114,8 @@
     <p id="err" class="err" role="alert"></p>
   </div>
   <aside>
+    <h2>Komentarze</h2>
+    <ol id="comments" class="comments"></ol>
     <h2>Agenci</h2>
     <div id="agents" class="agents"></div>
     <h2>Kto co robi</h2>
@@ -165,6 +184,10 @@
   // layout: returns Map key -> {kind, tx, ty, ...}
   function layout(st) {
     const out = new Map();
+    const recentComments = {};
+    for (const c of st.comments || []) {
+      if (Date.now() - new Date(c.at) < 60 * 60000 && !/```ya?ml[\s\S]*checkin:/.test(c.body || "")) recentComments[c.issue] = (recentComments[c.issue] || 0) + 1;
+    }
     const agentByIssue = {};
     for (const a of st.agents || []) {
       const n = parseInt(a.working_on, 10);
@@ -181,7 +204,7 @@
       if (pr && pr.isDraft && !labelsOf(i).has("status:review")) { zones.work.push(item(i, pr)); continue; }
       zones[zoneOf(i, pr)].push(item(i, pr));
     }
-    for (const p of loose) zones.review.push({ key: "p" + p.number, n: p.number, title: p.title, owner: p.author?.login, pr: p, isPR: true });
+    for (const p of loose) zones.review.push({ key: "p" + p.number, n: p.number, title: p.title, owner: p.author?.login, pr: p, isPR: true, comments: recentComments[p.number] || 0 });
     for (const k in zones) zones[k].sort((a, b) => a.n - b.n);
 
     // ready board: 2 columns of cards
@@ -236,7 +259,7 @@
       const ag = agentByIssue[i.number];
       return { key: "i" + i.number, n: i.number, title: i.title,
         owner: (i.assignees || [])[0]?.login || pr?.author?.login || ag?.operator || null, pr, labels: labelsOf(i),
-        agentLabel: ag ? `${ag.tool}·${ag.model}` : null };
+        agentLabel: ag ? `${ag.tool}·${ag.model}` : null, comments: recentComments[i.number] || 0 };
     }
   }
   function teamList(st) {
@@ -295,7 +318,7 @@
     prevMerged = new Set((st.merged || []).map(p => p.number));
     firstLoad = false;
 
-    renderAgents(st.agents);
+    renderAgents(st.agents); renderComments(st.comments || []);
     // header stats
     const c = view.counts;
     setText("s-ready", c.ready); setText("s-work", c.work); setText("s-review", c.review);
@@ -380,6 +403,13 @@
     else if (it.pr && e.zone !== "review") { ctx.fillStyle = C.accent; ctx.fillText("PR", e.x + w - 24, e.y + 16); }
     ctx.fillStyle = C.text; const f = "13px system-ui, sans-serif";
     ctx.font = f; ctx.fillText(fit(it.title, w - 22, f), e.x + 12, e.y + 34);
+    // new comments in the last hour
+    if (it.comments && !e.dying) {
+      const bx = e.x + w - 4, by = e.y + 2;
+      ctx.fillStyle = C.accent; rr(bx - 13, by - 9, 26, 16, 8); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = "700 10px system-ui, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("✎" + it.comments, bx, by + 3); ctx.textAlign = "left";
+    }
     // review lamps
     if (e.lamps && e.zone === "review" && !e.dying) {
       e.lamps.forEach((s, i) => {
@@ -613,6 +643,10 @@
       const a = { checkin: "online", agent: `${op}/${tool}-${model}`, operator: op, operator_name: op === "KNixt0" ? "Aleksander" : "Osoba " + op.slice(0, 3), tool, model, tier, working_on: "none", at: new Date().toISOString() };
       S.agents.push(a); agentOf[op] = a;
     }
+    S.comments = [
+      { issue: 3, author: "TeoJa1", at: new Date().toISOString(), url: "#", body: "Czy skip link ma być widoczny tylko przy fokusie?" },
+      { issue: 2, author: "KNixt0", at: new Date().toISOString(), url: "#", body: "Roll call: who operates you? operator_name required." },
+    ];
     const busy = (op, n) => Object.assign(agentOf[op], { checkin: n ? "busy" : "online", working_on: n ? String(n) : "none", at: new Date().toISOString() });
     const L = n => [{ name: n }];
     const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -660,6 +694,66 @@
       apply(JSON.parse(JSON.stringify(S)));
     }
     return tick;
+  }
+
+  // ---------- comments panel (+ reply through the local gh login) ----------
+  let replyOpen = null;   // issue number with an open reply form (skip re-render while typing)
+  function compactBody(b) {
+    const m = /```ya?ml([\s\S]*?)```/.exec(b || "");
+    if (m && /checkin:/.test(m[1])) {
+      const g = k => (new RegExp("^\\s*" + k + ":\\s*(.*)$", "m").exec(m[1]) || [])[1] || "?";
+      const owner = g("operator_name").split("#")[0].trim();
+      return `meldunek: ${g("agent").split("#")[0].trim()} · ${g("checkin").split("#")[0].trim()} · właściciel: ${owner && owner !== "?" ? owner : "BRAK"}`;
+    }
+    return (b || "").replace(/```[\s\S]*?```/g, "[blok kodu]").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function renderComments(list) {
+    if (replyOpen !== null) return;
+    const box = document.getElementById("comments");
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+    const frag = document.createDocumentFragment();
+    if (!list.length) frag.append(el("li", "empty", "Brak komentarzy."));
+    for (const c of list.slice(0, 15)) {
+      const li = el("li"); const dot = el("span", "who"); dot.style.background = tint(c.author);
+      const head = el("span", "head"); const b = el("b", null, c.author || "?");
+      const a = el("a", null, `#${c.issue}`); a.href = c.url; a.target = "_blank"; a.rel = "noopener";
+      head.append(b, " w ", a, ` · ${rel(c.at)}`);
+      const body = el("span", "cbody", compactBody(c.body));
+      const acts = el("span", "acts");
+      const more = el("button", "linkbtn", "Rozwiń"); more.type = "button";
+      more.onclick = () => { body.classList.toggle("open"); more.textContent = body.classList.contains("open") ? "Zwiń" : "Rozwiń"; };
+      const rep = el("button", "linkbtn", "Odpowiedz"); rep.type = "button";
+      rep.onclick = () => openReply(li, c);
+      acts.append(more, rep); li.append(dot, head, body, acts); frag.append(li);
+    }
+    box.replaceChildren(frag);
+  }
+  function openReply(li, c) {
+    if (li.querySelector(".reply")) return;
+    replyOpen = c.issue;
+    const form = document.createElement("form"); form.className = "reply";
+    const id = "reply-" + c.issue + "-" + Date.now();
+    const label = document.createElement("label"); label.htmlFor = id; label.className = "msg"; label.textContent = `Odpowiedź w #${c.issue} (jako Twój login gh)`;
+    const ta = document.createElement("textarea"); ta.id = id; ta.required = true; ta.maxLength = 5000;
+    ta.value = c.author ? `@${c.author} ` : "";
+    const row = document.createElement("div"); row.className = "row";
+    const send = document.createElement("button"); send.type = "submit"; send.className = "primary"; send.textContent = "Wyślij";
+    const cancel = document.createElement("button"); cancel.type = "button"; cancel.textContent = "Anuluj";
+    const msg = document.createElement("span"); msg.className = "msg"; msg.setAttribute("role", "status");
+    cancel.onclick = () => { form.remove(); replyOpen = null; };
+    form.onsubmit = async ev => {
+      ev.preventDefault();
+      if (DEMO) { msg.textContent = "W trybie demo nic nie jest wysyłane."; return; }
+      send.disabled = true; msg.textContent = "Wysyłanie…";
+      try {
+        const r = await fetch("/api/comment", { method: "POST", headers: { "Content-Type": "application/json", "X-Swarm": "1" },
+          body: JSON.stringify({ issue: c.issue, body: ta.value }) });
+        const res = await r.json();
+        if (!res.ok) throw new Error(res.error || "błąd");
+        msg.textContent = "Wysłano."; replyOpen = null; setTimeout(pollLive, 800);
+      } catch (e) { msg.textContent = "Nie wysłano: " + e.message; send.disabled = false; }
+    };
+    row.append(send, cancel, msg); form.append(label, ta, row); li.append(form); ta.focus();
   }
 
   // ---------- agents panel (roster issue, PROTOCOL §0) ----------
