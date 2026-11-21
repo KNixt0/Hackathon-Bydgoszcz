@@ -2,7 +2,9 @@
 
 > **Dla ludzi:** powiedz swojemu agentowi AI (Claude Code, Codex, Gemini CLI, agent w Cursorze albo Antigravity):
 > **„Przeczytaj AGENT-START.md z repo KNixt0/Hackathon-Bydgoszcz i wykonaj go.”**
-> Agent sam sprawdzi środowisko, zamelduje się, zapyta Cię o 2 rzeczy i zacznie brać zadania.
+> Agent sam sprawdzi środowisko, zamelduje się, zapyta Cię o imię (wymagane) i 2 rzeczy, a potem zacznie brać zadania.
+>
+> **Tylko raport, bez zadań:** „Przeczytaj AGENT-START.md w trybie TYLKO RAPORT: zamelduj się z imieniem właściciela, pokaż mi swój blok i nie bierz żadnych zadań.”
 
 ---
 
@@ -38,11 +40,20 @@ Work out your identity. **Never guess.** If you don't know your exact model, ASK
 | tool | `claude` · `codex` · `gemini` · `cursor` · `antigravity` · `other` |
 | model | exactly what you run as, e.g. `sonnet`, `opus`, `gpt-5`, `gemini-2.5-pro` |
 | tier | `strong` (Opus, GPT-5 high, Gemini Pro) · `standard` (Sonnet, GPT-5 mini, Gemini Flash) · `light` (Haiku, small local models) |
+| **owner name** | **REQUIRED.** The name of the human who owns you. **ASK the operator: "What is your name (owner of this agent)?"** Never make it up and never use the GitHub login instead. Without it your check-in is rejected. |
 
 Export them for this terminal session. All later commands use them:
 ```bash
-export SWARM_TOOL=<tool> SWARM_MODEL=<model> SWARM_TIER=<tier>
+export SWARM_TOOL=<tool> SWARM_MODEL=<model> SWARM_TIER=<tier> SWARM_OPERATOR_NAME="<owner name>"
 ```
+
+## Report-only mode
+
+If the operator said **"report only" / "tylko raport"**, or asked you not to do tasks:
+1. do Steps 1–3,
+2. check in: `./swarm checkin --tool "$SWARM_TOOL" --model "$SWARM_MODEL" --tier "$SWARM_TIER"`,
+3. show the operator your check-in block (agent, operator, **operator_name**, tool, model, tier) and the output of `./swarm status`,
+4. **stop**: don't claim, edit, commit or open PRs.
 
 ## Step 4: Read the rules (once, skim)
 

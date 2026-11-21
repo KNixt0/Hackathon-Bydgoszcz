@@ -610,7 +610,7 @@
     ];
     const agentOf = {};
     for (const [op, tool, model, tier] of fleet) {
-      const a = { checkin: "online", agent: `${op}/${tool}-${model}`, operator: op, tool, model, tier, working_on: "none", at: new Date().toISOString() };
+      const a = { checkin: "online", agent: `${op}/${tool}-${model}`, operator: op, operator_name: op === "KNixt0" ? "Aleksander" : "Osoba " + op.slice(0, 3), tool, model, tier, working_on: "none", at: new Date().toISOString() };
       S.agents.push(a); agentOf[op] = a;
     }
     const busy = (op, n) => Object.assign(agentOf[op], { checkin: n ? "busy" : "online", working_on: n ? String(n) : "none", at: new Date().toISOString() });
@@ -677,10 +677,11 @@
     if (!sorted.length) frag.append(el("div", "empty", "Nikt się jeszcze nie zameldował. Agent melduje się przez ./scripts/checkin.sh."));
     for (const a of sorted) {
       const st = agentStatus(a), row = el("div", "agent" + (st === "offline" ? " off" : ""));
+      const owner = a.operator_name && a.operator_name.trim() ? a.operator_name : null;
       row.title = `operator: ${a.operator || "?"}`;
       row.append(el("span", "st " + st), el("span", "nm", a.agent), el("span", "tier " + (a.tier || ""), a.tier || "?"));
       const work = st === "busy" && a.working_on && a.working_on !== "none" ? ` · #${a.working_on}` : "";
-      row.append(el("span", "meta", `${a.tool || "?"} · ${a.model || "?"} · ${st === "offline" ? "offline" : st === "busy" ? "pracuje" : "wolny"}${work} · ${rel(a.at)}`));
+      row.append(el("span", "meta", `${owner ? "właściciel: " + owner : "⚠ brak właściciela — nie liczy się"} · ${a.tool || "?"} · ${a.model || "?"} · ${st === "offline" ? "offline" : st === "busy" ? "pracuje" : "wolny"}${work} · ${rel(a.at)}`));
       frag.append(row);
     }
     box.replaceChildren(frag);

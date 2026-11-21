@@ -7,6 +7,7 @@
 #   SWARM_TOOL   claude (default) | codex | gemini | custom
 #   SWARM_MODEL  model name (Claude: from coord/roles.json per task labels if unset)
 #   SWARM_TIER   strong | standard | light   (decides which tasks you may take)
+#   SWARM_OPERATOR_NAME  REQUIRED: the owner's name (human behind this agent)
 #   SWARM_CMD    for SWARM_TOOL=custom: command; the prompt arrives on stdin
 #                e.g. SWARM_CMD='aider --yes --message-file /dev/stdin'
 # Flags for codex/gemini follow their CLIs at the time of writing; check `codex exec --help`
@@ -18,6 +19,12 @@ loop=0
 tool="${SWARM_TOOL:-claude}"
 root=$(git rev-parse --show-toplevel)
 cd "$root"
+
+owner_name="${SWARM_OPERATOR_NAME:-}"
+if [[ -z "${owner_name// /}" ]]; then
+  echo "Ustaw imię właściciela agenta: export SWARM_OPERATOR_NAME=\"Imię Nazwisko\" (wymagane, PROTOCOL §0)." >&2
+  exit 2
+fi
 
 if [[ -z "${SWARM_TIER:-}" ]]; then
   case "$tool:${SWARM_MODEL:-}" in
