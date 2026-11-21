@@ -148,11 +148,22 @@ for a in rows:
     ;;
   setup)
     ok=1
-    for t in gh claude python3 git; do
+    for t in gh python3 git; do
       if command -v "$t" >/dev/null; then echo "✓ $t"; else echo "✗ brakuje $t"; ok=0; fi
     done
     if gh auth status >/dev/null 2>&1; then echo "✓ gh zalogowany jako $(gh api user --jq .login)"; else echo "✗ zaloguj: gh auth login"; ok=0; fi
-    echo "• Uruchom raz 'claude' w tym folderze i zaakceptuj „trust this folder” (inaczej worker nie dostanie uprawnień)."
+    if git rev-parse --show-toplevel 2>/dev/null | grep -q "/Hackathon-Bydgoszcz/Hackathon-Bydgoszcz$\|/hackathon-bydgoszcz/hackathon-bydgoszcz$"; then
+      echo "! jesteś w kopii repo wewnątrz drugiej kopii — zostaw jedną (cd .. i usuń wewnętrzny folder)"
+    fi
+    # AI tool: any one is enough (Cursor / Antigravity editors need no CLI: ./swarm claim N → ./swarm done N)
+    tools=""; for t in claude codex gemini; do command -v "$t" >/dev/null && tools+="$t "; done
+    if [[ -n "$tools" ]]; then
+      echo "✓ narzędzia AI w terminalu: $tools"
+      [[ "$tools" == *claude* ]] && echo "• Claude Code: uruchom raz 'claude' w tym folderze i zaakceptuj „trust this folder”."
+    else
+      echo "• brak CLI AI (claude/codex/gemini) — OK, jeśli pracujesz w Cursorze/Antigravity: ./swarm claim N → ./swarm done N"
+      echo "  Claude Code: curl -fsSL https://claude.ai/install.sh | bash"
+    fi
     echo
     role table
     [[ $ok == 1 ]] && echo && echo "Gotowe. Zacznij od: ./swarm view"
