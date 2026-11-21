@@ -38,12 +38,12 @@ def pct(values: list[float], p: float) -> float:
 
 
 def summary(name: str, lat: list[float], codes: Counter, wall: float) -> dict:
-    ok = sum(n for c, n in codes.items() if 200 <= c < 300)
+    ok = sum(n for c, n in codes.items() if isinstance(c, int) and 200 <= c < 300)
     row = {
         "test": name,
         "requests": sum(codes.values()),
         "ok": ok,
-        "errors": {str(c): n for c, n in codes.items() if not 200 <= c < 300},
+        "errors": {str(c): n for c, n in codes.items() if not (isinstance(c, int) and 200 <= c < 300)},
         "rps": round(sum(codes.values()) / wall, 1) if wall else 0.0,
         "p50_ms": round(pct(lat, 50) * 1000, 1),
         "p95_ms": round(pct(lat, 95) * 1000, 1),
