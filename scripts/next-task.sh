@@ -5,16 +5,22 @@
 #   strong   : everything
 #   standard : everything except model:opus
 #   light    : only size:xs
+# Area filter (SWARM_AREAS, comma separated, default: all): only tasks with one of
+#   the labels area:<name>. Aliases: ui → frontend, api → backend, model → ai.
+#   e.g. SWARM_AREAS=ui,docs ./scripts/next-task.sh
 set -euo pipefail
 
 me=$(gh api user --jq .login)
 tier="${SWARM_TIER:-standard}"
+areas="${SWARM_AREAS:-}"
 
 candidates=$(gh issue list --state open --label "status:ready" --limit 100 \
   --json number,assignees,labels,createdAt \
   | python3 -c '
 import json, sys
-me, tier = sys.argv[1], sys.argv[2]
+me, tier, areas = sys.argv[1], sys.argv[2], sys.argv[3]
+alias = {"ui": "frontend", "front": "frontend", "api": "backend", "back": "backend", "model": "ai", "ml": "ai", "ops": "devops"}
+want = {"area:" + alias.get(a.strip().lower(), a.strip().lower()) for a in areas.split(",") if a.strip()}
 out = []
 for i in json.load(sys.stdin):
     a = [x["login"] for x in i["assignees"]]
@@ -25,13 +31,15 @@ for i in json.load(sys.stdin):
         continue
     if tier == "standard" and "model:opus" in L:
         continue
+    if want and not (want & L) and a != [me]:
+        continue                      # not my area (tasks reserved for me always pass)
     key = (0 if a == [me] else 1,
            0 if tier == "strong" and "model:opus" in L else 1,
            0 if "prio:high" in L else 1,
            i["createdAt"])
     out.append((key, i["number"]))
 print("\n".join(str(n) for _, n in sorted(out)))
-' "$me" "$tier")
+' "$me" "$tier" "$areas")
 
 for n in $candidates; do
   deps=$(gh issue view "$n" --json body --jq '.body' \
@@ -44,5 +52,5 @@ for n in $candidates; do
   if [[ $ok == 1 ]]; then echo "$n"; exit 0; fi
 done
 
-echo "no claimable issue for tier $tier" >&2
+echo "no claimable issue for tier $tier${areas:+, areas $areas}" >&2
 exit 1

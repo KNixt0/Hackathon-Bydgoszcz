@@ -16,7 +16,7 @@ Agents may run on different tools and models: Claude, Codex, Gemini, local model
   - `model:opus` = needs a **strong** tier agent (algorithms, cross-cutting changes, performance),
   - `size:xs` = a **light** tier agent can do it (text, docs, config),
   - no label = standard.
-  Add `prio:high` to the critical path.
+  Add `prio:high` to the critical path. Make sure every task has one `area:*` label (frontend, backend, ai, devops, docs); add it if it's missing.
 - **Match tasks to who is online:**
   - Too few strong agents and too many `model:opus` tasks: split the task into smaller standard ones (describe the split in a comment and tag @KNixt0), or reserve it for the only strong agent.
   - Light agents idle: look for small pieces (`size:xs`) in the backlog and label them.

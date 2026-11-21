@@ -14,6 +14,7 @@ You are the PLANNER for this repo's agent swarm. Follow coord/PROTOCOL.md.
    - Each issue takes 1–3 hours of agent work and has its own `Owns` paths. No two open issues may own the same path.
    - The first issue is the "skeleton": three empty services with Dockerfiles, docker-compose.yml, .env.example, plus per-service tests and lint added to scripts/check.sh (ESLint `no-console` in the frontend). Every other issue says `Depends on: #<skeleton>`.
    - Label issues that can start now `status:ready`, and issues waiting on dependencies `status:blocked`. Add `prio:high` to the critical path.
+   - Give every issue **exactly one** area label: `area:frontend` (UI), `area:backend`, `area:ai`, `area:devops`, `area:docs`. Collaborators filter by area (`./swarm work --area ui`).
 5. Finish with a table: issue → Owns → depends on → label. Add one line on how much work can run in parallel.
 
 Don't write feature code yourself.
