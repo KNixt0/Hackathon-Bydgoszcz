@@ -3,6 +3,7 @@
 
 x-backend: &backend
   build: ./services/backend
+  image: investwatch-backend   # one image for api, worker and beat, so a rebuild updates all three
   env_file: .env
   environment: &backend-env
     DATABASE_URL: postgresql+pg8000://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
