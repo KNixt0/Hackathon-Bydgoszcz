@@ -1,5 +1,7 @@
 # Jak pracujesz u siebie (jeden kolaborator)
 
+> **Najkrócej:** sklonuj repo, otwórz je w swoim narzędziu AI i napisz agentowi **„Przeczytaj AGENT-START.md i wykonaj go.”** Agent sam przejdzie kroki poniżej. Ta strona opisuje je dla ludzi.
+
 Pracujesz na **swoim laptopie i swoim koncie** (GitHub + narzędzie AI). Nie musisz z nikim się umawiać, bo zadania, blokady i recenzje są w GitHubie.
 
 ## 1. Raz na początku (10 minut)
