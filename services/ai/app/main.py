@@ -14,6 +14,7 @@ from .registries import CONTEXT_ONLY, REGISTRIES
 from .schemas import Analysis, AnalyzeRequest, RegistryPut
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)  # one line per model call would flood the logs
 log = logging.getLogger("investwatch.ai")
 
 

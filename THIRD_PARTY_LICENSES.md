@@ -222,7 +222,8 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 | postgres:16-alpine | PostgreSQL License | database |
 | valkey/valkey:8-alpine | BSD-3-Clause | queue broker |
 | chrislusf/seaweedfs:3.80 | Apache-2.0 | S3-compatible object storage |
-| python:3.12-slim | PSF | base image, backend and ai |
+| mcr.microsoft.com/playwright/python:v1.65.2-noble | Apache-2.0 (includes Chromium) | base image, backend |
+| python:3.12-slim | PSF | base image, ai service only |
 | node:22-alpine | MIT | frontend build stage only |
 | nginxinc/nginx-unprivileged | BSD-2-Clause | frontend runtime (static files) |
 | ollama/ollama:0.40.16 | MIT | optional local LLM (profile `llm`) |
