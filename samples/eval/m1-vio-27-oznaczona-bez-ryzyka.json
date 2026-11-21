@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://youtube.example/m1-vio-27-oznaczona-bez-ryzyka",
+  "platform": "youtube",
+  "title": "Podwój oszczędności [reklama]",
+  "published_at": "2026-11-06",
+  "seed": true,
+  "detected_days_ago": 14,
+  "author": {
+   "name": "Zmyślona Sowa Finansowa",
+   "handle": "@zmyslona_sowa"
+  }
+ },
+ "text": "Reklama. We współpracy z Dom Maklerski Kormoran Fikcyjny S.A. pokazuję, jak podwoić oszczędności w dwa lata. Zarobisz więcej niż na lokacie. Załóż konto z linku w opisie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -7,7 +7,7 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from sqlalchemy import JSON, create_engine
+from sqlalchemy import JSON, create_engine, inspect, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -76,6 +76,77 @@ def get_db() -> Iterator[Session]:
         yield session
 
 
+def _add_missing_columns() -> None:
+    """create_all never alters existing tables: add nullable columns introduced after a volume
+    was first created (keeps `docker compose up` working without wiping data)."""
+    engine = get_engine()
+    inspector = inspect(engine)
+    for table in Base.metadata.sorted_tables:
+        existing = {column["name"] for column in inspector.get_columns(table.name)}
+        for column in table.columns:
+            if column.name not in existing and column.nullable:
+                kind = column.type.compile(engine.dialect)
+                ddl = f'ALTER TABLE "{table.name}" ADD COLUMN "{column.name}" {kind}'
+                with engine.begin() as connection:
+                    connection.execute(text(ddl))
+                log.info("added column", extra={"table": table.name, "column": column.name})
+
+
+# Contract v3 replaced the five case statuses: old values are rewritten in place on start.
+STATUS_RENAMES = {"closed_violation": "resolved", "closed_ok": "false_positive"}
+
+_PG_AUDIT_GUARD = [
+    """CREATE OR REPLACE FUNCTION audit_logs_append_only() RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'audit_logs is append-only';
+END;
+$$ LANGUAGE plpgsql""",
+    "DROP TRIGGER IF EXISTS audit_logs_append_only ON audit_logs",
+    """CREATE TRIGGER audit_logs_append_only BEFORE UPDATE OR DELETE ON audit_logs
+FOR EACH ROW EXECUTE FUNCTION audit_logs_append_only()""",
+]
+
+
+def _backfill_norm_hash(engine: Engine) -> None:
+    from app.public_reports import normalized_hash
+
+    with engine.begin() as connection:
+        rows = connection.execute(
+            text("SELECT id, source_url FROM incidents WHERE norm_url_hash IS NULL")
+        ).fetchall()
+        for row_id, source_url in rows:
+            connection.execute(
+                text("UPDATE incidents SET norm_url_hash = :h WHERE id = :id"),
+                {"h": normalized_hash(source_url or ""), "id": row_id},
+            )
+
+
+def _upgrade_data() -> None:
+    """Idempotent value migrations that create_all cannot express."""
+    engine = get_engine()
+    with engine.begin() as connection:
+        for old, new in STATUS_RENAMES.items():
+            result = connection.execute(
+                text("UPDATE incidents SET status = :new WHERE status = :old"), {"new": new, "old": old}
+            )
+            if result.rowcount:
+                log.info("migrated status", extra={"from": old, "to": new, "rows": result.rowcount})
+        for statement in (
+            "UPDATE incidents SET user_reports_count = 0 WHERE user_reports_count IS NULL",
+            "UPDATE incidents SET priority_score = risk_score WHERE priority_score IS NULL",
+        ):
+            connection.execute(text(statement))
+    _backfill_norm_hash(engine)
+    if engine.dialect.name == "postgresql":
+        try:
+            with engine.begin() as connection:
+                connection.execute(text("SELECT pg_advisory_xact_lock(74210012)"))
+                for statement in _PG_AUDIT_GUARD:
+                    connection.execute(text(statement))
+        except Exception as exc:  # noqa: BLE001 (the ORM guard still applies)
+            log.warning("audit trigger not installed", extra={"error": type(exc).__name__})
+
+
 def init_db(attempts: int = 30, delay: float = 2.0) -> None:
     """create_all with retries: the DB may still be starting, and api/worker/beat may race."""
     from app import models  # noqa: F401  (register tables)
@@ -83,10 +154,21 @@ def init_db(attempts: int = 30, delay: float = 2.0) -> None:
     last: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
-            Base.metadata.create_all(get_engine())
+            engine = get_engine()
+            with engine.begin() as connection:
+                if engine.dialect.name == "postgresql":
+                    # api, worker and beat start together: only one of them creates the schema at a time
+                    connection.execute(text("SELECT pg_advisory_xact_lock(74210011)"))
+                Base.metadata.create_all(connection)
+            _add_missing_columns()
+            _upgrade_data()
             return
         except Exception as exc:  # noqa: BLE001
             last = exc
-            log.warning("database not ready", extra={"attempt": attempt, "error": type(exc).__name__})
+            log.log(
+                logging.INFO if attempt < 5 else logging.WARNING,
+                "waiting for database",
+                extra={"attempt": attempt, "error": type(exc).__name__},
+            )
             time.sleep(delay)
     raise RuntimeError("database unavailable") from last

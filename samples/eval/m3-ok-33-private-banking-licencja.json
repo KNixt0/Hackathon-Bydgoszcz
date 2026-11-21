@@ -1,0 +1,30 @@
+{
+ "meta": {
+  "url": "https://youtube.example/m3-ok-33-private-banking-licencja",
+  "platform": "youtube",
+  "title": "Private banking w Banku Jantarowym Fikcyjnym",
+  "published_at": "2026-11-08",
+  "seed": true,
+  "detected_days_ago": 12,
+  "author": {
+   "name": "Bank Jantarowy Fikcyjny",
+   "handle": "@bank_jantarowy"
+  }
+ },
+ "text": "Bank Jantarowy Fikcyjny S.A. zaprasza do private banking. Nasz doradca inwestycyjny (licencja nr 9001) przygotuje dla Ciebie indywidualne rekomendacje dotyczące akcji i obligacji. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ],
+  "declared": {
+   "advisor_licence_no": "9001"
+  }
+ }
+}

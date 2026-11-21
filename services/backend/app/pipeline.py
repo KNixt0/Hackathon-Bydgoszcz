@@ -16,11 +16,14 @@ from app.db import session_scope
 from app.incidents import level_for, to_summary, upsert_incident
 from app.jobs import set_state
 from app.models import ScanJob, utcnow
+from app.public_reports import crossed_viral, link_pending
 from app.schemas import PLATFORMS, AnalysisIn
 from app.scraper import BlockedURL, FetchedPage, Fetcher, FetchError
 from app.scraper.parsers import GENERIC, detect_platform, select_parser
 from app.scraper.ssrf import is_fixture_url
+from app.scraper.visual_audit import attach_visual
 from app.storage import get_store
+from app.thresholds import alert_threshold
 
 log = logging.getLogger(__name__)
 
@@ -58,6 +61,7 @@ def build_document(job: ScanJob, page: FetchedPage, fetcher: Fetcher) -> dict[st
             sample_text = str(json.loads(page.body).get("text") or "")
         except (ValueError, AttributeError):
             sample_text = ""
+        page.body, page.content_type = sample_text, "text/plain; charset=utf-8"  # archive the text itself
 
     if sample_text is not None:
         title, text, language, published, author = "", sample_text, None, None, None
@@ -129,6 +133,9 @@ def _normalise_analysis(analysis: dict, document: dict, context: dict) -> dict:
     source.setdefault("fetched_at", document["fetched_at"])
     source.setdefault("language", document.get("language") or "")
     source.setdefault("text", document["text"])
+    for key in ("final_url", "redirect_chain", "affiliate_params"):  # scraper-owned (contract v3)
+        if key in document and key not in source:
+            source[key] = document[key]
     if not source.get("content_hash"):
         source["content_hash"] = hashlib.sha256(" ".join(source["text"].split()).encode("utf-8")).hexdigest()
     payload["source"] = source
@@ -148,7 +155,6 @@ def _normalise_analysis(analysis: dict, document: dict, context: dict) -> dict:
 
 
 def _run(job_id: str) -> None:
-    settings = get_settings()
     with session_scope() as db:
         job = db.get(ScanJob, job_id)
         if job is None or job.state in ("done", "failed"):
@@ -176,6 +182,7 @@ def _run(job_id: str) -> None:
     if not document["text"].strip():
         raise _Fail("no text could be extracted from the page")
     _archive(job_id, document, page)
+    attach_visual(document, page, job_id, fixture=is_fixture_url(page.url), store=get_store())
 
     set_state(job_id, "analyzing")
     context = dict(job.context or {})
@@ -199,24 +206,30 @@ def _run(job_id: str) -> None:
             db,
             payload,
             created_at=created_at,
+            meta=job.meta,
+            context=job.context,
             origin=job.origin,
             fetch_url=job.fetch_url,
             render=job.render,
             module_hint=job.module_hint,
         )
+        linked = link_pending(db, row, job_id)  # reports that were waiting for this scan
         summary = to_summary(row)
         incident_id = row.id
 
     set_state(job_id, "done", incident_id=incident_id)
     events.emit("incident:new" if created else "incident:updated", summary)
-    if created and summary["risk_score"] >= settings.alert_threshold:
+    critical = alert_threshold()  # global "critical" threshold
+    if created and summary["risk_score"] >= critical:
         events.emit("alert:high", summary)
+    if linked and crossed_viral(*linked) and summary["risk_score"] >= critical:
+        events.emit("alert:viral", summary)
     log.info(
-        "scan finished",
+        "incident stored",
         extra={
             "job_id": job_id,
             "incident_id": incident_id,
-            "created": created,
+            "is_new": created,
             "risk_score": summary["risk_score"],
         },
     )
@@ -242,6 +255,5 @@ def process_job(job_id: str) -> float | None:
     except Exception as exc:  # noqa: BLE001
         log.exception("scan failed unexpectedly", extra={"job_id": job_id})
         message = f"internal error ({type(exc).__name__})"
-    log.warning("scan failed", extra={"job_id": job_id, "error": message})
     set_state(job_id, "failed", error=message)
     return None

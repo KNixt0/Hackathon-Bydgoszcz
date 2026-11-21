@@ -1,0 +1,138 @@
+{
+ "meta": {
+  "url": "https://youtube.example/m1-ok-17-youtube-oznaczona",
+  "platform": "youtube",
+  "title": "Jak zacząć inwestować? [współpraca reklamowa]",
+  "published_at": "2026-11-19",
+  "seed": true,
+  "detected_days_ago": 1,
+  "author": {
+   "name": "Zmyślona Sowa Finansowa",
+   "handle": "@zmyslona_sowa"
+  }
+ },
+ "text": "#reklama Film powstał we współpracy reklamowej z Dom Maklerski Bursztyn Przykładowy S.A.. Pokazuję, jak otworzyć rachunek i złożyć pierwsze zlecenie. Link do oferty w opisie. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków. Kontrakty CFD są złożonymi instrumentami i wiążą się z dużym ryzykiem szybkiej utraty środków pieniężnych z powodu dźwigni finansowej. 76% rachunków inwestorów detalicznych odnotowuje straty pieniężne w wyniku handlu kontraktami CFD u niniejszego dostawcy.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ],
+  "comments": [
+   {
+    "handle": "@ania_krk",
+    "account_created": "2024-04-04T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-10T18:00:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@marek_waw",
+    "account_created": "2022-11-27T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam mieszane odczucia.",
+    "posted_at": "2026-11-11T03:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@ola_gda",
+    "account_created": "2020-09-21T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Warto poczytać regulamin przed założeniem konta.",
+    "posted_at": "2026-11-12T15:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@piotr_poz",
+    "account_created": "2023-05-31T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "U mnie działa bez zarzutu.",
+    "posted_at": "2026-11-13T03:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@ewa_lodz",
+    "account_created": "2025-06-12T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Trochę za dużo marketingu.",
+    "posted_at": "2026-11-14T12:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@jan_krk",
+    "account_created": "2018-12-14T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dobrze wytłumaczone.",
+    "posted_at": "2026-11-15T00:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@iza_waw",
+    "account_created": "2022-10-12T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Opłaty mogłyby być niższe.",
+    "posted_at": "2026-11-16T07:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@adam_gda",
+    "account_created": "2024-08-14T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Korzystam od roku, jest ok.",
+    "posted_at": "2026-11-17T10:00:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@ania_poz8",
+    "account_created": "2025-07-07T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-18T00:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@marek_lodz9",
+    "account_created": "2025-08-30T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam mieszane odczucia.",
+    "posted_at": "2026-11-10T12:00:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@ola_krk10",
+    "account_created": "2021-01-12T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Warto poczytać regulamin przed założeniem konta.",
+    "posted_at": "2026-11-11T00:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@piotr_waw11",
+    "account_created": "2023-04-12T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "U mnie działa bez zarzutu.",
+    "posted_at": "2026-11-12T14:00:00Z",
+    "rating": 5
+   }
+  ]
+ }
+}

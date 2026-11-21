@@ -1,4 +1,4 @@
-version: 1
+version: 3
 
 # Incident: the one schema every module ends in
 
@@ -8,7 +8,8 @@ The AI service returns an `Analysis`. The backend stores it, adds `id`, `status`
 
 - `risk_score`: continuous `0–100`, **higher = more dangerous**. This is the raw engine output and the only number the threshold slider works on.
 - `compliance_score = 100 - risk_score`, shown as "Compliance Score" (so the green demo case shows 92/100, the red one 11/100).
-- `risk_level` is derived, never stored as truth: `red` if `risk_score >= T_red`, `orange` if `>= T_orange`, else `green`. Defaults `T_red = 70`, `T_orange = 35`. The dashboard recomputes levels client-side from `risk_score` whenever the slider moves.
+- `risk_level` is derived, never stored as truth: `red` if `risk_score >= T_red`, `orange` if `>= T_orange`, else `green`. Defaults `T_red = 70`, `T_orange = 20`. The dashboard recomputes levels client-side from `risk_score` whenever the slider moves.
+- **Flagged** (what the calibration panel counts as a detection) = `risk_score >= T_orange`, i.e. orange or red. `T_orange` is the calibration threshold; `T_red` only separates "needs review" from "critical" and drives the live alert.
 
 ## Types
 
@@ -184,3 +185,43 @@ interface EngineInfo { version: string; plugins: string[]; llm_used: boolean; mo
 2. Every `evidence_ids` entry resolves to an `evidence` item.
 3. `rules` has exactly 19 rows in attachment order.
 4. `risk_score` is computed by the engine from findings; no score is hard-coded per sample.
+
+## Version 3 additions (all additive unless marked)
+
+```ts
+// CHANGED: case workflow replaces the old five statuses.
+type Status = "new" | "in_review" | "escalation_requested" | "escalated" | "resolved" | "false_positive";
+// Allowed transitions: new→in_review · in_review→escalation_requested | resolved | false_positive ·
+// escalation_requested→escalated (SUPERVISOR) | in_review · escalated→resolved | false_positive.
+// resolved / false_positive require a reason. Any transition is written to the audit log.
+
+type Role = "ANALYST" | "SUPERVISOR";
+type EscalationPath = "SUPERVISION_RISK_DEPT" | "LEGAL_WARNING_LIST" | "THIRD_PARTY_AUDIT";   // default by primary module: 2, 3, 1
+type ResolutionAction = "evidence_report" | "warning_list_request" | "enhanced_monitoring" | "false_positive";
+
+interface Workflow {
+  assigned_to: string | null;            // user email
+  escalation_path: EscalationPath | null;
+  resolution_action: ResolutionAction | null;
+  resolution_note: string;
+  label: "unlabeled" | "true_positive" | "false_positive";   // analyst verdict; feeds the calibration set
+}
+
+interface Incident { workflow: Workflow; user_reports_count: number; priority_score: number; }
+interface IncidentSummary { workflow: Pick<Workflow,"assigned_to"|"label">; user_reports_count: number; priority_score: number; }
+// priority_score = min(100, risk_score * (1 + 0.25 * log2(1 + user_reports_count)))   (threshold-free, server-computed)
+// Priority tier is DERIVED client-side like risk_level, with T = T_orange and N = 5 reports:
+//   critical_viral (risk ≥ T, reports ≥ N) · high_risk_early (risk ≥ T, reports < N)
+//   crowd_anomaly (risk < T, reports ≥ N: possible false negative) · low_watch (otherwise)
+
+interface BBox { viewport: "desktop" | "tablet" | "mobile"; x: number; y: number; w: number; h: number; }  // CSS px in that viewport's full-page screenshot
+interface Evidence { bbox?: BBox; }                       // storage_key then points at that viewport's screenshot
+interface RuleResult { method: "rendered" | "static" | "text" | "llm"; score: number; }   // score: 0–1 violation strength; method "rendered" = measured in a real browser
+interface Source {
+  final_url?: string; redirect_chain?: string[]; affiliate_params?: string[];
+  archive: { html_key: string | null; screenshot_key: string | null;      // screenshot_key = desktop, kept for compatibility
+             screenshots?: { desktop?: string; tablet?: string; mobile?: string } };
+}
+```
+
+Invariant 5: a rule reports `method: "rendered"` only when its verdict comes from `document.visual` measurements; without them it falls back to `static` or returns `unknown`.

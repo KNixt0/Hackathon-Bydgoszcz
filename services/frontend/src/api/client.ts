@@ -7,14 +7,32 @@ export class ApiError extends Error {
   }
 }
 
+type UnauthorizedHandler = () => void;
+let onUnauthorized: UnauthorizedHandler | null = null;
+
+/** The auth provider registers here: any 401 outside /api/auth/* ends the session in the UI. */
+export function setUnauthorizedHandler(handler: UnauthorizedHandler | null) {
+  onUnauthorized = handler;
+}
+
+function notifyUnauthorized(path: string, status: number) {
+  if (status === 401 && !path.startsWith("/api/auth/")) onUnauthorized?.();
+}
+
 const NETWORK_MESSAGE = "Brak połączenia z serwerem. Sprawdź, czy usługa backend działa, i spróbuj ponownie.";
 
 function statusMessage(status: number): string {
+  if (status === 401) return "Sesja wygasła. Zaloguj się ponownie.";
+  if (status === 403) return "Ta czynność wymaga uprawnień kierownika.";
   if (status === 404) return "Nie znaleziono zasobu.";
+  if (status === 409) return "Tej zmiany nie można wykonać na obecnym etapie sprawy. Odśwież sprawę i spróbuj ponownie.";
+  if (status === 429) return "Zbyt wiele prób. Spróbuj ponownie za kilka minut.";
   if (status === 422) return "Serwer odrzucił dane jako nieprawidłowe.";
   if (status >= 500) return "Serwer zwrócił błąd. Spróbuj ponownie za chwilę.";
   return `Żądanie nie powiodło się (kod ${status}).`;
 }
+
+const KNOWN_STATUSES = new Set([401, 403, 409, 429]);
 
 async function detailOf(res: Response): Promise<string | null> {
   try {
@@ -42,9 +60,12 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(NETWORK_MESSAGE, 0);
   }
   if (!res.ok) {
-    const detail = await detailOf(res);
+    notifyUnauthorized(path, res.status);
+    // The backend's `detail` strings are English and technical: Polish messages for the known statuses.
+    const detail = KNOWN_STATUSES.has(res.status) ? null : await detailOf(res);
     throw new ApiError(detail ?? statusMessage(res.status), res.status);
   }
+  if (res.status === 204) return undefined as T;
   try {
     return (await res.json()) as T;
   } catch {
@@ -60,7 +81,10 @@ export async function requestText(path: string, init?: RequestInit): Promise<str
     if (err instanceof DOMException && err.name === "AbortError") throw err;
     throw new ApiError(NETWORK_MESSAGE, 0);
   }
-  if (!res.ok) throw new ApiError(statusMessage(res.status), res.status);
+  if (!res.ok) {
+    notifyUnauthorized(path, res.status);
+    throw new ApiError(statusMessage(res.status), res.status);
+  }
   return res.text();
 }
 

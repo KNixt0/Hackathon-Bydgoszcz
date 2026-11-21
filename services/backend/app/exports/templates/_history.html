@@ -1,0 +1,11 @@
+<table>
+  <tr><th style="width:30mm">Kiedy (UTC)</th><th style="width:42mm">Kto</th><th style="width:34mm">Decyzja</th><th>Zmiana i uzasadnienie</th></tr>
+  {% for h in history %}
+  <tr><td class="small">{{ h.at }}</td><td>{{ h.actor_email }}<div class="small muted">{{ roles.get(h.actor_role, h.actor_role) }}</div></td>
+      <td>{{ actions.get(h.action, h.action) }}</td>
+      <td>{% for key, value in (h.new or {}).items() %}<div class="small">{{ fields.get(key, key) }}: {% if h.previous and h.previous.get(key) is not none %}{{ values.get(h.previous.get(key), h.previous.get(key)) }} → {% endif %}<strong>{{ values.get(value, value) if value is not none else '—' }}</strong></div>{% endfor %}
+          {% if h.reason %}<div>Uzasadnienie: {{ h.reason }}</div>{% endif %}</td></tr>
+  {% else %}
+  <tr><td colspan="4" class="muted">Brak decyzji w sprawie.</td></tr>
+  {% endfor %}
+</table>

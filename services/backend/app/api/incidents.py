@@ -1,20 +1,26 @@
-"""Incidents: list/filter, detail, status change, stats, calibration, exports."""
+"""Incidents: list/filter, detail, workflow, history, stats, calibration, exports."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import UTC, date, datetime, time, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Query as SAQuery
 from sqlalchemy.orm import Session
 
-from app import events
-from app.db import get_db
+from app import audit, events
+from app.auth import Actor
+from app.db import get_db, session_scope
 from app.exports import csv_export
-from app.incidents import to_incident, to_summary
-from app.models import Incident, IncidentVersion, utcnow
-from app.schemas import PLATFORMS, STATUSES, StatusPatch, iso
+from app.incidents import rescan_options, to_incident, to_summary
+from app.jobs import create_job, dispatch
+from app.models import Incident, IncidentVersion, UserReport, utcnow
+from app.schemas import PLATFORMS, STATUSES, LabelRequest, StatusPatch, TransitionRequest, iso
+from app.workflow import TransitionInput, WorkflowError, set_label, transition
+from app.workflow import assign as assign_case
 
 router = APIRouter(prefix="/api", tags=["incidents"])
 Db = Annotated[Session, Depends(get_db)]
@@ -44,7 +50,12 @@ class IncidentFilters:
         from_: Annotated[str | None, Query(alias="from", max_length=40)] = None,
         to: Annotated[str | None, Query(max_length=40)] = None,
         q: Annotated[str | None, Query(max_length=200)] = None,
+        sort: Annotated[str, Query(max_length=16)] = "risk",
+        min_reports: Annotated[int, Query(ge=0, le=100000)] = 0,
     ) -> None:
+        if sort not in ("risk", "priority"):
+            raise HTTPException(422, "'sort' must be one of: risk, priority")
+        self.sort, self.min_reports = sort, min_reports
         if source is not None and source not in PLATFORMS:
             raise HTTPException(422, f"'source' must be one of: {', '.join(PLATFORMS)}")
         if status is not None and status not in STATUSES:
@@ -68,13 +79,22 @@ class IncidentFilters:
             query = query.filter(
                 Incident.created_at <= self.end if self.end_inclusive else Incident.created_at < self.end
             )
+        if self.min_reports:
+            query = query.filter(func.coalesce(Incident.user_reports_count, 0) >= self.min_reports)
         if self.q and self.q.strip():
             needle = self.q.strip().lower().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
             query = query.filter(Incident.search_text.like(f"%{needle}%", escape="\\"))
         return query
 
 
-def _ordered(query: SAQuery) -> SAQuery:
+def _ordered(query: SAQuery, sort: str = "risk") -> SAQuery:
+    if sort == "priority":
+        return query.order_by(
+            func.coalesce(Incident.priority_score, Incident.risk_score).desc(),
+            Incident.risk_score.desc(),
+            Incident.created_at.desc(),
+            Incident.id,
+        )
     return query.order_by(Incident.risk_score.desc(), Incident.created_at.desc(), Incident.id)
 
 
@@ -94,15 +114,16 @@ def list_incidents(
 ) -> dict:
     query = filters.apply(db.query(Incident))
     total = query.count()
-    rows = _ordered(query).offset(offset).limit(limit).all()
+    rows = _ordered(query, filters.sort).offset(offset).limit(limit).all()
     return {"items": [to_summary(row) for row in rows], "total": total}
 
 
 # declared before /incidents/{incident_id} so "export.csv" is not taken for an id
 @router.get("/incidents/export.csv")
-def export_list_csv(db: Db, filters: Annotated[IncidentFilters, Depends()]) -> Response:
-    rows = _ordered(filters.apply(db.query(Incident))).limit(5000).all()
+def export_list_csv(db: Db, user: Actor, filters: Annotated[IncidentFilters, Depends()]) -> Response:
+    rows = _ordered(filters.apply(db.query(Incident)), filters.sort).limit(5000).all()
     body = csv_export.incidents_csv(to_summary(row) for row in rows)
+    audit.record(db, user, "export", new={"format": "csv", "scope": "list", "rows": len(rows)})
     return _csv_response(body, f"investwatch-incydenty-{utcnow():%Y%m%d}.csv")
 
 
@@ -111,14 +132,89 @@ def get_incident(incident_id: str, db: Db) -> dict:
     return to_incident(_get_or_404(db, incident_id))
 
 
-@router.patch("/incidents/{incident_id}")
-def patch_incident(incident_id: str, body: StatusPatch, db: Db) -> dict:
-    row = _get_or_404(db, incident_id)
-    row.status = body.status
-    row.updated_at = utcnow()
+def _commit_and_announce(db: Session, row: Incident) -> dict:
+    """The change and its audit row commit together; clients hear about it only afterwards."""
     db.commit()
     events.emit("incident:updated", to_summary(row))
     return to_incident(row)
+
+
+def _workflow(fn: Callable[..., None], *args: object) -> None:
+    try:
+        fn(*args)
+    except WorkflowError as exc:
+        raise HTTPException(exc.status_code, exc.detail) from exc
+
+
+@router.post("/incidents/{incident_id}/transition")
+def transition_incident(incident_id: str, body: TransitionRequest, db: Db, user: Actor) -> dict:
+    row = _get_or_404(db, incident_id)
+    _workflow(transition, db, row, user, TransitionInput(**body.model_dump()))
+    return _commit_and_announce(db, row)
+
+
+@router.patch("/incidents/{incident_id}")
+def patch_incident(incident_id: str, body: StatusPatch, db: Db, user: Actor) -> dict:
+    """Alias of POST .../transition (kept from contract v1)."""
+    row = _get_or_404(db, incident_id)
+    fields = body.model_dump()
+    _workflow(transition, db, row, user, TransitionInput(to=fields.pop("status"), **fields))
+    return _commit_and_announce(db, row)
+
+
+@router.post("/incidents/{incident_id}/assign")
+def assign_incident(incident_id: str, db: Db, user: Actor) -> dict:
+    row = _get_or_404(db, incident_id)
+    _workflow(assign_case, db, row, user)
+    return _commit_and_announce(db, row)
+
+
+@router.post("/incidents/{incident_id}/label")
+def label_incident(incident_id: str, body: LabelRequest, db: Db, user: Actor) -> dict:
+    row = _get_or_404(db, incident_id)
+    set_label(db, row, user, body.label)
+    return _commit_and_announce(db, row)
+
+
+@router.get("/incidents/{incident_id}/reports")
+def incident_reports(incident_id: str, db: Db) -> dict:
+    """Logged-in only: what citizens wrote about the case (no reporter data)."""
+    row = _get_or_404(db, incident_id)
+    return {"items": _report_items(db, row.id)}
+
+
+def _report_items(db: Session, incident_id: str, limit: int = 50) -> list[dict]:
+    reports = (
+        db.query(UserReport)
+        .filter(UserReport.incident_id == incident_id)
+        .order_by(UserReport.created_at.desc(), UserReport.id)
+        .limit(limit)
+        .all()
+    )
+    return [
+        {"created_at": iso(r.created_at), "category_hint": r.category_hint, "comment": r.comment}
+        for r in reports
+    ]
+
+
+@router.get("/incidents/{incident_id}/history")
+def incident_history(incident_id: str, db: Db) -> dict:
+    row = _get_or_404(db, incident_id)
+    return {"items": audit.incident_history(db, row.id)}
+
+
+@router.post("/incidents/{incident_id}/rescan", status_code=202)
+def rescan_incident(incident_id: str, db: Db, user: Actor) -> dict:
+    """Extra: fetch the same source again through the pipeline (periodic update on demand). The
+    incident is updated in place; a changed content hash is recorded in its version history."""
+    row = _get_or_404(db, incident_id)
+    url, options = row.source_url, rescan_options(row)
+    audit.record(db, user, "rescan", incident_id=row.id, new={"url": url})
+    db.commit()
+    db.close()
+    job_id = create_job(url, **options)
+    dispatch(job_id)
+    return {"job_id": job_id}
 
 
 @router.get("/incidents/{incident_id}/versions")
@@ -145,28 +241,53 @@ def incident_versions(incident_id: str, db: Db) -> dict:
 
 
 @router.get("/incidents/{incident_id}/export.csv")
-def export_incident_csv(incident_id: str, db: Db) -> Response:
+def export_incident_csv(incident_id: str, db: Db, user: Actor) -> Response:
     row = _get_or_404(db, incident_id)
-    return _csv_response(csv_export.incident_csv(to_incident(row)), f"investwatch-{row.id}.csv")
+    body = csv_export.incident_csv(to_incident(row), _report_items(db, row.id))
+    audit.record(db, user, "export", incident_id=row.id, new={"format": "csv"})
+    return _csv_response(body, f"investwatch-{row.id}.csv")
 
 
-@router.get("/incidents/{incident_id}/export.pdf")
-def export_incident_pdf(incident_id: str, db: Db) -> Response:
-    from app.exports.pdf import render_pdf
+def _render(kind: str, incident_id: str, db: Session, user: Actor) -> Response:
+    from app.exports.pdf import render_pdf, render_warning_list_pdf
     from app.scraper.browser import BrowserUnavailable
 
     row = _get_or_404(db, incident_id)
     incident = to_incident(row)
+    if kind == "warning_list_request" and not (
+        3 in (incident.get("modules") or []) or row.primary_module == 3 or row.resolution_action == kind
+    ):
+        raise HTTPException(409, "the warning-list request is only available for Module 3 cases")
+    history = audit.incident_history(db, row.id, audit.DECISION_ACTIONS)
+    reports = _report_items(db, row.id, 20)
     db.close()  # do not hold a connection while Chromium renders
     try:
-        pdf = render_pdf(incident)
+        if kind == "warning_list_request":
+            pdf = render_warning_list_pdf(incident, history)
+        else:
+            pdf = render_pdf(incident, history, reports)
     except BrowserUnavailable as exc:
         raise HTTPException(503, "PDF renderer is not available") from exc
+    with session_scope() as audit_db:  # only a document that was really produced is logged
+        audit.record(
+            audit_db, user, "export", incident_id=incident["id"], new={"format": "pdf", "document": kind}
+        )
+    name = "wniosek-lista-ostrzezen" if kind == "warning_list_request" else "investwatch"
     return Response(
         pdf,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="investwatch-{incident["id"]}.pdf"'},
+        headers={"Content-Disposition": f'attachment; filename="{name}-{incident["id"]}.pdf"'},
     )
+
+
+@router.get("/incidents/{incident_id}/export.pdf")
+def export_incident_pdf(incident_id: str, db: Db, user: Actor) -> Response:
+    return _render("evidence_package", incident_id, db, user)
+
+
+@router.get("/incidents/{incident_id}/warning-list-request.pdf")
+def warning_list_request_pdf(incident_id: str, db: Db, user: Actor) -> Response:
+    return _render("warning_list_request", incident_id, db, user)
 
 
 @router.get("/stats/trends")
@@ -189,21 +310,29 @@ def trends(db: Db, days: Annotated[int, Query(ge=1, le=366)] = 30) -> dict:
     return {"days": [{"date": key, "items": items} for key, items in buckets.items()]}
 
 
+ANALYST_TRUTH = {"true_positive": "violation", "false_positive": "ok"}
+
+
 @router.get("/calibration")
 def calibration(db: Db) -> dict:
-    rows = _ordered(db.query(Incident).filter(Incident.ground_truth.in_(("violation", "ok")))).all()
-    return {
-        "items": [
+    """Seeded ground truth plus analyst labels; an analyst's verdict wins over the sample label."""
+    query = db.query(Incident).filter(
+        or_(Incident.ground_truth.in_(("violation", "ok")), Incident.label.in_(tuple(ANALYST_TRUTH)))
+    )
+    items = []
+    for row in _ordered(query).all():
+        analyst = ANALYST_TRUTH.get(row.label or "")
+        items.append(
             {
                 "id": row.id,
                 "title": row.payload.get("title", ""),
                 "risk_score": row.risk_score,
-                "ground_truth": row.ground_truth,
+                "ground_truth": analyst or row.ground_truth,
                 "module": row.primary_module,
+                "label_source": "analyst" if analyst else "sample",
             }
-            for row in rows
-        ]
-    }
+        )
+    return {"items": items}
 
 
 def _csv_response(body: bytes, filename: str) -> Response:

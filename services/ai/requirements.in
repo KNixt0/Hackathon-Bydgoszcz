@@ -1,0 +1,7 @@
+# Direct runtime dependencies (all permissively licensed, see LICENSES.md).
+# requirements.txt is the fully pinned lock: uv pip compile requirements.in -o requirements.txt
+fastapi==0.165.0
+starlette==1.10.0
+uvicorn==0.54.0
+pydantic==2.14.4
+httpx==0.28.1

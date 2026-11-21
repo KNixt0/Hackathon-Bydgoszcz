@@ -14,25 +14,140 @@ from difflib import SequenceMatcher
 from ..preprocess.normalize import fold
 
 LEGAL_SEQUENCES = [
-    ("spolka", "z", "ograniczona", "odpowiedzialnoscia"), ("spolka", "akcyjna"),
-    ("spolka", "komandytowa"), ("spolka", "jawna"), ("sp", "z", "o", "o"), ("sp", "z", "oo"),
-    ("sp", "zoo"), ("sp", "k"), ("sp", "j"), ("s", "a"), ("a", "s"), ("s", "r", "o"),
-    ("b", "v"), ("n", "v"), ("oddzial", "w", "polsce"),
+    ("spolka", "z", "ograniczona", "odpowiedzialnoscia"),
+    ("spolka", "akcyjna"),
+    ("spolka", "komandytowa"),
+    ("spolka", "jawna"),
+    ("sp", "z", "o", "o"),
+    ("sp", "z", "oo"),
+    ("sp", "zoo"),
+    ("sp", "k"),
+    ("sp", "j"),
+    ("s", "a"),
+    ("a", "s"),
+    ("s", "r", "o"),
+    ("b", "v"),
+    ("n", "v"),
+    ("oddzial", "w", "polsce"),
 ]
 LEGAL_TOKENS = {
-    "sa", "spzoo", "zoo", "spk", "spj", "ska", "ltd", "limited", "llc", "llp", "lp", "plc", "inc",
-    "corp", "corporation", "gmbh", "ag", "kg", "ug", "se", "sarl", "sas", "spa", "srl", "sau",
-    "bv", "nv", "as", "sro", "oy", "oyj", "ab", "asa", "ou", "uab", "sia", "doo", "ead", "kft",
-    "zrt", "cy", "co", "company", "psc",
+    "sa",
+    "spzoo",
+    "zoo",
+    "spk",
+    "spj",
+    "ska",
+    "ltd",
+    "limited",
+    "llc",
+    "llp",
+    "lp",
+    "plc",
+    "inc",
+    "corp",
+    "corporation",
+    "gmbh",
+    "ag",
+    "kg",
+    "ug",
+    "se",
+    "sarl",
+    "sas",
+    "spa",
+    "srl",
+    "sau",
+    "bv",
+    "nv",
+    "as",
+    "sro",
+    "oy",
+    "oyj",
+    "ab",
+    "asa",
+    "ou",
+    "uab",
+    "sia",
+    "doo",
+    "ead",
+    "kft",
+    "zrt",
+    "cy",
+    "co",
+    "company",
+    "psc",
 }
 GENERIC_TOKENS = {
-    "dom", "maklerski", "maklerskie", "biuro", "departament", "dm", "bm", "bank", "banku",
-    "securities", "brokers", "broker", "investment", "investments", "invest", "capital",
-    "kapital", "management", "asset", "assets", "wealth", "partners", "group", "grupa",
-    "holding", "financial", "finance", "services", "markets", "trading", "europe", "polska",
-    "poland", "international", "global", "inwestycyjny", "towarzystwo", "funduszy", "fund",
-    "funds", "advisory", "advisors", "consulting", "family", "office", "private", "banking",
-    "the", "and", "i", "of", "de", "eu",
+    "dom",
+    "maklerski",
+    "maklerskie",
+    "biuro",
+    "departament",
+    "dm",
+    "bm",
+    "bank",
+    "banku",
+    "securities",
+    "brokers",
+    "broker",
+    "investment",
+    "investments",
+    "invest",
+    "capital",
+    "kapital",
+    "management",
+    "asset",
+    "assets",
+    "wealth",
+    "partners",
+    "group",
+    "grupa",
+    "holding",
+    "financial",
+    "finance",
+    "services",
+    "markets",
+    "trading",
+    "europe",
+    "polska",
+    "poland",
+    "international",
+    "global",
+    "inwestycyjny",
+    "towarzystwo",
+    "funduszy",
+    "fund",
+    "funds",
+    "advisory",
+    "advisors",
+    "consulting",
+    "family",
+    "office",
+    "private",
+    "banking",
+    "the",
+    "and",
+    "i",
+    "of",
+    "de",
+    "eu",
+}
+
+NEUTRAL_DESCRIPTORS = {
+    "dom",
+    "maklerski",
+    "maklerskie",
+    "biuro",
+    "departament",
+    "dm",
+    "bm",
+    "bank",
+    "banku",
+    "polska",
+    "poland",
+    "grupa",
+    "group",
+    "broker",
+    "brokers",
 }
 
 LISTED_THRESHOLD = 0.9
@@ -103,6 +218,7 @@ def _keys(entry: dict) -> list[tuple[str, str]]:
         cached = [(normalize_name(n), kind) for n, kind in names]
         cached = [(k, kind) for k, kind in cached if k]
         entry["_keys"] = cached
+        entry["_tokens"] = {t for k, _ in cached for t in k.split()}
         entry["_forms"] = {legal_form(n) for n, _ in names}
         entry["_cores"] = sorted(c for c in {core_name(n) for n, _ in names} if len(c) >= 3)
     return cached
@@ -112,6 +228,10 @@ def _core_ratio(q_core: str, entry: dict) -> float:
     if not q_core:
         return 0.0
     return max((SequenceMatcher(None, q_core, c).ratio() for c in entry["_cores"]), default=0.0)
+
+
+def _tokens_alike(a: set[str], b: set[str]) -> bool:
+    return all(any(x == y or SequenceMatcher(None, x, y).ratio() >= 0.8 for y in b) for x in a)
 
 
 def best_match(query: str, entries: list[dict]) -> Match | None:
@@ -132,21 +252,36 @@ def best_match(query: str, entries: list[dict]) -> Match | None:
     for entry in entries:
         for key, kind in _keys(entry):
             if key == q_norm:
-                consider(entry, 1.0, kind)
+                # Same name but another legal form ("XTB sp. z o.o." vs "XTB S.A.") is a
+                # different entity.
+                if q_form and entry["_forms"] - {""} and q_form not in entry["_forms"]:
+                    consider(entry, 0.8, "brand_contained")
+                else:
+                    consider(entry, 1.0, kind)
                 continue
             key_tokens = set(key.split())
             if not (key_tokens & q_tokens) and key[:3] != q_norm[:3]:
                 continue
             ratio = SequenceMatcher(None, q_norm, key).ratio()
-            if ratio >= SIMILAR_THRESHOLD and _core_ratio(q_core, entry) >= 0.8:
+            # Fuzzy = typo tolerance only: same number of words, similar brand core.
+            if (
+                ratio >= SIMILAR_THRESHOLD
+                and len(key_tokens) == len(q_tokens)
+                and _core_ratio(q_core, entry) >= 0.8
+                and _tokens_alike(q_tokens, key_tokens)
+            ):
                 consider(entry, min(ratio, 0.99), "fuzzy")
         for core in entry["_cores"]:
+            core_tokens = set(core.split())
             if q_core and core == q_core:
-                # Same brand. A different legal form ("XTB Ltd" vs "XTB S.A.") is another
-                # entity using the brand, not the registered one.
+                # Same brand. It is the registered entity only if the legal form agrees and
+                # the query adds nothing but neutral descriptors ("Dom Maklerski XTB").
+                # "XTB Wealth Partners Ltd" is a different entity using the brand.
+                extra = q_tokens - core_tokens - entry["_tokens"] - NEUTRAL_DESCRIPTORS
                 same_form = not q_form or q_form in entry["_forms"]
-                consider(entry, 0.94 if same_form else 0.8, "core" if same_form else "brand_contained")
-            elif set(core.split()) <= q_tokens and len(core) >= 3:
+                ok = same_form and not extra
+                consider(entry, 0.94 if ok else 0.8, "core" if ok else "brand_contained")
+            elif core_tokens <= q_tokens:
                 # The registered brand is embedded in a longer, different name.
                 consider(entry, 0.8, "brand_contained")
     return best

@@ -1,0 +1,229 @@
+{
+ "meta": {
+  "url": "https://tiktok.example/m1-vio-25-tiktok-lista-ostrzezen",
+  "platform": "tiktok",
+  "title": "Platforma, o której banki milczą",
+  "published_at": "2026-11-12",
+  "seed": true,
+  "detected_days_ago": 8,
+  "author": {
+   "name": "Zmyślony Milioner Kuba",
+   "handle": "@zmyslony_milioner"
+  }
+ },
+ "text": "Fikcja Trade Solutions OÜ to platforma, o której banki milczą. Wpłać 1000 zł i zarabiaj 300 zł tygodniowo. Link w bio, miejsca ograniczone.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": null,
+  "companies": [
+   {
+    "name": "Fikcja Trade Solutions OÜ",
+    "role": "investment_firm",
+    "country": "EE"
+   }
+  ],
+  "comments": [
+   {
+    "handle": "@ania_krk",
+    "account_created": "2023-02-13T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-10T09:00:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@marek_waw",
+    "account_created": "2021-04-28T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam mieszane odczucia.",
+    "posted_at": "2026-11-11T15:00:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@milioner_team1576",
+    "account_created": "2026-11-14T04:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T03:25:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team9101",
+    "account_created": "2026-11-14T18:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T01:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team8625",
+    "account_created": "2026-11-15T10:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T02:21:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team2928",
+    "account_created": "2026-11-14T06:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:49:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team520",
+    "account_created": "2026-11-14T16:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T01:39:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team2800",
+    "account_created": "2026-11-14T19:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T05:21:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team6201",
+    "account_created": "2026-11-14T05:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T05:43:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team6455",
+    "account_created": "2026-11-15T08:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:31:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team4152",
+    "account_created": "2026-11-15T06:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T00:45:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team9072",
+    "account_created": "2026-11-14T19:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T07:45:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team4883",
+    "account_created": "2026-11-15T12:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T07:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team8429",
+    "account_created": "2026-11-14T12:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T03:36:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team9912",
+    "account_created": "2026-11-14T18:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T03:51:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team2743",
+    "account_created": "2026-11-14T14:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T02:12:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team808",
+    "account_created": "2026-11-14T05:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T03:56:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team4694",
+    "account_created": "2026-11-15T09:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T05:58:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team5717",
+    "account_created": "2026-11-14T09:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T00:34:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team6863",
+    "account_created": "2026-11-14T12:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T02:21:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team3109",
+    "account_created": "2026-11-14T22:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T06:22:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@milioner_team9746",
+    "account_created": "2026-11-14T20:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T07:43:00Z",
+    "rating": 5
+   }
+  ]
+ }
+}

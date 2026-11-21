@@ -8,6 +8,7 @@ this way (external stylesheets, script-driven layout) stays `None`; the rules th
 
 from __future__ import annotations
 
+import contextlib
 import re
 from dataclasses import dataclass, field, replace
 from html.parser import HTMLParser
@@ -17,18 +18,55 @@ from .normalize import fold, normalize_line
 DEFAULT_FONT_PX = 16.0
 
 BLOCK_TAGS = {
-    "address", "article", "aside", "blockquote", "body", "dd", "details", "div", "dl", "dt",
-    "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6",
-    "header", "hr", "li", "main", "nav", "ol", "p", "pre", "section", "summary", "table",
-    "tbody", "td", "tfoot", "th", "thead", "tr", "ul", "title", "button", "label", "option",
+    "address",
+    "article",
+    "aside",
+    "blockquote",
+    "body",
+    "dd",
+    "details",
+    "div",
+    "dl",
+    "dt",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "form",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "header",
+    "hr",
+    "li",
+    "main",
+    "nav",
+    "ol",
+    "p",
+    "pre",
+    "section",
+    "summary",
+    "table",
+    "tbody",
+    "td",
+    "tfoot",
+    "th",
+    "thead",
+    "tr",
+    "ul",
+    "title",
+    "button",
+    "label",
+    "option",
 }
 SKIP_TAGS = {"script", "style", "noscript", "template", "svg", "iframe", "object", "select"}
 VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "wbr"}
 HEADING_SCALE = {"h1": 2.0, "h2": 1.5, "h3": 1.17, "h4": 1.0, "h5": 0.83, "h6": 0.67}
 
-_LOW_VIS_CLASS = re.compile(
-    r"foot-?note|przypis|disclaimer|legal|nota-?prawna|fine-?print|small-?print|zastrzezeni"
-)
+_LOW_VIS_CLASS = re.compile(r"foot-?note|przypis|disclaimer|legal|nota-?prawna|fine-?print|small-?print|zastrzezeni")
 _COLLAPSE_CLASS = re.compile(r"collaps|accordion|spoiler|tooltip|modal|tab-pane|read-?more-content|hidden")
 _COLLAPSE_OPEN = re.compile(r"\b(show|open|expanded|active)\b")
 _LEGAL_HEADING = re.compile(r"^(legal|nota prawna|informacje prawne|zastrzezenia prawne|przypisy|disclaimer)\b")
@@ -38,12 +76,25 @@ EXPAND_LINK = re.compile(
 )
 
 NAMED_COLORS = {
-    "black": (0, 0, 0), "white": (255, 255, 255), "gray": (128, 128, 128),
-    "grey": (128, 128, 128), "silver": (192, 192, 192), "lightgray": (211, 211, 211),
-    "lightgrey": (211, 211, 211), "darkgray": (169, 169, 169), "darkgrey": (169, 169, 169),
-    "dimgray": (105, 105, 105), "gainsboro": (220, 220, 220), "whitesmoke": (245, 245, 245),
-    "red": (255, 0, 0), "green": (0, 128, 0), "blue": (0, 0, 255), "yellow": (255, 255, 0),
-    "orange": (255, 165, 0), "navy": (0, 0, 128), "gold": (255, 215, 0),
+    "black": (0, 0, 0),
+    "white": (255, 255, 255),
+    "gray": (128, 128, 128),
+    "grey": (128, 128, 128),
+    "silver": (192, 192, 192),
+    "lightgray": (211, 211, 211),
+    "lightgrey": (211, 211, 211),
+    "darkgray": (169, 169, 169),
+    "darkgrey": (169, 169, 169),
+    "dimgray": (105, 105, 105),
+    "gainsboro": (220, 220, 220),
+    "whitesmoke": (245, 245, 245),
+    "red": (255, 0, 0),
+    "green": (0, 128, 0),
+    "blue": (0, 0, 255),
+    "yellow": (255, 255, 0),
+    "orange": (255, 165, 0),
+    "navy": (0, 0, 128),
+    "gold": (255, 215, 0),
 }
 
 RGB = tuple[int, int, int]
@@ -59,6 +110,7 @@ class Style:
     collapsed: bool = False  # needs a click: <details>, accordion, collapsed block
     low_visibility: bool = False  # footnote / <small> / footer / "Legal" section
     truncated: bool = False  # ellipsis, line clamp, clipped overflow
+    media_hidden: bool = False  # hidden by an @media rule (some screen sizes)
     bold: bool = False
     heading: int | None = None
     href: str | None = None
@@ -122,8 +174,15 @@ def _first_color(value: str) -> RGB | None:
 def parse_font_size(value: str, parent_px: float) -> float | None:
     value = value.strip().lower()
     keywords = {
-        "xx-small": 9, "x-small": 10, "small": 13, "medium": 16, "large": 18, "x-large": 24,
-        "xx-large": 32, "smaller": parent_px * 0.83, "larger": parent_px * 1.2,
+        "xx-small": 9,
+        "x-small": 10,
+        "small": 13,
+        "medium": 16,
+        "large": 18,
+        "x-large": 24,
+        "xx-large": 32,
+        "smaller": parent_px * 0.83,
+        "larger": parent_px * 1.2,
     }
     if value in keywords:
         return float(keywords[value])
@@ -136,7 +195,10 @@ def parse_font_size(value: str, parent_px: float) -> float | None:
         return None
     unit = m.group(2) or "px"
     return {
-        "px": num, "pt": num * 4 / 3, "em": num * parent_px, "rem": num * DEFAULT_FONT_PX,
+        "px": num,
+        "pt": num * 4 / 3,
+        "em": num * parent_px,
+        "rem": num * DEFAULT_FONT_PX,
         "%": num / 100 * parent_px,
     }[unit]
 
@@ -217,10 +279,9 @@ class _Walker(HTMLParser):
         ident = attrs.get("id")
         decls: dict[str, str] = {}
         matched = [
-            r for r in self.rules
-            if (r.tag is None or r.tag == tag)
-            and (r.ident is None or r.ident == ident)
-            and r.classes <= classes
+            r
+            for r in self.rules
+            if (r.tag is None or r.tag == tag) and (r.ident is None or r.ident == ident) and r.classes <= classes
         ]
         for rule in sorted(matched, key=lambda r: r.specificity):
             decls.update(rule.decls)
@@ -258,10 +319,8 @@ class _Walker(HTMLParser):
         if bg and (c := _first_color(bg)):
             changes.update(background=c, styled=True)
         if "opacity" in decls:
-            try:
+            with contextlib.suppress(ValueError):
                 changes.update(opacity=parent.opacity * float(decls["opacity"]), styled=True)
-            except ValueError:
-                pass
         weight = decls.get("font-weight", "")
         if weight in {"bold", "bolder"} or (weight.isdigit() and int(weight) >= 600):
             changes["bold"] = True
@@ -290,6 +349,12 @@ class _Walker(HTMLParser):
             or (decls.get("white-space") == "nowrap" and clip)
         ):
             changes["truncated"] = True
+        for selector in self.signals.media_hidden_selectors:
+            parsed = _parse_selector(selector)
+            if parsed and (parsed[0] or parsed[1] or parsed[2]):
+                m_tag, m_id, m_classes = parsed
+                if (m_tag in (None, tag)) and (m_id in (None, ident)) and m_classes <= classes:
+                    changes["media_hidden"] = True
         if tag == "a" and attrs.get("href"):
             changes["href"] = attrs["href"]
         if tag == "title":
@@ -350,9 +415,7 @@ class _Walker(HTMLParser):
             self.legal_section_depth = max(1, len(self.stack) - 2)
         elif self.legal_section_depth is not None and len(self.stack) - 1 >= self.legal_section_depth:
             style = replace(style, low_visibility=True)
-        lead_space = data[:1].isspace()
         self.runs.append((text, style, self.block_break or not self.runs))
-        self._lead_space = lead_space
         self.block_break = False
 
 
@@ -387,8 +450,7 @@ def extract_segments(html: str) -> tuple[str, list[Segment], PageSignals]:
     if weights:
         signals.dominant_font_px = max(weights.items(), key=lambda kv: (kv[1], kv[0]))[0]
     signals.expand_links = [
-        s for s in segments
-        if len(s.text) <= 60 and EXPAND_LINK.search(fold(s.text)) and not s.style.hidden
+        s for s in segments if len(s.text) <= 60 and EXPAND_LINK.search(fold(s.text)) and not s.style.hidden
     ]
     return full, segments, signals
 

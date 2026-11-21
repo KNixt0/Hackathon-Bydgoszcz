@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bursztyn-przykladowy.example/m2-ok-01-rachunek-bursztyn",
+  "platform": "web",
+  "title": "Rachunek maklerski w DM Bursztyn Przykładowy",
+  "published_at": "2026-11-19",
+  "seed": true,
+  "detected_days_ago": 1
+ },
+ "text": "Materiał reklamowy. Dom Maklerski Bursztyn Przykładowy S.A. zaprasza do otwarcia rachunku maklerskiego: dostęp do akcji i funduszy ETF w jednej aplikacji. Inwestowanie daje szansę na zysk, ale wynik nie jest pewny. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków. Kontrakty CFD są złożonymi instrumentami i wiążą się z dużym ryzykiem szybkiej utraty środków pieniężnych z powodu dźwigni finansowej. 76% rachunków inwestorów detalicznych odnotowuje straty pieniężne w wyniku handlu kontraktami CFD u niniejszego dostawcy.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

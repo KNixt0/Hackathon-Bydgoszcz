@@ -23,6 +23,25 @@ def _party_name(payload: dict, key: str) -> str | None:
     return party.get("name") if isinstance(party, dict) else None
 
 
+def workflow_dict(row: Incident) -> dict[str, Any]:
+    """Contract v3 `Workflow`."""
+    return {
+        "assigned_to": row.assigned_to,
+        "escalation_path": row.escalation_path,
+        "resolution_action": row.resolution_action,
+        "resolution_note": row.resolution_note or "",
+        "label": row.label or "unlabeled",
+    }
+
+
+def _priority(row: Incident) -> float:
+    if row.priority_score is not None:
+        return row.priority_score
+    from app.public_reports import priority_score
+
+    return priority_score(row.risk_score, row.user_reports_count)
+
+
 def to_incident(row: Incident) -> dict[str, Any]:
     return {
         **row.payload,
@@ -30,6 +49,9 @@ def to_incident(row: Incident) -> dict[str, Any]:
         "status": row.status,
         "created_at": iso(row.created_at),
         "updated_at": iso(row.updated_at),
+        "workflow": workflow_dict(row),
+        "user_reports_count": row.user_reports_count or 0,
+        "priority_score": _priority(row),
     }
 
 
@@ -58,6 +80,9 @@ def to_summary(row: Incident) -> dict[str, Any]:
         "advertiser": _party_name(p, "advertiser"),
         "firm": _party_name(p, "investment_firm"),
         "failed_rules": [str(r.get("id")) for r in p.get("rules") or [] if r.get("status") == "fail"],
+        "workflow": {"assigned_to": row.assigned_to, "label": row.label or "unlabeled"},
+        "user_reports_count": row.user_reports_count or 0,
+        "priority_score": _priority(row),
     }
 
 
@@ -95,6 +120,10 @@ def apply_payload(row: Incident, payload: dict) -> None:
     row.source_url_hash = url_hash(row.source_url)
     row.synthetic = bool(payload.get("synthetic", False))
     row.search_text = _search_text(payload)
+    from app.public_reports import normalized_hash, priority_score
+
+    row.norm_url_hash = normalized_hash(row.source_url)
+    row.priority_score = priority_score(row.risk_score, row.user_reports_count)  # risk moved: recompute
 
 
 def upsert_incident(
@@ -106,6 +135,8 @@ def upsert_incident(
     fetch_url: str,
     render: bool,
     module_hint: int | None,
+    meta: dict | None = None,
+    context: dict | None = None,
 ) -> tuple[Incident, bool]:
     """Store an Analysis. Same source url -> update in place (keeps id, status, created_at) and
     record a version; `changed` on the version says whether the content hash moved (the diff)."""
@@ -125,6 +156,7 @@ def upsert_incident(
     apply_payload(row, payload)
     row.updated_at = row.created_at if created else now
     row.origin, row.fetch_url, row.render, row.module_hint = origin, fetch_url, render, module_hint
+    row.scan_meta, row.scan_context = meta or None, context or None
     db.flush()
     db.add(
         IncidentVersion(
@@ -151,3 +183,16 @@ def upsert_incident(
 def delete_incident(db: Session, row: Incident) -> None:
     db.query(IncidentVersion).filter(IncidentVersion.incident_id == row.id).delete()
     db.delete(row)
+
+
+def rescan_options(row: Incident) -> dict:
+    """create_job() arguments that fetch this incident's source again exactly like the first time."""
+    meta = {k: v for k, v in (row.scan_meta or {}).items() if k != "detected_days_ago"}
+    return {
+        "fetch_url": row.fetch_url or row.source_url,
+        "origin": row.origin,
+        "render": row.render,
+        "module_hint": row.module_hint,
+        "meta": meta,
+        "context": row.scan_context or {},
+    }

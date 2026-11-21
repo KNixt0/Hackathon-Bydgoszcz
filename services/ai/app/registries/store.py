@@ -32,8 +32,12 @@ class Snapshot:
 
 
 class RegistryStore:
-    def __init__(self, data_dir: Path | None = None, demo_overlay: bool = True,
-                 bundled_dir: Path = BUNDLED_DATA_DIR / "registries") -> None:
+    def __init__(
+        self,
+        data_dir: Path | None = None,
+        demo_overlay: bool = True,
+        bundled_dir: Path = BUNDLED_DATA_DIR / "registries",
+    ) -> None:
         self.bundled_dir = bundled_dir
         self.runtime_dir = (data_dir / "registries") if data_dir else None
         self.demo_overlay = demo_overlay
@@ -99,8 +103,12 @@ class RegistryStore:
         self.runtime_dir.mkdir(parents=True, exist_ok=True)
         label, url = REGISTRIES[registry]
         payload = {
-            "registry": registry, "label": label, "url": url, "snapshot_date": snapshot_date,
-            "source": "PUT /registries", "entries": entries,
+            "registry": registry,
+            "label": label,
+            "url": url,
+            "snapshot_date": snapshot_date,
+            "source": "PUT /registries",
+            "entries": entries,
         }
         tmp = self.runtime_dir / f"{registry}.json.tmp"
         tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -116,10 +124,15 @@ class RegistryStore:
         out = []
         for registry, (label, url) in REGISTRIES.items():
             snap = self._snapshots[registry]
-            out.append({
-                "registry": registry, "label": label, "url": url,
-                "entries": len(snap.entries), "snapshot_date": snap.snapshot_date,
-            })
+            out.append(
+                {
+                    "registry": registry,
+                    "label": label,
+                    "url": url,
+                    "entries": len(snap.entries),
+                    "snapshot_date": snap.snapshot_date,
+                }
+            )
         return out
 
     def lookup(self, registry: str, name: str) -> Match | None:

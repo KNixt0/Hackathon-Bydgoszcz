@@ -10,7 +10,7 @@ _ZERO_WIDTH = dict.fromkeys(map(ord, "​‌‍⁠﻿­"), None)
 _SPACES = re.compile(r"[ \t\r\f\v  -   　]+")
 _FOLD_MAP = str.maketrans(
     "ąćęłńóśźżäöüßáéíúàèâêôçñ’‘`´“”„«»–—‑",
-    "acelnoszzaousaeiuaeaeocn''''\"\"\"\"\"---",
+    'acelnoszzaousaeiuaeaeocn\'\'\'\'"""""---',
 )
 
 

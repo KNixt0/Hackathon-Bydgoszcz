@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bursztyn-przykladowy.example/m2-ok-04-poradnik-etf",
+  "platform": "web",
+  "title": "Czym jest fundusz ETF? Poradnik",
+  "published_at": "2026-11-12",
+  "seed": true,
+  "detected_days_ago": 8
+ },
+ "text": "Poradnik edukacyjny Dom Maklerski Bursztyn Przykładowy S.A.. Fundusz ETF to fundusz notowany na giełdzie, który odwzorowuje indeks. Jednostki kupuje się jak akcje, przez rachunek maklerski. Opłata za zarządzanie jest zwykle niższa niż w funduszach aktywnych. Wartość jednostek zmienia się razem z rynkiem, więc inwestor może ponieść stratę. Materiał ma charakter edukacyjny i nie stanowi rekomendacji.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

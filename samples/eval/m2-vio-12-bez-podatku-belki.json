@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://wisla-zmyslona.example/m2-vio-12-bez-podatku-belki",
+  "platform": "web",
+  "title": "Inwestuj bez podatku Belki",
+  "published_at": "2026-11-11",
+  "seed": true,
+  "detected_days_ago": 9
+ },
+ "text": "Materiał reklamowy Dom Maklerski Wisła Zmyślona S.A.. Inwestuj bez podatku Belki: na koncie IKZE nie zapłacisz podatku od zysków, a wpłaty odliczysz od dochodu. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

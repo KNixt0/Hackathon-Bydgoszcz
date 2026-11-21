@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, field_validator
 
-Status = Literal["new", "in_review", "escalated", "closed_violation", "closed_ok"]
+# contract v3: the case workflow (old closed_violation -> resolved, closed_ok -> false_positive)
+Status = Literal["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"]
 ModuleId = Literal[1, 2, 3]
 Platform = Literal["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"]
 PLATFORMS: tuple[str, ...] = (
@@ -20,7 +21,18 @@ PLATFORMS: tuple[str, ...] = (
     "google_ads",
     "sample",
 )
-STATUSES: tuple[str, ...] = ("new", "in_review", "escalated", "closed_violation", "closed_ok")
+STATUSES: tuple[str, ...] = (
+    "new",
+    "in_review",
+    "escalation_requested",
+    "escalated",
+    "resolved",
+    "false_positive",
+)
+Role = Literal["ANALYST", "SUPERVISOR"]
+EscalationPath = Literal["SUPERVISION_RISK_DEPT", "LEGAL_WARNING_LIST", "THIRD_PARTY_AUDIT"]
+ResolutionAction = Literal["evidence_report", "warning_list_request", "enhanced_monitoring", "false_positive"]
+Label = Literal["unlabeled", "true_positive", "false_positive"]
 
 
 def iso(value: datetime | None) -> str | None:
@@ -49,8 +61,62 @@ class ScanRequest(Strict):
         return value
 
 
+class PublicReportRequest(Strict):
+    """POST /api/public/reports. The comment is stored as plain text and escaped wherever it is shown."""
+
+    url: str = Field(min_length=1, max_length=2048)
+    category_hint: ModuleId | None = None
+    comment: str | None = Field(default=None, max_length=500)
+
+    @field_validator("url")
+    @classmethod
+    def _http_url(cls, value: str) -> str:
+        value = value.strip()
+        if not value.lower().startswith(("http://", "https://")):
+            raise ValueError("only http and https addresses are accepted")
+        return value
+
+    @field_validator("comment")
+    @classmethod
+    def _plain(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = "".join(ch for ch in value if ch in "\n\t" or ch.isprintable()).strip()
+        return cleaned or None
+
+
 class StatusPatch(Strict):
+    """PATCH /api/incidents/{id}: alias of the transition endpoint."""
+
     status: Status
+    reason: str | None = Field(default=None, max_length=2000)
+    escalation_path: EscalationPath | None = None
+    resolution_action: ResolutionAction | None = None
+
+
+class TransitionRequest(Strict):
+    to: Status
+    reason: str | None = Field(default=None, max_length=2000)
+    escalation_path: EscalationPath | None = None
+    resolution_action: ResolutionAction | None = None
+
+
+class LabelRequest(Strict):
+    label: Label
+
+
+class ThresholdsRequest(Strict):
+    flag: float = Field(ge=0, le=100)
+    critical: float = Field(ge=0, le=100)
+
+
+class LoginRequest(Strict):
+    email: str = Field(min_length=1, max_length=255)
+    password: str = Field(min_length=1, max_length=1024)
+
+
+class DemoLoginRequest(Strict):
+    role: Role
 
 
 class ImportRequest(Strict):
@@ -63,6 +129,13 @@ class DemoTriggerRequest(Strict):
 
 class WatchlistRequest(ScanRequest):
     pass
+
+
+class DiscoverySourceRequest(ScanRequest):
+    keywords: list[Annotated[str, Field(min_length=1, max_length=80)]] = Field(
+        default_factory=list, max_length=30
+    )
+    max_links: int | None = Field(default=None, ge=1, le=100)
 
 
 # ---- AI service response (only what the backend relies on is enforced; the rest passes through) ----

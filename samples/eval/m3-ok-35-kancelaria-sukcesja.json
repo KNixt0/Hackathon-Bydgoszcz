@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://zmyslona-sukcesja.example/m3-ok-35-kancelaria-sukcesja",
+  "platform": "web",
+  "title": "Planowanie sukcesji majątku",
+  "published_at": "2026-11-02",
+  "seed": true,
+  "detected_days_ago": 18
+ },
+ "text": "Kancelaria Zmyślona Sukcesja sp. z o.o. pomaga rodzinom zaplanować sukcesję majątku: testament, fundacja rodzinna, podatki. Nie świadczymy doradztwa inwestycyjnego ani nie rekomendujemy instrumentów finansowych. Kwestie podatkowe zależą od indywidualnej sytuacji klienta i mogą ulec zmianie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Kancelaria Zmyślona Sukcesja sp. z o.o.",
+    "role": "investment_firm",
+    "country": "PL"
+   }
+  ],
+  "declared": {
+   "tax_adviser_no": "99001"
+  }
+ }
+}

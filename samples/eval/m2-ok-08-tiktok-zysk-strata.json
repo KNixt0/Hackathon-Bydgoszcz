@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://tiktok.example/m2-ok-08-tiktok-zysk-strata",
+  "platform": "tiktok",
+  "title": "Zysk? Możliwy. Strata? Też.",
+  "published_at": "2026-10-31",
+  "seed": true,
+  "detected_days_ago": 20,
+  "author": {
+   "name": "DM Kormoran Fikcyjny",
+   "handle": "@kormoran_fikcyjny"
+  }
+ },
+ "text": "Reklama Dom Maklerski Kormoran Fikcyjny S.A.. Zysk? Możliwy. Strata? Też. Zanim zaczniesz, sprawdź, ile możesz stracić. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków. Szczegóły i tabela opłat na stronie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

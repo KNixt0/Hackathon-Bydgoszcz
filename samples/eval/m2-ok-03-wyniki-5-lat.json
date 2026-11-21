@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://kormoran-fikcyjny.example/m2-ok-03-wyniki-5-lat",
+  "platform": "facebook",
+  "title": "Fundusz akcji: wyniki za 5 lat",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 5
+ },
+ "text": "Materiał promocyjny Dom Maklerski Kormoran Fikcyjny S.A.. Stopa zwrotu portfela akcji w latach 2021–2025 wyniosła kolejno 8%, -4%, 11%, 6% i 9% (pełne lata kalendarzowe, okres referencyjny 01.01.2021–31.12.2025). Źródło: opracowanie własne na podstawie danych spółki. Wyniki podano po uwzględnieniu opłat i prowizji. Wyniki historyczne nie stanowią gwarancji przyszłych wyników. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

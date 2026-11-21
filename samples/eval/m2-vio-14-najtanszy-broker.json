@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bank-jantarowy.example/m2-vio-14-najtanszy-broker",
+  "platform": "web",
+  "title": "Najtańszy broker w Polsce",
+  "published_at": "2026-11-05",
+  "seed": true,
+  "detected_days_ago": 15
+ },
+ "text": "Materiał reklamowy. Bank Jantarowy Fikcyjny S.A. to najtańszy broker w Polsce: prowizje niższe niż u konkurencji. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

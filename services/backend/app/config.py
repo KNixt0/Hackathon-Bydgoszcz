@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     scan_retry_backoff_seconds: float = 5.0
     rescan_cron: str = "0 */6 * * *"
     registry_refresh_cron: str = "30 3 * * *"
+    discovery_cron: str = "15 */6 * * *"
+    rescan_samples: bool = False  # scheduled re-scan also covers sample/synthetic incidents
+    discovery_max_links: int = 20  # default per-run cap of new links per source
+    # keyword filter of the offline listing page (SAMPLES_DIR/discovery/index.html), comma separated
+    discovery_keywords: str = "oferta,inwest,doradztw,family office,wealth"
 
     # --- pipeline ---
     alert_threshold: float = 70.0
@@ -51,11 +56,33 @@ class Settings(BaseSettings):
     respect_robots: bool = True
     playwright_enabled: bool = True
     chromium_no_sandbox: bool = True  # Chromium's own sandbox needs extra container privileges
+    visual_audit_enabled: bool = True  # render HTML at 3 viewports and measure risk warnings
+    visual_audit_timeout_seconds: float = 20.0  # hard budget per document
     registry_min_entries: int = 3
 
     # --- exports ---
     csv_delimiter: str = ";"
     registry_max_pages: int = 60
+
+    # --- public reports (POST /api/public/reports) ---
+    public_reports_per_hour: int = 20  # per reporter (salted hash of the client IP)
+    public_reports_max_queued: int = 50  # scans started by reports that are still waiting or running
+    public_reports_salt: str = ""  # empty = derived from JWT_SECRET
+    public_reports_viral_threshold: int = 5
+
+    # --- authentication ---
+    app_env: Literal["development", "production"] = "development"
+    jwt_secret: str = ""  # HS256 key; empty/placeholder -> refused in production, random with DEMO_LOGIN
+    jwt_expire_hours: float = 8.0
+    cookie_secure: Literal["auto", "true", "false"] = "auto"  # auto = Secure when the request is HTTPS
+    demo_login: bool = False
+    demo_analyst_email: str = "analityk@uknf.local"
+    demo_analyst_password: str = ""  # empty = the account can only be used through the demo login
+    demo_supervisor_email: str = "kierownik@uknf.local"
+    demo_supervisor_password: str = ""
+    login_max_failures_per_email: int = 5
+    login_max_failures_per_ip: int = 20
+    login_window_seconds: int = 900
 
     @field_validator("database_url")
     @classmethod
@@ -74,6 +101,10 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def discovery_keyword_list(self) -> list[str]:
+        return [k.strip() for k in self.discovery_keywords.split(",") if k.strip()]
 
     @property
     def proxy_list(self) -> list[str]:

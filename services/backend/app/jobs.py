@@ -56,6 +56,7 @@ def create_job(
         db.add(job)
         db.flush()
         payload = job_dict(job)
+    log.info("job state", extra={"job_id": payload["id"], "state": "queued", "origin": origin})
     events.emit("scan:progress", payload)
     return payload["id"]
 
@@ -87,6 +88,10 @@ def set_state(job_id: str, state: str, *, error: str | None = None, incident_id:
         job.finished_at = utcnow() if state in ("done", "failed") else None
         db.flush()
         payload = job_dict(job)
+    log.info(
+        "job state",
+        extra={"job_id": job_id, "state": state, **({"error": payload["error"]} if error else {})},
+    )
     events.emit("scan:progress", payload)
 
 

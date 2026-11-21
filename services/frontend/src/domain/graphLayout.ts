@@ -3,6 +3,8 @@ import type { Graph, GraphNode, GraphNodeType } from "../types/incident";
 export interface PositionedNode extends GraphNode {
   x: number;
   y: number;
+  /** index of the layout column, left to right */
+  col: number;
 }
 
 export interface GraphLayout {
@@ -21,11 +23,13 @@ const COLUMN: Record<GraphNodeType, number> = {
   ad: 4,
 };
 
-export const NODE_W = 168;
+export const NODE_W = 164;
 export const NODE_H = 46;
-const COL_GAP = 62;
-const ROW_GAP = 26;
+const COL_GAP = 104;
+const ROW_GAP = 30;
 const PAD = 20;
+/** Vertical room above and below the nodes for edges that arc over skipped columns. */
+export const PAD_Y = 52;
 
 /**
  * Simple layered layout: one column per node type, rows ordered by the barycentre
@@ -56,7 +60,7 @@ export function layoutGraph(graph: Graph): GraphLayout {
   });
 
   const maxRows = Math.max(1, ...columns.map((c) => c.length));
-  const height = PAD * 2 + maxRows * NODE_H + (maxRows - 1) * ROW_GAP;
+  const height = PAD_Y * 2 + maxRows * NODE_H + (maxRows - 1) * ROW_GAP;
   const width = PAD * 2 + columns.length * NODE_W + Math.max(0, columns.length - 1) * COL_GAP;
 
   const nodes: PositionedNode[] = [];
@@ -64,7 +68,7 @@ export function layoutGraph(graph: Graph): GraphLayout {
     const colHeight = col.length * NODE_H + (col.length - 1) * ROW_GAP;
     const top = (height - colHeight) / 2;
     col.forEach((n, ri) => {
-      nodes.push({ ...n, x: PAD + ci * (NODE_W + COL_GAP), y: top + ri * (NODE_H + ROW_GAP) });
+      nodes.push({ ...n, col: ci, x: PAD + ci * (NODE_W + COL_GAP), y: top + ri * (NODE_H + ROW_GAP) });
     });
   });
   return { nodes, width: Math.max(width, 2 * PAD + NODE_W), height };

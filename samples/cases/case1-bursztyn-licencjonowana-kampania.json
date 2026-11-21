@@ -1,0 +1,291 @@
+{
+ "meta": {
+  "url": "https://youtube.example/watch?v=zmyslony-portfel-bursztyn",
+  "platform": "youtube",
+  "title": "Jak wybrać rachunek maklerski? Przegląd oferty Dom Maklerski Bursztyn Przykładowy S.A. [REKLAMA]",
+  "published_at": "2026-11-08",
+  "author": {
+   "name": "Zmyślony Portfel",
+   "handle": "@zmyslonyportfel"
+  },
+  "seed": true,
+  "detected_days_ago": 6
+ },
+ "html_file": "case1-bursztyn-licencjonowana-kampania.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": null,
+  "demo_case": "case1",
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ],
+  "graph": {
+   "nodes": [
+    {
+     "id": "firm",
+     "type": "company",
+     "label": "Dom Maklerski Bursztyn Przykładowy S.A.",
+     "meta": {
+      "role": "investment_firm"
+     }
+    },
+    {
+     "id": "channel",
+     "type": "influencer",
+     "label": "Zmyślony Portfel",
+     "meta": {
+      "note": "kanał fikcyjny"
+     }
+    },
+    {
+     "id": "ad",
+     "type": "ad",
+     "label": "Film: przegląd oferty Dom Maklerski Bursztyn Przykładowy S.A. [REKLAMA]"
+    }
+   ],
+   "edges": [
+    {
+     "source": "firm",
+     "target": "channel",
+     "type": "contract",
+     "label": "umowa reklamowa zgłoszona do UKNF"
+    },
+    {
+     "source": "channel",
+     "target": "ad",
+     "type": "publishes",
+     "label": "publikuje"
+    },
+    {
+     "source": "ad",
+     "target": "firm",
+     "type": "promotes",
+     "label": "promuje"
+    }
+   ]
+  },
+  "comments": [
+   {
+    "handle": "@marta_z_gdanska",
+    "account_created": "2019-03-27T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dobrze, że na początku jest jasno napisane, że to reklama. Szanuję.",
+    "posted_at": "2026-11-08T17:54:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@pan_tadeusz_inwestuje",
+    "account_created": "2022-12-03T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Przydałoby się więcej o opłatach za przewalutowanie.",
+    "posted_at": "2026-11-08T16:28:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@Kasia.Nowakowska",
+    "account_created": "2019-11-10T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam tam rachunek od kilku lat, aplikacja ok, ale obsługa czasem długo odpisuje.",
+    "posted_at": "2026-11-08T18:12:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@oszczedny_inzynier",
+    "account_created": "2016-03-26T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Fajnie wytłumaczone zlecenia z limitem.",
+    "posted_at": "2026-11-09T21:32:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wojtek1985",
+    "account_created": "2019-07-01T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Brakuje porównania z innymi brokerami, ale rozumiem, że to materiał sponsorowany.",
+    "posted_at": "2026-11-09T19:39:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@ania_i_gielda",
+    "account_created": "2023-01-21T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ostrzeżenie o ryzyku CFD powinno być w każdym takim filmie, plus.",
+    "posted_at": "2026-11-09T11:06:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@DarekZLublina",
+    "account_created": "2019-03-04T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Trochę za długie intro.",
+    "posted_at": "2026-11-09T13:09:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@babcia_gieldowa",
+    "account_created": "2015-03-07T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dzięki za pokazanie, gdzie jest tabela opłat.",
+    "posted_at": "2026-11-10T17:51:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@student_ekonomii",
+    "account_created": "2021-12-09T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ja zostaję przy obligacjach, ale film rzeczowy.",
+    "posted_at": "2026-11-10T19:02:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@piotr.kowal",
+    "account_created": "2020-11-02T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Czy rachunek IKE też tam można otworzyć?",
+    "posted_at": "2026-11-10T15:28:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@gosia_finanse",
+    "account_created": "2021-06-30T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "CFD to nie dla mnie, straciłem kiedyś sporo.",
+    "posted_at": "2026-11-11T20:39:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@marek_tokarz",
+    "account_created": "2021-06-14T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Konkretnie i bez obiecywania cudów.",
+    "posted_at": "2026-11-11T11:39:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@ela_ksiegowa",
+    "account_created": "2014-05-01T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dźwięk mógłby być lepszy.",
+    "posted_at": "2026-11-12T17:04:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@rysiek_z_radomia",
+    "account_created": "2014-10-30T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dobrze, że mówisz o ryzyku, mało kto to robi.",
+    "posted_at": "2026-11-12T09:12:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@nocny_trader",
+    "account_created": "2016-11-15T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Średnio mnie przekonuje, ale przynajmniej uczciwie oznaczone.",
+    "posted_at": "2026-11-13T18:01:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@zuza_m",
+    "account_created": "2022-11-21T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Subskrybuję od dawna, tak trzymaj.",
+    "posted_at": "2026-11-13T16:20:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@krzysiek_it",
+    "account_created": "2019-02-07T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "A jak wygląda sprawa z PIT-em na koniec roku?",
+    "posted_at": "2026-11-14T18:53:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@halina_oszczedza",
+    "account_created": "2016-05-09T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Pierwsze zlecenie złożone, dzięki za instrukcję.",
+    "posted_at": "2026-11-15T17:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@tomasz.w",
+    "account_created": "2021-05-05T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dla początkujących w sam raz.",
+    "posted_at": "2026-11-15T13:31:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@beata_z_opola",
+    "account_created": "2014-03-19T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Wolałbym odcinek bez sponsora, ale rozumiem.",
+    "posted_at": "2026-11-16T19:05:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@leszek_emeryt",
+    "account_created": "2019-04-17T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Interfejs pokazany czytelnie.",
+    "posted_at": "2026-11-17T19:17:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@iga_analizuje",
+    "account_created": "2018-09-22T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Uwaga na dźwignię, ludzie.",
+    "posted_at": "2026-11-18T17:59:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@pawel_gorski",
+    "account_created": "2023-08-02T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Spoko materiał.",
+    "posted_at": "2026-11-19T10:45:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@dorota_s",
+    "account_created": "2017-01-04T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Czekam na odcinek o ETF-ach.",
+    "posted_at": "2026-11-20T14:48:00Z",
+    "rating": 4
+   }
+  ]
+ }
+}

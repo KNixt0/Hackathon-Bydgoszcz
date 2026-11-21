@@ -1,0 +1,198 @@
+{
+ "meta": {
+  "url": "https://bursztyn-vip.example/m3-vio-41-podszywanie-pod-marke",
+  "platform": "facebook",
+  "title": "Bursztyn Przykładowy Capital: oferta VIP",
+  "published_at": "2026-11-04",
+  "seed": true,
+  "detected_days_ago": 16
+ },
+ "text": "Bursztyn Przykładowy Capital Ltd, oficjalny partner domu maklerskiego. Gwarantowany zysk 10% miesięcznie. Nasz doradca wskaże Ci, które akcje kupić. Wypełnij formularz na bursztyn-vip.example.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Bursztyn Przykładowy Capital Ltd",
+    "role": "investment_firm",
+    "country": "SC",
+    "incorporated_on": "2026-08-15"
+   }
+  ],
+  "comments": [
+   {
+    "handle": "@ania_krk",
+    "account_created": "2019-05-01T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-10T02:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip4386",
+    "account_created": "2026-11-14T02:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T01:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip9708",
+    "account_created": "2026-11-15T06:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T02:43:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip458",
+    "account_created": "2026-11-14T17:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T06:50:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip3345",
+    "account_created": "2026-11-15T02:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:38:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip9331",
+    "account_created": "2026-11-15T11:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T05:39:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip1543",
+    "account_created": "2026-11-15T03:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T00:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip6033",
+    "account_created": "2026-11-15T02:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T03:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip1636",
+    "account_created": "2026-11-14T12:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T00:49:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip848",
+    "account_created": "2026-11-15T13:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T07:03:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip6004",
+    "account_created": "2026-11-15T07:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T04:23:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip9535",
+    "account_created": "2026-11-15T08:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T05:24:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip6020",
+    "account_created": "2026-11-14T15:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T02:35:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip5955",
+    "account_created": "2026-11-15T13:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T00:45:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip8294",
+    "account_created": "2026-11-15T09:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T00:59:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip4489",
+    "account_created": "2026-11-14T19:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T03:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip8025",
+    "account_created": "2026-11-14T14:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T05:05:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip3538",
+    "account_created": "2026-11-15T09:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T01:36:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@bursztyn_vip2871",
+    "account_created": "2026-11-14T01:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T04:45:00Z",
+    "rating": 5
+   }
+  ]
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://x.example/m1-ok-19-wzmianka-organiczna",
+  "platform": "x",
+  "title": "Przeniosłem rachunek",
+  "published_at": "2026-11-13",
+  "seed": true,
+  "detected_days_ago": 7,
+  "author": {
+   "name": "Zmyślony Kowalski",
+   "handle": "@zmyslony_kowalski"
+  }
+ },
+ "text": "Przeniosłem rachunek maklerski do Banku Jantarowego Fikcyjnego. Formalności trwały tydzień, przelew papierów jeszcze w drodze. Dam znać, jak wyjdzie w praktyce.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": null,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>InvestWatch – prezentacja dla jury</title>
+<style>
+@page { size: 1280px 720px; margin: 0 }
+:root{--ink:#14213d;--mute:#5a6478;--acc:#2a5db0;--line:#dfe3ea;--bg:#fbfcfd;--soft:#f0f3f8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:"Helvetica Neue",Arial,"Liberation Sans","DejaVu Sans",sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+section{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg);page-break-after:always;break-after:page;padding:92px 64px 40px}
+section:last-child{page-break-after:auto;break-after:auto}
+.hd{position:absolute;left:64px;right:64px;top:28px;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--mute);border-bottom:1px solid var(--line);padding-bottom:12px}
+.mark{font-weight:700;color:var(--ink);letter-spacing:.2px}.mark i{display:inline-block;width:10px;height:10px;background:var(--acc);border-radius:2px;margin-right:8px}
+h1{font-size:40px;line-height:1.15;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+h2{font-size:32px;line-height:1.2;font-weight:700;margin-bottom:8px;letter-spacing:-.2px}
+.lead{font-size:20px;color:var(--mute);line-height:1.4;margin-bottom:20px}
+p,li{font-size:19px;line-height:1.42}
+ul{list-style:none}
+li{padding-left:20px;position:relative;margin-bottom:10px}
+li:before{content:"";position:absolute;left:0;top:.62em;width:8px;height:2px;background:var(--acc)}
+.shot{border:1px solid #cfd6e2;box-shadow:0 6px 22px rgba(20,33,61,.12);background:#fff;overflow:hidden;border-radius:4px}
+.shot img{display:block}
+.row{display:flex;gap:28px}
+.cap{font-size:13px;color:var(--mute);margin:0 0 5px;letter-spacing:.2px}
+.tag{display:inline-block;font-size:13px;font-weight:700;color:var(--acc);border:1px solid var(--acc);border-radius:3px;padding:1px 7px;margin-right:6px}
+table{border-collapse:collapse;width:100%}
+td,th{font-size:16px;padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.big{font-size:44px;font-weight:700;color:var(--acc);line-height:1}
+.note{font-size:14px;color:var(--mute);line-height:1.4}
+.crop{overflow:hidden;position:relative}.crop img{position:absolute;max-width:none}
+.mono{font-family:"DejaVu Sans Mono",monospace}
+.box{border:1px solid var(--line);background:#fff;border-radius:4px;padding:14px 16px}
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section style="padding-top:0">
+<div style="position:absolute;left:0;top:0;bottom:0;width:14px;background:var(--acc)"></div>
+<div style="position:absolute;left:96px;top:170px;width:1000px">
+<div class="mark" style="font-size:20px;margin-bottom:26px"><i></i>InvestWatch</div>
+<h1 style="font-size:60px;margin-bottom:22px">Nadzór nad reklamą finansową,<br>który pokazuje dowody.</h1>
+<p style="font-size:26px;color:var(--mute);line-height:1.4;max-width:900px">System on-premise dla UKNF: zbiera reklamy i oferty z sieci, mierzy je w prawdziwej przeglądarce, ocenia lokalnym modelem AI i podaje analitykowi werdykt, przepis i dosłowny cytat.</p>
+</div>
+<div style="position:absolute;left:96px;bottom:60px;font-size:18px;color:var(--mute)">HackNation 2026 · wyzwanie UKNF · <b style="color:var(--ink)">[nazwa zespołu]</b></div>
+</section>
+
+<!-- 2 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>2</span></div>
+<h2>Dziś analityk robi to ręcznie</h2>
+<p class="lead" style="margin-bottom:34px">Trzy obszary wyzwania. W każdym sprawa zaczyna się od przeglądania sieci i porównywania treści z przepisami i rejestrami.</p>
+<div class="row" style="gap:24px;margin-top:10px">
+<div class="box" style="flex:1;height:300px"><span class="tag">1</span><h3 style="font-size:23px;margin:12px 0 10px">Reklamy podmiotów trzecich</h3><p>Reklamy firm inwestycyjnych prowadzone przez podmioty trzecie i finfluencerów. Trzeba ustalić, kto reklamuje, czyją usługę i czy współpraca została zgłoszona.</p></div>
+<div class="box" style="flex:1;height:300px"><span class="tag">2</span><h3 style="font-size:23px;margin:12px 0 10px">Informacja o ryzyku</h3><p>Niewystarczające informacje o ryzyku w materiałach firm. Każdy materiał trzeba sprawdzić względem 18 kryteriów UKNF, osobno dla każdej reklamy.</p></div>
+<div class="box" style="flex:1;height:300px"><span class="tag">3</span><h3 style="font-size:23px;margin:12px 0 10px">Doradztwo bez licencji</h3><p>Nielicencjonowane doradztwo inwestycyjne. Trzeba odróżnić je od edukacji i sprawdzić, czy autor figuruje w rejestrach.</p></div>
+</div>
+</section>
+
+<!-- 3 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>3</span></div>
+<h2>Co widzi analityk po trzech sekundach</h2>
+<div class="row" style="margin-top:12px;gap:32px">
+<div><div class="shot crop" style="width:835px;height:522px;"><img src="img/01_kolejka.png" style="width:835px;left:0px;top:-75px"></div><p class="cap" style="margin-top:6px">Kolejka spraw po zalogowaniu (dane syntetyczne i próbki)</p></div>
+<div style="width:300px;padding-top:4px">
+<ul>
+<li>Kolejka od najgroźniejszych: 54 sprawy, w tym 7 krytycznych i 19 do weryfikacji.</li>
+<li>Poziomy ryzyka z licznikami, trend napływu z 30 dni.</li>
+<li>Logowanie z dwiema rolami: analityk i kierownik.</li>
+</ul>
+<div class="box" style="margin-top:14px">
+<p style="font-weight:700;margin-bottom:6px">Jedna komenda</p>
+<p class="mono" style="font-size:15px">docker compose up</p>
+<p class="note" style="margin-top:8px">On-premise. Bez płatnych API. Po zbudowaniu obrazów działa offline.</p>
+</div></div>
+</div>
+</section>
+
+<!-- 4 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>4</span></div>
+<h2>Od adresu do alertu</h2>
+<p class="lead">Jeden przepływ dla każdego źródła. Wynik zawsze w tym samym schemacie incydentu.</p>
+<svg viewBox="0 0 1152 380" width="1152" height="380" font-family="Helvetica Neue,Arial,Liberation Sans,sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs>
+<g fill="#fff" stroke="#cfd6e2" stroke-width="1.5">
+<rect x="0" y="10" width="258" height="130" rx="6"/><rect x="298" y="10" width="258" height="130" rx="6"/><rect x="596" y="10" width="258" height="130" rx="6"/>
+<rect x="894" y="10" width="258" height="130" rx="6" stroke="#2a5db0" stroke-width="2.5"/>
+<rect x="0" y="240" width="258" height="130" rx="6"/><rect x="298" y="240" width="258" height="130" rx="6"/><rect x="596" y="240" width="258" height="130" rx="6"/>
+</g>
+<rect x="894" y="240" width="258" height="130" rx="6" fill="#2a5db0"/>
+<g fill="#14213d" font-size="20" font-weight="700">
+<text x="16" y="40">Wejście</text><text x="314" y="40">Kolejka</text><text x="612" y="40">Scraper</text><text x="910" y="40">Audyt wizualny</text>
+<text x="16" y="270">Silnik AI</text><text x="314" y="270">Incydent</text><text x="612" y="270">Dashboard</text>
+</g>
+<text x="910" y="270" font-size="20" font-weight="700" fill="#fff">Alert</text>
+<g fill="#5a6478" font-size="16">
+<text x="16" y="68">adres URL, próbka z pendrive'a</text><text x="16" y="91">wyszukiwanie źródeł (discovery)</text><text x="16" y="114">zgłoszenie obywatela, /zglos</text>
+<text x="314" y="68">Celery</text><text x="314" y="91">Valkey (broker)</text><text x="314" y="114">cron: beat</text>
+<text x="612" y="68">httpx + Playwright</text><text x="612" y="91">archiwum HTML</text><text x="612" y="114">rotacja User-Agent, proxy</text>
+<text x="910" y="68">Chromium, 3 rozdzielczości</text><text x="910" y="91">pomiar czcionki i kontrastu</text><text x="910" y="114">zrzut z ramką</text>
+<text x="16" y="298">moduły 1, 2, 3, debata agentów</text><text x="16" y="321">model lokalny przez Ollama</text><text x="16" y="344">scoring 0–100, cytaty z źródła</text>
+<text x="314" y="298">jeden JSON, 19 reguł</text><text x="314" y="321">PostgreSQL</text><text x="314" y="344">SeaweedFS (S3): HTML, zrzuty</text>
+<text x="612" y="298">React, logowanie, role</text><text x="612" y="321">sprawa, kalibracja</text><text x="612" y="344">dziennik audytu</text>
+<text x="910" y="298" fill="#dbe6fa">Socket.IO, na żywo</text><text x="910" y="321" fill="#dbe6fa">krytyczna sprawa pojawia</text><text x="910" y="344" fill="#dbe6fa">się sama w kolejce</text>
+</g>
+<g stroke="#2a5db0" stroke-width="2.5" fill="none" marker-end="url(#a)">
+<path d="M260,75 H294"/><path d="M558,75 H592"/><path d="M856,75 H890"/>
+<path d="M1023,142 V190 H129 V236"/><path d="M260,305 H294"/><path d="M558,305 H592"/><path d="M856,305 H890"/>
+</g>
+</svg>
+<p class="note" style="margin-top:4px">Audyt wizualny działa tylko dla stron HTML. Gdy go nie ma, reguły wracają do analizy statycznej. Cron (beat) odświeża rejestry, wyszukuje źródła i skanuje ponownie.</p>
+</section>
+
+<!-- 5 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>5</span></div>
+<h2>Mierzymy w przeglądarce, nie zgadujemy</h2>
+<p class="lead" style="margin-bottom:12px;font-size:18px">Strona jest renderowana w Chromium (1920×1080, 768×1024, 390×844). Reguły 4, 5, 6, 7, 8 i 13 rozstrzyga pomiar.</p>
+<div style="width:1088px"><div class="shot crop" style="width:1088px;height:29px;"><img src="img/03a_macierz.png" style="width:1152px;left:-32px;top:-140px"></div></div>
+<div style="width:1088px;margin-top:-1px"><div class="shot crop" style="width:1088px;height:232px;"><img src="img/03a_macierz.png" style="width:1152px;left:-32px;top:-338px"></div></div>
+<div class="row" style="gap:26px;margin-top:12px">
+<div><div class="shot crop" style="width:620px;height:205px;"><img src="img/05b_dowod_zoom.png" style="width:1042px;left:-267px;top:-25px"></div><p class="cap" style="margin-top:4px">Dowód: zrzut strony z ramką wokół naruszenia</p></div>
+<div style="width:420px;padding-top:2px"><ul>
+<li style="font-size:17px;margin-bottom:6px">Kryterium 4: tekst główny 16 px, ostrzeżenie 10 px (0,62×; próg 0,8×).</li>
+<li style="font-size:17px;margin-bottom:6px">Kryterium 5: kontrast 7,5:1, bez przesłonięcia, więc spełnione.</li>
+<li style="font-size:17px;margin-bottom:6px">Kryterium 6: 291 z 325 znaków ostrzeżenia w notach prawnych.</li>
+</ul></div>
+</div>
+</section>
+
+<!-- 6 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>6</span></div>
+<h2>Ukryte powiązania widać na grafie</h2>
+<div style="margin-top:8px"><div class="shot crop" style="width:1142px;height:398px"><img src="img/03b_graf.png" style="width:1210px;left:-34px;top:-109px"></div></div>
+<div class="row" style="gap:28px;margin-top:12px">
+<p style="flex:1;font-size:17px">Graf łączy firmę, zarząd, agencję PR i twórcę. Oznaczona ścieżka to współpraca nieujawniona w materiale.</p>
+<p style="flex:1;font-size:17px">Z każdej sprawy eksport: pakiet dowodowy PDF i CSV (URL, czas pobrania, skrót treści, cytaty, przepisy).</p>
+</div>
+</section>
+
+<!-- 7 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>7</span></div>
+<h2>Werdykt, który składa się z dowodów</h2>
+<div class="row" style="gap:28px;margin-top:8px">
+<div style="width:600px"><p class="cap">Sprawa 2: ocena z progami na skali ryzyka</p><div class="shot crop" style="width:600px;height:384px;"><img src="img/02_sprawa2_werdykt.png" style="width:1152px;left:0px;top:-488px"></div></div>
+<div style="width:524px"><p class="cap">Argumenty „za” i „przeciw” po ocenie krytyka</p><div class="shot crop" style="width:526px;height:374px;"><img src="img/04_argumenty.png" style="width:1037px;left:-17px;top:-68px"></div></div>
+</div>
+<div class="row" style="gap:28px;margin-top:14px">
+<p style="flex:1;font-size:16px"><span class="tag">M1</span>finfluenserzy <span class="tag">M2</span>18 kryteriów (19 wierszy) <span class="tag">M3</span>doradztwo bez licencji</p>
+<p style="flex:1;font-size:16px">Cytat modelu jest przyjęty tylko wtedy, gdy jest dosłownym fragmentem źródła. Brak pewności to „nie wiadomo”.</p>
+</div>
+</section>
+
+<!-- 8 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>8</span></div>
+<h2>Postępowanie: kto, kiedy, co zmienił</h2>
+<div class="row" style="gap:26px;margin-top:8px">
+<div><p class="cap">Analityk: etap sprawy z uzasadnieniem i ścieżką eskalacji</p><div class="shot crop" style="width:533px;height:182px;"><img src="img/06_workflow.png" style="width:893px;left:0px;top:0px"></div></div>
+<div><p class="cap">Historia decyzji tej sprawy</p><div class="shot crop" style="width:392px;height:268px;"><img src="img/06b_historia.png" style="width:1008px;left:-609px;top:0px"></div></div>
+</div>
+<div style="margin-top:8px"><p class="cap">Kierownik: dziennik audytu, tylko do odczytu (21.11.2026, wpisy z tej sesji)</p><div class="shot crop" style="width:1088px;height:150px;"><img src="img/08_audyt.png" style="width:1152px;left:-32px;top:-304px"></div></div>
+<div class="row" style="gap:28px;margin-top:10px">
+<p style="flex:1;font-size:16px"><b>Role.</b> Analityk przejmuje sprawę i wnioskuje o eskalację. Kierownik zatwierdza eskalację, zapisuje progi i widzi dziennik.</p>
+<p style="flex:1;font-size:16px"><b>Zasady.</b> Zmiana etapu wymaga powodu przy zamknięciu. Wpisów nie można edytować ani usuwać.</p>
+</div>
+</section>
+
+<!-- 9 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>9</span></div>
+<h2>Dwa wejścia: urzędnik i obywatel</h2>
+<div class="row" style="gap:24px;margin-top:6px">
+<div><p class="cap">Logowanie, konta demo</p><div class="shot crop" style="width:291px;height:403px;"><img src="img/10_logowanie.png" style="width:893px;left:-304px;top:-62px"></div></div>
+<div><p class="cap">Formularz publiczny /zglos, bez logowania</p><div class="shot crop" style="width:403px;height:496px;"><img src="img/09_zglos.png" style="width:893px;left:-245px;top:-62px"></div></div>
+<div style="width:352px;padding-top:20px">
+<ul>
+<li style="font-size:17px;margin-bottom:8px">Zgłoszenie trafia do tego samego potoku co skan z kolejki.</li>
+<li style="font-size:17px;margin-bottom:8px">Zgłaszający to solony skrót IP, bez fingerprintingu; limit 20 zgłoszeń na godzinę.</li>
+<li style="font-size:17px;margin-bottom:8px">Priorytet: ryzyko × (1 + 0,25 · log₂(1 + zgłoszenia)).</li>
+</ul>
+<div class="box" style="margin-top:10px"><p class="note" style="font-size:15px;color:var(--ink)"><b>Anomalia tłumu:</b> niski wynik AI, ale 5 lub więcej zgłoszeń. To możliwy fałszywy negatyw, który silnik przeoczył.</p></div>
+</div>
+</div>
+</section>
+
+<!-- 10 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>10</span></div>
+<h2>Jeden suwak, a koszt wyboru widać od razu</h2>
+<p class="lead" style="margin-bottom:8px;font-size:18px">Sprawdzone na 50 sprawach ocenionych wcześniej przez analityków (28 naruszeń). Zdanie pod suwakiem liczy się na żywo.</p>
+<div class="row" style="gap:32px">
+<div style="width:560px"><div class="shot crop" style="width:560px;height:271px;"><img src="img/07a_kalibracja_20.png" style="width:831px;left:-12px;top:-196px"></div>
+<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 20.</b> Przy progu 20 system oznacza 24 z 50 sprawdzonych spraw. W tym 22 rzeczywiste naruszenia i 2 fałszywe alarmy. 6 naruszeń zostaje przeoczonych.</p></div>
+<div style="width:560px"><div class="shot crop" style="width:560px;height:271px;"><img src="img/07b_kalibracja_35.png" style="width:831px;left:-12px;top:-228px"></div>
+<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 35.</b> Przy progu 35 system oznacza 14 z 50 sprawdzonych spraw. W tym 14 rzeczywistych naruszeń i 0 fałszywych alarmów. 14 naruszeń zostaje przeoczonych.</p></div>
+</div>
+<p class="note" style="margin-top:8px">Zbiór jest syntetyczny; progi na realnych danych UKNF trzeba dostroić. Globalne progi zapisuje tylko kierownik.</p>
+</section>
+
+<!-- 11 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>11</span></div>
+<h2>Architektura: jeden obraz backendu, niezależne serwisy</h2>
+<div class="row" style="margin-top:14px;gap:28px">
+<div style="width:640px">
+<svg viewBox="0 0 640 410" width="640" height="410" font-family="Helvetica Neue,Arial,Liberation Sans,sans-serif">
+<defs><marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a5db0"/></marker></defs>
+<g fill="#fff" stroke="#cfd6e2" stroke-width="1.5">
+<rect x="0" y="0" width="190" height="86" rx="6"/><rect x="225" y="0" width="190" height="86" rx="6"/><rect x="450" y="0" width="190" height="86" rx="6"/>
+<rect x="0" y="160" width="190" height="86" rx="6"/><rect x="225" y="160" width="190" height="86" rx="6"/><rect x="450" y="160" width="190" height="86" rx="6" stroke-dasharray="6 4"/>
+<rect x="0" y="320" width="190" height="86" rx="6"/><rect x="225" y="320" width="190" height="86" rx="6"/>
+</g>
+<g font-size="18" font-weight="700" fill="#14213d"><text x="14" y="32">frontend</text><text x="239" y="32">backend (api)</text><text x="464" y="32">ai</text><text x="14" y="192">Valkey</text><text x="239" y="192">worker (xN), beat</text><text x="464" y="192">Ollama</text><text x="14" y="352">PostgreSQL</text><text x="239" y="352">SeaweedFS</text></g>
+<g font-size="14" fill="#5a6478"><text x="14" y="55">React + nginx</text><text x="239" y="55">FastAPI, Socket.IO</text><text x="239" y="73">logowanie, workflow, audyt</text><text x="464" y="55">FastAPI, wtyczki M1–M3</text><text x="14" y="215">kolejka zadań</text><text x="239" y="215">Celery, Chromium</text><text x="239" y="233">ten sam obraz co api</text><text x="464" y="215">Gemma 4 i embeddingi</text><text x="464" y="233">opcjonalnie</text><text x="14" y="375">dane, dziennik audytu</text><text x="239" y="375">S3: archiwum HTML, zrzuty</text></g>
+<g stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#b)"><path d="M192,43 H221"/><path d="M417,43 H446"/><path d="M545,88 V156"/><path d="M225,100 L192,166"/><path d="M192,203 H221"/><path d="M320,248 V316"/><path d="M270,248 L120,316" transform="translate(-20,0)"/></g>
+</svg>
+</div>
+<div style="width:484px">
+<table>
+<tr><th>Rola</th><th>Technologia</th></tr>
+<tr><td>Baza</td><td>PostgreSQL</td></tr>
+<tr><td>Kolejka</td><td>Valkey, Celery</td></tr>
+<tr><td>Archiwum</td><td>SeaweedFS (S3)</td></tr>
+<tr><td>API, silnik</td><td>FastAPI, Socket.IO</td></tr>
+<tr><td>Interfejs</td><td>React, nginx</td></tr>
+<tr><td>Model lokalny</td><td>Ollama: gemma4:e4b, embeddinggemma:300m</td></tr>
+</table>
+<ul style="margin-top:12px">
+<li style="font-size:16px;margin-bottom:6px">Nowy moduł to jeden plik wtyczki.</li>
+<li style="font-size:16px;margin-bottom:6px">Skalowanie: <span class="mono" style="font-size:14px">--scale worker=N</span>.</li>
+<li style="font-size:16px;margin-bottom:6px">Z modelem ok. 3 s na analizę (laptop z Apple silicon, Ollama na hoście).</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- 12 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>12</span></div>
+<h2>Jak to naprawdę zbudowaliśmy z asystentami AI</h2>
+<p class="lead" style="margin-bottom:10px">AI pisze kod. Decyzje i odpowiedzialność zostają u zespołu.</p>
+<div class="row" style="gap:32px">
+<div style="width:600px"><ul>
+<li style="font-size:18px;margin-bottom:9px"><b>Kontrakt przed kodem.</b> Schemat incydentu i API spisane, zanim agenci ruszyli. Ich zmiana wymaga decyzji człowieka.</li>
+<li style="font-size:18px;margin-bottom:9px"><b>Rozłączne pliki.</b> Każdy budowniczy ma własny katalog i zakaz wychodzenia poza niego.</li>
+<li style="font-size:18px;margin-bottom:9px"><b>Model i effort do zadania.</b> Mocny model do funkcji przekrojowych i interfejsu, tańsze do dokumentacji, audytów i porządków.</li>
+<li style="font-size:18px;margin-bottom:9px"><b>Lead nie wierzy raportom.</b> Powtórzył testy i przeszedł każdą funkcję na stosie w przeglądarce.</li>
+<li style="font-size:18px;margin-bottom:9px"><b>Niezależny audyt</b> z dokumentami organizatorów zmienił produkt (decyzje 12–14).</li>
+<li style="font-size:18px;margin-bottom:9px"><b>Decyzje ludzi w dzienniku:</b> 15 wpisów w <span class="mono" style="font-size:15px">coord/decisions.md</span>.</li>
+</ul></div>
+<div style="width:520px">
+<div class="box"><p class="cap">Dwa błędy, których testy budowniczych nie złapały</p>
+<p style="font-size:16px;margin-bottom:8px">1. Worker działał na starym obrazie, więc audyt wizualny nigdy się nie uruchamiał. Teraz api, worker i beat to jeden obraz.</p>
+<p style="font-size:16px">2. Model zwracał puste odpowiedzi, bo ukryte rozumowanie zużywało budżet tokenów. Teraz jest wyłączone w wywołaniach.</p></div>
+<table style="margin-top:12px">
+<tr><td style="font-size:16px;padding:6px 10px">Testy, lint, guard.sh</td><td style="font-size:16px;padding:6px 10px">check.sh</td></tr>
+<tr><td style="font-size:16px;padding:6px 10px">Zależności, licencje, sekrety</td><td style="font-size:16px;padding:6px 10px">pip-audit, npm audit, gitleaks w CI</td></tr>
+<tr><td style="font-size:16px;padding:6px 10px">Zatwierdzenie</td><td style="font-size:16px;padding:6px 10px">właściciel repo, każdy PR</td></tr>
+</table>
+<div class="box" style="margin-top:12px"><p class="note" style="font-size:15px;color:var(--ink)"><b>Uczciwie:</b> automatyczna recenzja AI w CI została pominięta dla PR-ów tej iteracji. Weryfikował lead i człowiek.</p></div>
+</div>
+</div>
+</section>
+
+<!-- 13 -->
+<section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>13</span></div>
+<h2>Bezpieczeństwo i droga do pilotażu</h2>
+<div class="row" style="gap:26px;margin-top:20px">
+<div style="width:360px">
+<p class="cap">Audyty (docs/security/, 2026-11-21)</p>
+<ul>
+<li style="font-size:17px;margin-bottom:8px">pip-audit: backend i ai, 0 znanych podatności.</li>
+<li style="font-size:17px;margin-bottom:8px">npm audit: frontend, 0 podatności.</li>
+<li style="font-size:17px;margin-bottom:8px">guard.sh: 5 z 5 reguł.</li>
+<li style="font-size:17px;margin-bottom:8px">Licencje: MIT, Apache-2.0, BSD, ISC.</li>
+</ul>
+<p class="note" style="font-size:14px">Nie uruchomiono lokalnie gitleaks (działa w CI) ani Snyk.</p>
+<p class="cap" style="margin-top:14px">Prawdziwe a przykładowe</p>
+<p style="font-size:16px"><b>Prawdziwe:</b> migawki rejestrów KNF i ostrzeżeń publicznych. <b>Przykładowe:</b> KIRP, KIDP, lista doradców, sprawy demo z wymyślonymi podmiotami.</p>
+</div>
+<div style="width:360px">
+<p class="cap">Te same kontenery na Azure</p>
+<p style="font-size:16px;margin-bottom:8px">Jedna maszyna wirtualna, ten sam <span class="mono" style="font-size:14px">docker compose</span>, skrypty w <span class="mono" style="font-size:14px">deploy/azure/</span>. Dostęp tylko z wskazanego adresu IP; na zewnątrz wystawiony jest sam frontend.</p>
+<p class="cap" style="margin-top:12px">Ograniczenia</p>
+<ul>
+<li style="font-size:16px;margin-bottom:6px">Konta demo są jawne.</li>
+<li style="font-size:16px;margin-bottom:6px">W chmurze tylko HTTP, bez TLS.</li>
+<li style="font-size:16px;margin-bottom:6px">Jedna VM, bez wysokiej dostępności.</li>
+<li style="font-size:16px;margin-bottom:6px">Limity zgłoszeń w pamięci procesu API.</li>
+</ul>
+</div>
+<div style="width:376px">
+<p class="cap">Pilotaż w UKNF, trzy kroki</p>
+<ol style="padding-left:24px;font-size:19px;line-height:1.4">
+<li style="padding-left:0;margin-bottom:12px;list-style:decimal">Podłączyć wewnętrzne rejestry UKNF zamiast próbek KIRP, KIDP i doradców.</li>
+<li style="padding-left:0;margin-bottom:12px;list-style:decimal">Wyłączyć konta demo: własne konta, TLS, produkcyjny klucz sesji.</li>
+<li style="padding-left:0;margin-bottom:12px;list-style:decimal">Dostroić progi na realnych, oznaczonych sprawach UKNF i dodać platformy.</li>
+</ol>
+<style>ol li:before{display:none}</style>
+</div>
+</div>
+</section>
+
+</body>
+</html>

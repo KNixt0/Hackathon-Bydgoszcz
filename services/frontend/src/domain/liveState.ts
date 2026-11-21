@@ -10,6 +10,8 @@ export interface IncidentsState {
   fresh: string[];
   /** alert:high incidents, newest first; pinned to the top of the queue until dismissed */
   alerts: IncidentSummary[];
+  /** alert:viral incidents (critical case reaching 5 reports), newest first; shown until dismissed */
+  viralAlerts: IncidentSummary[];
 }
 
 export type IncidentsAction =
@@ -19,10 +21,12 @@ export type IncidentsAction =
   | { type: "incident:new"; incident: IncidentSummary }
   | { type: "incident:updated"; incident: IncidentSummary }
   | { type: "alert:high"; incident: IncidentSummary }
+  | { type: "alert:viral"; incident: IncidentSummary }
   | { type: "alert:dismiss"; id: string }
+  | { type: "alert:viral:dismiss"; id: string }
   | { type: "fresh:clear"; id: string };
 
-export const INITIAL_INCIDENTS: IncidentsState = { phase: "loading", error: null, items: [], fresh: [], alerts: [] };
+export const INITIAL_INCIDENTS: IncidentsState = { phase: "loading", error: null, items: [], fresh: [], alerts: [], viralAlerts: [] };
 
 const withId = (ids: string[], id: string) => (ids.includes(id) ? ids : [id, ...ids]);
 
@@ -50,6 +54,7 @@ export function incidentsReducer(state: IncidentsState, action: IncidentsAction)
         ...state,
         items: upsertIncident(state.items, action.incident),
         alerts: state.alerts.map((a) => (a.id === action.incident.id ? action.incident : a)),
+        viralAlerts: state.viralAlerts.map((a) => (a.id === action.incident.id ? action.incident : a)),
       };
     case "alert:high":
       return {
@@ -58,6 +63,14 @@ export function incidentsReducer(state: IncidentsState, action: IncidentsAction)
         fresh: withId(state.fresh, action.incident.id),
         alerts: [action.incident, ...state.alerts.filter((a) => a.id !== action.incident.id)],
       };
+    case "alert:viral":
+      return {
+        ...state,
+        items: upsertIncident(state.items, action.incident),
+        viralAlerts: [action.incident, ...state.viralAlerts.filter((a) => a.id !== action.incident.id)],
+      };
+    case "alert:viral:dismiss":
+      return { ...state, viralAlerts: state.viralAlerts.filter((a) => a.id !== action.id) };
     case "alert:dismiss":
       return { ...state, alerts: state.alerts.filter((a) => a.id !== action.id) };
     case "fresh:clear":

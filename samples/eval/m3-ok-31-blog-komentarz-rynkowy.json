@@ -1,0 +1,20 @@
+{
+ "meta": {
+  "url": "https://zmyslony-blog-gieldowy.example/m3-ok-31-blog-komentarz-rynkowy",
+  "platform": "web",
+  "title": "Tydzień na rynkach: komentarz",
+  "published_at": "2026-11-14",
+  "seed": true,
+  "detected_days_ago": 6,
+  "author": {
+   "name": "Zmyślony Bloger Giełdowy"
+  }
+ },
+ "text": "W minionym tygodniu indeksy lekko spadły, a obligacje skarbowe zyskały. Opisuję, co moim zdaniem stało za ruchem cen. Wpis ma charakter edukacyjny i nie stanowi rekomendacji inwestycyjnej. Nie jestem doradcą inwestycyjnym.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3
+ }
+}

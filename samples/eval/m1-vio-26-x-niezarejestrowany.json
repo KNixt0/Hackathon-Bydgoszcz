@@ -1,0 +1,29 @@
+{
+ "meta": {
+  "url": "https://x.example/m1-vio-26-x-niezarejestrowany",
+  "platform": "x",
+  "title": "Pewny zysk z Zmyślony Kapitał Global",
+  "published_at": "2026-11-09",
+  "seed": true,
+  "detected_days_ago": 11,
+  "author": {
+   "name": "Wymyślony Inwestor Staszek",
+   "handle": "@wymyslony_staszek"
+  }
+ },
+ "text": "Zmyślony Kapitał Global Ltd wypłaca gwarantowany zysk 15% miesięcznie. Sam wypłaciłem już trzy razy. Napisz do mnie po link polecający.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": null,
+  "companies": [
+   {
+    "name": "Zmyślony Kapitał Global Ltd",
+    "role": "investment_firm",
+    "country": "VG"
+   }
+  ]
+ }
+}

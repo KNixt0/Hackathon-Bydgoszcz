@@ -1,0 +1,21 @@
+{
+ "meta": {
+  "url": "https://facebook.example/m3-ok-32-ostrzezenie-przed-oszustami",
+  "platform": "facebook",
+  "title": "Uwaga na fałszywych doradców",
+  "published_at": "2026-11-11",
+  "seed": true,
+  "detected_days_ago": 9,
+  "author": {
+   "name": "Zmyślony Portal Konsumenta",
+   "handle": "@zmyslony_konsument"
+  }
+ },
+ "text": "KNF ostrzega przed fałszywymi doradcami, którzy obiecują gwarantowany zysk i proponują zarządzanie portfelem przez komunikatory. Oszuści podszywają się pod znane domy maklerskie i wskazują, które akcje kupić. Zanim wpłacisz pieniądze, sprawdź podmiot w rejestrze KNF.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3
+ }
+}

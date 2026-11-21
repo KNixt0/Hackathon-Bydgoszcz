@@ -1,0 +1,21 @@
+{
+ "meta": {
+  "url": "https://youtube.example/m3-vio-42-akademia-konsultacje",
+  "platform": "youtube",
+  "title": "Akademia inwestora: konsultacje indywidualne",
+  "published_at": "2026-10-30",
+  "seed": true,
+  "detected_days_ago": 21,
+  "author": {
+   "name": "Zmyślona Akademia Inwestora",
+   "handle": "@zmyslona_akademia"
+  }
+ },
+ "text": "Zapraszam na konsultacje indywidualne w Zmyślonej Akademii Inwestora. Omówimy Twój portfel i wskażę, które akcje warto sprzedać, a które dokupić. Cena: 500 zł za godzinę.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3
+ }
+}

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Projekt wniosku o wpis na listę ostrzeżeń publicznych {{ i.id }}</title>
+{% include '_style.html' %}
+</head>
+<body>
+<div class="head">
+  <div>
+    <div class="brand">#InvestWatch · UKNF</div>
+    <h1>Wniosek o wpisanie podmiotu na listę ostrzeżeń publicznych KNF</h1>
+    <div>{{ i.title }}</div>
+  </div>
+  <div class="small muted" style="text-align:right">
+    Sprawa: <span class="mono">{{ i.id }}</span><br>
+    Status sprawy: {{ status_label }}<br>
+    Wygenerowano: {{ generated_at }}
+  </div>
+</div>
+
+<div class="draft">PROJEKT – dokument roboczy do weryfikacji prawnej, nie został podpisany ani przekazany</div>
+{% if i.synthetic %}<div class="synthetic">Dane syntetyczne – materiał demonstracyjny, nie dotyczy rzeczywistego podmiotu</div>{% endif %}
+
+<div class="letter">
+  <p><strong>Do:</strong> Departament Prawny / zespół prowadzący listę ostrzeżeń publicznych KNF<br>
+     <strong>Od:</strong> {{ requested_by }}</p>
+  <p>Wnoszę o rozważenie wpisania na listę ostrzeżeń publicznych Komisji Nadzoru Finansowego
+     (art. 6b ustawy z dnia 21 lipca 2006 r. o nadzorze nad rynkiem finansowym) podmiotu wskazanego poniżej.
+     Z zebranych materiałów wynika, że podmiot może świadczyć usługę doradztwa inwestycyjnego bez wymaganego
+     zezwolenia, tj. z naruszeniem art. 69 ust. 1 w zw. z art. 76 ustawy z dnia 29 lipca 2005 r. o obrocie
+     instrumentami finansowymi (czyn zagrożony karą z art. 178 tej ustawy).</p>
+  <p>{{ i.summary }}</p>
+</div>
+
+<h2>Podmiot</h2>
+<table>
+  {% macro party(role, p) %}
+  <tr><td class="k">{{ role }}</td><td><strong>{{ p.name }}</strong>
+      <div class="small">{% if p.krs %}KRS {{ p.krs }} {% endif %}{% if p.nip %}NIP {{ p.nip }} {% endif %}{% if p.handle %}{{ p.handle }} {% endif %}{% if p.country %}({{ p.country }}) {% endif %}</div>
+      {% if p.url %}<div class="mono">{{ p.url }}</div>{% endif %}</td></tr>
+  {% endmacro %}
+  {% if entities.investment_firm %}{{ party('Podmiot oferujący usługę', entities.investment_firm) }}{% endif %}
+  {% if entities.advertiser %}{{ party('Autor / publikujący', entities.advertiser) }}{% endif %}
+  {% for p in entities.others or [] %}{{ party('Inny podmiot', p) }}{% endfor %}
+  {% if not entities.investment_firm and not entities.advertiser and not entities.others %}<tr><td colspan="2" class="muted">Nie zidentyfikowano podmiotu – wymaga uzupełnienia.</td></tr>{% endif %}
+</table>
+
+<h2>Zabezpieczony materiał</h2>
+<table>
+  <tr><td class="k">Adres URL</td><td class="mono">{{ source.url }}</td></tr>
+  <tr><td class="k">Czas pobrania</td><td>{{ source.fetched_at or '—' }}</td></tr>
+  <tr><td class="k">Skrót treści (SHA-256)</td><td class="mono">{{ source.content_hash or '—' }}</td></tr>
+  <tr><td class="k">Archiwum HTML</td><td class="mono">{{ (source.archive or {}).html_key or '—' }}</td></tr>
+  <tr><td class="k">Zrzut ekranu</td><td class="mono">{{ (source.archive or {}).screenshot_key or '—' }}</td></tr>
+  <tr><td class="k">Wskaźnik ryzyka</td><td>{{ '%.1f'|format(i.risk_score|float) }} / 100 ({{ module_label }})</td></tr>
+</table>
+
+<h2>Wykryte sformułowania</h2>
+{% if phrases %}
+<table>
+  <tr><th style="width:12mm">ID</th><th>Cytat z materiału</th><th style="width:55mm">Kwalifikacja</th></tr>
+  {% for e in phrases %}
+  <tr><td class="mono">{{ e.id }}</td><td><blockquote>„{{ e.quote }}”</blockquote></td><td>{{ e.label }}{% if e.legal_ref %}<div class="small muted">{{ e.legal_ref }}</div>{% endif %}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="muted">Silnik nie wskazał cytatów – uzasadnienie wymaga uzupełnienia przez analityka.</p>
+{% endif %}
+
+<h2>Sprawdzenie w rejestrach</h2>
+<table>
+  <tr><th>Rejestr</th><th>Szukany podmiot</th><th>Status</th><th>Szczegóły</th><th>Stan na</th></tr>
+  {% for r in registry_checks %}
+  <tr><td>{{ r.label or r.registry }}<div class="mono muted">{{ r.url }}</div></td><td>{{ r.subject }}</td>
+      <td class="{{ 'st-fail' if r.status in ('not_listed', 'warning_listed', 'inactive') else 'st-pass' if r.status == 'listed' else 'st-na' }}">{{ registry_status.get(r.status, r.status) }}</td>
+      <td>{{ r.detail }}</td><td>{{ r.snapshot_date or '—' }}</td></tr>
+  {% else %}
+  <tr><td colspan="5" class="muted">Brak sprawdzeń w rejestrach – wymaga uzupełnienia.</td></tr>
+  {% endfor %}
+</table>
+
+<h2>Historia decyzji</h2>
+{% include '_history.html' %}
+
+<div class="sign"><div class="small muted">podpis i data (po weryfikacji)</div></div>
+<p class="small muted">Projekt wygenerowany automatycznie przez #InvestWatch {{ backend_version }}. Kwalifikacja prawna jest wstępna i wymaga oceny Departamentu Prawnego; dokument nie stanowi rozstrzygnięcia.</p>
+</body>
+</html>

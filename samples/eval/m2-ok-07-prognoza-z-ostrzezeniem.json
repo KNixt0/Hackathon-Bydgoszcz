@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bursztyn-przykladowy.example/m2-ok-07-prognoza-z-ostrzezeniem",
+  "platform": "facebook",
+  "title": "Komentarz rynkowy analityków",
+  "published_at": "2026-11-03",
+  "seed": true,
+  "detected_days_ago": 17
+ },
+ "text": "Materiał promocyjny Dom Maklerski Bursztyn Przykładowy S.A.. Nasi analitycy prognozują, że indeks szerokiego rynku może wzrosnąć w przyszłym roku o 5–7%. Prognozy nie stanowią wiarygodnego wskaźnika przyszłych wyników. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

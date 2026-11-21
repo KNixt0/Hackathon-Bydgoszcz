@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m1-vio-24-instagram-to-nie-reklama",
+  "platform": "instagram",
+  "title": "Moja szczera opinia",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 5,
+  "author": {
+   "name": "Fikcyjna Ola o Finansach",
+   "handle": "@fikcyjna_ola"
+  }
+ },
+ "text": "To nie jest reklama, tylko szczera opinia: Bank Jantarowy Fikcyjny S.A. ma najlepszą aplikację do inwestowania. Z kodem rabatowym OLA10 pierwsze zlecenia bez prowizji. Inwestowanie wiąże się z ryzykiem.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": false,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

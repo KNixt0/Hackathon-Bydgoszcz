@@ -3,36 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Pakiet dowodowy {{ i.id }}</title>
-<style>
-  @page { size: A4; }
-  * { box-sizing: border-box; }
-  body { font-family: "DejaVu Sans", "Noto Sans", "Liberation Sans", Arial, Helvetica, sans-serif; font-size: 9.5pt; line-height: 1.4; color: #16202b; margin: 0; }
-  h1 { font-size: 16pt; margin: 0 0 2mm; }
-  h2 { font-size: 11pt; margin: 6mm 0 2mm; padding-bottom: 1mm; border-bottom: 1.5px solid #1d3557; color: #1d3557; break-after: avoid; }
-  p { margin: 0 0 2mm; }
-  .muted { color: #5b6672; }
-  .small { font-size: 8pt; }
-  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm; border-bottom: 2px solid #1d3557; padding-bottom: 3mm; }
-  .brand { font-weight: 700; color: #1d3557; letter-spacing: .3px; }
-  .synthetic { border: 1.5px solid #9a5b00; color: #9a5b00; background: #fff6e5; padding: 1.5mm 3mm; font-weight: 700; margin: 3mm 0; text-align: center; }
-  .verdict { display: flex; gap: 4mm; margin: 4mm 0; }
-  .box { flex: 1; border: 1px solid #c9d1da; border-radius: 2mm; padding: 2.5mm 3mm; }
-  .box .label { font-size: 7.5pt; text-transform: uppercase; color: #5b6672; letter-spacing: .4px; }
-  .box .value { font-size: 13pt; font-weight: 700; }
-  .red { color: #b3261e; } .orange { color: #a15c00; } .green { color: #1b6e3c; }
-  .bg-red { border-color: #b3261e; background: #fdecea; } .bg-orange { border-color: #a15c00; background: #fff4e0; } .bg-green { border-color: #1b6e3c; background: #e8f5ec; }
-  table { width: 100%; border-collapse: collapse; margin: 0 0 2mm; }
-  th, td { border: 1px solid #c9d1da; padding: 1.2mm 1.8mm; vertical-align: top; text-align: left; overflow-wrap: anywhere; }
-  th { background: #eef2f6; font-size: 8pt; }
-  tr { break-inside: avoid; }
-  td.k { width: 42mm; background: #f6f8fa; font-weight: 600; }
-  .st-fail { color: #b3261e; font-weight: 700; } .st-pass { color: #1b6e3c; } .st-na, .st-unknown { color: #5b6672; }
-  blockquote { margin: 1mm 0; padding: 1mm 2.5mm; border-left: 2.5px solid #1d3557; background: #f6f8fa; font-style: italic; }
-  .mono { font-family: "DejaVu Sans Mono", "Liberation Mono", Menlo, Consolas, monospace; font-size: 8pt; overflow-wrap: anywhere; }
-  ul { margin: 0 0 2mm; padding-left: 5mm; }
-  li { margin-bottom: 1mm; }
-  .cols { display: flex; gap: 5mm; } .cols > div { flex: 1; }
-</style>
+{% include '_style.html' %}
 </head>
 <body>
 <div class="head">
@@ -104,7 +75,7 @@
 
 <h2>Macierz 19 kryteriów</h2>
 <table>
-  <tr><th style="width:9mm">Nr</th><th style="width:44mm">Kryterium</th><th style="width:20mm">Wynik</th><th style="width:13mm">Pewność</th><th>Uzasadnienie i podstawa prawna</th></tr>
+  <tr><th style="width:11mm">Nr</th><th style="width:42mm">Kryterium</th><th style="width:25mm">Wynik</th><th style="width:16mm">Pewność</th><th>Uzasadnienie i podstawa prawna</th></tr>
   {% for r in rules %}
   <tr><td>{{ r.id }}</td><td>{{ r.name }}</td><td class="st-{{ r.status }}">{{ rule_status.get(r.status, r.status) }}</td>
       <td>{% if r.confidence is number %}{{ '%.0f'|format(r.confidence * 100) }}%{% endif %}</td>
@@ -143,6 +114,18 @@
   <tr><td colspan="3" class="muted">Brak dowodów.</td></tr>
   {% endfor %}
 </table>
+
+{% if i.user_reports_count %}
+<h2>Zgłoszenia użytkowników ({{ i.user_reports_count }})</h2>
+<table>
+  {% for r in reports %}
+  <tr><td style="width:34mm" class="small">{{ r.created_at }}</td><td style="width:44mm">{{ report_categories.get(r.category_hint, 'nie wiem') }}</td><td>{{ r.comment or '—' }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<h2>Historia decyzji</h2>
+{% include '_history.html' %}
 
 <h2>Silnik analizy</h2>
 <table>

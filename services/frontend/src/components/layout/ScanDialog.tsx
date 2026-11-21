@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CircleAlert, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { MODULE_LABEL, MODULES } from "../../domain/labels";
+import { useRestoreFocus } from "../../hooks/useRestoreFocus";
 import type { ScanRequest } from "../../types/api";
 import type { ModuleId } from "../../types/incident";
 import { Button } from "../ui/Button";
@@ -28,6 +29,7 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
   const [render, setRender] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const focus = useRestoreFocus();
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,7 +54,19 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
     <Dialog.Root open={open} onOpenChange={(next) => { if (!next) setError(null); onOpenChange(next); }}>
       <Dialog.Portal>
         <Dialog.Overlay className="overlay" />
-        <Dialog.Content className="dialog">
+        <Dialog.Content
+          className="dialog"
+          // focus the address field; a native autoFocus would make Radix restore focus into the closed dialog
+          onCloseAutoFocus={focus.restore}
+          onOpenAutoFocus={(e) => {
+            focus.remember();
+            const field = document.getElementById("scan-url");
+            if (field) {
+              e.preventDefault();
+              field.focus();
+            }
+          }}
+        >
           <form onSubmit={submit} noValidate>
             <div className="dialog__head">
               <div>
@@ -66,15 +80,15 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
               </Dialog.Close>
             </div>
             <div className="dialog__body">
-              <label className="field">
-                <span className="field__label">Adres materiału</span>
+              <div className="field">
+                <label className="field__label" htmlFor="scan-url">Adres materiału</label>
+                <span className="field__hint" id="scan-hint">Pełny adres strony lub posta, np. https://przyklad.pl/oferta</span>
                 <input
-                  className="input" type="url" inputMode="url" autoFocus required value={url}
-                  placeholder="https://przyklad.pl/oferta"
-                  aria-invalid={error ? true : undefined} aria-describedby={error ? "scan-error" : undefined}
+                  id="scan-url" className="input" type="url" inputMode="url" required value={url}
+                  aria-invalid={error ? true : undefined} aria-describedby={error ? "scan-hint scan-error" : "scan-hint"}
                   onChange={(e) => { setUrl(e.target.value); if (error) setError(null); }}
                 />
-              </label>
+              </div>
               <label className="field">
                 <span className="field__label">Moduł analityczny</span>
                 <select className="select" value={moduleHint} onChange={(e) => setModuleHint(Number(e.target.value) as ModuleId | 0)}>
@@ -91,8 +105,8 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
               )}
             </div>
             <div className="dialog__foot">
-              <Dialog.Close asChild><Button>Anuluj</Button></Dialog.Close>
               <Button type="submit" variant="primary" disabled={busy}>{busy ? "Zlecanie…" : "Zleć skanowanie"}</Button>
+              <Dialog.Close asChild><Button>Anuluj</Button></Dialog.Close>
             </div>
           </form>
         </Dialog.Content>

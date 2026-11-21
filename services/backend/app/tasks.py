@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+from datetime import UTC, timedelta
 
 from app.celery_app import celery
 from app.config import get_settings
 from app.db import session_scope
+from app.incidents import rescan_options, url_hash
 from app.models import Incident, WatchlistItem, utcnow
 
 log = logging.getLogger(__name__)
@@ -26,26 +28,34 @@ def enqueue_rescan() -> list[str]:
     from app.jobs import create_job, dispatch
 
     targets: dict[str, dict] = {}
+    now = utcnow()
     with session_scope() as db:
-        rows = db.query(Incident).filter(Incident.synthetic.is_(False), Incident.origin != "sample").all()
-        for row in rows:
-            targets[row.source_url] = {
-                "fetch_url": row.fetch_url or row.source_url,
-                "origin": row.origin,
-                "render": row.render,
-                "module_hint": row.module_hint,
-            }
+        query = db.query(Incident)
+        if not get_settings().rescan_samples:  # offline material never changes: skipped unless asked for
+            query = query.filter(Incident.synthetic.is_(False), Incident.origin != "sample")
+        for row in query.all():
+            targets[row.source_url] = rescan_options(row)
         for item in db.query(WatchlistItem).all():
-            targets.setdefault(
-                item.url,
-                {
-                    "fetch_url": item.url,
-                    "origin": "watchlist",
-                    "render": item.render,
-                    "module_hint": item.module_hint,
-                },
-            )
-            item.last_scanned_at = utcnow()
+            last = item.last_scanned_at
+            if last is not None and last.tzinfo is None:
+                last = last.replace(tzinfo=UTC)
+            # enhanced monitoring sets a minimum interval; a few minutes of slack absorb cron jitter
+            if item.interval_hours and last and now - last < timedelta(hours=item.interval_hours, minutes=-5):
+                continue
+            if item.url not in targets:
+                # a monitored case is fetched exactly like the first time (e.g. a sample's fixture)
+                case = db.query(Incident).filter(Incident.source_url_hash == url_hash(item.url)).first()
+                targets[item.url] = (
+                    rescan_options(case)
+                    if case is not None and case.source_url == item.url
+                    else {
+                        "fetch_url": item.url,
+                        "origin": "watchlist",
+                        "render": item.render,
+                        "module_hint": item.module_hint,
+                    }
+                )
+            item.last_scanned_at = now
     job_ids = [create_job(url, **options) for url, options in targets.items()]
     for job_id in job_ids:
         dispatch(job_id)
@@ -64,3 +74,10 @@ def refresh_registries() -> dict:
 
     get_settings()
     return refresh_all()
+
+
+@celery.task(name="investwatch.run_discovery")
+def run_discovery_task() -> dict:
+    from app.discovery import run_discovery
+
+    return run_discovery()

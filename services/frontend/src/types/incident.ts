@@ -2,7 +2,20 @@
 
 export type ModuleId = 1 | 2 | 3;
 export type RiskLevel = "red" | "orange" | "green";
-export type Status = "new" | "in_review" | "escalated" | "closed_violation" | "closed_ok";
+// Contract v3: the case workflow (old closed_violation → resolved, closed_ok → false_positive).
+export type Status = "new" | "in_review" | "escalation_requested" | "escalated" | "resolved" | "false_positive";
+export type Role = "ANALYST" | "SUPERVISOR";
+export type EscalationPath = "SUPERVISION_RISK_DEPT" | "LEGAL_WARNING_LIST" | "THIRD_PARTY_AUDIT";
+export type ResolutionAction = "evidence_report" | "warning_list_request" | "enhanced_monitoring" | "false_positive";
+export type CaseLabel = "unlabeled" | "true_positive" | "false_positive";
+
+export interface Workflow {
+  assigned_to: string | null;
+  escalation_path: EscalationPath | null;
+  resolution_action: ResolutionAction | null;
+  resolution_note: string;
+  label: CaseLabel;
+}
 export type RuleId =
   | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11"
   | "12a" | "12b" | "13" | "14" | "15" | "16" | "17" | "18";
@@ -16,8 +29,29 @@ export interface Source {
   language: string;
   content_hash: string;
   text: string;
-  archive: { html_key: string | null; screenshot_key: string | null };
+  archive: {
+    html_key: string | null;
+    screenshot_key: string | null;
+    // Contract v3: one full-page screenshot per viewport (screenshot_key = desktop).
+    screenshots?: Partial<Record<Viewport, string>>;
+  };
+  // Contract v3: what the scraper saw while fetching.
+  final_url?: string;
+  redirect_chain?: string[];
+  affiliate_params?: string[];
 }
+
+// Contract v3: rendered visual audit.
+export type Viewport = "desktop" | "tablet" | "mobile";
+/** CSS px in that viewport's full-page screenshot. */
+export interface BBox {
+  viewport: Viewport;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+export type RuleMethod = "rendered" | "static" | "text" | "llm";
 
 export interface Party {
   name: string;
@@ -60,6 +94,9 @@ export interface RuleResult {
   confidence: number;
   explanation: string;
   evidence_ids: string[];
+  // Contract v3: how the verdict was reached and its 0–1 violation strength.
+  method?: RuleMethod;
+  score?: number;
 }
 
 export type RegistryStatus = "listed" | "not_listed" | "warning_listed" | "inactive" | "not_checked";
@@ -170,6 +207,8 @@ export interface Evidence {
   attachment?: string;
   url?: string;
   storage_key?: string;
+  /** Contract v3: location on the screenshot of `bbox.viewport` (storage_key points at it). */
+  bbox?: BBox;
 }
 
 export interface Recommendation {
@@ -216,6 +255,10 @@ export interface Incident extends Analysis {
   status: Status;
   created_at: string;
   updated_at: string;
+  workflow: Workflow;
+  /** Contract v3: public reports linked to the case, and risk × reports (server-computed, threshold-free). */
+  user_reports_count: number;
+  priority_score: number;
 }
 
 export type IncidentSummary = Pick<
@@ -227,4 +270,7 @@ export type IncidentSummary = Pick<
   advertiser: string | null;
   firm: string | null;
   failed_rules: RuleId[];
+  workflow: Pick<Workflow, "assigned_to" | "label">;
+  user_reports_count: number;
+  priority_score: number;
 };

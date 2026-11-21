@@ -1,8 +1,9 @@
 import type {
   EvidenceKind, GraphEdge, GraphNodeType, ModuleId, Platform, RegistryStatus, RiskLevel, RuleStatus, Status, Claim,
-  Finding, Recommendation, Forensics,
+  Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role, RuleMethod,
 } from "../types/incident";
-import type { ScanState } from "../types/api";
+import type { AuditAction, ReportCategory, ScanState } from "../types/api";
+import type { PriorityTier } from "./priority";
 
 export const LEVEL_LABEL: Record<RiskLevel, string> = {
   red: "Krytyczne",
@@ -12,12 +13,64 @@ export const LEVEL_LABEL: Record<RiskLevel, string> = {
 
 export const STATUS_LABEL: Record<Status, string> = {
   new: "Nowe",
-  in_review: "W analizie",
+  in_review: "W weryfikacji",
+  escalation_requested: "Wniosek o eskalację",
   escalated: "Eskalowane",
-  closed_violation: "Zamknięte: naruszenie",
-  closed_ok: "Zamknięte: bez naruszeń",
+  resolved: "Zamknięte: naruszenie",
+  false_positive: "Zamknięte: fałszywy alarm",
 };
-export const STATUSES: Status[] = ["new", "in_review", "escalated", "closed_violation", "closed_ok"];
+export const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
+
+export const ROLE_LABEL: Record<Role, string> = { ANALYST: "Analityk", SUPERVISOR: "Kierownik" };
+
+export const ESCALATION_PATH_LABEL: Record<EscalationPath, string> = {
+  SUPERVISION_RISK_DEPT: "Departament nadzoru: informacja o ryzyku",
+  LEGAL_WARNING_LIST: "Departament Prawny: lista ostrzeżeń publicznych",
+  THIRD_PARTY_AUDIT: "Audyt współpracy z podmiotem trzecim",
+};
+export const ESCALATION_PATHS = Object.keys(ESCALATION_PATH_LABEL) as EscalationPath[];
+
+export const RESOLUTION_ACTION_LABEL: Record<ResolutionAction, string> = {
+  evidence_report: "Raport dowodowy",
+  warning_list_request: "Wniosek o wpis na listę ostrzeżeń",
+  enhanced_monitoring: "Wzmożony monitoring (co 6 godzin)",
+  false_positive: "Fałszywy alarm",
+};
+
+export const CASE_LABEL_LABEL: Record<CaseLabel, string> = {
+  unlabeled: "Bez oceny",
+  true_positive: "Trafny alarm (naruszenie)",
+  false_positive: "Fałszywy alarm",
+};
+
+export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
+  login: "Logowanie",
+  assign: "Przypisanie sprawy",
+  transition: "Zmiana etapu",
+  label: "Ocena trafności",
+  thresholds: "Zmiana progów",
+  export: "Eksport",
+  rescan: "Ponowne skanowanie",
+  public_report: "Zgłoszenie użytkownika",
+};
+
+export const TIER_LABEL: Record<Exclude<PriorityTier, "low_watch">, string> = {
+  critical_viral: "Krytyczne i zgłaszane",
+  high_risk_early: "Wysokie ryzyko",
+  crowd_anomaly: "Rozbieżność: zgłaszane przez użytkowników",
+};
+export const TIER_FILTER_LABEL: Record<PriorityTier, string> = { ...TIER_LABEL, low_watch: "Niskie ryzyko, mało zgłoszeń" };
+export const TIER_HINT: Record<Exclude<PriorityTier, "low_watch">, string> = {
+  critical_viral: "Wysoki wynik silnika i co najmniej 5 zgłoszeń użytkowników.",
+  high_risk_early: "Wysoki wynik silnika, jeszcze mało zgłoszeń użytkowników.",
+  crowd_anomaly: "Silnik ocenił materiał nisko, a użytkownicy zgłaszają go masowo. To możliwy fałszywie ujemny wynik modelu: warto zweryfikować ręcznie.",
+};
+
+export const REPORT_CATEGORY_LABEL: Record<ReportCategory, string> = {
+  1: "Reklama influencera lub podmiotu trzeciego",
+  2: "Materiał firmy inwestycyjnej",
+  3: "Doradztwo bez zezwolenia",
+};
 
 export const MODULE_LABEL: Record<ModuleId, string> = {
   1: "Finfluencerzy i podmioty trzecie",
@@ -52,6 +105,23 @@ export const REGISTRY_STATUS_LABEL: Record<RegistryStatus, string> = {
   warning_listed: "Lista ostrzeżeń",
   inactive: "Wpis nieaktywny",
   not_checked: "Nie sprawdzono",
+};
+
+/** Words in the register table's "Wynik" column. */
+export const REGISTRY_RESULT_LABEL: Record<RegistryStatus, string> = {
+  listed: "wpis aktywny",
+  not_listed: "brak wpisu",
+  warning_listed: "na liście ostrzeżeń",
+  inactive: "wpis nieaktywny",
+  not_checked: "nie sprawdzono",
+};
+
+/** How a criterion was assessed (contract v3 RuleResult.method). */
+export const RULE_METHOD_LABEL: Record<RuleMethod, string> = {
+  rendered: "pomiar w przeglądarce",
+  static: "analiza HTML",
+  text: "tekst",
+  llm: "model językowy",
 };
 
 export const NODE_TYPE_LABEL: Record<GraphNodeType, string> = {

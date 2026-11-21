@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bursztyn-przykladowy.example/m3-ok-30-doradztwo-zarejestrowany",
+  "platform": "web",
+  "title": "Doradztwo inwestycyjne w DM Bursztyn Przykładowy",
+  "published_at": "2026-11-17",
+  "seed": true,
+  "detected_days_ago": 3
+ },
+ "text": "Dom Maklerski Bursztyn Przykładowy S.A. świadczy usługę doradztwa inwestycyjnego i zarządzania portfelem na podstawie zezwolenia Komisji Nadzoru Finansowego. Doradca przygotuje rekomendacje dopasowane do Twojej sytuacji i celów. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

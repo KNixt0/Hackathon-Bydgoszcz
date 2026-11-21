@@ -22,7 +22,7 @@ Każde zadanie (issue) ma listę plików, które agent może zmienić (`Owns`). 
 | Decyzje produktowe, architektura, kontrakty, zatwierdzenie merge | **Człowiek** | — |
 | Planer: dzieli plan na zadania 1–3 h | AI | Opus / high |
 | Budowniczy: implementacja jednego zadania | AI | Sonnet / medium (Opus lub Haiku zależnie od trudności) |
-| Weryfikator: niezależna recenzja PR | AI | Opus / high, inny model niż autor |
+| Weryfikator: niezależna recenzja PR | AI | Opus / high, inny model niż autor. W iteracji z sekcji 7 krok recenzji AI w CI został pominięty na tych PR-ach; weryfikował lead i człowiek |
 | Lead: deleguje i merguje, nie pisze kodu | AI | Sonnet / medium |
 
 Konfiguracja jest w [coord/roles.json](../coord/roles.json), a uzasadnienie w [coord/roles.md](../coord/roles.md). Do swarmu mogą dołączyć też inne modele (Codex, Gemini, modele lokalne). Lead przydziela im zadania według poziomu (strong / standard / light) i mocnych stron zgłoszonych w rosterze. Każdy PR ma w bloku przekazania pola `agent:` i `model:`, więc wiadomo, kto i czym wykonał pracę.
@@ -37,7 +37,7 @@ Każdy PR przechodzi przez te same bramki, zanim trafi do `main`:
    - `gitleaks` szuka sekretów,
    - `pip-audit` i `npm audit` szukają podatności,
    - skan licencji blokuje GPL, AGPL i LGPL.
-4. **Recenzja AI**: weryfikator z innym modelem zostawia werdykt `APPROVE` albo `CHANGES`.
+4. **Recenzja AI**: weryfikator z innym modelem zostawia werdykt `APPROVE` albo `CHANGES`. Dla PR-ów z iteracji opisanej w sekcji 7 ten krok pominięto.
 5. **Zatwierdzenie przez człowieka**: właściciel repo zatwierdza ostatni commit każdego PR od innych osób. Bez tego check `owner-approval` jest czerwony.
 6. **Merge** robi lead, dopiero gdy wszystkie bramki są zielone. Jeśli coś ominie bramki, `main-guard` otwiera zgłoszenie.
 
@@ -62,3 +62,13 @@ AI jest wyłącznie narzędziem deweloperskim. Produkt działa w 100% lokalnie n
 5. **Człowiek zatwierdza.** Całość trafia do `main` jako PR, po bramkach z sekcji 3.
 
 Zasady, które agenci dostali wprost, bo AI lubi je łamać: żadnych cytatów spoza tekstu źródłowego (test sprawdza, że każdy cytat jest podciągiem źródła), żadnych wyników wpisanych na sztywno pod próbkę, żadnych danych testowych w paczce produkcyjnej, status reguły `unknown` zamiast zgadywania.
+
+## 7. Iteracja: audyt zgodności i trzy dodatki
+
+1. **Niezależny audyt zgodności** z dokumentami organizatorów wskazał rozbieżności, które zmieniły produkt: wszystkie trzy sprawy demo używają zmyślonych podmiotów (#12), próg kalibracji to próg oznaczania, a nie krytyczny (#13), modele lokalne jak w wymaganiach wyzwania (#14).
+2. **Specyfikacja właściciela** została zrecenzowana. Przyjęto trzy dodatki: audyt wizualny renderowanych stron, logowanie z rolami i dziennikiem audytu oraz zgłoszenia publiczne z priorytetem. Odrzucono trzy elementy (#15): kształt `UnifiedIncident` (nasz kontrakt jest już zaimplementowany w trzech serwisach), MinIO i Redis (zakaz licencyjny; używamy SeaweedFS i Valkey) oraz limity po odcisku przeglądarki (niepotrzebne śledzenie obywateli; używamy solonego skrótu IP).
+3. **Kontrakt v3 przed kodem** ([api.md](../coord/contracts/api.md), [incident.md](../coord/contracts/incident.md)), potem budowniczowie z rozłącznymi plikami (`Owns`).
+4. **Lead powtórzył testy i sprawdził każdą funkcję na stosie compose w przeglądarce.** To wykryło dwa realne błędy, których testy budowniczych nie złapały: kontener workera działał na starym obrazie, więc audyt wizualny nigdy się nie uruchamiał (stąd jeden obraz `investwatch-backend` dla api, worker i beat), oraz model zwracał puste odpowiedzi, bo ukryte rozumowanie zużywało budżet tokenów (teraz jest wyłączone w wywołaniach modelu).
+5. **Model i effort dobrane do zadania:** mocny model do funkcji przekrojowych i projektu interfejsu, tańsze modele do dokumentacji, audytów i porządków na GitHubie.
+6. **Projekt interfejsu też przeszedł przez bramkę człowieka.** Agent przygotował cztery propozycje języka wizualnego na tych samych trzech fragmentach ekranu; właściciel odrzucił pierwszą rundę jako zbyt szablonową, wybrał kierunek „Urzędowy" z drugiej i zażądał prostszej kalibracji. Dopiero wtedy powstała specyfikacja ([DESIGN.md](../DESIGN.md), [PRODUCT.md](../PRODUCT.md)), a po niej wdrożenie; decyzje #16–#17.
+7. **Wdrożenie w chmurze dopiero po testach lokalnych.** Skrypty Azure CLI ([deploy/azure](../deploy/azure/)) uruchomiono na gotowym, sprawdzonym stosie; te same kontenery, jedna maszyna, dostęp ograniczony do adresu IP (decyzja #18).

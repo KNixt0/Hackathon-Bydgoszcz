@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from urllib.parse import urlsplit
 
@@ -24,6 +24,7 @@ class Rendered:
     status: int
     html: str
     screenshot: bytes | None
+    redirect_chain: list[str] = field(default_factory=list)
 
 
 def _launch_args(settings: Settings) -> list[str]:
@@ -99,8 +100,19 @@ def render_page(
                     screenshot = page.screenshot(full_page=True, type="png", timeout=timeout_ms)
                 except PlaywrightError:
                     screenshot = None
+                chain: list[str] = []
+                request = response.request if response else None
+                while request is not None:
+                    chain.insert(0, request.url)
+                    request = request.redirected_from
+                if page.url and (not chain or chain[-1] != page.url):
+                    chain.append(page.url)  # JS / meta-refresh navigation after load
                 return Rendered(
-                    url=page.url, status=response.status if response else 0, html=html, screenshot=screenshot
+                    url=page.url,
+                    status=response.status if response else 0,
+                    html=html,
+                    screenshot=screenshot,
+                    redirect_chain=chain,
                 )
             finally:
                 browser.close()

@@ -1,0 +1,21 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m3-ok-34-edukacja-budzet",
+  "platform": "instagram",
+  "title": "Konsultacje finansowe",
+  "published_at": "2026-11-05",
+  "seed": true,
+  "detected_days_ago": 15,
+  "author": {
+   "name": "Zmyślona Edukatorka Finansowa",
+   "handle": "@zmyslona_edukatorka"
+  }
+ },
+ "text": "Prowadzę konsultacje inwestycyjne o charakterze edukacyjnym: tłumaczę, jak działają obligacje i fundusze, jak czytać tabelę opłat i jak ułożyć budżet domowy. Nie doradzam, w co inwestować, i nie udzielam rekomendacji.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3
+ }
+}

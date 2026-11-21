@@ -29,16 +29,19 @@ REGISTRIES: dict[str, tuple[str, str]] = {
         "Lista doradców inwestycyjnych (KNF)",
         f"{_KNF}/lista_doradcow_inwestycyjnych",
     ),
-    "kirp_legal_advisers": ("Rejestr radców prawnych (KIRP)", "https://kirp.pl/"),
-    "kidp_tax_advisers": ("Rejestr doradców podatkowych (KIDP)", "https://kidp.pl/"),
+    "kirp_legal_advisers": ("Rejestr radców prawnych (KIRP)", "https://kirp.pl/krajowa-wyszukiwarka-radcow-prawnych/"),
+    "kidp_tax_advisers": ("Rejestr doradców podatkowych (KIDP)", "https://kidp.pl/wyszukaj-doradce-podatkowego"),
     # Internal UKNF source: there is no public URL and no bundled snapshot. It is fed only by
     # `context.cooperation_notified` of the analysed document.
     "uknf_cooperation_notice": ("Zgłoszenia współpracy reklamowej (źródło wewnętrzne UKNF)", ""),
 }
 
 KNF_FIRM_REGISTERS = [
-    "knf_investment_firms", "knf_banks_brokerage", "knf_brokerage_houses",
-    "knf_foreign_branches", "knf_foreign_cross_border",
+    "knf_investment_firms",
+    "knf_banks_brokerage",
+    "knf_brokerage_houses",
+    "knf_foreign_branches",
+    "knf_foreign_cross_border",
 ]
 # Sub-registers whose union forms the umbrella "Rejestr firm inwestycyjnych".
 KNF_SUB_REGISTERS = KNF_FIRM_REGISTERS[1:]

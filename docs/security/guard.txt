@@ -1,0 +1,5 @@
+✓ brak płatnych API AI w services/
+✓ brak commitowanych plików .env
+✓ brak oczywistych sekretów
+✓ brak console.log we froncie
+✓ docker compose obecny

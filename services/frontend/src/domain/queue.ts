@@ -1,5 +1,6 @@
 import type { IncidentSummary, ModuleId, Platform, RiskLevel, Status } from "../types/incident";
 import { deriveLevel, LEVEL_ORDER, type Thresholds } from "./levels";
+import { priorityOf, TIERS, tierOf, type PriorityTier } from "./priority";
 
 export interface QueueFilters {
   q: string;
@@ -9,12 +10,15 @@ export interface QueueFilters {
   level: RiskLevel | "";
   module: ModuleId | 0;
   status: Status | "";
+  tier: PriorityTier | "";
+  /** "risk" = by level and risk (default), "priority" = by risk × reports */
+  sort: "risk" | "priority";
 }
 
-export const EMPTY_FILTERS: QueueFilters = { q: "", from: "", to: "", platform: "", level: "", module: 0, status: "" };
+export const EMPTY_FILTERS: QueueFilters = { q: "", from: "", to: "", platform: "", level: "", module: 0, status: "", tier: "", sort: "risk" };
 
 export function activeFilterCount(f: QueueFilters): number {
-  return [f.q, f.from, f.to, f.platform, f.level, f.module ? "m" : "", f.status].filter(Boolean).length;
+  return [f.q, f.from, f.to, f.platform, f.level, f.module ? "m" : "", f.status, f.tier].filter(Boolean).length;
 }
 
 const fold = (s: string) =>
@@ -24,6 +28,7 @@ export function matchesFilters(it: IncidentSummary, f: QueueFilters, t: Threshol
   if (f.platform && it.source.platform !== f.platform) return false;
   if (f.module && !it.modules.includes(f.module) && it.primary_module !== f.module) return false;
   if (f.status && it.status !== f.status) return false;
+  if (f.tier && tierOf(it, t) !== f.tier) return false;
   if (f.level && deriveLevel(it.risk_score, t) !== f.level) return false;
   const day = it.created_at.slice(0, 10);
   if (f.from && day < f.from) return false;
@@ -37,7 +42,12 @@ export function matchesFilters(it: IncidentSummary, f: QueueFilters, t: Threshol
 }
 
 /** Most dangerous first: pinned alerts, then red → orange → green, then raw risk, then newest. */
-export function sortQueue(items: IncidentSummary[], t: Thresholds, pinned: readonly string[] = []): IncidentSummary[] {
+export function sortQueue(
+  items: IncidentSummary[],
+  t: Thresholds,
+  pinned: readonly string[] = [],
+  sort: QueueFilters["sort"] = "risk",
+): IncidentSummary[] {
   const pinRank = new Map(pinned.map((id, i) => [id, i]));
   return [...items].sort((a, b) => {
     const pa = pinRank.get(a.id);
@@ -46,6 +56,12 @@ export function sortQueue(items: IncidentSummary[], t: Thresholds, pinned: reado
       if (pa === undefined) return 1;
       if (pb === undefined) return -1;
       return pa - pb;
+    }
+    if (sort === "priority") {
+      const diff = priorityOf(b) - priorityOf(a);
+      if (diff !== 0) return diff;
+      if (a.risk_score !== b.risk_score) return b.risk_score - a.risk_score;
+      return b.created_at.localeCompare(a.created_at);
     }
     const la = LEVEL_ORDER[deriveLevel(a.risk_score, t)];
     const lb = LEVEL_ORDER[deriveLevel(b.risk_score, t)];
@@ -61,7 +77,7 @@ export function applyQueue(
   t: Thresholds,
   pinned: readonly string[] = [],
 ): IncidentSummary[] {
-  return sortQueue(items.filter((it) => matchesFilters(it, f, t)), t, pinned);
+  return sortQueue(items.filter((it) => matchesFilters(it, f, t)), t, pinned, f.sort);
 }
 
 /** Insert or replace by id (socket events may repeat or arrive before the list). */
@@ -82,11 +98,13 @@ export function filtersToSearch(f: QueueFilters): URLSearchParams {
   if (f.level) p.set("poziom", f.level);
   if (f.module) p.set("modul", String(f.module));
   if (f.status) p.set("status", f.status);
+  if (f.tier) p.set("priorytet", f.tier);
+  if (f.sort === "priority") p.set("sortowanie", "priorytet");
   return p;
 }
 
 const PLATFORMS: Platform[] = ["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"];
-const STATUSES: Status[] = ["new", "in_review", "escalated", "closed_violation", "closed_ok"];
+const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
 const LEVELS: RiskLevel[] = ["red", "orange", "green"];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -106,6 +124,8 @@ export function filtersFromSearch(p: URLSearchParams): QueueFilters {
     level: oneOf(p.get("poziom"), LEVELS),
     module: m === 1 || m === 2 || m === 3 ? m : 0,
     status: oneOf(p.get("status"), STATUSES),
+    tier: oneOf(p.get("priorytet"), TIERS),
+    sort: p.get("sortowanie") === "priorytet" ? "priority" : "risk",
   };
 }
 
@@ -118,6 +138,7 @@ export function filtersToApiQuery(f: QueueFilters): string {
   if (f.from) p.set("from", f.from);
   if (f.to) p.set("to", f.to);
   if (f.q) p.set("q", f.q);
+  if (f.sort === "priority") p.set("sort", "priority");
   const s = p.toString();
   return s ? `?${s}` : "";
 }

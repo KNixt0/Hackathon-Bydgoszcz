@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://facebook.example/m1-vio-28-facebook-polecam-link",
+  "platform": "facebook",
+  "title": "Polecam",
+  "published_at": "2026-11-01",
+  "seed": true,
+  "detected_days_ago": 19,
+  "author": {
+   "name": "Zmyślony Doradca Sąsiedzki",
+   "handle": "@zmyslony_sasiad"
+  }
+ },
+ "text": "Polecam Dom Maklerski Wisła Zmyślona S.A., sam korzystam od dawna. Link w komentarzu.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": false,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -1,0 +1,158 @@
+{
+ "meta": {
+  "url": "https://x.example/m3-vio-37-grupa-sygnalowa",
+  "platform": "x",
+  "title": "Grupa VIP: sygnały",
+  "published_at": "2026-11-16",
+  "seed": true,
+  "detected_days_ago": 4,
+  "author": {
+   "name": "Zmyślony Sygnalista",
+   "handle": "@zmyslony_sygnalista"
+  }
+ },
+ "text": "Grupa VIP na Telegramie: codziennie sygnały kupna i sprzedaży akcji oraz kontraktów CFD, dopasowane do Twojego portfela. Powiem Ci dokładnie, co kupić i kiedy sprzedać. Dołącz, abonament 199 zł miesięcznie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3,
+  "comments": [
+   {
+    "handle": "@ania_krk",
+    "account_created": "2018-10-12T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-10T08:00:00Z",
+    "rating": 4
+   },
+   {
+    "handle": "@marek_waw",
+    "account_created": "2019-10-27T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam mieszane odczucia.",
+    "posted_at": "2026-11-11T00:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@ola_gda",
+    "account_created": "2022-12-21T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Warto poczytać regulamin przed założeniem konta.",
+    "posted_at": "2026-11-12T20:00:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@vip_sygnal2669",
+    "account_created": "2026-11-14T07:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T04:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal4139",
+    "account_created": "2026-11-15T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T04:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal4185",
+    "account_created": "2026-11-14T00:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T03:28:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal4679",
+    "account_created": "2026-11-14T11:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:21:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal1278",
+    "account_created": "2026-11-14T08:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T01:04:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal2266",
+    "account_created": "2026-11-14T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T01:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal3630",
+    "account_created": "2026-11-14T10:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T02:28:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal5238",
+    "account_created": "2026-11-14T12:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:33:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal3325",
+    "account_created": "2026-11-15T00:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T00:11:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal6017",
+    "account_created": "2026-11-15T02:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T07:59:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal2487",
+    "account_created": "2026-11-14T16:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T02:49:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@vip_sygnal5037",
+    "account_created": "2026-11-15T14:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T05:05:00Z",
+    "rating": 5
+   }
+  ]
+ }
+}

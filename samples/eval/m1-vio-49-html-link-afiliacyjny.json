@@ -1,0 +1,20 @@
+{
+ "meta": {
+  "url": "https://zmyslone-finanse.example/rachunek-po-roku",
+  "platform": "web",
+  "title": "Mój rachunek maklerski po roku: szczera opinia",
+  "published_at": "2026-11-10",
+  "author": {
+   "name": "Blog Zmyślone Finanse"
+  },
+  "seed": true,
+  "detected_days_ago": 11
+ },
+ "html_file": "m1-vio-49-html-link-afiliacyjny.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1
+ }
+}

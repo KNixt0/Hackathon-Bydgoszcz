@@ -38,15 +38,47 @@
   ],
   "knf_banks_brokerage": [
    {
-    "name": "Bank Zmyślony S.A.",
+    "name": "Bank Jantarowy Fikcyjny S.A.",
     "aliases": [
-     "Biuro Maklerskie Banku Zmyślonego"
+     "Biuro Maklerskie Banku Jantarowego Fikcyjnego"
     ],
     "status": "listed",
     "detail": "Podmiot fikcyjny (dane demonstracyjne)",
     "domains": [
-     "bank-zmyslony.example"
+     "bank-jantarowy.example"
     ]
+   }
+  ],
+  "knf_public_warnings": [
+   {
+    "name": "Zmyślony Kapitał Global Ltd",
+    "aliases": [
+     "zmyslonykapital.example"
+    ],
+    "status": "warning",
+    "detail": "Wpis fikcyjny (dane demonstracyjne, nie jest to wpis KNF): podejrzenie prowadzenia działalności maklerskiej bez zezwolenia"
+   },
+   {
+    "name": "Fikcja Trade Solutions OÜ",
+    "aliases": [
+     "FikcjaTrade"
+    ],
+    "status": "warning",
+    "detail": "Wpis fikcyjny (dane demonstracyjne, nie jest to wpis KNF): podejrzenie prowadzenia działalności maklerskiej bez zezwolenia"
+   },
+   {
+    "name": "Bajkowy Zysk Invest sp. z o.o.",
+    "aliases": [],
+    "status": "warning",
+    "detail": "Wpis fikcyjny (dane demonstracyjne, nie jest to wpis KNF): podejrzenie zarządzania portfelami bez zezwolenia"
+   },
+   {
+    "name": "Nibylandia Wealth Partners LLC",
+    "aliases": [
+     "Nibylandia Wealth"
+    ],
+    "status": "warning",
+    "detail": "Wpis fikcyjny (dane demonstracyjne, nie jest to wpis KNF): podejrzenie doradztwa inwestycyjnego bez zezwolenia"
    }
   ]
  }

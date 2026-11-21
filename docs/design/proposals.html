@@ -1,0 +1,1321 @@
+<meta charset="utf-8">
+<title>Języki projektowe InvestWatch</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Public+Sans:wght@400;500;700&family=Literata:opsz,wght@7..72,400;7..72,600&family=Source+Sans+3:wght@400;600&family=Lato:wght@400;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: a quiet, neutral document frame (the "chrome") holds four light-theme specimen sheets.
+   Chrome follows the dark-mode token contract; the specimens always render in their own light themes. */
+:root {
+  --bg: #F3F4F6;
+  --surface: #FFFFFF;
+  --ink: #15181E;
+  --ink2: #3B424D;
+  --muted: #566070;
+  --line: #D9DCE2;
+  --line2: #AEB5C1;
+  --tint: #E8EAEE;
+  --focus: #2563EB;
+  --bar: #F3F4F6;
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1115; --surface: #171A20; --ink: #ECEEF2; --ink2: #C5CAD3; --muted: #9BA4B1;
+    --line: #2A2F39; --line2: #444B58; --tint: #20242C; --focus: #7AA2FF; --bar: #0F1115;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1115; --surface: #171A20; --ink: #ECEEF2; --ink2: #C5CAD3; --muted: #9BA4B1;
+  --line: #2A2F39; --line2: #444B58; --tint: #20242C; --focus: #7AA2FF; --bar: #0F1115;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bar); }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, table { margin: 0; padding: 0; }
+/* the page ships without a doctype (charset meta must be line 1), so tables would not inherit text styles in quirks mode */
+table { color: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; font-family: inherit; }
+ul, ol { list-style: none; }
+h1, h2, h3 { text-wrap: balance; font-weight: 600; line-height: 1.2; }
+a { color: var(--ink); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-variant-numeric: tabular-nums; }
+code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; overflow-wrap: anywhere; }
+
+/* ---------- chrome: jump bar ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bar); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; gap: 8px 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+.jump { display: flex; gap: 4px; overflow-x: auto; max-width: 100%; scrollbar-width: thin; }
+.jump a { white-space: nowrap; text-decoration: none; font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 6px; color: var(--ink2); }
+.jump a:hover { background: var(--tint); color: var(--ink); }
+.jump a b { font-weight: 600; color: var(--muted); margin-right: 6px; }
+.view { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 8px; padding: 2px; gap: 2px; background: var(--surface); }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--ink2); cursor: pointer; white-space: nowrap; }
+.seg input:checked + span { background: var(--ink); color: var(--bg); }
+.seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 720px) { .bar { position: static; } body::before { display: none; } .view { width: 100%; flex-wrap: wrap; } .seg { flex-wrap: wrap; max-width: 100%; } }
+
+/* ---------- chrome: intro ---------- */
+.hero { padding-block: 56px 40px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.hero h1 { font-size: clamp(2rem, 4.4vw, 3.25rem); letter-spacing: -0.02em; font-weight: 600; }
+.hero .lead { margin-top: 20px; max-width: 58ch; color: var(--ink2); font-size: 1.125rem; }
+.read { border-top: 2px solid var(--ink); padding-top: 14px; font-size: 15px; color: var(--ink2); }
+.read h2 { font-size: 15px; margin-bottom: 8px; color: var(--ink); }
+.read li { padding-left: 16px; position: relative; margin-bottom: 6px; }
+.read li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 6px; height: 1.5px; background: var(--muted); }
+@media (max-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 36px 28px; } }
+
+/* ---------- chrome: comparison ---------- */
+.sec { padding-block: 40px; }
+.sec-h { display: flex; justify-content: space-between; gap: 16px 32px; align-items: end; flex-wrap: wrap; margin-bottom: 20px; }
+.sec-h h2 { font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.01em; }
+.sec-h p { color: var(--muted); max-width: 62ch; font-size: 15px; }
+.scroll { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.cmp { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 14px; line-height: 1.45; }
+.cmp th, .cmp td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.cmp tbody tr:last-child th, .cmp tbody tr:last-child td { border-bottom: 0; }
+.cmp thead th { font-weight: 600; font-size: 15px; background: var(--tint); border-bottom: 1px solid var(--line2); }
+.cmp tbody th { width: 150px; font-weight: 500; color: var(--muted); }
+.cmp td { color: var(--ink2); }
+.dots { display: flex; gap: 6px; align-items: center; }
+.dots i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.18); display: block; }
+.cost { font-weight: 600; color: var(--ink); }
+
+/* ---------- chrome: proposal sections ---------- */
+.prop { padding-block: 48px; border-top: 1px solid var(--line2); }
+.prop-h { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px 40px; align-items: start; margin-bottom: 28px; }
+.prop-h h2 { font-size: clamp(1.75rem, 3.6vw, 2.5rem); letter-spacing: -0.015em; }
+.prop-h p { color: var(--ink2); font-size: 1.0625rem; max-width: 62ch; }
+.prop-h p.src { margin-top: 10px; font-size: 14px; color: var(--muted); }
+@media (max-width: 860px) { .prop-h { grid-template-columns: minmax(0, 1fr); } }
+.chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border: 1px solid var(--line2); border-radius: 6px; font-size: 13px; color: var(--ink2); background: var(--surface); }
+.stage { display: grid; gap: 28px; }
+.frag-cap { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+.frag-cap strong { color: var(--ink); font-weight: 600; font-size: 15px; }
+.frame { border: 1px solid var(--line2); border-radius: 4px; overflow: hidden; background: #fff; }
+main[data-view="a"] .frag:not([data-f="a"]), main[data-view="b"] .frag:not([data-f="b"]), main[data-view="c"] .frag:not([data-f="c"]) { display: none; }
+main:not([data-view="all"]) .docs { display: none; }
+main:not([data-view="all"]) .prop { padding-block: 32px; }
+.docs { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; margin-top: 40px; align-items: start; }
+@media (max-width: 960px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+.docs h3 { font-size: 17px; margin-bottom: 12px; }
+.docs h3:not(:first-child) { margin-top: 28px; }
+.tok { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+.tok th, .tok td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.tok thead th { font-size: 13px; font-weight: 500; color: var(--muted); background: var(--tint); }
+.tok tbody tr:last-child td, .tok tbody tr:last-child th { border-bottom: 0; }
+.tok tbody th { font-weight: 500; }
+.tok td.r { white-space: nowrap; }
+.smp { display: inline-grid; place-items: center; width: 44px; height: 28px; border-radius: 4px; font-weight: 600; font-size: 14px; border: 1px solid rgba(0,0,0,.2); }
+.smp i { display: block; width: 14px; height: 14px; border-radius: 50%; }
+.hex { font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+.tag { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--tint); color: var(--ink); margin-left: 6px; }
+.fnd { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 0; font-size: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.fnd dt, .fnd dd { padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.fnd dt { color: var(--muted); font-weight: 500; }
+.fnd dd:last-of-type, .fnd dt:nth-last-of-type(1) { border-bottom: 0; }
+.fnd dd { color: var(--ink2); }
+@media (max-width: 520px) { .fnd { grid-template-columns: minmax(0, 1fr); } .fnd dt { border-bottom: 0; padding-bottom: 0; } }
+.prov li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink2); align-items: baseline; }
+.prov li:last-child { border-bottom: 0; }
+.prov .chip { height: 24px; font-size: 12.5px; white-space: nowrap; }
+.sr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.sr > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+.sr h3 { margin: 0 0 8px !important; font-size: 15px; }
+.sr li { font-size: 14px; color: var(--ink2); padding-left: 16px; position: relative; margin-bottom: 8px; }
+.sr li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 6px; border-radius: 1px; background: var(--muted); }
+.sr .no li::before { background: transparent; border: 1.5px solid var(--muted); }
+
+/* ---------- chrome: sources, recommendation ---------- */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.note { font-size: 14px; color: var(--ink2); }
+.note li { margin-bottom: 10px; padding-left: 16px; position: relative; }
+.note li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 1.5px; background: var(--muted); }
+.note a { overflow-wrap: anywhere; }
+.reco-pick { border: 2px solid var(--ink); border-radius: 10px; background: var(--surface); padding: clamp(20px, 3vw, 36px); }
+.reco-pick h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin-bottom: 12px; }
+.reco-pick > p { max-width: 72ch; color: var(--ink2); margin-bottom: 12px; }
+.cost-tbl { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+.cost-tbl th, .cost-tbl td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.cost-tbl thead th { background: var(--tint); font-weight: 500; font-size: 13px; color: var(--muted); }
+.cost-tbl tbody tr:last-child td, .cost-tbl tbody tr:last-child th { border-bottom: 0; }
+footer.end { padding-block: 32px 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+/* =====================================================================
+   SPECIMEN BASE. Shared parts read their look from variables; each proposal
+   then adds its own structure below. Specimens are always light.
+   ===================================================================== */
+.spec { container: spec / inline-size; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5; font-variant-numeric: tabular-nums; color-scheme: light; -webkit-font-smoothing: antialiased; text-align: left; }
+.spec *, .spec *::before, .spec *::after { box-sizing: border-box; }
+.spec :where(h4, h5, h6, p, dl, dd, ul, ol, figure, table, fieldset) { margin: 0; padding: 0; }
+.spec :where(fieldset) { border: 0; min-width: 0; }
+.spec :where(ul, ol) { list-style: none; }
+.spec h4, .spec h5, .spec h6 { text-wrap: balance; }
+.spec :where(button, select, input) { font: inherit; color: inherit; }
+.spec :where(button) { cursor: pointer; }
+.spec :where(a) { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.spec :where(a):hover { text-decoration-thickness: 2px; }
+.spec ::selection { background: var(--sel); color: var(--ink); }
+.spec .ic { width: 1.125em; height: 1.125em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.spec :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.spec .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.spec .tw { overflow-x: auto; scrollbar-color: var(--line2) transparent; scrollbar-width: thin; }
+.spec table { border-collapse: collapse; width: 100%; }
+.spec th { text-align: left; font-weight: var(--wb); }
+.spec td, .spec th { vertical-align: middle; }
+.spec [hidden] { display: none !important; }
+.spec .none { color: var(--muted); }
+.spec .nw { white-space: nowrap; }
+.spec .mu { color: var(--muted); }
+.spec .qt .c-case { min-width: 300px; }
+.p1-bd, .p3-bd, .p4-bd, .p1-col, .p3-main, .p4-col { grid-template-columns: minmax(0, 1fr); }
+.p1-bd > *, .p3-bd > *, .p4-bd > *, .p2-pg > *, .p4-pn > * { min-width: 0; }
+.spec .lr { display: grid; gap: 4px; justify-items: start; }
+.spec .qt td .sel { width: 216px; min-width: 216px; }
+
+/* level: icon of its own shape plus the word */
+.spec .lvl { display: inline-flex; align-items: center; gap: 6px; font-weight: var(--wb); white-space: nowrap; }
+.spec .lvl-red { color: var(--c-red); } .spec .lvl-amb { color: var(--c-amb); } .spec .lvl-grn { color: var(--c-grn); }
+
+/* risk number + small ruled scale (baseline, ticks at 20 and 70, filled to the value) */
+.spec .rk { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.spec .rk-n { min-width: 2ch; text-align: right; font-weight: var(--wb); }
+.spec .ms { position: relative; display: block; width: 56px; height: 12px; flex: none; }
+.spec .ms::before { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: var(--ink2); }
+.spec .ms-f { position: absolute; left: 0; bottom: 3px; height: 5px; background: var(--m); border-radius: var(--r-bar, 0); }
+.spec .ms-t { position: absolute; bottom: 0; height: 12px; width: 1px; background: var(--ink); }
+.spec .ms-red { --m: var(--m-red); } .spec .ms-amb { --m: var(--m-amb); } .spec .ms-grn { --m: var(--m-grn); }
+
+/* status select: always dark text on a light field */
+.spec .sel { appearance: none; -webkit-appearance: none; width: 100%; min-width: 172px; max-width: 220px; padding: 0 32px 0 10px; font-size: 14px; color: var(--ink); background-color: var(--field); background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23161616' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+.spec option { color: #161616; background: #FFFFFF; }
+
+/* dual scale: risk on top, Compliance Score (100 minus risk) underneath, thresholds marked */
+.spec .ds { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); column-gap: 16px; }
+.spec .ds-th { grid-column: 2; grid-row: 1; position: relative; height: 22px; }
+.spec .ds-th span { position: absolute; bottom: 2px; white-space: nowrap; font-size: 12px; line-height: 1.4; color: var(--ink); font-weight: var(--wb); padding-left: 8px; border-left: 2px solid var(--ink); }
+.spec .ds-c { grid-column: 1; font-size: 14px; color: var(--ink2); line-height: 18px; white-space: nowrap; }
+.spec .ds-c1 { grid-row: 2; } .spec .ds-c2 { grid-row: 4; }
+.spec .ds-lr, .spec .ds-lc { grid-column: 2; position: relative; height: 18px; font-size: 12px; line-height: 18px; color: var(--muted); }
+.spec .ds-lr { grid-row: 2; } .spec .ds-lc { grid-row: 4; }
+.spec .ds-lr span, .spec .ds-lc span { position: absolute; top: 0; transform: translateX(-50%); }
+.spec .ds-lr span.s, .spec .ds-lc span.s { transform: none; }
+.spec .ds-lr span.e, .spec .ds-lc span.e { transform: translateX(-100%); }
+.spec .ds-lr span.k { color: var(--ink); font-weight: var(--wb); }
+.spec .ds-ax { grid-column: 2; grid-row: 3; position: relative; height: 24px; }
+.spec .ds-z { position: absolute; top: 10px; height: 4px; }
+.spec .ds-z.z1 { left: 0; width: 20%; background: var(--m-grn); } .spec .ds-z.z2 { left: 20%; width: 50%; background: var(--m-amb); } .spec .ds-z.z3 { left: 70%; width: 30%; background: var(--m-red); }
+.spec .ds-tk { position: absolute; top: 5px; height: 14px; width: 1px; margin-left: -.5px; background: var(--ink2); }
+.spec .ds-tk.mi { top: 8px; height: 8px; }
+.spec .ds-tt { position: absolute; top: 0; height: 24px; width: 2px; margin-left: -1px; background: var(--ink); }
+.spec .ds-mk { grid-column: 2; grid-row: 2 / 5; position: relative; pointer-events: none; }
+.spec .ds-nd { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--ink); }
+.spec .ds-nd::after { content: ""; position: absolute; left: -5px; top: 21px; border: 6px solid transparent; border-top: 7px solid var(--ink); border-bottom: 0; }
+.spec .ds figcaption { grid-column: 1 / -1; grid-row: 5; margin-top: 10px; font-size: 14px; color: var(--ink2); }
+.spec .ds figcaption b { color: var(--ink); font-weight: var(--wb); }
+.spec .ds .nar { display: none; }
+@container spec (max-width: 640px) {
+  .spec .ds { grid-template-columns: minmax(0, 1fr); }
+  .spec .ds-c { display: none; }
+  .spec .ds-th, .spec .ds-lr, .spec .ds-lc, .spec .ds-ax, .spec .ds-mk { grid-column: 1; }
+  .spec .ds .od { display: none; }
+  .spec .ds .nar { display: inline; }
+}
+
+/* calibration instrument: one 0–100 axis; units above = violations, below = compliant; slider on the axis */
+.spec .cal { position: relative; }
+.spec .cal-w { position: relative; margin: 0 calc(var(--th) / 2); }
+.spec .cal-lb { position: relative; height: 20px; font-size: 12px; line-height: 20px; color: var(--ink2); }
+.spec .cal-lb span { position: absolute; top: 0; white-space: nowrap; padding-left: 5px; }
+.spec .cal-up, .spec .cal-dn { position: relative; }
+.spec .cal-up { height: 30px; }
+.spec .cal-dn { height: 76px; }
+.spec .bin { position: absolute; width: 5%; display: flex; gap: 1px; padding: 0 1px; }
+.spec .cal-up .bin { bottom: 0; flex-direction: column-reverse; }
+.spec .cal-dn .bin { top: 0; flex-direction: column; }
+.spec .u { display: block; height: 5px; background: var(--u-off); border-radius: var(--r-unit, 0); }
+.spec .u.on { background: var(--u-on); }
+.spec .brk { display: block; margin-top: 3px; padding-top: 4px; border-top: 1px dashed var(--ink2); font-size: 12px; line-height: 1.25; text-align: center; color: var(--ink); letter-spacing: -0.02em; }
+.spec .cal-ax { position: relative; height: calc(32px + var(--th) / 2); }
+.spec .cal-ax::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: var(--ink); }
+.spec .cal-ax i { position: absolute; top: 6px; height: 10px; width: 1px; margin-left: -.5px; background: var(--ink); }
+.spec .cal-ax i.mi { top: 8px; height: 6px; }
+.spec .cal-ax span { position: absolute; z-index: 1; padding: 0 2px; background: var(--cal-bg, #FFFFFF); top: calc(12px + var(--th) / 2); font-size: 12px; line-height: 18px; color: var(--muted); transform: translateX(-50%); }
+.spec .cal-ax span.s { transform: none; } .spec .cal-ax span.e { transform: translateX(-100%); }
+.spec .cal-k { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--ink2); }
+.spec .cal-t { position: absolute; top: 20px; bottom: 0; width: 2px; margin-left: -1px; background: var(--u-on); }
+.spec .cal .rng { position: absolute; left: 0; right: 0; width: 100%; top: calc(20px + 30px + 11px - var(--th) / 2); height: var(--th); margin: 0; -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; }
+.spec .rng::-webkit-slider-runnable-track { height: var(--th); background: transparent; }
+.spec .rng::-moz-range-track { height: var(--th); background: transparent; }
+.spec .rng::-webkit-slider-thumb { -webkit-appearance: none; box-sizing: border-box; width: var(--th); height: var(--th); border-radius: var(--thr, 0); background: var(--thbg); border: var(--thbd); }
+.spec .rng::-moz-range-thumb { box-sizing: border-box; width: var(--th); height: var(--th); border-radius: var(--thr, 0); background: var(--thbg); border: var(--thbd); }
+.spec .rng:focus-visible { outline-offset: 4px; }
+.spec .cal-key { margin-top: 8px; font-size: 14px; color: var(--muted); max-width: 72ch; }
+.spec .cal-nar { display: none; }
+@container spec (max-width: 640px) { .spec .cal-ax .od { display: none; } .spec .brk { font-size: 0; height: 1px; padding: 0; } .spec .cal-nar { display: inline; } .spec .od-w { display: none; } .spec .cal-dn { height: 62px; } }
+
+/* confusion matrix: a real small table with row and column headings and totals */
+.spec .cm { font-size: 14px; }
+.spec .cm caption { text-align: left; font-weight: var(--wb); font-size: 16px; padding-bottom: 8px; color: var(--ink); }
+.spec .cm th, .spec .cm td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: right; }
+.spec .cm th:first-child { text-align: left; }
+.spec .cm thead th, .spec .cm thead td { border-bottom: 1px solid var(--ink); font-size: 14px; vertical-align: bottom; }
+.spec .cm tfoot th, .spec .cm tfoot td { border-bottom: 0; border-top: 1px solid var(--ink); color: var(--ink2); }
+.spec .cm td b { display: block; font-size: 18px; line-height: 1.2; font-weight: var(--wb); color: var(--ink); }
+.spec .cm td small { display: block; font-size: 12px; color: var(--muted); line-height: 1.3; }
+@container spec (max-width: 520px) {
+  .spec .cm th, .spec .cm td { padding: 10px 6px; }
+  .spec .cm tr > :last-child { display: none; }
+  .spec .cm th:first-child { padding-left: 0; }
+  .p4 .cm-wrap { border: 0; padding: 0; border-radius: 0; }
+}
+
+/* =====================================================================
+   1. URZĘDOWY  (DSFR discipline: square, ruled, table-first)
+   ===================================================================== */
+.p1 { --font: "Public Sans", system-ui, "Segoe UI", sans-serif; --wb: 700;
+  --bg: #FFFFFF; --ink: #161616; --ink2: #3A3A3A; --muted: #5E5E5E; --line: #DDDDDD; --line2: #929292;
+  --field: #EEEEEE; --tint: #EDEFF8; --link: #1A2F8C; --accent: #1A2F8C; --accent-h: #121F66; --sel: #D9DFF6;
+  --c-red: #B0121A; --c-amb: #8F3F00; --c-grn: #1C6B3B; --m-red: #C8141E; --m-amb: #C25200; --m-grn: #2E8A53;
+  --focus: #0A6CD6; --th: 22px; --thr: 0; --thbg: var(--accent); --thbd: 3px solid #FFFFFF; --u-on: var(--accent); --u-off: #C9C9C9; }
+.p1-hd .top { display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; padding: 16px 24px; }
+.p1-svc b { display: block; font-size: 20px; line-height: 1.2; }
+.p1-svc span { font-size: 14px; color: var(--muted); }
+.p1-qa { display: flex; gap: 4px 24px; flex-wrap: wrap; font-size: 14px; }
+.p1-nav { display: flex; overflow-x: auto; padding: 0 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.p1-nav a { display: block; padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.p1-nav a[aria-current] { color: var(--accent); font-weight: 700; border-bottom-color: var(--accent); }
+.p1-bd { padding: 24px; display: grid; gap: 16px; }
+.p1 h4 { font-size: 28px; line-height: 1.2; font-weight: 700; }
+.p1 h5 { font-size: 20px; line-height: 1.25; font-weight: 700; }
+.p1-sum { color: var(--ink2); max-width: 75ch; }
+.p1-tabs { display: flex; gap: 4px; overflow-x: auto; position: relative; z-index: 1; margin-bottom: -1px; }
+.p1-tab { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid transparent; border-top: 2px solid transparent; border-bottom: 0; border-radius: 0; background: var(--tint); font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+.p1-tab b { font-weight: 700; }
+.p1-tab[data-l="red"] .ic { color: var(--c-red); } .p1-tab[data-l="amb"] .ic { color: var(--c-amb); } .p1-tab[data-l="grn"] .ic { color: var(--c-grn); }
+.p1-tab[aria-selected="true"] { background: #FFFFFF; border-color: var(--line); border-top-color: var(--accent); color: var(--accent); }
+.p1-panel { border: 1px solid var(--line); padding: 16px; display: grid; gap: 16px; }
+.p1-tool { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end; justify-content: space-between; }
+.p1-fld label { display: block; font-size: 14px; margin-bottom: 4px; }
+.p1-grp { display: flex; }
+.p1 .inp { height: 40px; width: min(300px, 60vw); padding: 0 12px; border: 0; border-radius: 4px 0 0 0; background: var(--field); box-shadow: inset 0 -2px 0 var(--ink2); font-size: 16px; color: var(--ink); }
+.p1-btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 0; background: var(--accent); color: #FFFFFF; font-size: 16px; font-weight: 500; white-space: nowrap; }
+.p1-btn:hover { background: var(--accent-h); }
+.p1-btn2 { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 0; background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-size: 16px; font-weight: 500; white-space: nowrap; }
+.p1-right { display: flex; gap: 16px 24px; align-items: flex-end; flex-wrap: wrap; }
+.p1 .sel { height: 40px; border: 0; border-radius: 4px 4px 0 0; box-shadow: inset 0 -2px 0 var(--ink2); }
+.p1 .qt td .sel { height: 36px; }
+.p1 .dl { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; white-space: nowrap; }
+.p1 .qt { min-width: 1060px; font-size: 14px; }
+.p1 .qt th { padding: 8px 12px; border-bottom: 2px solid var(--ink); white-space: nowrap; vertical-align: bottom; }
+.p1 .qt td { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.p1 .qt tbody tr:hover td { background: #F6F6F6; }
+.p1 .qt .c-case a { font-weight: 500; }
+.p1 .qt .sub { display: block; color: var(--muted); }
+.p1-ft { display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.p1-pg { display: flex; gap: 4px; flex-wrap: wrap; }
+.p1-pg a, .p1-pg span { display: inline-grid; place-items: center; min-width: 32px; height: 32px; padding: 0 8px; color: var(--ink); text-decoration: none; }
+.p1-pg a:hover { text-decoration: underline; }
+.p1-pg a[aria-current] { background: var(--accent); color: #FFFFFF; }
+.p1-leg { font-size: 12px; color: var(--muted); line-height: 1.4; max-width: 90ch; }
+/* B */
+.p1-bc { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted); }
+.p1-bc a { color: var(--ink2); }
+.p1-bdg { display: flex; gap: 8px; flex-wrap: wrap; }
+.p1 .bdg { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 14px; font-weight: 700; }
+.p1 .bdg-red { background: #FCE7E7; color: var(--c-red); }
+.p1 .bdg-new { background: #E6EAF8; color: var(--accent); }
+.p1-case { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.p1-col { display: grid; gap: 24px; align-content: start; min-width: 0; }
+.p1-meta { display: grid; grid-template-columns: 11em minmax(0, 1fr); border-top: 1px solid var(--line); font-size: 14px; }
+.p1-meta dt, .p1-meta dd { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.p1-meta dt { color: var(--ink2); font-weight: 500; padding-right: 16px; }
+.p1-verd { font-size: 18px; line-height: 1.45; max-width: 60ch; }
+.p1-verd b { font-weight: 700; color: var(--c-red); }
+.p1-call { background: var(--tint); border-left: 4px solid var(--accent); padding: 24px; display: grid; gap: 12px; }
+.p1-call p { max-width: 62ch; }
+.p1-call .acts { display: flex; gap: 12px 16px; flex-wrap: wrap; align-items: center; margin-top: 4px; font-size: 14px; }
+.p1 .rt { font-size: 14px; }
+.p1 .rt th { padding: 8px 12px 8px 0; border-bottom: 2px solid var(--ink); }
+.p1 .rt td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.p1-files li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.p1-files li:first-child { border-top: 1px solid var(--line); }
+.p1-files a { display: inline-flex; gap: 6px; align-items: center; font-weight: 500; }
+.p1-files span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* C */
+.p1-calg { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.p1-ctl { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.p1-ctl label { font-weight: 500; }
+.p1-ctl output { font-size: 28px; font-weight: 700; line-height: 1; }
+.p1-hint { font-size: 14px; color: var(--muted); margin: 4px 0 8px; max-width: 64ch; }
+.p1 .mtab { font-size: 14px; margin-top: 24px; }
+.p1 .mtab th, .p1 .mtab td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
+.p1 .mtab thead th { border-bottom: 2px solid var(--ink); }
+.p1 .mtab td.v { font-size: 18px; font-weight: 700; text-align: right; padding-right: 16px; }
+@container spec (max-width: 900px) { .p1-case, .p1-calg { grid-template-columns: minmax(0, 1fr); } }
+@container spec (max-width: 640px) {
+  .p1-bd { padding: 16px; } .p1-hd .top { padding: 12px 16px; } .p1-nav { padding: 0 8px; } .p1-nav a { padding: 12px 8px; }
+  .p1 h4 { font-size: 24px; } .p1-meta { grid-template-columns: minmax(0, 1fr); } .p1-meta dt { border-bottom: 0; padding-bottom: 0; }
+  .p1-panel { padding: 12px; } .p1-call { padding: 16px; } .p1 .inp { width: 100%; } .p1-fld { width: 100%; } .p1-grp { width: 100%; }
+}
+
+/* =====================================================================
+   2. TECZKA  (NL calm: the case read as a document, margin headings, no boxes)
+   ===================================================================== */
+.p2 { --font: "Source Sans 3", system-ui, "Segoe UI", sans-serif; --serif: "Literata", Georgia, serif; --wb: 600;
+  --bg: #FFFFFF; --ink: #1E2328; --ink2: #3A424B; --muted: #59626C; --line: #D5D9DE; --line2: #8D959E;
+  --field: #FFFFFF; --link: #15608F; --accent: #15608F; --sel: #D8E8F2;
+  --c-red: #A3281E; --c-amb: #7A4E00; --c-grn: #2C6B35; --m-red: #B3362B; --m-amb: #B47D00; --m-grn: #4C8C57;
+  --focus: #1E2328; --th: 22px; --thr: 50%; --thbg: #1E2328; --thbd: 3px solid #FFFFFF; --u-on: #1E2328; --u-off: #CBD0D6; }
+.p2 a:focus-visible, .p2 .fl:focus-visible { outline: 2px solid #1E2328; outline-offset: 2px; background: #FFE680; color: #1E2328; }
+.p2-hd { display: flex; align-items: baseline; gap: 8px 40px; flex-wrap: wrap; padding: 24px 48px; border-bottom: 1px solid var(--line); }
+.p2-wm { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.2; }
+.p2-nav { display: flex; gap: 8px 28px; flex-wrap: wrap; font-size: 17px; }
+.p2-nav a { color: var(--ink2); text-decoration: none; padding: 4px 0; }
+.p2-nav a[aria-current] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.p2-usr { margin-left: auto; font-size: 15px; color: var(--muted); }
+.p2-pg { padding: 48px 48px 56px; }
+.p2 h4 { font-family: var(--serif); font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.01em; max-width: 26ch; }
+.p2-lead { font-family: var(--serif); font-size: 19px; line-height: 1.6; max-width: 62ch; margin-top: 12px; color: var(--ink); }
+.p2 .fl { font: inherit; background: none; border: 0; padding: 0; color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.p2 .fl[aria-pressed="true"] { color: var(--ink); text-decoration-thickness: 3px; text-decoration-color: var(--ink); }
+.p2-sub { margin-top: 8px; font-size: 15px; color: var(--muted); }
+.p2 .qt { min-width: 940px; font-size: 16px; margin-top: 32px; }
+.p2 .qt thead th { font-size: 15px; padding: 0 16px 10px 0; border-bottom: 2px solid var(--ink); white-space: nowrap; vertical-align: bottom; }
+.p2 .qt td { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--line); }
+.p2 .qt .grp th { padding: 28px 0 8px; border-bottom: 1px solid var(--ink2); font-family: var(--serif); font-size: 19px; font-weight: 600; }
+.p2 .qt .grp th .mu { font-family: var(--font); font-size: 15px; font-weight: 400; margin-left: 8px; }
+.p2 .qt .grp .lvl { font-weight: 600; }
+.p2 .qt .more td { padding: 10px 0 0; border-bottom: 0; font-size: 15px; }
+.p2 .qt .c-case a { font-weight: 400; }
+.p2 .qt .sub { display: block; font-size: 15px; color: var(--muted); margin-top: 2px; }
+.p2 .sel { height: 40px; border: 1px solid var(--line2); border-radius: 3px; font-size: 15px; }
+/* document rows: margin heading + body */
+.p2-ref { font-size: 15px; color: var(--muted); margin-bottom: 8px; }
+.p2-doc { margin-top: 32px; }
+.p2-row { display: grid; grid-template-columns: 10.5rem minmax(0, 46rem); column-gap: 40px; padding: 24px 0; border-top: 1px solid var(--line); }
+.p2-row > h5 { font-size: 15px; font-weight: 600; color: var(--ink2); line-height: 1.6; padding-top: 2px; }
+.p2-meta { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 6px 24px; font-size: 16px; }
+.p2-meta dt { color: var(--muted); }
+.p2-verd { font-family: var(--serif); font-size: 21px; line-height: 1.5; }
+.p2-verd + p { margin-top: 10px; font-size: 15px; color: var(--ink2); }
+.p2-find { counter-reset: f; display: grid; gap: 10px; font-family: var(--serif); font-size: 17px; line-height: 1.6; max-width: 62ch; }
+.p2-find li { counter-increment: f; display: grid; grid-template-columns: 2em minmax(0, 1fr); }
+.p2-find li::before { content: counter(f) "."; color: var(--muted); }
+.p2-find small { font-family: var(--font); font-size: 15px; color: var(--muted); }
+.p2-adv { font-family: var(--serif); font-size: 19px; line-height: 1.55; max-width: 60ch; }
+.p2-adv + p { margin-top: 8px; color: var(--ink2); max-width: 62ch; }
+.p2-acts { display: flex; gap: 12px 24px; align-items: center; flex-wrap: wrap; margin-top: 20px; }
+.p2-btn { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 20px; text-align: left; border: 0; border-radius: 3px; background: var(--accent); color: #FFFFFF; font-size: 17px; font-weight: 600; }
+.p2-reg li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.p2-reg li:first-child { padding-top: 0; }
+.p2-reg li:last-child { border-bottom: 0; }
+.p2-reg .r { display: inline-flex; gap: 6px; align-items: center; }
+.p2-reg .d { grid-column: 1 / -1; font-size: 15px; color: var(--muted); }
+.p2-files { display: grid; gap: 8px; }
+.p2-files a { display: inline-flex; gap: 8px; align-items: center; }
+/* C */
+.p2-live { font-family: var(--serif); font-size: 21px; line-height: 1.55; max-width: 60ch; margin-top: 12px; }
+.p2-live b { font-weight: 600; }
+.p2-ctl { display: flex; gap: 16px; align-items: baseline; margin: 32px 0 4px; }
+.p2-ctl label { font-weight: 600; font-size: 17px; }
+.p2-ctl output { font-family: var(--serif); font-size: 28px; line-height: 1; }
+.p2-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; margin-top: 32px; align-items: start; }
+.p2-met { display: grid; gap: 16px; }
+.p2-met div { border-top: 1px solid var(--line); padding-top: 16px; display: grid; grid-template-columns: 7rem auto minmax(0, 1fr); gap: 4px 16px; align-items: baseline; }
+.p2-met dt { font-weight: 600; }
+.p2-met dd.v { font-family: var(--serif); font-size: 32px; line-height: 1.25; }
+.p2-met dd.h { font-size: 15px; color: var(--muted); }
+.p2 .cm td b { font-family: var(--serif); font-weight: 400; font-size: 21px; }
+@container spec (max-width: 860px) { .p2-cols { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+@container spec (max-width: 760px) {
+  .p2-nav { gap: 4px 16px; font-size: 16px; }
+  .p2-hd { padding: 16px 20px; } .p2-pg { padding: 28px 20px 40px; }
+  .p2 h4 { font-size: 28px; } .p2-row { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
+  .p2-usr { margin-left: 0; }
+}
+@container spec (max-width: 520px) {
+  .p2-meta { grid-template-columns: minmax(0, 1fr); gap: 0; } .p2-meta dd { margin-bottom: 8px; }
+  .p2-met div { grid-template-columns: minmax(0, 1fr) auto; } .p2-met dd.h { grid-column: 1 / -1; }
+  .p2-verd, .p2-live { font-size: 19px; }
+}
+
+/* =====================================================================
+   3. MOBYWATEL SŁUŻBOWY  (gov.pl conventions for an official's tool)
+   ===================================================================== */
+.p3 { --font: "Lato", system-ui, "Segoe UI", sans-serif; --wb: 700;
+  --bg: #FFFFFF; --panel: #F4F6FB; --ink: #1B1B1B; --ink2: #3C424B; --muted: #52575F; --line: #DDE1E8; --line2: #8C95A6;
+  --field: #FFFFFF; --link: #0A51A1; --accent: #0A51A1; --accent-h: #083F7E; --tint: #E8F0FA; --sel: #D3E3F7;
+  --c-red: #B0172F; --c-amb: #7D4B00; --c-grn: #14663A; --m-red: #C41E3A; --m-amb: #B86E00; --m-grn: #2B8A57;
+  --focus: #0A51A1; --th: 32px; --thr: 50%; --thbg: #FFFFFF; --thbd: 3px solid var(--accent); --u-on: var(--accent); --u-off: #C7CEDA; }
+.p3-hd { display: flex; align-items: center; gap: 8px 24px; flex-wrap: wrap; min-height: 64px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+.p3-br { display: flex; align-items: center; gap: 16px; padding: 12px 0; }
+.p3-br b { font-size: 20px; line-height: 1.2; }
+.p3-br span { padding-left: 16px; border-left: 1px solid var(--line2); font-size: 14px; color: var(--muted); line-height: 1.3; }
+.p3-nav { display: flex; align-self: stretch; }
+.p3-nav a { display: flex; align-items: center; padding: 0 16px; min-height: 48px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: 16px; border-bottom: 3px solid transparent; }
+.p3-nav a[aria-current] { color: var(--accent); border-bottom-color: var(--accent); }
+.p3-usr { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 14px; color: var(--muted); padding: 8px 0; }
+.p3-ob { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 2px solid var(--accent); border-radius: 4px; background: #FFFFFF; color: var(--accent); font-weight: 700; font-size: 16px; text-decoration: none; }
+.p3-bc { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 12px 24px; font-size: 14px; color: var(--ink2); }
+.p3-bc .ic { color: var(--muted); width: 14px; height: 14px; }
+.p3-bc a { display: inline-flex; align-items: center; }
+.p3-bd { padding: 8px 24px 32px; display: grid; gap: 24px; }
+.p3 h4 { font-size: 32px; line-height: 1.2; font-weight: 700; }
+.p3 h5 { font-size: 20px; line-height: 1.3; font-weight: 700; }
+.p3-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 32px; flex-wrap: wrap; }
+.p3-spk { display: grid; grid-template-columns: auto auto; gap: 2px 12px; align-items: end; font-size: 14px; color: var(--muted); }
+.p3-spk .bars { display: flex; align-items: flex-end; gap: 3px; height: 32px; }
+.p3-spk .bars i { display: block; width: 8px; background: #9BB3D6; }
+.p3-spk .bars i:last-child { background: var(--accent); }
+.p3-spk b { font-size: 20px; color: var(--ink); line-height: 1; }
+.p3-spk p { grid-column: 1 / -1; }
+.p3-srch label { display: block; font-size: 16px; margin-bottom: 6px; }
+.p3-srch div { position: relative; max-width: 560px; }
+.p3-srch .ic { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--accent); width: 20px; height: 20px; }
+.p3 .inp { width: 100%; height: 48px; padding: 0 16px 0 44px; border: 1px solid var(--line2); border-radius: 4px; font-size: 16px; color: var(--ink); background: #FFFFFF; }
+.p3-lvf legend { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.p3-lvf .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.p3-opt { position: relative; }
+.p3-opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.p3-opt span { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px; border: 1px solid var(--line2); border-radius: 4px; font-size: 16px; background: #FFFFFF; cursor: pointer; }
+.p3-opt span b { font-weight: 700; }
+.p3-opt input:checked + span { border: 2px solid var(--accent); padding: 0 15px; background: var(--tint); }
+.p3-opt input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.p3-opt[data-l="red"] .ic { color: var(--c-red); } .p3-opt[data-l="amb"] .ic { color: var(--c-amb); } .p3-opt[data-l="grn"] .ic { color: var(--c-grn); }
+.p3 .qt { min-width: 1040px; font-size: 16px; }
+.p3 .qt thead th { background: var(--panel); padding: 12px; font-size: 14px; color: var(--ink2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.p3 .qt td { padding: 12px; border-bottom: 1px solid var(--line); height: 72px; }
+.p3 .qt .c-case a { font-weight: 700; }
+.p3 .qt .sub { display: block; font-size: 14px; color: var(--muted); margin-top: 2px; }
+.p3 .qt .go { display: inline-grid; place-items: center; width: 44px; height: 44px; color: var(--accent); }
+.p3 .sel { height: 44px; border: 1px solid var(--line2); border-radius: 4px; font-size: 15px; }
+.p3-ft { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.p3-btn2 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 20px; border: 2px solid var(--accent); border-radius: 4px; background: #FFFFFF; color: var(--accent); font-size: 16px; font-weight: 700; text-decoration: none; }
+.p3-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 20px; border: 2px solid var(--accent); border-radius: 4px; background: var(--accent); color: #FFFFFF; font-size: 16px; font-weight: 700; }
+.p3-btn:hover { background: var(--accent-h); border-color: var(--accent-h); }
+@container spec (max-width: 720px) {
+  .p3 .qt { min-width: 0; }
+  .p3 .qt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .p3 .qt, .p3 .qt tbody, .p3 .qt tr, .p3 .qt td { display: block; }
+  .p3 .qt tr { position: relative; padding: 16px 48px 16px 0; border-bottom: 1px solid var(--line); }
+  .p3 .qt td { border: 0; height: auto; padding: 4px 0; }
+  .p3 .qt td[data-l]::before { content: attr(data-l) ": "; color: var(--muted); font-size: 14px; }
+  .p3 .qt td.c-go { position: absolute; right: 0; top: 16px; padding: 0; }
+  .p3 .qt td.c-st::before { display: block; margin-bottom: 4px; }
+}
+/* B */
+.p3-meta { display: flex; flex-wrap: wrap; gap: 4px 32px; font-size: 16px; color: var(--ink2); }
+.p3-meta dt { color: var(--muted); font-size: 14px; }
+.p3-meta div { display: grid; }
+.p3-step { display: grid; gap: 8px; max-width: 640px; }
+.p3-step p { font-size: 16px; } .p3-step p b { font-weight: 700; }
+.p3-step .seg4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.p3-step .seg4 i { height: 8px; background: #DDE1E8; }
+.p3-step .seg4 i.on { background: var(--accent); }
+.p3-step small { font-size: 14px; color: var(--muted); }
+.p3-case { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.p3-main { display: grid; gap: 24px; min-width: 0; }
+.p3-alert { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 12px; padding: 16px 20px; border: 1px solid var(--m-red); border-radius: 4px; background: #FDF0F2; }
+.p3-alert > .ic { color: var(--c-red); width: 24px; height: 24px; margin-top: 2px; }
+.p3-alert h5 { color: var(--c-red); font-size: 18px; }
+.p3-alert p { grid-column: 2; }
+.p3-next { background: var(--panel); border-radius: 4px; padding: 24px; display: grid; gap: 12px; }
+.p3-next .acts { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.p3-ex { display: flex; gap: 12px; flex-wrap: wrap; }
+.p3-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #FFFFFF; }
+.p3-card header { background: var(--panel); padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.p3-card header p { font-size: 14px; color: var(--muted); }
+.p3-card header h5 { font-size: 20px; margin-top: 2px; }
+.p3-card dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 16px; padding: 16px 20px; font-size: 16px; border-bottom: 1px solid var(--line); }
+.p3-card dt { color: var(--muted); font-size: 14px; padding-top: 2px; }
+.p3-card h6 { font-size: 16px; font-weight: 700; padding: 16px 20px 4px; }
+.p3-card ul { padding: 0 20px 8px; }
+.p3-card li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 2px 8px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.p3-card li:last-child { border-bottom: 0; }
+.p3-card li .ic { margin-top: 3px; }
+.p3-card li small { grid-column: 2; font-size: 14px; color: var(--muted); }
+.p3-card .ok { color: var(--c-grn); } .p3-card .bad { color: var(--c-red); } .p3-card .nn { color: var(--c-amb); }
+/* C */
+.p3-ctl { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 8px; }
+.p3-ctl label { display: block; font-weight: 700; font-size: 18px; }
+.p3-ctl p { font-size: 14px; color: var(--muted); max-width: 52ch; }
+.p3-stp { display: flex; align-items: center; gap: 8px; }
+.p3-stp button { width: 48px; height: 48px; display: grid; place-items: center; border: 2px solid var(--accent); border-radius: 4px; background: #FFFFFF; color: var(--accent); }
+.p3-stp output { min-width: 3ch; text-align: center; font-size: 32px; font-weight: 700; line-height: 1; }
+.p3-res { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; margin-top: 24px; }
+.p3-met { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.p3-met div { padding: 16px; border-left: 1px solid var(--line); }
+.p3-met div:first-child { border-left: 0; padding-left: 0; }
+.p3-met dt { font-size: 14px; font-weight: 700; color: var(--ink2); }
+.p3-met dd.v { font-size: 32px; font-weight: 700; line-height: 1.15; margin-top: 4px; }
+.p3-met dd.h { font-size: 14px; color: var(--muted); margin-top: 4px; }
+@container spec (max-width: 900px) { .p3-case, .p3-res { grid-template-columns: minmax(0, 1fr); } }
+@container spec (max-width: 640px) {
+  .p3-hd { padding: 0 16px; } .p3-bc { padding: 12px 16px; } .p3-bd { padding: 8px 16px 24px; }
+  .p3 h4 { font-size: 26px; } .p3-usr { margin-left: 0; } .p3-nav a { padding: 0 12px; }
+  .p3-met { grid-template-columns: minmax(0, 1fr); } .p3-met div { border-left: 0; border-top: 1px solid var(--line); padding: 12px 0; } .p3-met div:first-child { border-top: 0; }
+  .p3-next { padding: 16px; }
+}
+
+/* =====================================================================
+   4. MIĘKKI NADZÓR  (owner's soft mood under rules: calm canvas, few rounded panels, pill nav)
+   ===================================================================== */
+.p4 { --font: "Figtree", system-ui, "Segoe UI", sans-serif; --wb: 600;
+  --bg: #E8ECF1; --soft: #F3F5F8; --tint: #E0E7F1; --ink: #18202B; --ink2: #364150; --muted: #505B6A; --line: #D3DAE3; --line-in: #E3E8EE; --line2: #858F9E;
+  --field: #FFFFFF; --link: #2F5089; --accent: #2F5089; --nav: #22324A; --sel: #D5E0F0;
+  --c-red: #A3262A; --c-amb: #7A4D00; --c-grn: #22694A; --m-red: #C53A3E; --m-amb: #B87A0A; --m-grn: #3C8C66;
+  --focus: #2F5089; --th: 28px; --thr: 50%; --thbg: var(--nav); --thbd: 4px solid #FFFFFF; --u-on: var(--nav); --u-off: #C3CCD8; --r-bar: 3px; --r-unit: 1px; }
+.p4-hd { display: flex; align-items: center; gap: 12px 24px; flex-wrap: wrap; padding: 16px 24px; }
+.p4-br { font-size: 18px; font-weight: 600; }
+.p4-nav { display: flex; gap: 4px; padding: 4px; background: #FFFFFF; border: 1px solid var(--line); border-radius: 999px; flex-wrap: wrap; }
+.p4-nav a { padding: 8px 16px; border-radius: 999px; color: var(--ink2); text-decoration: none; font-weight: 500; font-size: 16px; line-height: 1.5; }
+.p4-nav a[aria-current] { background: var(--nav); color: #FFFFFF; }
+.p4-usr { margin-left: auto; display: flex; gap: 16px; align-items: center; font-size: 14px; color: var(--ink2); }
+.p4-bd { padding: 0 24px 24px; display: grid; gap: 16px; }
+.p4-pn { background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px; padding: 24px; min-width: 0; }
+.p4 h4 { font-size: 24px; line-height: 1.25; font-weight: 600; }
+.p4 h5 { font-size: 18px; line-height: 1.3; font-weight: 600; }
+.p4-ph { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 24px; flex-wrap: wrap; }
+.p4-ph p { color: var(--muted); margin-top: 4px; max-width: 60ch; }
+.p4-seg { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--soft); border: 1px solid var(--line-in); border-radius: 24px; margin-top: 20px; width: fit-content; max-width: 100%; }
+.p4-seg button { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 16px; border: 0; border-radius: 999px; background: transparent; color: var(--ink2); font-size: 16px; line-height: 1.5; }
+.p4-seg button b { font-size: 20px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.p4-seg button .ic { align-self: center; }
+.p4-seg button[data-l="red"] .ic { color: var(--c-red); } .p4-seg button[data-l="amb"] .ic { color: var(--c-amb); } .p4-seg button[data-l="grn"] .ic { color: var(--c-grn); }
+.p4-seg button[aria-pressed="true"] { background: #FFFFFF; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line2); }
+.p4-tw { margin: 16px -24px 0; }
+.p4 .qt { min-width: 1040px; font-size: 16px; }
+.p4 .qt thead th { padding: 10px 12px; font-size: 14px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.p4 .qt td { padding: 12px; border-bottom: 1px solid var(--line-in); }
+.p4 .qt tr > :first-child { padding-left: 24px; } .p4 .qt tr > :last-child { padding-right: 24px; }
+.p4 .qt tbody tr:hover td { background: var(--soft); }
+.p4 .qt .c-case a { font-weight: 500; }
+.p4 .qt .sub { display: block; font-size: 14px; color: var(--muted); margin-top: 2px; }
+.p4 .sel { height: 40px; border: 1px solid var(--line2); border-radius: 10px; }
+.p4-ft { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; margin-top: 16px; font-size: 14px; color: var(--muted); }
+.p4-btn2 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 18px; border: 1px solid var(--line2); border-radius: 10px; background: #FFFFFF; color: var(--ink); font-size: 16px; font-weight: 500; text-decoration: none; }
+.p4-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 20px; border: 0; border-radius: 10px; background: var(--nav); color: #FFFFFF; font-size: 16px; font-weight: 500; }
+/* B */
+.p4-ref { font-size: 14px; color: var(--muted); }
+.p4-hm { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line-in); }
+.p4-hm dt { font-size: 14px; color: var(--muted); }
+.p4-hm dd { font-size: 16px; }
+.p4-case { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.p4-col { display: grid; gap: 16px; min-width: 0; }
+.p4-verd { font-size: 20px; line-height: 1.45; font-weight: 500; margin-top: 12px; max-width: 52ch; }
+.p4-cs { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 20px 0 12px; }
+.p4-cs { column-gap: 24px; row-gap: 8px; }
+.p4-cs .csn { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.p4-cs .csn span { font-size: 14px; color: var(--muted); }
+.p4-cs b { font-size: 40px; line-height: 1; font-weight: 600; letter-spacing: -0.02em; }
+.p4-blk { border: 1px solid var(--line-in); border-radius: 12px; padding: 16px; margin-top: 8px; }
+.p4-find { counter-reset: f; display: grid; gap: 8px; margin-top: 20px; }
+.p4-find li { counter-increment: f; display: grid; grid-template-columns: 1.75em minmax(0, 1fr); }
+.p4-find li::before { content: counter(f) "."; color: var(--muted); }
+.p4-find small { color: var(--muted); font-size: 14px; }
+.p4-rec { background: var(--tint); border-radius: 16px; padding: 24px; display: grid; gap: 10px; }
+.p4-rec .acts { display: flex; gap: 12px 16px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+.p4-reg { margin-top: 8px; }
+.p4-reg li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 12px 0; border-bottom: 1px solid var(--line-in); }
+.p4-reg li:last-child { border-bottom: 0; padding-bottom: 0; }
+.p4-reg .r { display: inline-flex; gap: 6px; align-items: center; font-weight: 500; }
+.p4-reg .ok { color: var(--c-grn); } .p4-reg .bad { color: var(--c-red); } .p4-reg .nn { color: var(--c-amb); }
+.p4-reg small { grid-column: 1 / -1; font-size: 14px; color: var(--muted); }
+.p4-ex { display: flex; gap: 12px; flex-wrap: wrap; }
+/* C */
+.p4-calg { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.p4-ctl { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 4px; }
+.p4-ctl label { font-weight: 500; }
+.p4-ctl p { font-size: 14px; color: var(--muted); }
+.p4-ctl output { font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+.p4-met { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--line-in); }
+.p4-met dt { font-size: 14px; color: var(--muted); }
+.p4-met dd.v { font-size: 32px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+.p4-met dd.h { font-size: 14px; color: var(--ink2); margin-top: 2px; }
+.p4 .cm-wrap { border: 1px solid var(--line-in); border-radius: 12px; padding: 16px; }
+@container spec (max-width: 900px) { .p4-case, .p4-calg { grid-template-columns: minmax(0, 1fr); } .p4-hm { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container spec (max-width: 640px) {
+  .p4-hd { padding: 16px; } .p4-bd { padding: 0 16px 16px; } .p4-pn { padding: 16px; } .p4-tw { margin: 16px -16px 0; }
+  .p4 .qt tr > :first-child { padding-left: 16px; } .p4 .qt tr > :last-child { padding-right: 16px; }
+  .p4-usr { margin-left: 0; } .p4-hm { grid-template-columns: minmax(0, 1fr); } .p4-rec { padding: 16px; }
+  .p4-met { grid-template-columns: minmax(0, 1fr); gap: 12px; } .p4 .cm-wrap { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-crit" viewBox="0 0 24 24"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5M12 16.2v.01"/></symbol>
+    <symbol id="i-rev" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.8 2.8L16 9.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.4v.01"/></symbol>
+    <symbol id="i-no" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></symbol>
+  </defs>
+</svg>
+
+<div class="bar">
+  <div class="wrap">
+    <nav class="jump" aria-label="Skok do propozycji">
+      <a href="#porownanie">Porównanie</a>
+      <a href="#urzedowy"><b>1</b>Urzędowy</a>
+      <a href="#teczka"><b>2</b>Teczka</a>
+      <a href="#mobywatel-sluzbowy"><b>3</b>mObywatel służbowy</a>
+      <a href="#miekki-nadzor"><b>4</b>Miękki nadzór</a>
+      <a href="#rekomendacja">Rekomendacja</a>
+      <a href="#zrodla">Źródła</a>
+    </nav>
+    <div class="view" role="radiogroup" aria-label="Widok propozycji">
+      <span id="view-l">Pokaż</span>
+      <div class="seg">
+        <label><input type="radio" name="view" value="all" checked aria-describedby="view-l"><span>Wszystko</span></label>
+        <label><input type="radio" name="view" value="a"><span>A Kolejka</span></label>
+        <label><input type="radio" name="view" value="b"><span>B Werdykt</span></label>
+        <label><input type="radio" name="view" value="c"><span>C Kalibracja</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main data-view="all">
+  <header class="wrap hero">
+    <div>
+      <h1>Cztery języki projektowe dla InvestWatch</h1>
+      <p class="lead">Kolejka spraw, nagłówek akt sprawy i pasek kalibracji, narysowane czterema sposobami. Każda propozycja wychodzi z innego wzorca administracji publicznej i ma inną strukturę, nie tylko inne kolory. Fragmenty działają: filtry poziomu przełączają wiersze, a suwak progu przelicza macierz i miary.</p>
+    </div>
+    <aside class="read" aria-labelledby="read-h">
+      <h2 id="read-h">Jak czytać tę stronę</h2>
+      <ul>
+        <li>Przełącznik „Pokaż” u góry zostawia w każdej propozycji tylko jeden fragment, więc cztery wersje tego samego ekranu leżą jedna pod drugą.</li>
+        <li>Próbki zawsze mają jasny motyw. Tylko rama strony reaguje na tryb ciemny.</li>
+        <li>Nie użyto godeł, logo ani zastrzeżonych krojów pisma. Odcienie są własne i tylko nawiązują do wzorców.</li>
+      </ul>
+    </aside>
+  </header>
+
+  <section class="sec wrap" id="porownanie" aria-labelledby="cmp-h">
+    <div class="sec-h">
+      <h2 id="cmp-h">Porównanie w skrócie</h2>
+      <p>Kolumny to propozycje, wiersze to decyzje projektowe. Koszt dotyczy kodu w <code>services/frontend/src</code>.</p>
+    </div>
+    <div class="scroll" tabindex="0" role="region" aria-label="Tabela porównawcza">
+      <table class="cmp">
+        <thead><tr><th scope="col"><span class="sr-only">Cecha</span></th><th scope="col">1 Urzędowy</th><th scope="col">2 Teczka</th><th scope="col">3 mObywatel służbowy</th><th scope="col">4 Miękki nadzór</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Pomysł</th><td>Rejestr urzędowy: wszystko jest tabelą, polem albo komunikatem z linią po lewej</td><td>Akta czytane jak pismo: tytuły sekcji na marginesie, prawie bez ramek</td><td>Usługa gov.pl dla urzędnika: okruszki, etapy sprawy, duże cele, jedna karta podmiotu</td><td>Kilka zaokrąglonych paneli na spokojnym tle, pigułkowa nawigacja, gęsta tabela w środku</td></tr>
+          <tr><th scope="row">Rodowód</th><td>DSFR (Francja)</td><td>NL Design System i zasady Rijkshuisstijl (Holandia)</td><td>gov.pl i mObywatel (Polska)</td><td>Referencje właściciela pod regułami z 1 i 3</td></tr>
+          <tr><th scope="row">Kolory</th><td><div class="dots" aria-hidden="true"><i style="background:#161616"></i><i style="background:#1A2F8C"></i><i style="background:#B0121A"></i><i style="background:#8F3F00"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#1E2328"></i><i style="background:#15608F"></i><i style="background:#A3281E"></i><i style="background:#7A4E00"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#1B1B1B"></i><i style="background:#0A51A1"></i><i style="background:#B0172F"></i><i style="background:#F4F6FB"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#E8ECF1"></i><i style="background:#22324A"></i><i style="background:#2F5089"></i><i style="background:#A3262A"></i></div></td></tr>
+          <tr><th scope="row">Krój pisma</th><td>Public Sans</td><td>Literata (pismo) i Source Sans 3 (interfejs)</td><td>Lato</td><td>Figtree</td></tr>
+          <tr><th scope="row">Liczniki poziomów</th><td>Zakładki z liczbą spraw</td><td>Zdanie z odnośnikami: „7 krytycznych, 23 do weryfikacji…”</td><td>Duże pola wyboru z liczbą</td><td>Pigułkowy filtr z dużą liczbą</td></tr>
+          <tr><th scope="row">Promienie</th><td>0; 4 px tylko u góry pól i na plakietkach</td><td>0; 3 px na polach i przycisku</td><td>4 px kontrolki, 12 px jedyna karta (podmiot)</td><td>16 px panele, 12 px bloki w panelu, 10 px kontrolki, pigułki tylko w nawigacji i filtrze</td></tr>
+          <tr><th scope="row">Rozdzielanie bloków</th><td>Linie 1 px, nagłówek tabeli 2 px, bez cieni</td><td>Odstęp i linia pozioma, tytuł sekcji na marginesie</td><td>Linie 1 px, pasmo #F4F6FB w nagłówku tabeli, ramka tylko na karcie</td><td>Ramka 1 px panelu, linie wierszy, bez cieni</td></tr>
+          <tr><th scope="row">Wiersz kolejki</th><td>Około 80 px (tytuł 14 px w dwóch liniach), 7 kolumn</td><td>Około 105 px, wiersze zgrupowane według poziomu</td><td>Około 96 px; poniżej 720 px lista zamiast tabeli</td><td>Około 96 px (tytuł 16 px), 7 kolumn w panelu</td></tr>
+          <tr><th scope="row">Najmocniejsza strona</th><td>Gęstość, kontrast, łatwy audyt dostępności</td><td>Uzasadnienie werdyktu czyta się jak pismo urzędowe</td><td>Znajomość wśród polskich urzędników, praca na tablecie</td><td>Nastrój z referencji bez utraty gęstości i precyzji</td></tr>
+          <tr><th scope="row">Główne ryzyko</th><td>Surowy, nie realizuje miękkości z referencji</td><td>Mało spraw na ekranie, długie przewijanie w kolejce</td><td>Pomylenie z usługą państwową; Lato jest neutralne</td><td>Zaokrąglenia kuszą, by dokładać kolejne panele</td></tr>
+          <tr><th scope="row">Koszt w kodzie</th><td class="cost">Mały</td><td class="cost">Średni</td><td class="cost">Średni</td><td class="cost">Średni</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="props"></div>
+
+  <section class="sec wrap" id="rekomendacja" aria-labelledby="rec-h">
+    <div class="reco-pick">
+      <h2 id="rec-h">Rekomendacja: 4 Miękki nadzór, z zasadami pisania werdyktu z Teczki</h2>
+      <p>Propozycja 4 spełnia nastrój z Twoich referencji (spokojne niebiesko-szare tło, zaokrąglone panele, pigułkowa nawigacja, duże czytelne liczby), a jednocześnie zachowuje to, czego analityk potrzebuje: tabelę z siedmioma kolumnami (poziom razem z ryzykiem), liczniki poziomów w filtrze zamiast kafli, wynik jako odczyt z dwóch skal z progami 20 i 70 oraz kalibrację jako jeden przyrząd z rozkładem pod suwakiem. Miękkość wynika z trzech reguł (promienie według roli, ramki zamiast cieni, pigułki tylko w nawigacji i filtrze), więc nie rozleje się na cały produkt.</p>
+      <p>Z Teczki warto przenieść sposób pisania: werdykt najpierw jednym zdaniem, potem ponumerowane ustalenia z numerami kryteriów. Z Urzędowego zostaje tabela rejestrów z datą stanu. Jeśli priorytetem będzie formalny audyt dostępności i zaufanie bez oswajania, wybierz 1: jest najtańszy i najłatwiejszy do wykazania.</p>
+      <p style="margin-bottom:20px"><strong>Do pilnowania:</strong> nie dodawać kolejnych paneli ani kafli z liczbami. Nowe informacje trafiają do istniejących paneli jako wiersze, listy albo kolumny.</p>
+      <h3 style="font-size:17px;margin-bottom:10px">Co zmieni się w kodzie React (bez zmian w logice)</h3>
+      <div class="scroll" tabindex="0" role="region" aria-label="Koszt wdrożenia propozycji 4">
+        <table class="cost-tbl">
+          <thead><tr><th scope="col">Plik</th><th scope="col">Zmiana</th><th scope="col">Wysiłek</th></tr></thead>
+          <tbody>
+            <tr><td><code>styles/tokens.css</code></td><td>Nowa paleta (tło #E8ECF1, panel #FFFFFF, tekst #18202B, akcent #2F5089, nawigacja #22324A, trzy trójki poziomów: tekst, znacznik, brak wypełnień), promienie według roli <code>--r-panel: 16px</code>, <code>--r-block: 12px</code>, <code>--r-ctl: 10px</code>, <code>--r-tag: 4px</code>, usunięcie cieni, skala 12/14/16/18/20/24/32/40</td><td>Mały</td></tr>
+            <tr><td><code>main.tsx</code>, <code>package.json</code>, <code>THIRD_PARTY_LICENSES.md</code></td><td>Zamiana <code>@fontsource/ibm-plex-sans</code> na <code>@fontsource/figtree</code> (OFL, wagi 400/500/600, latin i latin-ext), nadal samohostowany</td><td>Mały</td></tr>
+            <tr><td><code>Sidebar.tsx</code>, <code>TopBar.tsx</code>, <code>styles/layout.css</code></td><td>Nawigacja w pigułkach w górnym pasku. Tańszy wariant: zostawić boczny pasek i nadać aktywnej pozycji kształt pigułki</td><td>Średni (tańszy wariant: mały)</td></tr>
+            <tr><td><code>LevelSummary.tsx</code>, <code>QueueFilters.tsx</code>, <code>styles/queue.css</code></td><td>LevelSummary staje się filtrem z liczbami, który ustawia ten sam filtr poziomu co dzisiejsze pole „Poziom ryzyka”. <code>TrendChart.tsx</code> znika z kolejki</td><td>Średni</td></tr>
+            <tr><td><code>VerdictBlock.tsx</code>, <code>RecommendationCard.tsx</code>, <code>RegistryChecks.tsx</code>, <code>styles/case.css</code></td><td>Werdykt zdaniem, nowy komponent <code>ScoreScale</code> (HTML i CSS, bez zależności): skala ryzyka nad skalą Compliance Score, progi z <code>thresholds</code>. Rejestry jako lista z <code>snapshot_date</code>, które kontrakt już zawiera</td><td>Średni</td></tr>
+            <tr><td><code>ThresholdControl.tsx</code>, <code>ScoreHistogram.tsx</code>, <code>ConfusionMatrix.tsx</code>, <code>MetricsRow.tsx</code></td><td>Histogram pod suwakiem na tej samej osi 0–100, macierz z sumami wierszy i kolumn, ułamki pod miarami (liczby są już w <code>domain/calibration.ts</code>)</td><td>Średni</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="zrodla" aria-labelledby="src-h">
+    <div class="sec-h"><h2 id="src-h">Źródła i zastrzeżenia</h2><p>Co zostało sprawdzone, czego nie udało się otworzyć i jakie elementy są chronione.</p></div>
+    <div class="two">
+      <div>
+        <ul class="note">
+          <li><strong>DSFR, Francja.</strong> Strona komponentu <a href="https://www.systeme-de-design.gouv.fr/version-courante/fr/composants/tableau">Tableau</a> otworzyła się w przeglądarce, ale zasłoniła ją plansza warunków korzystania przeznaczonych dla serwisów .gouv.fr. Warunków nie zaakceptowano; odczytano tylko tekst strony: listę komponentów (między innymi mise en avant, badge, tag, indicateur d’étapes, curseur, fil d’Ariane) i zasady tabeli (sortowanie kolumn, pływająca pierwsza kolumna, paginacja w pasku narzędzi, dozwolone elementy w komórkach). Licencja i kroje: README repozytorium <a href="https://github.com/GouvernementFR/dsfr">GouvernementFR/dsfr</a> (kod Etalab 2.0, Marianne tylko dla administracji). Wartości barw DSFR nie zostały zweryfikowane u źródła; odcienie w propozycji 1 są własne.</li>
+          <li><strong>NL Design System.</strong> Odczytane strony komponentów <a href="https://nldesignsystem.nl/table/">Table</a> (nagłówki: <code>caption</code>, <code>th scope</code>, oznaczanie kolumny sortowania) i <a href="https://nldesignsystem.nl/case-card/">Case Card</a> („meta-informacje o sprawie i przejście do niej”). Wcześniej <a href="https://www.nldesignsystem.nl/richtlijnen/">Richtlijnen</a>: WCAG 2.2 AA, fokus i rozmiar celu w kierunku AAA, etykieta nad polem, kolor nigdy jedynym nośnikiem znaczenia. Skala i odstępy propozycji 2 są własne.</li>
+          <li><strong>Rijkshuisstijl.</strong> <a href="https://www.rijksoverheid.nl/onderwerpen/overheidscommunicatie/rijkshuisstijl-en-rijkswebsites">rijksoverheid.nl</a>: neutralność i ciągłość jako cel. <a href="https://github.com/nl-design-system/rijkshuisstijl-community">rijkshuisstijl-community</a>: oficjalne kroje nie są open source, logo tylko dla administracji centralnej. Z Rijkshuisstijl wzięto tylko zasadę pary krojów (szeryfowy do pisma, bezszeryfowy do interfejsu), nie barwy ani kroje.</li>
+          <li><strong>gov.pl i mObywatel.</strong> Zmierzone na żywo w przeglądarce na <a href="https://www.gov.pl/web/gov/uslugi-dla-obywatela">gov.pl, Usługi dla obywatela</a> (tylko odczyt stylów, pliki cookie odrzucone): Open Sans, treść 14,7 px, tekst #1B1B1B, odnośniki w okruszkach #0052A5, pole wyszukiwania z etykietą nad polem i promieniem 4 px, lista kategorii z liniami i niebieskimi pogrubionymi odnośnikami, przycisk z obrysem w nagłówku. Kontekst aplikacji: <a href="https://www.gov.pl/web/cyfryzacja/mobywatel--10-milionow-uzytkownikow-nowa-odslona-aplikacji-i-plany-jej-rozwoju">komunikat Ministerstwa Cyfryzacji</a> (dokumenty jako karty). Ekranów aplikacji mObywatel w tym przebiegu nie otwarto, więc karta podmiotu w propozycji 3 opiera się na tym opisie, nie na pomiarze.</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="note">
+          <li><strong>Czego nie użyto.</strong> Logo, godeł, wstęgi Rijks, czerwonej kreski z nagłówka gov.pl, krojów Marianne i Rijksoverheid Sans, układów kart dokumentów mObywatela. Ikony są własne. Kod i style tej strony są pisane od zera.</li>
+          <li><strong>Krój pisma.</strong> Wszystkie kroje mają licencję SIL OFL i pełne polskie znaki: Public Sans, Literata, Source Sans 3, Lato (projekt Łukasza Dziedzica), Figtree oraz IBM Plex Sans na ramie strony. Cyfry tabelaryczne sprawdzono w przeglądarce pomiarem szerokości ciągów cyfr. Ta strona ładuje kroje z Google Fonts tylko dlatego, że wymaga tego środowisko publikacji; produkt powinien je samohostować przez <code>@fontsource</code>.</li>
+          <li><strong>Kontrast.</strong> Współczynniki w tabelach tokenów liczy ta strona ze wzoru WCAG 2.x z podanych kolorów. Tekst ma co najmniej 4,5:1, znaczniki graficzne co najmniej 3:1. Poziom ryzyka zawsze niesie ikona o innym kształcie i słowo, nigdy sam kolor.</li>
+          <li><strong>Progi.</strong> W produkcie poziom wynika z ryzyka: oznaczenie od 20, krytyczne od 70, a Compliance Score to 100 minus ryzyko. Poprzednia wersja tej strony miała na mierniku znaczniki 30 i 80 bez opisu; to te same progi na skali Compliance Score, ale wyglądały na błędne. Dlatego karta werdyktu pokazuje teraz obie skale jedna nad drugą.</li>
+          <li><strong>Referencje właściciela.</strong> Z obrazów 1, 3, 7 i 9 wzięto zaokrąglone panele, pigułkową nawigację, duże czytelne liczby i spokojne niebiesko-szare tło. Pominięto bento, czarny kafel, półokrągły miernik, okrągłe przyciski ikon, strzałki na kafelkach, pastelowe wypełnienia i zdjęcia osób.</li>
+          <li><strong>Czego nie sprawdzono.</strong> Zachowania na prawdziwych danych, trybu ciemnego produktu, wydruku pakietu dowodowego, czytników ekranu i dotyku na prawdziwym tablecie. Stronę obejrzano w przeglądarce przy szerokości 1360 px i 390 px, w jasnym i ciemnym motywie ramy.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <footer class="wrap end">Propozycje dotyczą wyłącznie warstwy wizualnej. Logika, API i treści produktu pozostają bez zmian.</footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  const ic = (n) => `<svg class="ic" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
+  /* ---------- shared content (Polish, invented entities) ---------- */
+  const LV = {
+    red: { label: "Krytyczne", icon: "crit", n: 7 },
+    amb: { label: "Do weryfikacji", icon: "rev", n: 23 },
+    grn: { label: "Zgodne", icon: "ok", n: 118 }
+  };
+  const TOTAL = 148;
+  const lvOf = (v) => (v >= 70 ? "red" : v >= 20 ? "amb" : "grn");
+  const MOD = { 1: "Finfluencerzy i podmioty trzecie", 2: "Zgodność i informacja o ryzyku", 3: "Shadow advisory" };
+  const MODS = { 1: "Finfluencerzy", 2: "Informacja o ryzyku", 3: "Shadow advisory" };
+  const STATUS = [["new", "Nowe"], ["in_review", "W analizie"], ["escalated", "Eskalowane"], ["closed_violation", "Zamknięte: naruszenie"], ["closed_ok", "Zamknięte: bez naruszeń"]];
+  const ROWS = [
+    { id: "IW/2026/0412", risk: 86, title: "„Pewne 12% miesięcznie”: reklama bez informacji o ryzyku", ent: "Nordhaven Capital Sp. z o.o.", src: "Instagram", mods: [1, 2], crit: "3, 7, 12, 14", st: "new", age: "2 godz.", at: "21.11.2026, 09:14" },
+    { id: "IW/2026/0409", risk: 74, title: "Płatne „sygnały” inwestycyjne bez zezwolenia na doradztwo", ent: "TradeSignal Polska, kanał „Giełdowy Wilk”", src: "YouTube", mods: [3], crit: "15, 16", st: "in_review", age: "1 dzień", at: "20.11.2026, 16:02" },
+    { id: "IW/2026/0411", risk: 71, title: "Kurs „Forex od zera” z obietnicą gwarantowanego zysku", ent: "Lumen Trade Academy", src: "TikTok", mods: [1, 2], crit: "3, 9", st: "new", age: "5 godz.", at: "21.11.2026, 06:40" },
+    { id: "IW/2026/0398", risk: 41, title: "Niejawna współpraca z brokerem w serii wideo o ETF-ach", ent: "A. Wrona, Brokeria Group S.A.", src: "TikTok", mods: [1], crit: "5, 9", st: "new", age: "3 dni", at: "18.11.2026, 11:25" },
+    { id: "IW/2026/0391", risk: 27, title: "Ranking lokat bez daty i źródła oprocentowania", ent: "Portal Finanse Bez Tajemnic", src: "WWW", mods: [2], crit: "11", st: "in_review", age: "4 dni", at: "17.11.2026, 13:50" },
+    { id: "IW/2026/0384", risk: 8, title: "Webinar edukacyjny o obligacjach skarbowych", ent: "Fundacja Edukacji Kapitałowej Wisła", src: "WWW", mods: [2], crit: "", st: "closed_ok", age: "6 dni", at: "15.11.2026, 10:05" }
+  ];
+  const INFLOW = [21, 23, 19, 14, 11, 27, 29, 25, 33, 29]; /* new cases per day, 12–21 Nov */
+
+  /* calibration test set: 50 violations and 154 compliant items, in 5-point risk bins */
+  const VB = [0, 1, 3, 4, 2, 2, 2, 3, 2, 3, 2, 3, 2, 2, 3, 4, 3, 4, 3, 2];
+  const OB = [62, 48, 26, 14, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const binScores = (c, i) => Array.from({ length: c }, (_, k) => i * 5 + Math.floor((k * 5) / c));
+  const VI = VB.flatMap(binScores), OI = OB.flatMap(binScores);
+  function calc(t) {
+    const tp = VI.filter((s) => s >= t).length, fp = OI.filter((s) => s >= t).length;
+    return { tp, fp, fn: VI.length - tp, tn: OI.length - fp };
+  }
+  const plural = (n, one, few, many) => (n === 1 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
+  const pct = (x) => Math.round(x * 100) + "%";
+
+  /* ---------- small renderers ---------- */
+  const lvl = (l) => `<span class="lvl lvl-${l}">${ic(LV[l].icon)}<span>${LV[l].label}</span></span>`;
+  const ms = (v) => `<span class="ms ms-${lvOf(v)}" aria-hidden="true"><i class="ms-f" style="width:${v}%"></i><i class="ms-t" style="left:20%"></i><i class="ms-t" style="left:70%"></i></span>`;
+  const risk = (v) => `<span class="rk"><b class="rk-n">${v}</b>${ms(v)}<span class="sr-only"> na 100</span></span>`;
+  const lvRisk = (v) => `<span class="lr">${lvl(lvOf(v))}${risk(v)}</span>`;
+  const crit = (r) => (r.crit ? `<span class="nw">kryt. ${r.crit}</span>` : `<span class="none">brak</span>`);
+  const mods = (r) => `<span title="${r.mods.map((m) => m + ": " + MOD[m]).join("; ")}">${r.mods.join(", ")}</span>`;
+  const sel = (pid, i, r) => `<label class="sr-only" for="st-${pid}${i}">Status sprawy ${r.id}</label><select class="sel" id="st-${pid}${i}">${STATUS.map((s) => `<option value="${s[0]}"${s[0] === r.st ? " selected" : ""}>${s[1]}</option>`).join("")}</select>`;
+  const age = (r) => `<time class="nw" title="${r.at}">${r.age}</time>`;
+
+  function dscale(v, pid) {
+    let tk = "", lr = "", lc = "";
+    for (let x = 0; x <= 100; x += 5) tk += `<i class="ds-tk${x % 10 ? " mi" : ""}" style="left:${x}%"></i>`;
+    for (let x = 0; x <= 100; x += 10) {
+      const cls = (x === 0 ? "s" : x === 100 ? "e" : "") + ((x / 10) % 2 ? " od" : "");
+      lr += `<span class="${cls}${x === 20 || x === 70 ? " k" : ""}" style="left:${x}%">${x}</span>`;
+      lc += `<span class="${cls}" style="left:${x}%">${100 - x}</span>`;
+    }
+    return `<figure class="ds" aria-labelledby="dsc-${pid}">
+      <div class="ds-th" aria-hidden="true"><span style="left:20%">oznaczenie</span><span style="left:70%">krytyczne</span></div>
+      <span class="ds-c ds-c1" aria-hidden="true">Ryzyko</span><div class="ds-lr" aria-hidden="true">${lr}</div>
+      <div class="ds-ax" aria-hidden="true"><i class="ds-z z1"></i><i class="ds-z z2"></i><i class="ds-z z3"></i>${tk}<i class="ds-tt" style="left:20%"></i><i class="ds-tt" style="left:70%"></i></div>
+      <span class="ds-c ds-c2" aria-hidden="true">Compliance Score</span><div class="ds-lc" aria-hidden="true">${lc}</div>
+      <div class="ds-mk" aria-hidden="true"><i class="ds-nd" style="left:${v}%"></i></div>
+      <figcaption id="dsc-${pid}">Odczyt: ryzyko <b>${v}</b> z 100, Compliance Score <b>${100 - v}</b>. <span class="nar">Górna skala to ryzyko, dolna to Compliance Score (100 minus ryzyko). </span>Progi na skali ryzyka: oznaczenie od 20, krytyczne od 70.</figcaption>
+    </figure>`;
+  }
+
+  function calAxis(pid) {
+    const up = VB.map((c, i) => `<span class="bin" style="left:${i * 5}%">${binScores(c, i).reverse().map((s) => `<i class="u" data-s="${s}"></i>`).join("")}</span>`).join("");
+    const dn = OB.map((c, i) => {
+      if (!c) return "";
+      const sc = binScores(c, i).reverse();
+      if (c <= 10) return `<span class="bin" style="left:${i * 5}%">${sc.map((s) => `<i class="u" data-s="${s}"></i>`).join("")}</span>`;
+      const shown = Array.from({ length: 9 }, (_, j) => sc[Math.floor((j * c) / 9)]);
+      return `<span class="bin" style="left:${i * 5}%">${shown.map((s) => `<i class="u" data-s="${s}"></i>`).join("")}<span class="brk">${c}</span></span>`;
+    }).join("");
+    let ax = "";
+    for (let x = 0; x <= 100; x += 5) ax += `<i${x % 10 ? ' class="mi"' : ""} style="left:${x}%"></i>`;
+    for (let x = 0; x <= 100; x += 10) ax += `<span class="${x === 0 ? "s" : x === 100 ? "e" : ""}${(x / 10) % 2 ? " od" : ""}" style="left:${x}%">${x}</span>`;
+    return `<div class="cal">
+      <div class="cal-w" aria-hidden="true">
+        <div class="cal-lb"><span style="left:70%">krytyczne od 70</span></div>
+        <div class="cal-up">${up}</div>
+        <div class="cal-ax">${ax}</div>
+        <div class="cal-dn">${dn}</div>
+        <i class="cal-k" style="left:70%"></i><i class="cal-t" data-tl style="left:20%"></i>
+      </div>
+      <input class="rng" type="range" id="thr-${pid}" min="0" max="100" value="20" aria-describedby="hint-${pid}">
+    </div>
+    <p class="cal-key">Każda kreska to jedna sprawa z zestawu testowego (204). Nad osią naruszenia (50), pod osią materiały zgodne (154). Kolorem są sprawy oznaczone przy bieżącym progu. Słupki powyżej dziewięciu spraw są ucięte<span class="od-w">, a ich liczba stoi na końcu</span>.<span class="cal-nar"> Ucięte słupki (ryzyko 0–4, 5–9, 10–14 i 15–19): 62, 48, 26 i 14 spraw.</span></p>`;
+  }
+
+  function matrix() {
+    return `<div class="tw"><table class="cm"><caption>Macierz pomyłek przy progu <span data-o>20</span></caption>
+      <thead><tr><td></td><th scope="col">Oznaczone</th><th scope="col">Nieoznaczone</th><th scope="col">Razem</th></tr></thead>
+      <tbody><tr><th scope="row">Naruszenie</th><td><b data-c="tp">42</b><small>trafne alarmy</small></td><td><b data-c="fn">8</b><small>pominięte</small></td><td>50</td></tr>
+      <tr><th scope="row">Zgodne</th><td><b data-c="fp">4</b><small>fałszywe alarmy</small></td><td><b data-c="tn">150</b><small>trafnie pominięte</small></td><td>154</td></tr></tbody>
+      <tfoot><tr><th scope="row">Razem</th><td data-c="flag">46</td><td data-c="unf">158</td><td>204</td></tr></tfoot></table></div>`;
+  }
+  const MET = [["p", "Precyzja", "91%", "42 z 46 oznaczonych to naruszenia"], ["r", "Czułość", "84%", "wykryto 42 z 50 naruszeń"], ["f", "F1", "88%", "średnia harmoniczna obu miar"]];
+  const metDl = (cls) => `<dl class="${cls}">${MET.map((m) => `<div><dt>${m[1]}</dt><dd class="v" data-v="${m[0]}">${m[2]}</dd><dd class="h" data-h="${m[0]}">${m[3]}</dd></div>`).join("")}</dl>`;
+
+  /* ===================== 1. URZĘDOWY ===================== */
+  const p1Head = () => `<header class="p1-hd"><div class="top"><p class="p1-svc"><b>InvestWatch</b><span>Nadzór nad reklamą finansową</span></p><p class="p1-qa"><a href="#urzedowy" onclick="return false">Pomoc</a><span>A. Kowalczyk</span><a href="#urzedowy" onclick="return false">Wyloguj</a></p></div>
+    <nav class="p1-nav" aria-label="Główna"><a href="#urzedowy" aria-current="page" onclick="return false">Kolejka spraw</a><a href="#urzedowy" onclick="return false">Kalibracja</a><a href="#urzedowy" onclick="return false">Skanowania</a></nav></header>`;
+  function p1A() {
+    const tabs = [["all", "Wszystkie", TOTAL], ["red"], ["amb"], ["grn"]].map((t, k) => {
+      const l = t[0], label = k ? LV[l].label : t[1], n = k ? LV[l].n : t[2];
+      return `<button type="button" role="tab" class="p1-tab" data-f="${l}" data-l="${l}" aria-selected="${k === 0}" aria-controls="p1-panel">${k ? ic(LV[l].icon) : ""}<span>${label}</span><b>${n}</b></button>`;
+    }).join("");
+    const rows = ROWS.map((r, i) => `<tr data-row data-lv="${lvOf(r.risk)}"><td>${lvRisk(r.risk)}</td><td class="c-case"><a href="#urzedowy" onclick="return false">${esc(r.title)}</a><span class="sub">${r.id}, ${esc(r.ent)}</span></td><td>${r.src}</td><td>${mods(r)}</td><td>${crit(r)}</td><td>${sel("p1", i, r)}</td><td>${age(r)}</td></tr>`).join("");
+    return `<div class="spec p1" data-filter-root>${p1Head()}<div class="p1-bd">
+      <div><h4>Kolejka spraw</h4><p class="p1-sum">148 spraw z ostatnich 30 dni. Na decyzję czeka 7 krytycznych. Dziś wpłynęło 29 nowych spraw, średnio wpływa 23 dziennie.</p></div>
+      <div><div class="p1-tabs" role="tablist" aria-label="Poziom ryzyka">${tabs}</div>
+      <div class="p1-panel" role="tabpanel" id="p1-panel">
+        <div class="p1-tool"><div class="p1-fld"><label for="p1-q">Szukaj w kolejce</label><div class="p1-grp"><input class="inp" id="p1-q" type="search" placeholder="np. Nordhaven"><button type="button" class="p1-btn">Szukaj</button></div></div>
+          <div class="p1-right"><div class="p1-fld"><label for="p1-s">Sortowanie</label><select class="sel" id="p1-s"><option>Ryzyko, od najwyższego</option><option>Wykryto, od najnowszych</option><option>Status</option></select></div><a class="dl" href="#urzedowy" onclick="return false">${ic("dl")}Eksportuj CSV</a></div></div>
+        <div class="tw" tabindex="0" role="region" aria-label="Tabela spraw"><table class="qt"><caption class="sr-only">Sprawy w kolejce, od najwyższego ryzyka</caption><thead><tr><th scope="col">Poziom i ryzyko</th><th scope="col">Sprawa</th><th scope="col">Źródło</th><th scope="col">Moduł</th><th scope="col">Naruszone kryteria</th><th scope="col">Status</th><th scope="col">Wykryto</th></tr></thead><tbody>${rows}</tbody></table></div>
+        <div class="p1-ft"><span>Pokazano 1–6 ze 148</span><nav class="p1-pg" aria-label="Strony kolejki"><a href="#urzedowy" aria-current="page" onclick="return false">1</a><a href="#urzedowy" onclick="return false">2</a><a href="#urzedowy" onclick="return false">3</a><span>…</span><a href="#urzedowy" onclick="return false">25</a><a href="#urzedowy" onclick="return false">Następna</a></nav></div>
+        <p class="p1-leg">Moduły: 1 Finfluencerzy i podmioty trzecie, 2 Zgodność i informacja o ryzyku, 3 Shadow advisory. Kryteria według załącznika UKNF (19 kryteriów).</p>
+      </div></div></div></div>`;
+  }
+  function p1B() {
+    return `<div class="spec p1">${p1Head()}<div class="p1-bd">
+      <nav class="p1-bc" aria-label="Jesteś tutaj"><a href="#urzedowy" onclick="return false">Kolejka spraw</a><span aria-hidden="true">›</span><span aria-current="page">IW/2026/0412</span></nav>
+      <div class="p1-bdg"><span class="bdg bdg-red">${ic("crit")}Krytyczne</span><span class="bdg bdg-new">Nowe</span></div>
+      <h4>„Pewne 12% miesięcznie”: reklama bez informacji o ryzyku</h4>
+      <div class="p1-case"><div class="p1-col">
+        <dl class="p1-meta"><dt>Sygnatura</dt><dd>IW/2026/0412</dd><dt>Wykryto</dt><dd>21.11.2026, 09:14</dd><dt>Podmiot</dt><dd>Nordhaven Capital Sp. z o.o., KRS 0001023417</dd><dt>Źródło</dt><dd>Instagram, konto @nordhaven.capital, post z 20.11.2026</dd><dt>Moduły</dt><dd>1 Finfluencerzy i podmioty trzecie; 2 Zgodność i informacja o ryzyku</dd><dt>Podstawa prawna</dt><dd>art. 44 ust. 2 lit. b i d rozporządzenia delegowanego Komisji (UE) 2017/565</dd></dl>
+        <section style="display:grid;gap:16px"><h5>Ocena</h5><p class="p1-verd"><b>Naruszenie.</b> Reklama obiecuje stały zysk 12% miesięcznie i nie informuje o ryzyku utraty kapitału. Naruszone kryteria: 3, 7, 12 i 14.</p>${dscale(86, "p1")}</section>
+        <section class="p1-call" aria-labelledby="p1-rec"><h5 id="p1-rec">Rekomendacja: eskalować</h5><p>Skierować sprawę do postępowania wyjaśniającego. Następny krok: przekazać pakiet dowodowy zespołowi ds. postępowań wyjaśniających i zabezpieczyć archiwum posta.</p><div class="acts"><button type="button" class="p1-btn">Przekaż do postępowania</button><span class="mu">Decyzję zatwierdza analityk prowadzący.</span></div></section>
+      </div><div class="p1-col">
+        <section><h5 style="margin-bottom:8px">Rejestry</h5><div class="tw"><table class="rt"><thead><tr><th scope="col">Rejestr</th><th scope="col">Wynik</th><th scope="col">Stan na</th></tr></thead><tbody>
+          <tr><td>KRS</td><td><span class="lvl lvl-grn">${ic("ok")}<span>wpis aktywny</span></span></td><td class="nw">21.11.2026</td></tr>
+          <tr><td>Lista ostrzeżeń publicznych KNF</td><td><span class="lvl lvl-red">${ic("warn")}<span>na liście od 14.10.2026</span></span></td><td class="nw">21.11.2026</td></tr>
+          <tr><td>Rejestr firm inwestycyjnych KNF</td><td><span class="lvl lvl-amb">${ic("no")}<span>brak wpisu</span></span></td><td class="nw">21.11.2026</td></tr></tbody></table></div></section>
+        <section><h5 style="margin-bottom:8px">Pliki do pobrania</h5><ul class="p1-files"><li><a href="#urzedowy" onclick="return false">${ic("dl")}Pakiet dowodowy</a><span>PDF, 1,2 MB</span></li><li><a href="#urzedowy" onclick="return false">${ic("dl")}Dane sprawy</a><span>CSV, 14 kB</span></li></ul></section>
+      </div></div></div></div>`;
+  }
+  function p1C() {
+    return `<div class="spec p1">${p1Head()}<div class="p1-bd" data-strip>
+      <div><h4>Kalibracja progu</h4><p class="p1-sum">Próg decyduje, od jakiego ryzyka sprawa trafia do kolejki. Próg krytyczny (70) zmienia się osobno.</p></div>
+      <div class="p1-calg"><div>
+        <div class="p1-ctl"><label for="thr-p1">Próg oznaczenia sprawy</label><output for="thr-p1" data-o>20</output></div>
+        <p class="p1-hint" id="hint-p1">Sprawa trafia do kolejki, gdy ryzyko jest równe progowi lub wyższe. Strzałki zmieniają próg o 1.</p>
+        ${calAxis("p1")}
+      </div><div>
+        ${matrix()}
+        <table class="mtab"><thead><tr><th scope="col">Miara</th><th scope="col" style="text-align:right;padding-right:16px">Wartość</th><th scope="col">Z czego wynika</th></tr></thead><tbody>
+          ${MET.map((m) => `<tr><th scope="row">${m[1]}</th><td class="v" data-v="${m[0]}">${m[2]}</td><td data-h="${m[0]}">${m[3]}</td></tr>`).join("")}</tbody></table>
+      </div></div></div></div>`;
+  }
+
+  /* ===================== 2. TECZKA ===================== */
+  const p2Head = () => `<header class="p2-hd"><span class="p2-wm">InvestWatch</span><nav class="p2-nav" aria-label="Główna"><a href="#teczka" aria-current="page" onclick="return false">Kolejka spraw</a><a href="#teczka" onclick="return false">Kalibracja</a><a href="#teczka" onclick="return false">Skanowania</a></nav><span class="p2-usr">A. Kowalczyk, analityk</span></header>`;
+  function p2A() {
+    const groups = ["red", "amb", "grn"].map((l) => {
+      const rs = ROWS.filter((r) => lvOf(r.risk) === l);
+      const body = rs.map((r) => { const i = ROWS.indexOf(r); return `<tr data-row data-lv="${l}"><td><span class="sr-only">${LV[l].label}, ryzyko </span>${risk(r.risk)}</td><td class="c-case"><a href="#teczka" onclick="return false">${esc(r.title)}</a><span class="sub">${r.id}, ${esc(r.ent)}</span></td><td>${r.src}</td><td>${r.mods.map((m) => MODS[m]).join(", ")}</td><td>${crit(r)}</td><td>${sel("p2", i, r)}</td><td>${age(r)}</td></tr>`; }).join("");
+      return `<tbody><tr class="grp" data-row data-lv="${l}"><th colspan="7" scope="colgroup">${lvl(l)}<span class="mu">${rs.length} z ${LV[l].n}</span></th></tr>${body}<tr class="more" data-row data-lv="${l}"><td colspan="7"><a href="#teczka" onclick="return false">Pokaż wszystkie: ${LV[l].label.toLowerCase()} (${LV[l].n})</a></td></tr></tbody>`;
+    }).join("");
+    return `<div class="spec p2" data-filter-root>${p2Head()}<div class="p2-pg">
+      <h4>Kolejka spraw</h4>
+      <p class="p2-lead">Stan na 21 listopada 2026, godz. 9:30. W kolejce jest <button type="button" class="fl" data-f="all" aria-pressed="true">148 spraw</button>: <button type="button" class="fl" data-f="red" aria-pressed="false">7 krytycznych</button>, <button type="button" class="fl" data-f="amb" aria-pressed="false">23 do weryfikacji</button> i <button type="button" class="fl" data-f="grn" aria-pressed="false">118 zgodnych</button>.</p>
+      <p class="p2-sub">Kliknięcie liczby zawęża listę. W każdej grupie najpierw najwyższe ryzyko.</p>
+      <div class="tw" tabindex="0" role="region" aria-label="Tabela spraw"><table class="qt"><caption class="sr-only">Sprawy zgrupowane według poziomu ryzyka</caption><thead><tr><th scope="col">Ryzyko</th><th scope="col">Sprawa</th><th scope="col">Źródło</th><th scope="col">Moduł</th><th scope="col">Naruszone kryteria</th><th scope="col">Status</th><th scope="col">Wykryto</th></tr></thead>${groups}</table></div>
+    </div></div>`;
+  }
+  function p2B() {
+    return `<div class="spec p2">${p2Head()}<div class="p2-pg">
+      <p class="p2-ref">Sprawa IW/2026/0412, wykryta 21.11.2026 o 9:14</p>
+      <h4>„Pewne 12% miesięcznie”: reklama bez informacji o ryzyku</h4>
+      <div class="p2-doc">
+        <section class="p2-row"><h5>Metryczka</h5><dl class="p2-meta"><dt>Podmiot</dt><dd>Nordhaven Capital Sp. z o.o.</dd><dt>KRS</dt><dd>0001023417</dd><dt>Źródło</dt><dd>Instagram, @nordhaven.capital, post z 20.11.2026</dd><dt>Moduły</dt><dd>Finfluencerzy i podmioty trzecie; Zgodność i informacja o ryzyku</dd><dt>Podstawa prawna</dt><dd>art. 44 ust. 2 lit. b i d rozporządzenia delegowanego Komisji (UE) 2017/565</dd></dl></section>
+        <section class="p2-row"><h5>Ustalenie</h5><div><p class="p2-verd">Reklama narusza zasady informowania o ryzyku: obiecuje stały zysk 12% miesięcznie i nie mówi, że można stracić wpłacone pieniądze.</p><p>Poziom: ${lvl("red")}</p></div></section>
+        <section class="p2-row"><h5>Uzasadnienie</h5><ol class="p2-find"><li><span>Stopa zwrotu podana jako pewna, bez zastrzeżeń. <small>Kryt. 3</small></span></li><li><span>Brak informacji o ryzyku utraty kapitału. <small>Kryt. 7</small></span></li><li><span>Materiał nie jest oznaczony jako reklama. <small>Kryt. 12</small></span></li><li><span>Podmiot widnieje na liście ostrzeżeń publicznych KNF. <small>Kryt. 14</small></span></li></ol></section>
+        <section class="p2-row"><h5>Pomiar</h5>${dscale(86, "p2")}</section>
+        <section class="p2-row"><h5>Zalecenie</h5><div><p class="p2-adv">Eskalować: skierować sprawę do postępowania wyjaśniającego.</p><p>Następny krok: przekazać pakiet dowodowy zespołowi ds. postępowań wyjaśniających i zabezpieczyć archiwum posta.</p><div class="p2-acts"><button type="button" class="p2-btn">Przekaż do postępowania wyjaśniającego</button><a href="#teczka" onclick="return false">Zmień zalecenie</a></div></div></section>
+        <section class="p2-row"><h5>Rejestry</h5><ul class="p2-reg"><li><span>KRS</span><span class="r lvl-grn">${ic("ok")}wpis aktywny</span><span class="d">Stan na 21.11.2026</span></li><li><span>Lista ostrzeżeń publicznych KNF</span><span class="r lvl-red">${ic("warn")}na liście</span><span class="d">Wpisany 14.10.2026, stan na 21.11.2026</span></li><li><span>Rejestr firm inwestycyjnych KNF</span><span class="r lvl-amb">${ic("no")}brak wpisu</span><span class="d">Stan na 21.11.2026</span></li></ul></section>
+        <section class="p2-row"><h5>Pliki</h5><p class="p2-files"><a href="#teczka" onclick="return false">${ic("dl")}Pakiet dowodowy (PDF, 1,2 MB)</a><a href="#teczka" onclick="return false">${ic("dl")}Dane sprawy (CSV, 14 kB)</a></p></section>
+      </div></div></div>`;
+  }
+  function p2C() {
+    return `<div class="spec p2">${p2Head()}<div class="p2-pg" data-strip>
+      <h4>Próg oznaczenia</h4>
+      <p class="p2-live" data-sent>Przy progu <b>20</b> system oznacza <b>46</b> spraw z zestawu testowego. Naruszeń jest wśród nich <b>42</b>, a <b>8</b> naruszeń zostaje pominiętych.</p>
+      <div class="p2-ctl"><label for="thr-p2">Próg oznaczenia sprawy</label><output for="thr-p2" data-o>20</output></div>
+      <p class="p2-sub" id="hint-p2" style="margin:0 0 12px">Sprawa trafia do kolejki, gdy ryzyko jest równe progowi lub wyższe.</p>
+      ${calAxis("p2")}
+      <div class="p2-cols">${matrix()}${metDl("p2-met")}</div>
+    </div></div>`;
+  }
+
+  /* ===================== 3. MOBYWATEL SŁUŻBOWY ===================== */
+  const p3Head = (crumbs) => `<header class="p3-hd"><p class="p3-br"><b>InvestWatch</b><span>Narzędzie analityczne UKNF</span></p><nav class="p3-nav" aria-label="Główna"><a href="#mobywatel-sluzbowy" aria-current="page" onclick="return false">Kolejka spraw</a><a href="#mobywatel-sluzbowy" onclick="return false">Kalibracja</a></nav><div class="p3-usr"><span>A. Kowalczyk</span><a class="p3-ob" href="#mobywatel-sluzbowy" onclick="return false">Wyloguj</a></div></header>
+    <nav class="p3-bc" aria-label="Jesteś tutaj"><a href="#mobywatel-sluzbowy" onclick="return false" aria-label="Start">${ic("home")}</a>${crumbs.map((c, k) => `${ic("chev")}${k === crumbs.length - 1 ? `<span aria-current="page">${c}</span>` : `<a href="#mobywatel-sluzbowy" onclick="return false">${c}</a>`}`).join("")}</nav>`;
+  function p3A() {
+    const mx = Math.max(...INFLOW);
+    const bars = INFLOW.map((v) => `<i style="height:${Math.round((v / mx) * 32)}px"></i>`).join("");
+    const opts = [["all", "Wszystkie", TOTAL], ["red"], ["amb"], ["grn"]].map((t, k) => { const l = t[0]; return `<label class="p3-opt" data-l="${l}"><input type="radio" name="p3lv" value="${l}"${k ? "" : " checked"}><span>${k ? ic(LV[l].icon) : ""}${k ? LV[l].label : t[1]} <b>${k ? LV[l].n : t[2]}</b></span></label>`; }).join("");
+    const rows = ROWS.map((r, i) => `<tr data-row data-lv="${lvOf(r.risk)}"><td data-l="Poziom i ryzyko">${lvRisk(r.risk)}</td><td class="c-case"><a href="#mobywatel-sluzbowy" onclick="return false">${esc(r.title)}</a><span class="sub">${r.id}, ${esc(r.ent)}</span></td><td data-l="Źródło">${r.src}</td><td data-l="Moduł">${mods(r)}</td><td data-l="Kryteria">${crit(r)}</td><td class="c-st" data-l="Status">${sel("p3", i, r)}</td><td data-l="Wykryto">${age(r)}</td><td class="c-go"><a class="go" href="#mobywatel-sluzbowy" onclick="return false" aria-label="Otwórz sprawę ${r.id}">${ic("chev")}</a></td></tr>`).join("");
+    return `<div class="spec p3" data-filter-root>${p3Head(["InvestWatch", "Kolejka spraw"])}<div class="p3-bd">
+      <div class="p3-top"><h4>Kolejka spraw</h4><div class="p3-spk" role="img" aria-label="Nowe sprawy w ostatnich 10 dniach: ${INFLOW.join(", ")}. Dziś 29."><span class="bars">${bars}</span><span><b>29</b> dziś</span><p>Nowe sprawy, ostatnie 10 dni</p></div></div>
+      <div class="p3-srch"><label for="p3-q">Wpisz tekst, aby wyszukać sprawę</label><div>${ic("search")}<input class="inp" id="p3-q" type="search" placeholder="Tytuł, podmiot, sygnatura"></div></div>
+      <fieldset class="p3-lvf"><legend>Poziom ryzyka</legend><div class="opts">${opts}</div></fieldset>
+      <div class="tw" tabindex="0" role="region" aria-label="Tabela spraw"><table class="qt"><caption class="sr-only">Sprawy w kolejce, od najwyższego ryzyka</caption><thead><tr><th scope="col">Poziom i ryzyko</th><th scope="col">Sprawa</th><th scope="col">Źródło</th><th scope="col">Moduł</th><th scope="col">Kryteria</th><th scope="col">Status</th><th scope="col">Wykryto</th><th scope="col"><span class="sr-only">Otwórz</span></th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="p3-ft"><span>Pokazano 6 ze 148 spraw</span><a class="p3-btn2" href="#mobywatel-sluzbowy" onclick="return false">Pokaż kolejne 20</a></div>
+    </div></div>`;
+  }
+  function p3B() {
+    return `<div class="spec p3">${p3Head(["InvestWatch", "Kolejka spraw", "IW/2026/0412"])}<div class="p3-bd">
+      <h4>„Pewne 12% miesięcznie”: reklama bez informacji o ryzyku</h4>
+      <dl class="p3-meta"><div><dt>Sygnatura</dt><dd>IW/2026/0412</dd></div><div><dt>Wykryto</dt><dd>21.11.2026, 09:14</dd></div><div><dt>Źródło</dt><dd>Instagram, post z 20.11.2026</dd></div><div><dt>Moduły</dt><dd>1, 2</dd></div></dl>
+      <div class="p3-step"><p><b>Etap 1 z 4:</b> Nowe</p><div class="seg4" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div><small>Następny etap: W analizie</small></div>
+      <div class="p3-case"><div class="p3-main">
+        <div class="p3-alert" role="note">${ic("crit")}<h5>Naruszenie, poziom krytyczny</h5><p>Reklama obiecuje stały zysk 12% miesięcznie i nie informuje o ryzyku utraty kapitału. Naruszone kryteria: 3, 7, 12 i 14. Podstawa prawna: art. 44 ust. 2 lit. b i d rozporządzenia delegowanego 2017/565.</p></div>
+        <section><h5 style="margin-bottom:12px">Wynik</h5>${dscale(86, "p3")}</section>
+        <section class="p3-next" aria-labelledby="p3-nx"><h5 id="p3-nx">Następny krok</h5><p>Rekomendacja: eskalować. Przekaż pakiet dowodowy zespołowi ds. postępowań wyjaśniających i zabezpiecz archiwum posta.</p><div class="acts"><button type="button" class="p3-btn">Przekaż do postępowania wyjaśniającego</button><button type="button" class="p3-btn2">Wezwij do wyjaśnień</button></div></section>
+        <div class="p3-ex"><a class="p3-btn2" href="#mobywatel-sluzbowy" onclick="return false">${ic("dl")}Pobierz pakiet dowodowy (PDF)</a><a class="p3-btn2" href="#mobywatel-sluzbowy" onclick="return false">${ic("dl")}Pobierz dane (CSV)</a></div>
+      </div>
+      <aside class="p3-card" aria-labelledby="p3-ent"><header><p>Podmiot</p><h5 id="p3-ent">Nordhaven Capital Sp. z o.o.</h5></header>
+        <dl><dt>KRS</dt><dd>0001023417</dd><dt>Siedziba</dt><dd>Warszawa</dd><dt>Wpis do KRS</dt><dd>3 marca 2026 (8 miesięcy)</dd></dl>
+        <h6>Sprawdzenie w rejestrach</h6><ul>
+          <li><span class="ok">${ic("ok")}</span><span>KRS: wpis aktywny</span><small>Stan na 21.11.2026</small></li>
+          <li><span class="bad">${ic("warn")}</span><span>Lista ostrzeżeń publicznych KNF: na liście</span><small>Wpisany 14.10.2026, stan na 21.11.2026</small></li>
+          <li><span class="nn">${ic("no")}</span><span>Rejestr firm inwestycyjnych KNF: brak wpisu</span><small>Stan na 21.11.2026</small></li></ul>
+      </aside></div></div></div>`;
+  }
+  function p3C() {
+    return `<div class="spec p3">${p3Head(["InvestWatch", "Kalibracja"])}<div class="p3-bd" data-strip>
+      <h4>Kalibracja progu</h4>
+      <div><div class="p3-ctl"><div><label for="thr-p3">Próg oznaczenia sprawy</label><p id="hint-p3">Sprawa trafia do kolejki, gdy ryzyko jest równe progowi lub wyższe. Przyciski zmieniają próg o 1.</p></div>
+        <div class="p3-stp"><button type="button" data-step="-1" aria-label="Zmniejsz próg o 1">${ic("minus")}</button><output for="thr-p3" data-o>20</output><button type="button" data-step="1" aria-label="Zwiększ próg o 1">${ic("plus")}</button></div></div>
+        ${calAxis("p3")}</div>
+      <div class="p3-res">${metDl("p3-met")}${matrix()}</div>
+    </div></div>`;
+  }
+
+  /* ===================== 4. MIĘKKI NADZÓR ===================== */
+  const p4Head = () => `<header class="p4-hd"><span class="p4-br">InvestWatch</span><nav class="p4-nav" aria-label="Główna"><a href="#miekki-nadzor" aria-current="page" onclick="return false">Kolejka</a><a href="#miekki-nadzor" onclick="return false">Kalibracja</a><a href="#miekki-nadzor" onclick="return false">Skanowania</a></nav><div class="p4-usr"><span>A. Kowalczyk</span><a href="#miekki-nadzor" onclick="return false">Pomoc</a></div></header>`;
+  function p4A() {
+    const seg = [["all", "Wszystkie", TOTAL], ["red"], ["amb"], ["grn"]].map((t, k) => { const l = t[0]; return `<button type="button" data-f="${l}" data-l="${l}" aria-pressed="${k === 0}">${k ? ic(LV[l].icon) : ""}<span>${k ? LV[l].label : t[1]}</span><b>${k ? LV[l].n : t[2]}</b></button>`; }).join("");
+    const rows = ROWS.map((r, i) => `<tr data-row data-lv="${lvOf(r.risk)}"><td>${lvRisk(r.risk)}</td><td class="c-case"><a href="#miekki-nadzor" onclick="return false">${esc(r.title)}</a><span class="sub">${r.id}, ${esc(r.ent)}</span></td><td>${r.src}</td><td>${mods(r)}</td><td>${crit(r)}</td><td>${sel("p4", i, r)}</td><td>${age(r)}</td></tr>`).join("");
+    return `<div class="spec p4" data-filter-root>${p4Head()}<div class="p4-bd"><section class="p4-pn" aria-labelledby="p4-qh">
+      <div class="p4-ph"><div><h4 id="p4-qh">Kolejka spraw</h4><p>148 spraw z 30 dni. Progi: oznaczenie od 20, krytyczne od 70.</p></div><a class="p4-btn2" href="#miekki-nadzor" onclick="return false">${ic("dl")}Eksportuj CSV</a></div>
+      <div class="p4-seg" role="group" aria-label="Poziom ryzyka">${seg}</div>
+      <div class="tw p4-tw" tabindex="0" role="region" aria-label="Tabela spraw"><table class="qt"><caption class="sr-only">Sprawy w kolejce</caption><thead><tr><th scope="col">Poziom i ryzyko</th><th scope="col">Sprawa</th><th scope="col">Źródło</th><th scope="col">Moduł</th><th scope="col">Naruszone kryteria</th><th scope="col">Status</th><th scope="col">Wykryto</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="p4-ft"><span>Pokazano 6 ze 148</span><a class="p4-btn2" href="#miekki-nadzor" onclick="return false">Następna strona</a></div>
+    </section></div></div>`;
+  }
+  function p4B() {
+    return `<div class="spec p4">${p4Head()}<div class="p4-bd">
+      <section class="p4-pn" aria-labelledby="p4-ct"><p class="p4-ref">Sprawa IW/2026/0412</p><h4 id="p4-ct">„Pewne 12% miesięcznie”: reklama bez informacji o ryzyku</h4>
+        <dl class="p4-hm"><div><dt>Podmiot</dt><dd>Nordhaven Capital Sp. z o.o.</dd></div><div><dt>Źródło</dt><dd>Instagram, post z 20.11.2026</dd></div><div><dt>Wykryto</dt><dd>21.11.2026, 09:14</dd></div><div><dt>Podstawa prawna</dt><dd>art. 44 ust. 2 lit. b i d rozp. del. 2017/565</dd></div></dl></section>
+      <div class="p4-case"><section class="p4-pn" aria-labelledby="p4-vh"><h5 id="p4-vh">Werdykt</h5>
+          <p class="p4-verd">Naruszenie. Reklama obiecuje stały zysk 12% miesięcznie i nie informuje o ryzyku utraty kapitału.</p>
+          <div class="p4-cs">${lvl("red")}<span class="csn"><span>Compliance Score</span><b>14</b><span>z 100</span></span></div>
+          <div class="p4-blk">${dscale(86, "p4")}</div>
+          <ol class="p4-find"><li><span>Stopa zwrotu podana jako pewna. <small>Kryt. 3</small></span></li><li><span>Brak informacji o ryzyku utraty kapitału. <small>Kryt. 7</small></span></li><li><span>Brak oznaczenia materiału jako reklamy. <small>Kryt. 12</small></span></li><li><span>Podmiot na liście ostrzeżeń publicznych KNF. <small>Kryt. 14</small></span></li></ol>
+        </section>
+        <div class="p4-col">
+          <section class="p4-rec" aria-labelledby="p4-rh"><h5 id="p4-rh">Zalecenie: eskalować</h5><p>Skierować sprawę do postępowania wyjaśniającego. Następny krok: przekazać pakiet dowodowy zespołowi ds. postępowań wyjaśniających i zabezpieczyć archiwum posta.</p><div class="acts"><button type="button" class="p4-btn">Przekaż do postępowania</button><a href="#miekki-nadzor" onclick="return false">Zmień zalecenie</a></div></section>
+          <section class="p4-pn" aria-labelledby="p4-gh"><h5 id="p4-gh">Rejestry</h5><ul class="p4-reg">
+            <li><span>KRS</span><span class="r ok">${ic("ok")}wpis aktywny</span><small>Stan na 21.11.2026</small></li>
+            <li><span>Lista ostrzeżeń KNF</span><span class="r bad">${ic("warn")}na liście</span><small>Wpisany 14.10.2026, stan na 21.11.2026</small></li>
+            <li><span>Firmy inwestycyjne KNF</span><span class="r nn">${ic("no")}brak wpisu</span><small>Stan na 21.11.2026</small></li></ul></section>
+          <div class="p4-ex"><a class="p4-btn2" href="#miekki-nadzor" onclick="return false">${ic("dl")}Pakiet dowodowy PDF</a><a class="p4-btn2" href="#miekki-nadzor" onclick="return false">${ic("dl")}CSV</a></div>
+        </div></div></div></div>`;
+  }
+  function p4C() {
+    return `<div class="spec p4">${p4Head()}<div class="p4-bd"><section class="p4-pn" aria-labelledby="p4-kh" data-strip>
+      <div class="p4-ph" style="margin-bottom:20px"><div><h4 id="p4-kh">Kalibracja progu</h4><p>Zestaw testowy: 204 materiały, w tym 50 naruszeń.</p></div></div>
+      <div class="p4-calg"><div>
+        <div class="p4-ctl"><div><label for="thr-p4">Próg oznaczenia sprawy</label><p id="hint-p4">Sprawa trafia do kolejki od tej wartości ryzyka.</p></div><output for="thr-p4" data-o>20</output></div>
+        ${calAxis("p4")}
+      </div><div>
+        ${metDl("p4-met")}
+        <div class="cm-wrap">${matrix()}</div>
+      </div></div></section></div></div>`;
+  }
+
+  /* ---------- contrast ---------- */
+  function lum(h) { h = h.replace("#", ""); const c = [0, 2, 4].map((i) => { const v = parseInt(h.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  function cr(a, b) { let x = lum(a), y = lum(b); if (x < y) { const t = x; x = y; y = t; } return (x + 0.05) / (y + 0.05); }
+  function grade(r, kind) { if (kind === "g") return r >= 3 ? "UI 3:1" : "poniżej 3:1"; return r >= 7 ? "AAA" : r >= 4.5 ? "AA" : r >= 3 ? "tylko duży tekst" : "poniżej AA"; }
+
+  /* ---------- proposals ---------- */
+  const PROPS = [
+    {
+      id: "urzedowy", cls: "p1", n: 1, name: "Urzędowy", fA: p1A, fB: p1B, fC: p1C,
+      line: "Rejestr urzędowy w dyscyplinie DSFR: zakładki poziomów z liczbą spraw, tabela jako produkt, metryczka sprawy jako tabela klucz–wartość, rekomendacja jako komunikat z linią po lewej i kalibracja rozpisana na tabele.",
+      src: "Wzorce: DSFR (zakładki, tabela, pole z dolną krawędzią, mise en avant, plakietka, okruszki, pliki do pobrania), gov.pl (podkreślone odnośniki).",
+      tokens: [
+        ["Tekst główny", "#161616", "#FFFFFF", "Treść, nagłówki, liczby"],
+        ["Tekst pomocniczy", "#5E5E5E", "#FFFFFF", "Podpisy, legenda, podtytuły wierszy"],
+        ["Tekst na polu", "#161616", "#EEEEEE", "Selecty statusu i wyszukiwarka (naprawia puste selecty)"],
+        ["Akcent, odnośniki", "#1A2F8C", "#FFFFFF", "Odnośniki, aktywna zakładka, przycisk. Biały na akcencie: 11,5:1"],
+        ["Akcent na tle komunikatu", "#1A2F8C", "#EDEFF8", "Rekomendacja"],
+        ["Krytyczne, tekst", "#B0121A", "#FFFFFF", "Słowo poziomu, werdykt"],
+        ["Krytyczne, plakietka", "#B0121A", "#FCE7E7", "Jedyna plakietka z tłem (nagłówek akt)"],
+        ["Do weryfikacji, tekst", "#8F3F00", "#FFFFFF", "Słowo poziomu"],
+        ["Zgodne, tekst", "#1C6B3B", "#FFFFFF", "Słowo poziomu"],
+        ["Krytyczne, znacznik", "#C8141E", "#FFFFFF", "Mała skala ryzyka, strefa skali", "g"],
+        ["Do weryfikacji, znacznik", "#C25200", "#FFFFFF", "Mała skala ryzyka, strefa skali", "g"],
+        ["Krawędź pola", "#3A3A3A", "#EEEEEE", "Dolna krawędź 2 px pól i selectów", "g"],
+        ["Fokus", "#0A6CD6", "#FFFFFF", "Kontur 3 px, odstęp 2 px", "g"]
+      ],
+      found: [
+        ["Krój", "Public Sans (SIL OFL), wagi 400, 500, 700. Zamiast zastrzeżonej Marianne. Cyfry tabelaryczne w całej próbce."],
+        ["Skala", "12 / 14 / 16 / 18 / 20 / 28 px. Tabela 14 px, metadane 12 px. Interlinia 1,5 w treści, 1,2 w nagłówkach."],
+        ["Jednostka", "8 px, mikro 4 px. Wiersz tabeli około 80 px (tytuł w dwóch liniach i podtytuł), zakładka 44 px, pole 40 px."],
+        ["Promienie (reguła)", "Kontenery, tabele, przyciski i zakładki: 0. Pola i selecty: 4 px tylko u góry (zakładka pola, jak w DSFR). Plakietki: 4 px."],
+        ["Obramowanie i cień", "Linie 1 px #DDDDDD, nagłówek tabeli 2 px #161616, komunikat z linią 4 px akcentu po lewej. Cieni brak."],
+        ["Fokus", "Kontur 3 px #0A6CD6, odstęp 2 px."],
+        ["Poziom ryzyka", "Ikona o osobnym kształcie i słowo w kolorze poziomu. Tło tylko na jednej plakietce w nagłówku akt."],
+        ["Usunięte akcesorium", "Paski zebry w tabeli. Linie poziome wystarczają, a zebra dublowała podświetlenie wiersza."]
+      ],
+      prov: [
+        ["Zakładki z górną linią akcentu, licznik w zakładce", "DSFR, onglet"],
+        ["Pole z szarym tłem i dolną krawędzią 2 px", "DSFR, champ de saisie"],
+        ["Tabela z mocnym nagłówkiem, paginacja w stopce", "DSFR, tableau"],
+        ["Rekomendacja jako blok z linią po lewej", "DSFR, mise en avant"],
+        ["Plakietka statusu z ikoną i słowem", "DSFR, badge"],
+        ["Okruszki 12 px, pliki z typem i rozmiarem", "DSFR"],
+        ["Podkreślone odnośniki w treści", "gov.pl i DSFR"]
+      ],
+      good: ["Najwięcej informacji na ekranie: najniższy wiersz (około 80 px), a liczniki poziomów nie zajmują osobnego rzędu kafli.", "Kalibracja i rejestry jako tabele łatwo przejdą audyt dostępności i wydruk.", "Najtańszy: głównie usuwanie promieni i cieni oraz zamiana kafli na zakładki."],
+      bad: ["Surowy i bez miękkości z Twoich referencji.", "Wiele tabel obok siebie męczy przy długiej pracy, jeśli zabraknie odstępów.", "Zbyt wierne DSFR mogłoby sugerować francuskie pochodzenie, dlatego odcienie i krój są inne."]
+    },
+    {
+      id: "teczka", cls: "p2", n: 2, name: "Teczka", fA: p2A, fB: p2B, fC: p2C,
+      line: "Akta sprawy czytane jak pismo urzędowe: tytuły sekcji na marginesie, werdykt zdaniem, ponumerowane ustalenia z numerami kryteriów. Kolejka zgrupowana według poziomu, liczniki w zdaniu, kalibracja opisana zdaniem, które zmienia się razem z suwakiem.",
+      src: "Wzorce: NL Design System (Case Card, Table, Description List, etykiety i fokus), Rijkshuisstijl (para krojów szeryfowy i bezszeryfowy, spokój), polskie pismo urzędowe (metryczka, uzasadnienie, podstawa prawna).",
+      tokens: [
+        ["Tekst główny", "#1E2328", "#FFFFFF", "Treść, nagłówki"],
+        ["Tekst pomocniczy", "#59626C", "#FFFFFF", "Tytuły na marginesie, daty"],
+        ["Odnośniki", "#15608F", "#FFFFFF", "Odnośniki i liczniki w zdaniu. Biały na przycisku: 6,8:1"],
+        ["Tekst na fokusie", "#1E2328", "#FFE680", "Żółte tło fokusu odnośnika"],
+        ["Krytyczne, tekst", "#A3281E", "#FFFFFF", "Słowo poziomu"],
+        ["Do weryfikacji, tekst", "#7A4E00", "#FFFFFF", "Słowo poziomu"],
+        ["Zgodne, tekst", "#2C6B35", "#FFFFFF", "Słowo poziomu"],
+        ["Krytyczne, znacznik", "#B3362B", "#FFFFFF", "Mała skala, strefa skali", "g"],
+        ["Do weryfikacji, znacznik", "#B47D00", "#FFFFFF", "Mała skala, strefa skali", "g"],
+        ["Krawędź pola", "#8D959E", "#FFFFFF", "Select, przycisk drugorzędny", "g"],
+        ["Fokus", "#1E2328", "#FFFFFF", "Kontur 2 px i żółte tło #FFE680", "g"]
+      ],
+      found: [
+        ["Krój", "Literata (SIL OFL) do tytułów, werdyktu i uzasadnienia, wagi 400 i 600. Source Sans 3 (SIL OFL) do interfejsu i tabel, wagi 400 i 600. Para zamiast zastrzeżonych Rijksoverheid Serif i Sans."],
+        ["Skala", "15 / 16 / 17 / 19 / 21 / 28 / 36 px. Interlinia 1,5 w interfejsie, 1,6 w tekście szeryfowym. Szerokość tekstu do 62 znaków."],
+        ["Jednostka", "8 px. Sekcje co 24 px z linią, strona 48 px od krawędzi. Wiersz tabeli około 105 px."],
+        ["Promienie (reguła)", "0 wszędzie. 3 px tylko na polach i przycisku, żeby odróżnić kontrolkę od tekstu."],
+        ["Obramowanie i cień", "Tylko linie poziome 1 px; nagłówek tabeli i grupy 2 px lub 1 px w kolorze tekstu. Ramek wokół bloków i cieni brak."],
+        ["Fokus", "Kontur 2 px w kolorze tekstu i żółte tło pod odnośnikiem (kierunek NLDS)."],
+        ["Poziom ryzyka", "Nagłówek grupy z ikoną i słowem; w wierszu poziom dla czytnika ekranu. Kolor prawie się nie pojawia."],
+        ["Usunięte akcesorium", "Numerowane kwadraty modułów. Moduł zapisany słowem czyta się bez legendy."]
+      ],
+      prov: [
+        ["Metryczka sprawy jako lista opisowa", "NLDS, Case Card i Description List"],
+        ["Tytuły sekcji na marginesie, treść w wąskiej kolumnie", "Pismo urzędowe, Rijkshuisstijl"],
+        ["Para krojów: szeryfowy do pisma, bezszeryfowy do interfejsu", "Rijkshuisstijl (zasada)"],
+        ["Ponumerowane ustalenia z kryterium", "Uzasadnienie decyzji administracyjnej"],
+        ["Fokus z żółtym tłem", "NLDS"],
+        ["Tabela z caption i nagłówkami grup", "NLDS, Table"]
+      ],
+      good: ["Uzasadnienie werdyktu czyta się jak pismo, więc łatwo przenieść je do notatki służbowej.", "Grupowanie kolejki według poziomu pokazuje, ile pracy jest w każdej grupie, bez kafli.", "Zdanie przy suwaku mówi wprost, co oznacza zmiana progu."],
+      bad: ["Najmniej spraw na ekranie w kolejce: wiersz ma około 105 px, a nagłówki grup zajmują dodatkowe miejsce.", "Dwa kroje to więcej plików do samohostowania.", "Bez miękkości z referencji; przy pustej kolejce strona wygląda na niedokończoną."]
+    },
+    {
+      id: "mobywatel-sluzbowy", cls: "p3", n: 3, name: "mObywatel służbowy", fA: p3A, fB: p3B, fC: p3C,
+      line: "Konwencje gov.pl przeniesione do narzędzia urzędnika: nagłówek z nazwą usługi, okruszki, etykieta nad wyszukiwarką, duże pola wyboru, wskaźnik etapu sprawy. Kartą jest tylko to, co naprawdę jest kartą: podmiot z wynikami rejestrów.",
+      src: "Wzorce: gov.pl (mierzone: nagłówek, okruszki, pole z etykietą, przycisk z obrysem, lista z liniami), mObywatel (dokument jako karta), DSFR (wskaźnik etapów).",
+      tokens: [
+        ["Tekst główny", "#1B1B1B", "#FFFFFF", "Treść. Na paśmie #F4F6FB: 15,9:1"],
+        ["Tekst pomocniczy", "#52575F", "#FFFFFF", "Podpisy, daty"],
+        ["Tekst pomocniczy na paśmie", "#52575F", "#F4F6FB", "Nagłówek tabeli, karta"],
+        ["Akcent, odnośniki", "#0A51A1", "#FFFFFF", "Odnośniki, przyciski, aktywna zakładka. Biały na akcencie: 7,8:1"],
+        ["Akcent na zaznaczeniu", "#1B1B1B", "#E8F0FA", "Zaznaczone pole wyboru poziomu"],
+        ["Krytyczne, tekst", "#B0172F", "#FFFFFF", "Słowo poziomu"],
+        ["Krytyczne, komunikat", "#B0172F", "#FDF0F2", "Werdykt"],
+        ["Do weryfikacji, tekst", "#7D4B00", "#FFFFFF", "Słowo poziomu"],
+        ["Zgodne, tekst", "#14663A", "#FFFFFF", "Słowo poziomu"],
+        ["Krytyczne, znacznik", "#C41E3A", "#FFFFFF", "Skala, ramka komunikatu", "g"],
+        ["Krawędź pola", "#8C95A6", "#FFFFFF", "Pola, selecty, pola wyboru", "g"],
+        ["Fokus", "#0A51A1", "#FFFFFF", "Kontur 3 px, odstęp 2 px", "g"]
+      ],
+      found: [
+        ["Krój", "Lato (SIL OFL), wagi 400 i 700. Projekt Łukasza Dziedzica, pełne polskie znaki; zamiast Open Sans z gov.pl, żeby nie kopiować serwisu 1:1."],
+        ["Skala", "12 / 14 / 16 / 18 / 20 / 26 / 32 px. Tabela 16 px. Interlinia 1,5."],
+        ["Jednostka", "8 px. Cele dotyku 44 do 48 px, wiersz tabeli około 96 px. Poniżej 720 px tabela zamienia się w listę z etykietami."],
+        ["Promienie (reguła)", "Kontrolki 4 px (jak zmierzone na gov.pl). Jedyna karta (podmiot) 12 px. Reszta 0."],
+        ["Obramowanie i cień", "Linie 1 px #DDE1E8, pasmo #F4F6FB w nagłówku tabeli i karcie. Ramka tylko na karcie i komunikacie. Cieni brak."],
+        ["Fokus", "Kontur 3 px #0A51A1, odstęp 2 px."],
+        ["Poziom ryzyka", "Ikona i słowo; werdykt jako komunikat z ikoną, ramką i tytułem."],
+        ["Usunięte akcesorium", "Okrągłe przyciski wyszukiwania i powiadomień w nagłówku. Wyszukiwarka jest polem z etykietą w treści."]
+      ],
+      prov: [
+        ["Nazwa usługi z cienką pionową kreską i opisem", "gov.pl (bez czerwonej kreski i godła)"],
+        ["Okruszki z ikoną startu i szewronami", "gov.pl (mierzone)"],
+        ["Etykieta nad wyszukiwarką, pole 48 px, promień 4 px", "gov.pl (mierzone)"],
+        ["Przycisk z obrysem 2 px", "gov.pl (mierzone)"],
+        ["Podmiot jako karta z wynikami rejestrów", "mObywatel (dokument jako karta)"],
+        ["Wskaźnik etapu sprawy", "DSFR, indicateur d’étapes; StatusStepper w produkcie"],
+        ["Duże cele dotyku 44 do 48 px", "mObywatel i NLDS"]
+      ],
+      good: ["Polscy urzędnicy znają ten układ z gov.pl, więc nie trzeba go tłumaczyć.", "Działa na tablecie: duże cele, przyciski plus i minus przy progu, lista zamiast tabeli na wąskim ekranie.", "Jedna karta (podmiot) wyraźnie odróżnia się od reszty, bo nic innego nie jest kartą."],
+      bad: ["Najłatwiej pomylić z usługą państwową; potrzebny podpis „narzędzie analityczne UKNF” i brak godła.", "Lato jest neutralny, charakter daje głównie układ.", "Wiersz około 96 px zmniejsza gęstość; dla długich kolejek potrzebny wariant zwarty."]
+    },
+    {
+      id: "miekki-nadzor", cls: "p4", n: 4, name: "Miękki nadzór", fA: p4A, fB: p4B, fC: p4C,
+      line: "Twój nastrój w wiarygodnej formie: spokojne niebiesko-szare tło, kilka zaokrąglonych paneli, pigułkowa nawigacja i duże czytelne liczby tam, gdzie są potrzebne (w filtrze poziomów, przy wyniku, przy progu). Bez bento, miernika i czarnego kafla; gęstość zostaje.",
+      src: "Wzorce: referencje właściciela 1, 3, 7 i 9 (panele, pigułki, duże liczby, tło), reguły z propozycji 1 i 3 (tabela, etykiety, kontrast), NLDS (fokus, etykiety).",
+      tokens: [
+        ["Tekst główny", "#18202B", "#FFFFFF", "Na tle strony #E8ECF1: 13,8:1"],
+        ["Tekst pomocniczy", "#505B6A", "#FFFFFF", "Podpisy, nagłówki kolumn"],
+        ["Tekst pomocniczy na tle", "#364150", "#E8ECF1", "Nagłówek aplikacji"],
+        ["Tekst na zaleceniu", "#18202B", "#E0E7F1", "Panel zalecenia"],
+        ["Odnośniki", "#2F5089", "#FFFFFF", "Odnośniki w treści"],
+        ["Nawigacja i przycisk", "#FFFFFF", "#22324A", "Aktywna pigułka, przycisk główny, uchwyt suwaka"],
+        ["Krytyczne, tekst", "#A3262A", "#FFFFFF", "Słowo poziomu"],
+        ["Do weryfikacji, tekst", "#7A4D00", "#FFFFFF", "Słowo poziomu"],
+        ["Zgodne, tekst", "#22694A", "#FFFFFF", "Słowo poziomu"],
+        ["Krytyczne, znacznik", "#C53A3E", "#FFFFFF", "Mała skala, strefa skali", "g"],
+        ["Krawędź kontrolki", "#858F9E", "#FFFFFF", "Select, przycisk drugorzędny", "g"],
+        ["Fokus", "#2F5089", "#FFFFFF", "Kontur 3 px, odstęp 2 px", "g"]
+      ],
+      found: [
+        ["Krój", "Figtree (SIL OFL), wagi 400, 500, 600. Geometryczny i miękki jak na referencjach, z cyframi tabelarycznymi; zamiast Plus Jakarta Sans."],
+        ["Skala", "12 / 14 / 16 / 18 / 20 / 24 / 32 / 40 px. Duże liczby: 20 px w filtrze, 32 px w miarach, 40 px przy wyniku i progu."],
+        ["Jednostka", "8 px. Panel z wypełnieniem 24 px, odstęp między panelami 16 px. Wiersz tabeli około 96 px; wariant zwarty z tytułem w jednej linii to około 64 px."],
+        ["Promienie (reguła)", "Panele 16 px, bloki w panelu 12 px, kontrolki 10 px, znaczniki 3 px. Pigułka (999 px) tylko w nawigacji i filtrze poziomów."],
+        ["Obramowanie i cień", "Panel: ramka 1 px #D3DAE3 na tle #E8ECF1. Wiersze: linie 1 px #E3E8EE. Cieni brak; zalecenie wyróżnia tło #E0E7F1, nie cień."],
+        ["Fokus", "Kontur 3 px #2F5089, odstęp 2 px."],
+        ["Poziom ryzyka", "Ikona i słowo w kolorze, bez pastelowych pigułek. Liczby poziomów w filtrze."],
+        ["Usunięte akcesorium", "Wykres trendu w kolejce. Analityk zaczyna od tabeli; napływ spraw pokazuje propozycja 3, jeśli będzie potrzebny."]
+      ],
+      prov: [
+        ["Zaokrąglone panele na niebiesko-szarym tle", "Referencje 1 i 9"],
+        ["Nawigacja w pigułkach z ciemną aktywną pigułką", "Referencja 7"],
+        ["Duże czytelne liczby, tu w filtrze i przy wyniku", "Referencje 1 i 3"],
+        ["Filtr poziomów jako segmentowany przełącznik", "DSFR, contrôle segmenté"],
+        ["Tabela z liniami w panelu zamiast wierszy-kart", "Propozycja 1"],
+        ["Skala z progami zamiast półokrągłego miernika", "Reguła: przyrząd do odczytu"],
+        ["Bez zdjęć osób, szkła, gradientów i czarnego kafla", "Reguły rządowe z 1 i 3"]
+      ],
+      good: ["Najbliżej tego, co Ci się podoba, a przy tym gęsto: siedem kolumn w kolejce, poziom i ryzyko w jednej.", "Miękkość wynika z trzech reguł, więc da się ją utrzymać przy rozbudowie.", "Duże liczby pojawiają się tylko tam, gdzie analityk je odczytuje."],
+      bad: ["Panele kuszą, by dokładać kolejne; trzeba pilnować reguły „nowa informacja to wiersz, nie panel”.", "Zmiana nawigacji z bocznej na górną to praca w układzie aplikacji.", "Mniej oficjalny niż 1 i 3; zaufanie budują treść i kontrast, nie forma."]
+    }
+  ];
+
+  /* ---------- assemble sections ---------- */
+  const host = document.getElementById("props");
+  PROPS.forEach((P) => {
+    const sw = P.tokens.map((t) => {
+      const r = cr(t[1], t[2]), k = t[4] || "t";
+      return `<tr><th scope="row">${t[0]}</th><td><span class="smp" style="background:${t[2]};color:${t[1]}" aria-hidden="true">${k === "g" ? `<i style="background:${t[1]}"></i>` : "Aa"}</span></td><td class="hex">${t[1]}</td><td class="hex">${t[2]}</td><td class="r"><span class="num">${r.toFixed(1).replace(".", ",")}:1</span><span class="tag">${grade(r, k)}</span></td></tr>`;
+    }).join("");
+    const fnd = P.found.map((f) => `<dt>${f[0]}</dt><dd>${f[1]}</dd>`).join("");
+    const prov = P.prov.map((p) => `<li><span>${p[0]}</span><span class="chip">${p[1]}</span></li>`).join("");
+    const li = (a) => a.map((x) => `<li>${x}</li>`).join("");
+    const frags = [["a", "A", "Kolejka spraw", P.fA], ["b", "B", "Nagłówek akt i werdykt", P.fB], ["c", "C", "Kalibracja progu", P.fC]].map((f) =>
+      `<section class="frag" data-f="${f[0]}" aria-label="${P.name}: ${f[2]}"><div class="frag-cap"><span><strong>${f[1]}. ${f[2]}</strong></span><span>${P.name}</span></div><div class="frame">${f[3]()}</div></section>`).join("");
+    host.insertAdjacentHTML("beforeend",
+      `<section class="prop" id="${P.id}"><div class="wrap"><header class="prop-h"><div><h2>${P.n}. ${P.name}</h2></div><div><p>${P.line}</p><p class="src">${P.src}</p></div></header>
+      <div class="stage">${frags}</div>
+      <div class="docs"><div><h3>Tokeny kolorów</h3><div class="scroll" tabindex="0" role="region" aria-label="Tokeny kolorów: ${P.name}"><table class="tok"><thead><tr><th scope="col">Rola</th><th scope="col">Próbka</th><th scope="col">Tekst lub znak</th><th scope="col">Na tle</th><th scope="col">Kontrast</th></tr></thead><tbody>${sw}</tbody></table></div>
+      <h3>Podstawy</h3><dl class="fnd">${fnd}</dl></div>
+      <div><h3>Skąd co pochodzi</h3><ul class="prov">${prov}</ul><div class="sr" style="margin-top:28px"><div><h3>Mocne strony</h3><ul>${li(P.good)}</ul></div><div class="no"><h3>Ryzyka</h3><ul>${li(P.bad)}</ul></div></div></div></div></div></section>`);
+  });
+
+  /* ---------- level filters (tabs, sentence links, radio tiles, pill segments) ---------- */
+  function applyFilter(root, lv) {
+    root.querySelectorAll("[data-row]").forEach((tr) => { tr.hidden = lv !== "all" && tr.dataset.lv !== lv; });
+  }
+  host.querySelectorAll("[data-filter-root]").forEach((root) => {
+    root.querySelectorAll("button[data-f]").forEach((b) => {
+      b.addEventListener("click", () => {
+        root.querySelectorAll("button[data-f]").forEach((o) => {
+          const on = o === b;
+          if (o.hasAttribute("aria-selected")) o.setAttribute("aria-selected", on); else o.setAttribute("aria-pressed", on);
+          if (o.getAttribute("role") === "tab") o.tabIndex = on ? 0 : -1;
+        });
+        applyFilter(root, b.dataset.f);
+      });
+    });
+    root.querySelectorAll('input[name="p3lv"]').forEach((r) => r.addEventListener("change", () => applyFilter(root, r.value)));
+    const tl = root.querySelector('[role="tablist"]');
+    if (tl) {
+      const tabs = [...tl.querySelectorAll('[role="tab"]')];
+      tabs.forEach((t, k) => { if (k) t.tabIndex = -1; });
+      tl.addEventListener("keydown", (e) => {
+        const i = tabs.indexOf(document.activeElement); if (i < 0) return;
+        let j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : -9;
+        if (j === -9) return; e.preventDefault(); j = (j + tabs.length) % tabs.length; tabs[j].focus(); tabs[j].click();
+      });
+    }
+  });
+
+  /* ---------- calibration: one slider drives axis, matrix, metrics and the sentence ---------- */
+  host.querySelectorAll("[data-strip]").forEach((s) => {
+    const inp = s.querySelector(".rng"), units = s.querySelectorAll(".u"), tl = s.querySelector("[data-tl]");
+    const set = (sel, v) => s.querySelectorAll(sel).forEach((e) => { e.textContent = v; });
+    function upd() {
+      const t = +inp.value, c = calc(t), flag = c.tp + c.fp;
+      const p = flag ? c.tp / flag : 0, r = c.tp / (c.tp + c.fn), f = p + r ? (2 * p * r) / (p + r) : 0;
+      set("[data-o]", t);
+      tl.style.left = t + "%";
+      units.forEach((u) => u.classList.toggle("on", +u.dataset.s >= t));
+      ["tp", "fn", "fp", "tn"].forEach((k) => set(`[data-c="${k}"]`, c[k]));
+      set('[data-c="flag"]', flag); set('[data-c="unf"]', c.fn + c.tn);
+      set('[data-v="p"]', flag ? pct(p) : "brak"); set('[data-v="r"]', pct(r)); set('[data-v="f"]', pct(f));
+      set('[data-h="p"]', flag ? `${c.tp} z ${flag} oznaczonych to naruszenia` : "żadna sprawa nie jest oznaczona");
+      set('[data-h="r"]', `wykryto ${c.tp} z ${c.tp + c.fn} naruszeń`);
+      const sent = s.querySelector("[data-sent]");
+      if (sent) sent.innerHTML = `Przy progu <b>${t}</b> system oznacza <b>${flag}</b> ${plural(flag, "sprawę", "sprawy", "spraw")} z zestawu testowego. ` +
+        (flag ? `Naruszeń jest wśród nich <b>${c.tp}</b>, a ` : "Wszystkie naruszenia są pomijane: ") +
+        `<b>${c.fn}</b> ${plural(c.fn, "naruszenie zostaje pominięte", "naruszenia zostają pominięte", "naruszeń zostaje pominiętych")}.`;
+      inp.setAttribute("aria-valuetext", `Próg ${t}. Oznaczonych ${flag}, w tym ${c.tp} naruszeń; pominiętych naruszeń ${c.fn}.`);
+    }
+    inp.addEventListener("input", upd);
+    s.querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => {
+      inp.value = Math.max(0, Math.min(100, +inp.value + +b.dataset.step)); upd();
+    }));
+    upd();
+  });
+
+  /* ---------- view switch ---------- */
+  const main = document.querySelector("main");
+  document.querySelectorAll('input[name="view"]').forEach((r) => {
+    r.addEventListener("change", () => { main.setAttribute("data-view", r.value); try { sessionStorage.setItem("iw-view", r.value); } catch (e) {} });
+  });
+  try { const v = sessionStorage.getItem("iw-view"); if (v) { const el = document.querySelector(`input[name="view"][value="${v}"]`); if (el) { el.checked = true; main.setAttribute("data-view", v); } } } catch (e) {}
+})();
+</script>
