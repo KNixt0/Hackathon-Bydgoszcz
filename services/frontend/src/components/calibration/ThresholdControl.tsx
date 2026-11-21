@@ -1,14 +1,16 @@
 import * as Slider from "@radix-ui/react-slider";
 import { RotateCcw, Target } from "lucide-react";
 import type { CSSProperties } from "react";
-import { DEFAULT_THRESHOLDS, type Thresholds } from "../../domain/levels";
+import type { Thresholds } from "../../domain/levels";
 import { Button } from "../ui/Button";
 
 interface Props {
   thresholds: Thresholds;
   onChange: (next: Partial<Thresholds>) => void;
   onReset: () => void;
-  isDefault: boolean;
+  /** The values equal the global thresholds (nothing to reset). */
+  isGlobal: boolean;
+  globalThresholds: Thresholds;
   /** Threshold with the best F1 on the labelled set, if computable. */
   suggested: number | null;
 }
@@ -32,7 +34,7 @@ function NumberField({ label, value, onCommit, id }: { label: string; value: num
  * Primary slider: the flag threshold (T_orange), on which the whole calibration panel works
  * (flagged = risk_score >= T_orange). Secondary slider: the critical threshold (T_red >= T_orange).
  */
-export function ThresholdControl({ thresholds, onChange, onReset, isDefault, suggested }: Props) {
+export function ThresholdControl({ thresholds, onChange, onReset, isGlobal, globalThresholds, suggested }: Props) {
   const style = { "--t-orange": `${thresholds.orange}%`, "--t-red": `${thresholds.red}%` } as CSSProperties;
   return (
     <>
@@ -72,7 +74,7 @@ export function ThresholdControl({ thresholds, onChange, onReset, isDefault, sug
             <Target aria-hidden="true" />Najlepszy F1: {suggested}
           </Button>
         )}
-        <Button variant="ghost" onClick={onReset} disabled={isDefault}><RotateCcw aria-hidden="true" />Przywróć {DEFAULT_THRESHOLDS.orange} / {DEFAULT_THRESHOLDS.red}</Button>
+        <Button variant="ghost" onClick={onReset} disabled={isGlobal} title="Wraca do progów globalnych"><RotateCcw aria-hidden="true" />Przywróć {globalThresholds.orange} / {globalThresholds.red}</Button>
       </div>
     </>
   );

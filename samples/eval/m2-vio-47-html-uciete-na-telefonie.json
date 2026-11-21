@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://wisla-zmyslona.example/m2-vio-47-html-uciete-na-telefonie",
+  "platform": "web",
+  "title": "Kontrakty CFD na waluty",
+  "published_at": "2026-11-13",
+  "seed": true,
+  "detected_days_ago": 8
+ },
+ "html_file": "m2-vio-47-html-uciete-na-telefonie.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

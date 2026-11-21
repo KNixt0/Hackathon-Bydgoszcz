@@ -2,7 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { errorMessage } from "../api/client";
 import { api } from "../api/endpoints";
 import { incidentsReducer, INITIAL_INCIDENTS, type IncidentsState } from "../domain/liveState";
-import type { Incident, IncidentSummary, Status } from "../types/incident";
+import type { TransitionRequest } from "../types/api";
+import type { CaseLabel, Incident, IncidentSummary } from "../types/incident";
 import { useLiveEvent } from "./useLive";
 
 const FRESH_MS = 12000;
@@ -10,8 +11,10 @@ const FRESH_MS = 12000;
 interface IncidentsContextValue extends IncidentsState {
   reload: () => void;
   dismissAlert: (id: string) => void;
-  /** PATCHes the status; resolves with the full incident or throws an Error with a Polish message. */
-  changeStatus: (id: string, status: Status) => Promise<Incident>;
+  /** Workflow calls; each resolves with the full incident or throws an Error with a Polish message. */
+  transition: (id: string, body: TransitionRequest) => Promise<Incident>;
+  assign: (id: string) => Promise<Incident>;
+  setLabel: (id: string, label: CaseLabel) => Promise<Incident>;
   /** Bumps whenever the set of incidents changed (trend chart refetches on it). */
   revision: number;
 }
@@ -26,6 +29,7 @@ export function toSummary(inc: Incident): IncidentSummary {
     demo_case: inc.demo_case, source: { platform: inc.source.platform, url: inc.source.url },
     advertiser: inc.entities.advertiser?.name ?? null, firm: inc.entities.investment_firm?.name ?? null,
     failed_rules: inc.rules.filter((r) => r.status === "fail").map((r) => r.id),
+    workflow: { assigned_to: inc.workflow.assigned_to, label: inc.workflow.label },
   };
 }
 
@@ -86,22 +90,25 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
     markFresh(incident.id);
   });
 
-  const changeStatus = useCallback(async (id: string, status: Status) => {
+  const run = useCallback(async (call: () => Promise<Incident>) => {
     try {
-      const updated = await api.setStatus(id, status);
+      const updated = await call();
       dispatch({ type: "incident:updated", incident: toSummary(updated) });
       return updated;
     } catch (err) {
       throw new Error(errorMessage(err), { cause: err });
     }
   }, []);
+  const transition = useCallback((id: string, body: TransitionRequest) => run(() => api.transition(id, body)), [run]);
+  const assign = useCallback((id: string) => run(() => api.assign(id)), [run]);
+  const setLabel = useCallback((id: string, label: CaseLabel) => run(() => api.label(id, label)), [run]);
 
   const reload = useCallback(() => load(), [load]);
   const dismissAlert = useCallback((id: string) => dispatch({ type: "alert:dismiss", id }), []);
 
   const value = useMemo(
-    () => ({ ...state, reload, dismissAlert, changeStatus, revision }),
-    [state, reload, dismissAlert, changeStatus, revision],
+    () => ({ ...state, reload, dismissAlert, transition, assign, setLabel, revision }),
+    [state, reload, dismissAlert, transition, assign, setLabel, revision],
   );
   return <IncidentsContext.Provider value={value}>{children}</IncidentsContext.Provider>;
 }

@@ -42,6 +42,7 @@ FINDING_WEIGHTS: dict[str, float] = {
     "COOPERATION_NOT_NOTIFIED": 0.25,
     "UNMARKED_THIRD_PARTY_AD": 0.30,
     "DISGUISED_AD": 0.30,
+    "AFFILIATE_LINK_TO_FIRM": 0.35,  # affiliate/tracking link to a registered firm, no ad label
     "LEGAL_ADVISER_INACTIVE": 0.15,
     "LEGAL_ADVISER_NOT_FOUND": 0.15,
     "TAX_ADVISER_INACTIVE": 0.20,

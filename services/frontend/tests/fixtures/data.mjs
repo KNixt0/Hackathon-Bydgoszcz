@@ -96,6 +96,7 @@ export const orangeCase = {
   status: "in_review",
   created_at: "2026-11-19T08:42:00Z",
   updated_at: "2026-11-20T10:05:00Z",
+  workflow: { assigned_to: "analityk@uknf.local", escalation_path: null, resolution_action: null, resolution_note: "", label: "unlabeled" },
   title: "Recenzja platformy CFD Tradeon na kanale „Giełda Po Godzinach”",
   summary: "Influencer promuje platformę CFD, deklarując wynik 18% bez okresu i źródła; wynagrodzenie nie jest ujawnione, a agencja PR łączy go z członkiem zarządu firmy.",
   modules: [1, 2],
@@ -291,9 +292,13 @@ const GREEN_TEXT = [
 
 export const greenCase = {
   id: "8a2e7d40-11c3-4b6f-8d2a-5e9f3c7b2a02",
-  status: "closed_ok",
+  status: "false_positive",
   created_at: "2026-11-16T13:20:00Z",
   updated_at: "2026-11-17T09:00:00Z",
+  workflow: {
+    assigned_to: "analityk@uknf.local", escalation_path: null, resolution_action: "false_positive",
+    resolution_note: "Materiał zawiera pełną informację o ryzyku.", label: "false_positive",
+  },
   title: "Strona produktowa rachunku maklerskiego DM Wisła",
   summary: "Materiał własny domu maklerskiego: oznaczony jako reklama, z wyraźną informacją o ryzyku i kosztach. Nie stwierdzono naruszeń.",
   modules: [2],
@@ -370,6 +375,7 @@ export const redCase = {
   status: "new",
   created_at: "2026-11-21T07:15:00Z",
   updated_at: "2026-11-21T07:15:00Z",
+  workflow: { assigned_to: null, escalation_path: null, resolution_action: null, resolution_note: "", label: "unlabeled" },
   title: "Aurum Family Office: gwarancja zysku 12% miesięcznie bez licencji",
   summary: "Podmiot spoza rejestru KNF oferuje zarządzanie portfelem i konkretne rekomendacje, gwarantując zysk bez ryzyka. Powołuje się na nieistniejący numer doradcy.",
   modules: [3, 2],
@@ -493,6 +499,7 @@ export function toSummary(inc) {
     demo_case: inc.demo_case, source: { platform: inc.source.platform, url: inc.source.url },
     advertiser: inc.entities.advertiser?.name ?? null, firm: inc.entities.investment_firm?.name ?? null,
     failed_rules: inc.rules.filter((r) => r.status === "fail").map((r) => r.id),
+    workflow: { assigned_to: inc.workflow.assigned_to, label: inc.workflow.label },
   };
 }
 
@@ -506,27 +513,27 @@ const LABELLED = [
   ["Rolka: „CFD to najprostszy sposób na pasywny dochód”", 48, "violation", 1, "instagram", "@milioner_przed30", "TopMarkets Ltd", 4, "in_review", ["1", "4", "6", "18"]],
   ["Reklama konta demo z obietnicą bonusu 100%", 36, "violation", 2, "google_ads", "TopMarkets Ltd", "TopMarkets Ltd", 4, "new", ["4", "6"]],
   ["Poradnik inwestycyjny z linkiem afiliacyjnym do brokera", 34, "violation", 1, "youtube", "Kanał Finansowy Spokój", "EuroBroker AS", 5, "new", ["1", "18"]],
-  ["Porównanie brokerów: ranking sponsorowany bez oznaczenia", 31, "ok", 1, "web", "PorownajBrokera.example", "EuroBroker AS", 6, "closed_ok", ["1"]],
+  ["Porównanie brokerów: ranking sponsorowany bez oznaczenia", 31, "ok", 1, "web", "PorownajBrokera.example", "EuroBroker AS", 6, "false_positive", ["1"]],
   ["Oferta „doradztwa majątkowego” z rekomendacjami spółek", 33, "violation", 3, "web", "Kapitał Plus Consulting", null, 6, "in_review", ["2", "3"]],
   ["Film: jak zarobiłem 40% na kontraktach terminowych", 30, "violation", 1, "tiktok", "@trader_bartek", "TopMarkets Ltd", 7, "new", ["8", "9", "18"]],
-  ["Baner: lokata strukturyzowana do 11% rocznie", 27, "ok", 2, "google_ads", "Bank Bursztynowy S.A.", "Bank Bursztynowy S.A.", 8, "closed_ok", ["5"]],
+  ["Baner: lokata strukturyzowana do 11% rocznie", 27, "ok", 2, "google_ads", "Bank Bursztynowy S.A.", "Bank Bursztynowy S.A.", 8, "false_positive", ["5"]],
   ["Post sponsorowany o ETF-ach bez informacji o kosztach", 27, "violation", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 9, "in_review", ["12a"]],
-  ["Newsletter z analizą spółek i kodem rabatowym", 24, "ok", 1, "web", "Analizy Giełdowe Pro", "DM Bałtyk S.A.", 10, "closed_ok", ["18"]],
+  ["Newsletter z analizą spółek i kodem rabatowym", 24, "ok", 1, "web", "Analizy Giełdowe Pro", "DM Bałtyk S.A.", 10, "false_positive", ["18"]],
   ["Reklama aplikacji inwestycyjnej: ryzyko drobnym drukiem", 22, "violation", 2, "instagram", "InvestApp Europe", "InvestApp Europe UAB", 11, "in_review", ["5"]],
-  ["Wpis ekspercki doradcy podatkowego o IKE i IKZE", 21, "ok", 3, "web", "Kancelaria Podatkowa Rejtan", null, 12, "closed_ok", []],
+  ["Wpis ekspercki doradcy podatkowego o IKE i IKZE", 21, "ok", 3, "web", "Kancelaria Podatkowa Rejtan", null, 12, "false_positive", []],
   ["Shorts: „3 spółki, które kupiłbym dziś”", 18, "violation", 3, "youtube", "@dywidendowy", null, 13, "new", ["3"]],
-  ["Artykuł sponsorowany o funduszach obligacji", 19, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 14, "closed_ok", []],
-  ["Relacja z konferencji z logotypem brokera", 17, "ok", 1, "instagram", "@inwestorka_ewa", "EuroBroker AS", 15, "closed_ok", []],
-  ["Kampania wizerunkowa domu maklerskiego", 15, "ok", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 16, "closed_ok", []],
-  ["Podcast edukacyjny o dywersyfikacji portfela", 13, "ok", 1, "youtube", "Podcast O Pieniądzach", null, 17, "closed_ok", []],
-  ["Kalkulator prowizji na stronie brokera", 11, "ok", 2, "web", "EuroBroker AS", "EuroBroker AS", 18, "closed_ok", []],
-  ["Oferta kancelarii: obsługa prawna funduszy", 10, "ok", 3, "web", "Kancelaria Sowa i Wspólnicy", null, 19, "closed_ok", []],
+  ["Artykuł sponsorowany o funduszach obligacji", 19, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 14, "false_positive", []],
+  ["Relacja z konferencji z logotypem brokera", 17, "ok", 1, "instagram", "@inwestorka_ewa", "EuroBroker AS", 15, "false_positive", []],
+  ["Kampania wizerunkowa domu maklerskiego", 15, "ok", 2, "facebook", "DM Bałtyk S.A.", "DM Bałtyk S.A.", 16, "false_positive", []],
+  ["Podcast edukacyjny o dywersyfikacji portfela", 13, "ok", 1, "youtube", "Podcast O Pieniądzach", null, 17, "false_positive", []],
+  ["Kalkulator prowizji na stronie brokera", 11, "ok", 2, "web", "EuroBroker AS", "EuroBroker AS", 18, "false_positive", []],
+  ["Oferta kancelarii: obsługa prawna funduszy", 10, "ok", 3, "web", "Kancelaria Sowa i Wspólnicy", null, 19, "false_positive", []],
   ["Ukryta rekomendacja w recenzji książki o inwestowaniu", 15, "violation", 1, "web", "Blog Czytam o Giełdzie", "TopMarkets Ltd", 20, "new", ["18"]],
-  ["Reklama IKE z pełną informacją o ryzyku", 9, "ok", 2, "google_ads", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 21, "closed_ok", []],
-  ["Materiał edukacyjny GPW o obligacjach", 8, "ok", 2, "web", "Fundacja Edukacji Giełdowej", null, 22, "closed_ok", []],
-  ["Komunikat prasowy o wynikach kwartalnych TFI", 7, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 23, "closed_ok", []],
-  ["Strona „O nas” licencjonowanego doradcy inwestycyjnego", 6, "ok", 3, "web", "Tomasz Brzoza, doradca nr 512", null, 24, "closed_ok", []],
-  ["Ogłoszenie o walnym zgromadzeniu spółki", 3, "ok", 2, "web", "Stalprodukt Północ S.A.", null, 26, "closed_ok", []],
+  ["Reklama IKE z pełną informacją o ryzyku", 9, "ok", 2, "google_ads", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 21, "false_positive", []],
+  ["Materiał edukacyjny GPW o obligacjach", 8, "ok", 2, "web", "Fundacja Edukacji Giełdowej", null, 22, "false_positive", []],
+  ["Komunikat prasowy o wynikach kwartalnych TFI", 7, "ok", 2, "web", "TFI Karpaty S.A.", "TFI Karpaty S.A.", 23, "false_positive", []],
+  ["Strona „O nas” licencjonowanego doradcy inwestycyjnego", 6, "ok", 3, "web", "Tomasz Brzoza, doradca nr 512", null, 24, "false_positive", []],
+  ["Ogłoszenie o walnym zgromadzeniu spółki", 3, "ok", 2, "web", "Stalprodukt Północ S.A.", null, 26, "false_positive", []],
 ];
 
 const NOW = Date.parse("2026-11-21T09:00:00Z");
@@ -542,6 +549,7 @@ const generated = LABELLED.map(([title, risk, gt, module, platform, advertiser, 
     risk_level: risk >= 70 ? "red" : risk >= 20 ? "orange" : "green",
     status, created_at: created, updated_at: created, synthetic: true, ground_truth: gt, demo_case: null,
     source: { platform, url: `https://przyklad-${i + 1}.example/material` }, advertiser, firm, failed_rules: failed,
+    workflow: { assigned_to: status === "new" ? null : "analityk@uknf.local", label: status === "false_positive" ? "false_positive" : "unlabeled" },
   };
 });
 
@@ -552,7 +560,7 @@ export const incidentSummaries = [toSummary(orangeCase), toSummary(greenCase), .
 export const calibrationSet = {
   items: incidentSummaries
     .filter((it) => it.ground_truth)
-    .map((it) => ({ id: it.id, title: it.title, risk_score: it.risk_score, ground_truth: it.ground_truth, module: it.primary_module })),
+    .map((it) => ({ id: it.id, title: it.title, risk_score: it.risk_score, ground_truth: it.ground_truth, module: it.primary_module, label_source: "sample" })),
 };
 
 export const redSummary = toSummary(redCase);
@@ -571,12 +579,18 @@ export function trendsFrom(summaries, days = 30, now = NOW) {
 
 export const trends = trendsFrom(incidentSummaries);
 
+const DEFAULT_PATH = { 1: "THIRD_PARTY_AUDIT", 2: "SUPERVISION_RISK_DEPT", 3: "LEGAL_WARNING_LIST" };
+
 /** A full Incident for list rows that have no hand-written detail: empty graph, no forensics/financials. */
 export function minimalIncident(summary) {
   const text = `${summary.title}\n${summary.summary}`;
   return {
     ...summary,
     advertiser: undefined, firm: undefined, failed_rules: undefined,
+    workflow: {
+      assigned_to: summary.workflow?.assigned_to ?? null, escalation_path: summary.status === "escalated" ? DEFAULT_PATH[summary.primary_module] : null,
+      resolution_action: summary.status === "false_positive" ? "false_positive" : null, resolution_note: "", label: summary.workflow?.label ?? "unlabeled",
+    },
     source: { ...summary.source, fetched_at: summary.created_at, language: "pl", content_hash: "0".repeat(64), text, archive: { html_key: null, screenshot_key: null } },
     entities: {
       investment_firm: summary.firm ? { name: summary.firm, kind: "investment_firm" } : null,
@@ -601,3 +615,8 @@ export function minimalIncident(summary) {
 }
 
 export const incidentsById = { [orangeCase.id]: orangeCase, [greenCase.id]: greenCase, [redCase.id]: redCase };
+
+/** Contract v3: the two demo accounts. */
+export const analystUser = { id: "u-analyst", email: "analityk@uknf.local", name: "Analityk (demo)", role: "ANALYST" };
+export const supervisorUser = { id: "u-supervisor", email: "kierownik@uknf.local", name: "Kierownik zespołu (demo)", role: "SUPERVISOR" };
+export const globalThresholds = { flag: 20, critical: 70, updated_by: null, updated_at: null };

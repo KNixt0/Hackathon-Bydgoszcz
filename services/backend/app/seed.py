@@ -69,6 +69,9 @@ def main() -> None:
     args = parser.parse_args()
     setup_logging(get_settings().log_level)
     init_db()
+    from app.auth.users import seed_users
+
+    seed_users()
     register_fixture_source()
     job_ids = seed_if_empty(force=args.force)
     print(f"queued {len(job_ids)} sample(s)")  # noqa: T201

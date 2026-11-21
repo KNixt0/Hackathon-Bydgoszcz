@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from .. import lexicon as lx
+from . import rendered as measured
 from . import settings
 from .base import RuleOutcome, RuleView, failed, not_applicable, passed, rule, unknown
 
@@ -113,6 +114,8 @@ def history_dominance(v: RuleView) -> RuleOutcome:
     hist = v.facts.historical
     if not hist:
         return not_applicable(NO_HISTORY)
+    if v.rendered_history:
+        return measured.history_dominance(v, v.rendered_history)
     ev = _history_ev(v)
     dominant = v.signals.dominant_font_px
     for h in hist:

@@ -31,7 +31,7 @@ describe("case detail", () => {
     expect(verdict.getByRole("link", { name: /Pakiet dowodowy PDF/ })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.pdf`);
     expect(verdict.getByRole("link", { name: "CSV" })).toHaveAttribute("href", `/api/incidents/${orangeCase.id}/export.csv`);
     expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
-      "1Werdykt", "2Wykresy i wizualizacje", "3Argumenty „za” i „przeciw”", "4Źródła dowodowe",
+      "1Werdykt", "2Wykresy i wizualizacje", "3Argumenty „za” i „przeciw”", "4Źródła dowodowe", "5Historia decyzji",
     ]);
   });
 
@@ -145,15 +145,24 @@ describe("case detail", () => {
     expect(details.getByText(/Relacje \(3\)/)).toBeInTheDocument();
   });
 
-  it("changes status from the case pipeline", async () => {
-    const user = userEvent.setup();
-    const { calls } = mockApi();
-    renderApp({ route: orangeUrl });
-    await caseReady(/Recenzja platformy CFD Tradeon/);
-    await user.click(screen.getByRole("button", { name: "Eskaluj" }));
-    await waitFor(() => expect(calls.find((c) => c.method === "PATCH")?.body).toEqual({ status: "escalated" }));
-    expect(await screen.findByRole("button", { name: "Zamknij: naruszenie" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Eskaluj" })).not.toBeInTheDocument();
+  it("evidence with a bbox opens the screenshot viewer instead of a plain archived image", async () => {
+    const located = {
+      ...structuredClone(orangeCase),
+      evidence: orangeCase.evidence.map((e) => (e.id === "ev-a1" ? { ...e, bbox: { viewport: "desktop" as const, x: 40, y: 70, w: 300, h: 120 } } : e)),
+    };
+    mockApi((call) => (call.method === "GET" && call.path === `/api/incidents/${orangeCase.id}` ? { json: located } : undefined));
+    renderApp({ route: `${orangeUrl}?dowod=ev-a1` });
+    const drawer = within(await screen.findByTestId("evidence-drawer"));
+    expect(drawer.getByTestId("screenshot-evidence")).toBeInTheDocument();
+    expect(drawer.queryByText("Zarchiwizowany zrzut ekranu")).not.toBeInTheDocument();
+  });
+
+  it("evidence without a bbox keeps the plain archived screenshot", async () => {
+    mockApi();
+    renderApp({ route: `${orangeUrl}?dowod=ev-a1` });
+    const drawer = within(await screen.findByTestId("evidence-drawer"));
+    expect(drawer.getByText("Zarchiwizowany zrzut ekranu")).toBeInTheDocument();
+    expect(drawer.queryByTestId("screenshot-evidence")).not.toBeInTheDocument();
   });
 
   it("green case: every data-less sub-panel shows an empty state, not a broken chart", async () => {

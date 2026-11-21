@@ -1,6 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { STATUS_LABEL } from "../../src/domain/labels";
 import { countLevels, DEFAULT_THRESHOLDS } from "../../src/domain/levels";
 import { incidentSummaries, redSummary } from "../fixtures/data.mjs";
 import { FakeSocket, mockApi, renderApp } from "../helpers";
@@ -115,15 +116,17 @@ describe("triage queue", () => {
     expect(rows()[0]).not.toHaveTextContent(redSummary.title);
   });
 
-  it("applies incident:updated from another analyst", async () => {
+  it("applies incident:updated from another analyst (status and assignee)", async () => {
     const { calls } = mockApi();
     const socket = new FakeSocket();
     renderApp({ socket });
     await ready();
     const target = incidentSummaries[1];
     if (!target) throw new Error("fixture missing");
-    act(() => socket.emit("incident:updated", { ...target, status: "closed_violation" }));
-    expect(screen.getByLabelText(`Status sprawy: ${target.title}`)).toHaveValue("closed_violation");
+    act(() => socket.emit("incident:updated", { ...target, status: "escalation_requested", workflow: { assigned_to: "inny@uknf.local", label: "unlabeled" } }));
+    const link = screen.getByRole("link", { name: `Status sprawy: ${target.title}: Wniosek o eskalację` });
+    expect(link).toHaveAttribute("data-status", "escalation_requested");
+    expect(link.closest("td")).toHaveTextContent("inny@uknf.local");
     await trendRefetched(calls);
   });
 
@@ -139,31 +142,33 @@ describe("triage queue", () => {
     expect(rows()).toHaveLength(30);
   });
 
-  it("changes status inline through PATCH", async () => {
+  it("shows status and assignee per row; the status links to the case instead of changing it inline", async () => {
     const user = userEvent.setup();
     const { calls } = mockApi();
     renderApp();
     await ready();
-    const target = incidentSummaries[0];
-    if (!target) throw new Error("fixture missing");
-    await user.selectOptions(screen.getByLabelText(`Status sprawy: ${target.title}`), "closed_violation");
-    await waitFor(() => expect(calls.some((c) => c.method === "PATCH")).toBe(true));
-    const patch = calls.find((c) => c.method === "PATCH");
-    expect(patch?.path).toBe(`/api/incidents/${target.id}`);
-    expect(patch?.body).toEqual({ status: "closed_violation" });
-    await waitFor(() => expect(screen.getByLabelText(`Status sprawy: ${target.title}`)).toHaveValue("closed_violation"));
+    const target = incidentSummaries.find((i) => i.status === "new");
+    const taken = incidentSummaries.find((i) => i.workflow.assigned_to);
+    if (!target || !taken) throw new Error("fixture missing");
+    expect(screen.queryByRole("combobox", { name: /Status sprawy/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: `Status sprawy: ${taken.title}: ${STATUS_LABEL[taken.status]}` }).closest("td")).toHaveTextContent(taken.workflow.assigned_to ?? "");
+    const link = screen.getByRole("link", { name: `Status sprawy: ${target.title}: Nowe` });
+    expect(link.closest("td")).toHaveTextContent("nieprzypisana");
+    await user.click(link);
+    expect(await screen.findByRole("heading", { level: 1, name: target.title })).toBeInTheDocument();
+    expect(calls.some((c) => c.method !== "GET")).toBe(false);
   });
 
-  it("reports a failed status change without losing the row", async () => {
+  it("filters by the new workflow statuses", async () => {
     const user = userEvent.setup();
-    mockApi((call) => (call.method === "PATCH" ? { status: 422, json: { detail: "Nieprawidłowy status." } } : undefined));
+    mockApi();
     renderApp();
     await ready();
-    const target = incidentSummaries[0];
-    if (!target) throw new Error("fixture missing");
-    await user.selectOptions(screen.getByLabelText(`Status sprawy: ${target.title}`), "closed_ok");
-    expect(await screen.findByText(/Nie zmieniono statusu. Nieprawidłowy status./)).toBeInTheDocument();
-    expect(screen.getByLabelText(`Status sprawy: ${target.title}`)).toHaveValue(target.status);
+    await user.selectOptions(screen.getByLabelText("Status"), "false_positive");
+    const expected = incidentSummaries.filter((i) => i.status === "false_positive").length;
+    expect(expected).toBeGreaterThan(0);
+    expect(rows()).toHaveLength(expected);
+    expect(screen.getByRole("option", { name: "Wniosek o eskalację" })).toBeInTheDocument();
   });
 
   it("renders an error state with retry when the list cannot be loaded", async () => {

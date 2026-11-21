@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 from . import lexicon as lx
 from .preprocess import Embedder, Page, Sentence, cosine
 from .registries import KNF_FIRM_REGISTERS, RegistryStore, core_name, normalize_name
-from .schemas import Context, Document, Evidence, Party, Span
+from .schemas import BBox, Context, Document, Evidence, Party, Span
 
 ATTACHMENT_RULES = "ZASÓB DLA UCZESTNIKÓW - InvestWatch - kryteria oceny informacji o ryzyku.docx"
 ATTACHMENT_REGISTERS = "Załącznik do Tematu 1 Wyzwanie KNF HackNation.docx"
@@ -52,6 +52,29 @@ class EvidenceBook:
 
     def quote(self, start: int, end: int, label: str) -> str:
         """Evidence for text[start:end], trimmed to whole words and a readable length."""
+        start, end = self._trim(start, end)
+        return self._add(
+            ("quote", start, end),
+            kind="quote",
+            label=label,
+            quote=self.text[start:end],
+            span=Span(start=start, end=end),
+        )
+
+    def visual_quote(self, start: int, end: int, label: str, bbox: BBox, storage_key: str | None) -> str:
+        """Quote evidence located on an archived screenshot (contract v3: `bbox` + `storage_key`)."""
+        start, end = self._trim(start, end)
+        return self._add(
+            ("vquote", start, end, bbox.viewport, bbox.x, bbox.y, label),
+            kind="quote",
+            label=label,
+            quote=self.text[start:end],
+            span=Span(start=start, end=end),
+            bbox=bbox,
+            storage_key=storage_key or None,
+        )
+
+    def _trim(self, start: int, end: int) -> tuple[int, int]:
         start, end = max(0, start), min(len(self.text), end)
         while start < end and self.text[start].isspace():
             start += 1
@@ -64,13 +87,7 @@ class EvidenceBook:
             end = len(self.text[:end].rstrip())
         if end <= start:
             raise ValueError("empty quote")
-        return self._add(
-            ("quote", start, end),
-            kind="quote",
-            label=label,
-            quote=self.text[start:end],
-            span=Span(start=start, end=end),
-        )
+        return start, end
 
     def legal(self, legal_ref: str, label: str, attachment: str) -> str:
         return self._add(("legal", legal_ref), kind="legal", label=label, legal_ref=legal_ref, attachment=attachment)

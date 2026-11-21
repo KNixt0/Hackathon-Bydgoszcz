@@ -1,4 +1,4 @@
-"""Pydantic mirror of coord/contracts/incident.md and api.md (version 1).
+"""Pydantic mirror of coord/contracts/incident.md and api.md (versions 1-3).
 
 Output models forbid extra keys so a drift from the contract fails loudly in tests.
 Input models ignore unknown keys so the scraper may add fields without breaking us.
@@ -68,12 +68,26 @@ class In(BaseModel):
 # ---------------------------------------------------------------- output
 
 
+class Screenshots(SparseOut):
+    desktop: str | None = None
+    tablet: str | None = None
+    mobile: str | None = None
+
+
 class Archive(Out):
     html_key: str | None = None
-    screenshot_key: str | None = None
+    screenshot_key: str | None = None  # desktop screenshot (kept for compatibility)
+    screenshots: Screenshots | None = None  # contract v3: one full-page PNG per viewport
+
+    @model_serializer(mode="wrap")
+    def _drop_empty_screenshots(self, handler):  # type: ignore[no-untyped-def]
+        data = handler(self)
+        if data.get("screenshots") is None:
+            data.pop("screenshots", None)
+        return data
 
 
-class Source(Out):
+class Source(SparseOut):
     platform: Platform
     url: str
     fetched_at: str
@@ -81,6 +95,9 @@ class Source(Out):
     content_hash: str
     text: str
     archive: Archive
+    final_url: str | None = None  # contract v3
+    redirect_chain: list[str] | None = None
+    affiliate_params: list[str] | None = None
 
 
 class Party(SparseOut):
@@ -123,6 +140,9 @@ class ModuleResult(Out):
     findings: list[Finding]
 
 
+RuleMethod = Literal["rendered", "static", "text", "llm"]
+
+
 class RuleResult(Out):
     id: RuleId
     name: str
@@ -131,6 +151,8 @@ class RuleResult(Out):
     confidence: float = Field(ge=0, le=1)
     explanation: str
     evidence_ids: list[str]
+    method: RuleMethod = "text"  # contract v3: "rendered" only when decided from document.visual
+    score: float = Field(default=0.0, ge=0, le=1)  # contract v3: violation strength
 
 
 class RegistryCheck(Out):
@@ -280,6 +302,19 @@ class Span(Out):
     end: int
 
 
+Viewport = Literal["desktop", "tablet", "mobile"]
+
+
+class BBox(Out):
+    """CSS px in that viewport's full-page screenshot (contract v3)."""
+
+    viewport: Viewport
+    x: float
+    y: float
+    w: float
+    h: float
+
+
 class Evidence(SparseOut):
     id: str
     kind: Literal["quote", "legal", "registry", "archive", "account", "url", "krs"]
@@ -290,6 +325,7 @@ class Evidence(SparseOut):
     attachment: str | None = None
     url: str | None = None
     storage_key: str | None = None
+    bbox: BBox | None = None  # contract v3: storage_key then points at that viewport's screenshot
 
 
 class Recommendation(Out):
@@ -346,6 +382,84 @@ class FetchInfo(In):
     proxy: str | None = None
 
 
+class BBoxIn(In):
+    viewport: Viewport = "desktop"
+    x: float = 0
+    y: float = 0
+    w: float = 0
+    h: float = 0
+
+
+class ViewportMeasureIn(In):
+    """One viewport of one measured element (scraper extension of `visual`, optional)."""
+
+    font_px: float | None = None  # rendered size: CSS px x page zoom of that device
+    visible: bool = True
+    occluded: bool = False
+    clipped: bool = False
+    contrast: float | None = None
+    requires_interaction: str | None = None
+    bbox: BBoxIn | None = None
+    bbox_of: str | None = None
+    area_share: float | None = None
+
+
+class RiskElementIn(In):
+    text: str
+    font_px: float
+    ratio_to_dominant: float | None = None
+    color: str = ""
+    background: str = ""
+    contrast: float = 21.0
+    opacity: float = 1.0
+    visible: bool = True
+    occluded: bool = False
+    placement: Literal["body", "footer", "footnote", "legal_section"] = "body"
+    requires_interaction: Literal["details", "accordion", "tooltip", "modal", "link"] | None = None
+    control_text: str | None = None
+    bbox: BBoxIn | None = None
+    bbox_of: str | None = None
+    bboxes: list[BBoxIn] = Field(default_factory=list)
+    by_viewport: dict[str, ViewportMeasureIn] = Field(default_factory=dict)
+
+
+class PerformanceBlockIn(In):
+    text: str
+    font_px: float
+    area_share: float = 0.0
+    bbox: BBoxIn | None = None
+    by_viewport: dict[str, ViewportMeasureIn] = Field(default_factory=dict)
+
+
+class ViewportIn(In):
+    name: Viewport
+    width: int
+    height: int
+    page_height: int = 0
+    screenshot_key: str | None = None
+    overflow_x: bool = False
+    scroll_width: int | None = None
+    layout_width: int | None = None
+    clipped_texts: list[str] = Field(default_factory=list)
+    min_risk_font_px: float | None = None
+
+
+class VisualIn(In):
+    """`Document.visual` (contract v3): measurements from a real browser."""
+
+    dominant_font_px: float
+    max_font_px: float | None = None
+    viewports: list[ViewportIn] = Field(default_factory=list)
+    risk_elements: list[RiskElementIn] = Field(default_factory=list)
+    performance_blocks: list[PerformanceBlockIn] = Field(default_factory=list)
+
+
+class AffiliateLinkIn(In):
+    url: str
+    host: str = ""
+    params: list[str] = Field(default_factory=list)
+
+
 class Document(In):
     url: str
     platform: Platform = "sample"
@@ -359,6 +473,12 @@ class Document(In):
     author: Author | None = None
     fetch: FetchInfo = Field(default_factory=FetchInfo)
     archive: Archive = Field(default_factory=Archive)
+    # contract v3
+    final_url: str | None = None
+    redirect_chain: list[str] = Field(default_factory=list)
+    affiliate_params: list[str] = Field(default_factory=list)
+    affiliate_links: list[AffiliateLinkIn] = Field(default_factory=list)  # scraper extension: host per link
+    visual: VisualIn | None = None
 
 
 class StatementIn(In):

@@ -23,6 +23,16 @@ class RuleOutcome:
     confidence: float
     explanation: str
     evidence_ids: list[str] = field(default_factory=list)
+    method: str | None = None  # rendered | static | text | llm (None = decided by run_rules)
+    score: float | None = None  # 0-1 violation strength (None = derived from status/confidence)
+
+
+def rendered(outcome: RuleOutcome, score: float | None = None) -> RuleOutcome:
+    """Mark an outcome as decided from browser measurements (contract v3, invariant 5)."""
+    outcome.method = "rendered"
+    if score is not None:
+        outcome.score = max(0.0, min(1.0, score))
+    return outcome
 
 
 def passed(explanation: str, confidence: float = 0.8, evidence: list[str] | None = None) -> RuleOutcome:
@@ -84,6 +94,24 @@ class RuleView:
         """The risk passage a reader is most likely to see (longest of the best-placed ones)."""
         pool = self.risk_prominent or self.risk_open or self.risk
         return max(pool, key=lambda h: h.end - h.start) if pool else None
+
+    @cached_property
+    def visual(self):  # type: ignore[no-untyped-def]
+        """`document.visual` measurements (None when the page was not rendered)."""
+        return self.ctx.document.visual
+
+    @cached_property
+    def rendered_risk(self) -> list:
+        """Measured elements that hold risk information as the text analysis understands it."""
+        from .rendered import match_risk
+
+        return match_risk(self) if self.visual else []
+
+    @cached_property
+    def rendered_history(self) -> list:
+        from .rendered import match_history
+
+        return match_history(self) if self.visual else []
 
     @staticmethod
     def chars(hits: list[Hit]) -> int:

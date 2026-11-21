@@ -4,20 +4,23 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
 import { api } from "../api/endpoints";
 import { DebateBlock } from "../components/case/DebateBlock";
+import { DecisionHistory } from "../components/case/DecisionHistory";
 import { EvidenceDrawer } from "../components/case/EvidenceDrawer";
 import { EvidenceProvider } from "../components/case/EvidenceContext";
 import { SourcesBlock } from "../components/case/SourcesBlock";
 import { VerdictBlock } from "../components/case/VerdictBlock";
 import { VISUAL_TABS, VisualsBlock, type VisualTab } from "../components/case/VisualsBlock";
+import { WorkflowPanel } from "../components/case/WorkflowPanel";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { formatDateTime, hostOf } from "../domain/format";
 import { PLATFORM_LABEL } from "../domain/labels";
+import { useUser } from "../hooks/useAuth";
 import { useIncidents } from "../hooks/useIncidents";
 import { useLiveEvent } from "../hooks/useLive";
 import { useResource } from "../hooks/useResource";
 import { useThresholds } from "../hooks/useThresholds";
-import { useUi } from "../hooks/useUi";
-import type { Incident, Status } from "../types/incident";
+import type { TransitionRequest } from "../types/api";
+import type { CaseLabel, Incident } from "../types/incident";
 
 function defaultTab(incident: Incident): VisualTab {
   if (incident.graph.flagged_paths.length > 0) return "powiazania";
@@ -43,10 +46,12 @@ function CaseSkeleton() {
 export function CasePage() {
   const { id = "" } = useParams();
   const { thresholds } = useThresholds();
-  const { changeStatus } = useIncidents();
-  const { notify } = useUi();
+  const { transition, assign, setLabel } = useIncidents();
+  const user = useUser();
   const [params, setParams] = useSearchParams();
   const [statusBusy, setStatusBusy] = useState(false);
+  const history = useResource((signal) => api.history(id, signal), `history:${id}`);
+  const { refresh: refreshHistory } = history;
   const [notFound, setNotFound] = useState(false);
 
   const { resource, reload, refresh, setData } = useResource(
@@ -65,7 +70,10 @@ export function CasePage() {
 
   // Another analyst (or a re-analysis) changed this case: refresh without dropping the screen.
   useLiveEvent("incident:updated", (summary) => {
-    if (summary.id === id) refresh();
+    if (summary.id === id) {
+      refresh();
+      refreshHistory();
+    }
   });
 
   const incident = resource.phase === "ready" ? resource.data : null;
@@ -99,16 +107,25 @@ export function CasePage() {
     [setParams],
   );
 
-  const onStatusChange = useCallback(
-    (next: Status) => {
+  /** One workflow call: busy flag, fresh case + history on success, a Polish message on failure (shown by the panel). */
+  const act = useCallback(
+    async (call: () => Promise<Incident>, failurePrefix: string): Promise<string | null> => {
       setStatusBusy(true);
-      changeStatus(id, next)
-        .then((updated) => setData(updated))
-        .catch((err: unknown) => notify("error", `Nie zmieniono statusu. ${err instanceof Error ? err.message : ""}`.trim()))
-        .finally(() => setStatusBusy(false));
+      try {
+        setData(await call());
+        refreshHistory();
+        return null;
+      } catch (err) {
+        return `${failurePrefix} ${err instanceof Error ? err.message : ""}`.trim();
+      } finally {
+        setStatusBusy(false);
+      }
     },
-    [changeStatus, id, notify, setData],
+    [setData, refreshHistory],
   );
+  const onTransition = useCallback((body: TransitionRequest) => act(() => transition(id, body), "Nie zmieniono etapu sprawy."), [act, transition, id]);
+  const onAssign = useCallback(() => act(() => assign(id), "Nie przejęto sprawy."), [act, assign, id]);
+  const onLabel = useCallback((label: CaseLabel) => act(() => setLabel(id, label), "Nie zapisano oceny."), [act, setLabel, id]);
 
   if (resource.phase === "loading") return <CaseSkeleton />;
   if (resource.phase === "error") {
@@ -151,12 +168,22 @@ export function CasePage() {
           <a href="#wizualizacje">Wykresy i wizualizacje</a>
           <a href="#argumenty">Argumenty</a>
           <a href="#zrodla">Źródła dowodowe</a>
+          <a href="#historia">Historia decyzji</a>
         </nav>
 
-        <VerdictBlock incident={inc} thresholds={thresholds} onStatusChange={onStatusChange} statusBusy={statusBusy} />
+        <VerdictBlock
+          incident={inc}
+          thresholds={thresholds}
+          workflow={<WorkflowPanel incident={inc} user={user} busy={statusBusy} onTransition={onTransition} onAssign={onAssign} onLabel={onLabel} />}
+        />
         <VisualsBlock incident={inc} tab={tab} onTabChange={setTab} />
         <DebateBlock debate={inc.debate} />
         <SourcesBlock evidence={inc.evidence} source={inc.source} onOpen={openEvidence} />
+        <DecisionHistory
+          items={history.resource.phase === "ready" ? history.resource.data.items ?? [] : null}
+          error={history.resource.phase === "error" ? history.resource.error : null}
+          onRetry={history.reload}
+        />
       </div>
       <EvidenceDrawer incident={inc} evidenceId={evidenceId} onClose={closeEvidence} onNavigate={openEvidence} />
     </EvidenceProvider>

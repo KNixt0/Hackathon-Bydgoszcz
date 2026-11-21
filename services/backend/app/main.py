@@ -9,13 +9,17 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import socketio
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
-from app.api import discovery, incidents, scans, system
+from app.api import admin, auth, discovery, incidents, scans, system
+from app.auth import session_guard
+from app.auth.socket import SocketAuthGate
+from app.auth.tokens import get_secret
+from app.auth.users import seed_users
 from app.config import get_settings
 from app.db import init_db
 from app.log import setup_logging
@@ -38,7 +42,9 @@ def _seed() -> None:
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     setup_logging(settings.log_level)
+    get_secret()  # refuses to start without a usable JWT_SECRET (see app.auth.tokens)
     await asyncio.to_thread(init_db)
+    await asyncio.to_thread(seed_users)
     events.bind_loop(asyncio.get_running_loop())
     if settings.seed_on_start:
         # after startup: the pipeline fetches the samples from this very server
@@ -61,7 +67,13 @@ def _validation_message(exc: RequestValidationError) -> str:
 
 def create_api() -> FastAPI:
     settings = get_settings()
-    api = FastAPI(title="#InvestWatch backend", version=__version__, lifespan=lifespan)
+    # every /api route needs a session except /api/health, /api/auth/*, /api/public/* (app.auth.deps)
+    api = FastAPI(
+        title="#InvestWatch backend",
+        version=__version__,
+        lifespan=lifespan,
+        dependencies=[Depends(session_guard)],
+    )
 
     if settings.cors_origin_list:  # off by default: the browser reaches us same-origin through nginx
         from fastapi.middleware.cors import CORSMiddleware
@@ -69,8 +81,9 @@ def create_api() -> FastAPI:
         api.add_middleware(
             CORSMiddleware,
             allow_origins=settings.cors_origin_list,
-            allow_methods=["GET", "POST", "PATCH", "DELETE"],
+            allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE"],
             allow_headers=["Content-Type"],
+            allow_credentials=True,
         )
 
     @api.exception_handler(RequestValidationError)
@@ -89,6 +102,8 @@ def create_api() -> FastAPI:
         )
         return JSONResponse({"detail": "internal server error"}, status_code=500)
 
+    api.include_router(auth.router)
+    api.include_router(admin.router)
     api.include_router(incidents.router)
     api.include_router(scans.router)
     api.include_router(discovery.router)
@@ -98,4 +113,4 @@ def create_api() -> FastAPI:
 
 api = create_api()
 sio = events.create_server()
-app = socketio.ASGIApp(sio, other_asgi_app=api, socketio_path="socket.io")
+app = SocketAuthGate(socketio.ASGIApp(sio, other_asgi_app=api, socketio_path="socket.io"))

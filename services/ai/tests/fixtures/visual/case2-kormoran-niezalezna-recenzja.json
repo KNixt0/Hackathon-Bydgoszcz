@@ -1,0 +1,279 @@
+{
+ "dominant_font_px": 16,
+ "max_font_px": 32,
+ "has_viewport_meta": true,
+ "viewports": [
+  {
+   "name": "desktop",
+   "width": 1920,
+   "height": 1080,
+   "page_height": 1080,
+   "layout_width": 1920,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1080,
+   "overflow_x": false,
+   "scroll_width": 1920,
+   "clipped_texts": [],
+   "min_risk_font_px": 10.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "tablet",
+   "width": 768,
+   "height": 1024,
+   "page_height": 1024,
+   "layout_width": 768,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1024,
+   "overflow_x": false,
+   "scroll_width": 768,
+   "clipped_texts": [],
+   "min_risk_font_px": 10.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "mobile",
+   "width": 390,
+   "height": 844,
+   "page_height": 844,
+   "layout_width": 390,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 844,
+   "overflow_x": false,
+   "scroll_width": 390,
+   "clipped_texts": [],
+   "min_risk_font_px": 10.0,
+   "dominant_font_px": 16
+  }
+ ],
+ "risk_elements": [
+  {
+   "text": "Inwestowanie wiąże się z ryzykiem.",
+   "font_px": 10,
+   "ratio_to_dominant": 0.625,
+   "color": "rgb(85, 85, 85)",
+   "background": "rgb(255, 255, 255)",
+   "contrast": 7.46,
+   "opacity": 1,
+   "visible": true,
+   "occluded": false,
+   "placement": "body",
+   "requires_interaction": null,
+   "control_text": null,
+   "chars": 34,
+   "bbox": {
+    "x": 580,
+    "y": 289,
+    "w": 157,
+    "h": 11,
+    "viewport": "desktop"
+   },
+   "bbox_of": "element",
+   "bboxes": [
+    {
+     "x": 580,
+     "y": 289,
+     "w": 157,
+     "h": 11,
+     "viewport": "desktop"
+    },
+    {
+     "x": 16,
+     "y": 289,
+     "w": 157,
+     "h": 11,
+     "viewport": "tablet"
+    },
+    {
+     "x": 16,
+     "y": 453,
+     "w": 157,
+     "h": 11,
+     "viewport": "mobile"
+    }
+   ],
+   "by_viewport": {
+    "desktop": {
+     "font_px": 10.0,
+     "css_font_px": 10,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 580,
+      "y": 289,
+      "w": 157,
+      "h": 11,
+      "viewport": "desktop"
+     },
+     "bbox_of": "element"
+    },
+    "tablet": {
+     "font_px": 10.0,
+     "css_font_px": 10,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 16,
+      "y": 289,
+      "w": 157,
+      "h": 11,
+      "viewport": "tablet"
+     },
+     "bbox_of": "element"
+    },
+    "mobile": {
+     "font_px": 10.0,
+     "css_font_px": 10,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 16,
+      "y": 453,
+      "w": 157,
+      "h": 11,
+      "viewport": "mobile"
+     },
+     "bbox_of": "element"
+    }
+   }
+  },
+  {
+   "text": "Inwestowanie w instrumenty finansowe wiąże się z ryzykiem utraty części lub całości zainwestowanego kapitału. Wartość inwestycji może zarówno rosnąć, jak i spadać, a spółka nie gwarantuje osiągnięcia zysku. Przed podjęciem decyzji zapoznaj się z dokumentami informacyjnymi oraz tabelą opłat.",
+   "font_px": 12,
+   "ratio_to_dominant": 0.75,
+   "color": "rgb(85, 85, 85)",
+   "background": "rgb(255, 255, 255)",
+   "contrast": 7.46,
+   "opacity": 1,
+   "visible": false,
+   "occluded": false,
+   "placement": "legal_section",
+   "requires_interaction": "details",
+   "control_text": "Nota prawna – rozwiń",
+   "chars": 291,
+   "bbox": {
+    "x": 593,
+    "y": 421,
+    "w": 116,
+    "h": 14,
+    "viewport": "desktop"
+   },
+   "bbox_of": "control",
+   "bboxes": [],
+   "by_viewport": {
+    "desktop": {
+     "font_px": 12.0,
+     "css_font_px": 12,
+     "visible": false,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": "details",
+     "bbox": {
+      "x": 593,
+      "y": 421,
+      "w": 116,
+      "h": 14,
+      "viewport": "desktop"
+     },
+     "bbox_of": "control"
+    },
+    "tablet": {
+     "font_px": 12.0,
+     "css_font_px": 12,
+     "visible": false,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": "details",
+     "bbox": {
+      "x": 29,
+      "y": 421,
+      "w": 116,
+      "h": 14,
+      "viewport": "tablet"
+     },
+     "bbox_of": "control"
+    },
+    "mobile": {
+     "font_px": 12.0,
+     "css_font_px": 12,
+     "visible": false,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 7.46,
+     "requires_interaction": "details",
+     "bbox": {
+      "x": 29,
+      "y": 645,
+      "w": 116,
+      "h": 14,
+      "viewport": "mobile"
+     },
+     "bbox_of": "control"
+    }
+   }
+  }
+ ],
+ "performance_blocks": [
+  {
+   "text": "W 3 miesiące portfel testowy w aplikacji zarobił 18%. Wynik podaję po uwzględnieniu prowizji i opłat. Wyniki historyczne nie stanowią gwarancji przyszłych wyników.",
+   "font_px": 16,
+   "area_share": 0.012,
+   "bbox": {
+    "x": 580,
+    "y": 237,
+    "w": 711,
+    "h": 35,
+    "viewport": "desktop"
+   },
+   "by_viewport": {
+    "desktop": {
+     "font_px": 16.0,
+     "area_share": 0.012,
+     "bbox": {
+      "x": 580,
+      "y": 237,
+      "w": 711,
+      "h": 35,
+      "viewport": "desktop"
+     }
+    },
+    "tablet": {
+     "font_px": 16.0,
+     "area_share": 0.032,
+     "bbox": {
+      "x": 16,
+      "y": 237,
+      "w": 711,
+      "h": 35,
+      "viewport": "tablet"
+     }
+    },
+    "mobile": {
+     "font_px": 16.0,
+     "area_share": 0.074,
+     "bbox": {
+      "x": 16,
+      "y": 365,
+      "w": 341,
+      "h": 71,
+      "viewport": "mobile"
+     }
+    }
+   }
+  }
+ ]
+}

@@ -10,7 +10,7 @@ import logging
 import re
 import threading
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
@@ -52,6 +52,7 @@ class FetchedPage:
     proxy: str | None  # credentials removed
     fetched_at: str
     screenshot: bytes | None = None
+    redirect_chain: list[str] = field(default_factory=list)  # every URL requested, first = requested
 
     @property
     def is_html(self) -> bool:
@@ -155,7 +156,7 @@ class Fetcher:
             user_agent = self.user_agents.next()
             try:
                 with self._client(proxy, user_agent) as client:
-                    response, final_url, body = self._follow(client, url)
+                    response, final_url, body, chain = self._follow(client, url)
             except BlockedURL as exc:
                 raise FetchError(f"blocked: {exc}") from exc
             except httpx.HTTPError as exc:
@@ -172,16 +173,19 @@ class Fetcher:
                         user_agent=user_agent,
                         proxy=redact_proxy(proxy),
                         fetched_at=_now(),
+                        redirect_chain=chain,
                     )
                 last_error = f"http status {response.status_code}"
             if attempt + 1 < attempts:
                 time.sleep(min(2.0**attempt, 8.0) if transport is None else 0)
         raise FetchError(last_error, retryable=True)
 
-    def _follow(self, client: httpx.Client, url: str) -> tuple[httpx.Response, str, str]:
+    def _follow(self, client: httpx.Client, url: str) -> tuple[httpx.Response, str, str, list[str]]:
         current = url
+        chain: list[str] = []
         for _ in range(MAX_REDIRECTS + 1):
             check_url(current, self.settings)
+            chain.append(current)
             if not is_fixture_url(current, self.settings):
                 self.throttle.wait(urlsplit(current).hostname or "")
             with client.stream("GET", current) as response:
@@ -196,7 +200,7 @@ class Fetcher:
                     if size > self.settings.scrape_max_bytes:
                         break
                 raw = b"".join(chunks)[: self.settings.scrape_max_bytes]
-                return response, current, _decode(response, raw)
+                return response, current, _decode(response, raw), chain
         raise httpx.TooManyRedirects("too many redirects")
 
     # ---- robots.txt ---------------------------------------------------------------------
@@ -242,6 +246,7 @@ class Fetcher:
             proxy=redact_proxy(proxy),
             fetched_at=_now(),
             screenshot=rendered.screenshot,
+            redirect_chain=rendered.redirect_chain,
         )
 
 

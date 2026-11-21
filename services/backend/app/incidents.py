@@ -23,6 +23,17 @@ def _party_name(payload: dict, key: str) -> str | None:
     return party.get("name") if isinstance(party, dict) else None
 
 
+def workflow_dict(row: Incident) -> dict[str, Any]:
+    """Contract v3 `Workflow`."""
+    return {
+        "assigned_to": row.assigned_to,
+        "escalation_path": row.escalation_path,
+        "resolution_action": row.resolution_action,
+        "resolution_note": row.resolution_note or "",
+        "label": row.label or "unlabeled",
+    }
+
+
 def to_incident(row: Incident) -> dict[str, Any]:
     return {
         **row.payload,
@@ -30,6 +41,7 @@ def to_incident(row: Incident) -> dict[str, Any]:
         "status": row.status,
         "created_at": iso(row.created_at),
         "updated_at": iso(row.updated_at),
+        "workflow": workflow_dict(row),
     }
 
 
@@ -58,6 +70,7 @@ def to_summary(row: Incident) -> dict[str, Any]:
         "advertiser": _party_name(p, "advertiser"),
         "firm": _party_name(p, "investment_firm"),
         "failed_rules": [str(r.get("id")) for r in p.get("rules") or [] if r.get("status") == "fail"],
+        "workflow": {"assigned_to": row.assigned_to, "label": row.label or "unlabeled"},
     }
 
 

@@ -5,6 +5,7 @@ import { api, evidenceUrl } from "../../api/endpoints";
 import { formatDate, formatDateTime, formatPln, safeHref } from "../../domain/format";
 import { EVIDENCE_KIND_LABEL, REGISTRY_STATUS_LABEL } from "../../domain/labels";
 import { useResource } from "../../hooks/useResource";
+import { hasScreenshotBox, ScreenshotEvidence } from "../evidence";
 import type { Evidence, Incident } from "../../types/incident";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -62,9 +63,13 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
   const registry = ev.kind === "registry" ? incident.registry_checks.filter((c) => c.url === ev.url) : [];
   const accounts = ev.kind === "account" ? incident.forensics?.sample_accounts ?? [] : [];
   const fin = ev.kind === "krs" ? incident.financials : null;
-  const archiveKey = ev.storage_key ?? null;
+  const isImage = (key: string) => /\.(png|jpe?g|webp)$/i.test(key);
+  // a located screenshot is shown by the viewer below, with its box: no second plain copy
+  const archiveKey = ev.storage_key && !(ev.bbox && isImage(ev.storage_key)) ? ev.storage_key : null;
   return (
     <>
+      {hasScreenshotBox(ev) && <ScreenshotEvidence evidence={ev} incident={incident} />}
+
       {ev.kind === "quote" && (
         <>
           {ev.quote && (
@@ -136,7 +141,7 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
       )}
 
       {archiveKey && (
-        <Section title={/\.(png|jpe?g|webp)$/i.test(archiveKey) ? "Zarchiwizowany zrzut ekranu" : "Zarchiwizowany kod HTML"}>
+        <Section title={isImage(archiveKey) ? "Zarchiwizowany zrzut ekranu" : "Zarchiwizowany kod HTML"}>
           <Archive storageKey={archiveKey} label={ev.label} />
           <p className="muted" style={{ fontSize: "var(--fs-sm)", marginTop: 4 }}>Klucz w magazynie obiektów: {archiveKey}</p>
         </Section>

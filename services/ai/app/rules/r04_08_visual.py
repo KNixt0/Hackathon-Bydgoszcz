@@ -1,7 +1,9 @@
 """Rules 4-8: how the risk information is displayed.
 
-These rules read the visual signals extracted from the HTML. Without HTML, or when a signal
-cannot be resolved without rendering the page, the answer is `unknown`.
+When the scraper rendered the page in a real browser (`document.visual`), the rules decide from
+those measurements (`method: "rendered"`, see rendered.py). Otherwise they read the visual
+signals extracted from the HTML source (`static`); without HTML, or when a signal cannot be
+resolved without rendering the page, the answer is `unknown`.
 """
 
 from __future__ import annotations
@@ -9,6 +11,7 @@ from __future__ import annotations
 import re
 
 from ..preprocess import contrast_ratio
+from . import rendered as measured
 from . import settings
 from .base import RuleOutcome, RuleView, failed, not_applicable, passed, rule, unknown
 
@@ -24,6 +27,8 @@ _LEGAL_LINE = re.compile(
 def risk_font_size(v: RuleView) -> RuleOutcome:
     if not v.risk:
         return not_applicable(NO_RISK)
+    if v.rendered_risk:
+        return measured.font_size(v, v.rendered_risk)
     if not v.has_html or not v.signals.dominant_font_px:
         return unknown(NO_HTML)
     hit = v.main_risk
@@ -46,6 +51,8 @@ def risk_font_size(v: RuleView) -> RuleOutcome:
 def risk_contrast(v: RuleView) -> RuleOutcome:
     if not v.risk:
         return not_applicable(NO_RISK)
+    if v.rendered_risk:
+        return measured.contrast(v, v.rendered_risk)
     if not v.has_html:
         return unknown(NO_HTML)
     hit = v.main_risk
@@ -87,6 +94,8 @@ def risk_contrast(v: RuleView) -> RuleOutcome:
 def risk_concealment(v: RuleView) -> RuleOutcome:
     if not v.risk:
         return not_applicable(NO_RISK)
+    if v.rendered_risk:
+        return measured.concealment(v, v.rendered_risk)
     if v.has_html:
         tucked = [h for h in v.risk if v.is_low_visibility(h)]
         prominent = [h for h in v.risk if not v.is_low_visibility(h) and not v.is_concealed(h)]
@@ -133,6 +142,8 @@ def risk_one_click(v: RuleView) -> RuleOutcome:
                 ev,
             )
         return not_applicable(NO_RISK)
+    if v.rendered_risk:
+        return measured.one_click(v, v.rendered_risk)
     if not v.has_html:
         return unknown(NO_HTML)
     concealed = [h for h in v.risk if v.is_concealed(h)]
@@ -156,6 +167,8 @@ def risk_one_click(v: RuleView) -> RuleOutcome:
 def risk_responsiveness(v: RuleView) -> RuleOutcome:
     if not v.risk:
         return not_applicable(NO_RISK)
+    if v.rendered_risk:
+        return measured.responsiveness(v, v.rendered_risk)
     if not v.has_html:
         return unknown(NO_HTML)
     hit = v.main_risk

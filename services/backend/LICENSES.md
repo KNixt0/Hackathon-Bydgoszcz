@@ -13,6 +13,8 @@ MIT/Apache/BSD/ISC list, so it is flagged here for the owner's decision.
 | annotated-doc | 0.0.7 | MIT | transitive |  |
 | annotated-types | 0.8.0 | MIT | transitive |  |
 | anyio | 4.16.0 | MIT | transitive |  |
+| argon2-cffi | 25.1.0 | MIT | direct | argon2id password hashes |
+| argon2-cffi-bindings | 26.2.0 | MIT | transitive |  |
 | asn1crypto | 1.5.1 | MIT | transitive |  |
 | beautifulsoup4 | 4.15.0 | MIT | direct |  |
 | bidict | 0.24.1 | MPL-2.0 | transitive | weak copyleft (file level), not GPL-family; hard dependency of python-socketio |
@@ -21,6 +23,7 @@ MIT/Apache/BSD/ISC list, so it is flagged here for the owner's decision.
 | botocore | 1.44.9 | Apache-2.0 | transitive |  |
 | celery | 5.7.0 | BSD-3-Clause | direct |  |
 | certifi | 2026.11.20 | MPL-2.0 | transitive | weak copyleft (file level), not GPL-family; CA bundle data, hard dependency of httpx |
+| cffi | 2.1.1 | MIT-0 | transitive | permissive (MIT No Attribution) |
 | click | 8.5.1 | BSD-3-Clause | transitive |  |
 | click-didyoumean | 0.3.1 | MIT | transitive |  |
 | click-plugins | 1.1.1.2 | BSD-3-Clause | transitive |  |
@@ -41,9 +44,11 @@ MIT/Apache/BSD/ISC list, so it is flagged here for the owner's decision.
 | pg8000 | 1.31.6 | BSD-3-Clause | direct |  |
 | playwright | 1.65.2 | Apache-2.0 | direct |  |
 | prompt-toolkit | 3.0.53 | BSD-3-Clause | transitive |  |
+| pycparser | 3.12 | BSD-3-Clause | transitive |  |
 | pydantic | 2.14.4 | MIT | transitive |  |
 | pydantic-core | 2.50.5 | MIT | transitive |  |
 | pydantic-settings | 2.16.3 | MIT | direct |  |
+| pyjwt | 2.15.1 | MIT | direct | session tokens (HS256) |
 | python-dateutil | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause | transitive |  |
 | python-dotenv | 1.2.4 | BSD-3-Clause | transitive |  |
 | python-engineio | 4.15.1 | MIT | transitive |  |

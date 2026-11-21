@@ -23,7 +23,31 @@ REGISTRY.sort(key=lambda item: RULE_ORDER.index(item[0].id))
 SPECS: dict[str, RuleSpec] = {spec.id: spec for spec, _ in REGISTRY}
 assert list(SPECS) == RULE_ORDER, "rule registry must cover exactly the 19 criteria"
 
-__all__ = ["REGISTRY", "RULE_ORDER", "SPECS", "RuleOutcome", "RuleSpec", "RuleView", "run_rules"]
+__all__ = ["REGISTRY", "RULE_ORDER", "SPECS", "VISUAL_RULES", "RuleOutcome", "RuleSpec", "RuleView", "run_rules"]
+
+
+# Criteria about how the warning is displayed: decided from browser measurements when the scraper
+# rendered the page (method "rendered"), else from the HTML source ("static").
+VISUAL_RULES = {"4", "5", "6", "7", "8", "13"}
+
+
+def _method(spec: RuleSpec, outcome: RuleOutcome, view: RuleView) -> str:
+    if outcome.method:
+        return outcome.method
+    if spec.id in VISUAL_RULES and view.has_html and outcome.status != "na":
+        return "static"
+    return "text"
+
+
+def _score(outcome: RuleOutcome) -> float:
+    """Violation strength 0-1: a failed rule by its confidence, a passed one by its residual doubt."""
+    if outcome.score is not None:
+        return outcome.score
+    if outcome.status == "fail":
+        return outcome.confidence
+    if outcome.status == "pass":
+        return (1.0 - outcome.confidence) * 0.3
+    return 0.1 if outcome.status == "unknown" else 0.0
 
 
 def run_rules(ctx: AnalysisContext) -> list[RuleResult]:
@@ -43,6 +67,8 @@ def run_rules(ctx: AnalysisContext) -> list[RuleResult]:
                 confidence=round(outcome.confidence, 2),
                 explanation=outcome.explanation,
                 evidence_ids=evidence,
+                method=_method(spec, outcome, view),
+                score=round(max(0.0, min(1.0, _score(outcome))), 2),
             )
         )
     return results

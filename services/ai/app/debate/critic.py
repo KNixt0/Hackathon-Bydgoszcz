@@ -275,7 +275,7 @@ class Critic:
                 r"afiliac",
             ).search(h.sentence.folded)
             for h in facts.cta
-        )
+        ) or bool(codes & {"AFFILIATE_LINK_TO_FIRM", "AFFILIATE_LINK_DISCLOSED"})  # measured link (contract v3)
         cta = bool(facts.cta)
         reporting = bool(lx.REPORTING_CONTEXT.search(ctx.page.folded)) and not cta
         unauthorised = bool(codes & (UNLISTED_CODES | {"WARNING_LISTED", "BRAND_IMPERSONATION"}))

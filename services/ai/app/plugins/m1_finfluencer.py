@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..context import AnalysisContext
+from ._affiliate import affiliate_links
 from ._registers import check_professionals, lookup_firm, make_check, registry_evidence
 from .base import Plugin, PluginFinding, PluginResult
 
@@ -148,8 +149,49 @@ class FinfluencerPlugin(Plugin):
                 )
             )
 
+        findings += _affiliate_findings(ctx, publisher, bool(open_markers))
+
         prof_checks, prof_findings = check_professionals(ctx)
         return self.result(findings=findings + prof_findings, registry_checks=checks + prof_checks)
+
+
+def _affiliate_findings(ctx: AnalysisContext, publisher: str, marked: bool) -> list[PluginFinding]:
+    """An affiliate / tracking link to a registered firm in a third party's material is evidence of a
+    commercial relationship; together with a missing ad label it is an undisclosed advertisement."""
+    links = affiliate_links(ctx)
+    if not links:
+        return []
+    link = links[0]
+    params = ", ".join(link.params[:4])
+    how = (
+        f"adres materiału przekierowuje ({len(ctx.document.redirect_chain)} kroki) na stronę"
+        if link.via_redirect
+        else "zawiera link do strony"
+    )
+    evidence = [ctx.evidence.url(link.url, f"Link partnerski do {link.firm}")]
+    if len(links) > 1:
+        evidence += [ctx.evidence.url(other.url, f"Link partnerski do {other.firm}") for other in links[1:3]]
+    base = (
+        f"Materiał „{publisher}” {how} „{link.firm}” ({link.host}) z parametrami partnerskimi / śledzącymi "
+        f"({params}), co wskazuje na relację komercyjną z firmą."
+    )
+    data = {"host": link.host, "params": link.params, "firm": link.firm, "links": len(links)}
+    if marked:
+        return [
+            PluginFinding(
+                "AFFILIATE_LINK_DISCLOSED", "info", base + " Materiał jest oznaczony jako reklama.", evidence, 0.9, data
+            )
+        ]
+    return [
+        PluginFinding(
+            "AFFILIATE_LINK_TO_FIRM",
+            "medium",
+            base + " Materiał nie jest oznaczony jako reklama ani współpraca.",
+            evidence,
+            0.85,
+            data,
+        )
+    ]
 
 
 def _concealed(ctx: AnalysisContext, start: int, end: int) -> bool:

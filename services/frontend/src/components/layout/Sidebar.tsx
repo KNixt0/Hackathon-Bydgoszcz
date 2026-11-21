@@ -1,4 +1,4 @@
-import { Inbox, ScanEye, SlidersHorizontal } from "lucide-react";
+import { History, Inbox, ScanEye, SlidersHorizontal } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import type { LevelCounts, Thresholds } from "../../domain/levels";
 import type { ConnectionStatus } from "../../hooks/useLive";
@@ -6,12 +6,13 @@ import { ConnectionIndicator } from "./ConnectionIndicator";
 
 interface Props {
   thresholds: Thresholds;
-  thresholdsAreDefault: boolean;
+  thresholdsAreGlobal: boolean;
   counts: LevelCounts | null;
   connection: ConnectionStatus;
+  isSupervisor: boolean;
 }
 
-export function Sidebar({ thresholds, thresholdsAreDefault, counts, connection }: Props) {
+export function Sidebar({ thresholds, thresholdsAreGlobal, counts, connection, isSupervisor }: Props) {
   return (
     <aside className="sidebar">
       <Link to="/" className="brand" aria-label="InvestWatch, kolejka spraw">
@@ -40,6 +41,12 @@ export function Sidebar({ thresholds, thresholdsAreDefault, counts, connection }
           <SlidersHorizontal aria-hidden="true" />
           <span className="nav__label">Kalibracja</span>
         </NavLink>
+        {isSupervisor && (
+          <NavLink to="/audyt" className="nav__link">
+            <History aria-hidden="true" />
+            <span className="nav__label">Dziennik audytu</span>
+          </NavLink>
+        )}
       </nav>
 
       <div className="sidebar__section">
@@ -48,7 +55,7 @@ export function Sidebar({ thresholds, thresholdsAreDefault, counts, connection }
           <span className="threshold-card__row"><span>Flagowanie od</span><strong className="num">{thresholds.orange}</strong></span>
           <span className="threshold-card__row"><span>Krytyczne od</span><strong className="num">{thresholds.red}</strong></span>
           <span className="threshold-card__note" style={{ display: "block" }}>
-            {thresholdsAreDefault ? "Wartości domyślne" : "Zmienione przez analityka"}
+            {thresholdsAreGlobal ? "Progi globalne" : "Podgląd lokalny (tylko w tej przeglądarce)"}
           </span>
         </Link>
       </div>

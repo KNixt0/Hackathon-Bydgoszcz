@@ -7,9 +7,11 @@ interface Props {
   onOpenScan: () => void;
   shortcutLabel: string;
   children?: ReactNode;
+  /** After the primary action (the signed-in user). */
+  trailing?: ReactNode;
 }
 
-export function TopBar({ onOpenPalette, onOpenScan, shortcutLabel, children }: Props) {
+export function TopBar({ onOpenPalette, onOpenScan, shortcutLabel, children, trailing }: Props) {
   return (
     <header className="topbar">
       <button type="button" className="topbar__search" onClick={onOpenPalette} aria-label="Otwórz paletę poleceń">
@@ -23,6 +25,7 @@ export function TopBar({ onOpenPalette, onOpenScan, shortcutLabel, children }: P
         <Radar aria-hidden="true" />
         Skanuj URL
       </Button>
+      {trailing}
     </header>
   );
 }

@@ -1,0 +1,202 @@
+{
+ "dominant_font_px": 16,
+ "max_font_px": 32,
+ "has_viewport_meta": true,
+ "viewports": [
+  {
+   "name": "desktop",
+   "width": 1920,
+   "height": 1080,
+   "page_height": 1080,
+   "layout_width": 1920,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1080,
+   "overflow_x": false,
+   "scroll_width": 1920,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "tablet",
+   "width": 768,
+   "height": 1024,
+   "page_height": 1024,
+   "layout_width": 768,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1024,
+   "overflow_x": false,
+   "scroll_width": 768,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "mobile",
+   "width": 390,
+   "height": 844,
+   "page_height": 844,
+   "layout_width": 390,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 844,
+   "overflow_x": false,
+   "scroll_width": 390,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  }
+ ],
+ "risk_elements": [
+  {
+   "text": "Kontrakty CFD są złożonymi instrumentami i wiążą się z dużym ryzykiem szybkiej utraty środków pieniężnych z powodu dźwigni finansowej. 74% rachunków inwestorów detalicznych odnotowuje straty pieniężne w wyniku handlu kontraktami CFD u niniejszego dostawcy. Zastanów się, czy rozumiesz, jak działają kontrakty CFD, i czy możesz pozwolić sobie na wysokie ryzyko utraty pieniędzy.",
+   "font_px": 16,
+   "ratio_to_dominant": 1.0,
+   "color": "rgb(188, 188, 188)",
+   "background": "rgb(255, 255, 255)",
+   "contrast": 1.89,
+   "opacity": 1,
+   "visible": true,
+   "occluded": false,
+   "placement": "body",
+   "requires_interaction": null,
+   "control_text": null,
+   "chars": 377,
+   "bbox": {
+    "x": 580,
+    "y": 227,
+    "w": 725,
+    "h": 71,
+    "viewport": "desktop"
+   },
+   "bbox_of": "element",
+   "bboxes": [
+    {
+     "x": 580,
+     "y": 227,
+     "w": 725,
+     "h": 71,
+     "viewport": "desktop"
+    },
+    {
+     "x": 16,
+     "y": 227,
+     "w": 725,
+     "h": 71,
+     "viewport": "tablet"
+    },
+    {
+     "x": 16,
+     "y": 300,
+     "w": 327,
+     "h": 161,
+     "viewport": "mobile"
+    }
+   ],
+   "by_viewport": {
+    "desktop": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 1.89,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 580,
+      "y": 227,
+      "w": 725,
+      "h": 71,
+      "viewport": "desktop"
+     },
+     "bbox_of": "element"
+    },
+    "tablet": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 1.89,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 16,
+      "y": 227,
+      "w": 725,
+      "h": 71,
+      "viewport": "tablet"
+     },
+     "bbox_of": "element"
+    },
+    "mobile": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 1.89,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 16,
+      "y": 300,
+      "w": 327,
+      "h": 161,
+      "viewport": "mobile"
+     },
+     "bbox_of": "element"
+    }
+   }
+  }
+ ],
+ "performance_blocks": [
+  {
+   "text": "Kontrakty CFD są złożonymi instrumentami i wiążą się z dużym ryzykiem szybkiej utraty środków pieniężnych z powodu dźwigni finansowej. 74% rachunków inwestorów detalicznych odnotowuje straty pieniężne w wyniku handlu kontraktami CFD u niniejszego dostawcy. Zastanów się, czy rozumiesz, jak działają kontrakty CFD, i czy możesz pozwolić sobie na wysokie ryzyko utraty pieniędzy.",
+   "font_px": 16,
+   "area_share": 0.025,
+   "bbox": {
+    "x": 580,
+    "y": 227,
+    "w": 725,
+    "h": 71,
+    "viewport": "desktop"
+   },
+   "by_viewport": {
+    "desktop": {
+     "font_px": 16.0,
+     "area_share": 0.025,
+     "bbox": {
+      "x": 580,
+      "y": 227,
+      "w": 725,
+      "h": 71,
+      "viewport": "desktop"
+     }
+    },
+    "tablet": {
+     "font_px": 16.0,
+     "area_share": 0.065,
+     "bbox": {
+      "x": 16,
+      "y": 227,
+      "w": 725,
+      "h": 71,
+      "viewport": "tablet"
+     }
+    },
+    "mobile": {
+     "font_px": 16.0,
+     "area_share": 0.16,
+     "bbox": {
+      "x": 16,
+      "y": 300,
+      "w": 327,
+      "h": 161,
+      "viewport": "mobile"
+     }
+    }
+   }
+  }
+ ]
+}

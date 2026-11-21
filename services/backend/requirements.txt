@@ -10,6 +10,10 @@ anyio==4.16.0
     #   httpx
     #   starlette
     #   watchfiles
+argon2-cffi==25.1.0
+    # via -r requirements.in
+argon2-cffi-bindings==26.2.0
+    # via argon2-cffi
 asn1crypto==1.5.1
     # via scramp
 beautifulsoup4==4.15.0
@@ -30,6 +34,8 @@ certifi==2026.11.20
     # via
     #   httpcore
     #   httpx
+cffi==2.1.1
+    # via argon2-cffi-bindings
 click==8.5.1
     # via
     #   celery
@@ -82,6 +88,8 @@ playwright==1.65.2
     # via -r requirements.in
 prompt-toolkit==3.0.53
     # via click-repl
+pycparser==3.12 ; implementation_name != 'PyPy'
+    # via cffi
 pydantic==2.14.4
     # via
     #   fastapi
@@ -89,6 +97,8 @@ pydantic==2.14.4
 pydantic-core==2.50.5
     # via pydantic
 pydantic-settings==2.16.3
+    # via -r requirements.in
+pyjwt==2.15.1
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via

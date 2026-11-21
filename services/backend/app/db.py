@@ -92,6 +92,41 @@ def _add_missing_columns() -> None:
                 log.info("added column", extra={"table": table.name, "column": column.name})
 
 
+# Contract v3 replaced the five case statuses: old values are rewritten in place on start.
+STATUS_RENAMES = {"closed_violation": "resolved", "closed_ok": "false_positive"}
+
+_PG_AUDIT_GUARD = [
+    """CREATE OR REPLACE FUNCTION audit_logs_append_only() RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'audit_logs is append-only';
+END;
+$$ LANGUAGE plpgsql""",
+    "DROP TRIGGER IF EXISTS audit_logs_append_only ON audit_logs",
+    """CREATE TRIGGER audit_logs_append_only BEFORE UPDATE OR DELETE ON audit_logs
+FOR EACH ROW EXECUTE FUNCTION audit_logs_append_only()""",
+]
+
+
+def _upgrade_data() -> None:
+    """Idempotent value migrations that create_all cannot express."""
+    engine = get_engine()
+    with engine.begin() as connection:
+        for old, new in STATUS_RENAMES.items():
+            result = connection.execute(
+                text("UPDATE incidents SET status = :new WHERE status = :old"), {"new": new, "old": old}
+            )
+            if result.rowcount:
+                log.info("migrated status", extra={"from": old, "to": new, "rows": result.rowcount})
+    if engine.dialect.name == "postgresql":
+        try:
+            with engine.begin() as connection:
+                connection.execute(text("SELECT pg_advisory_xact_lock(74210012)"))
+                for statement in _PG_AUDIT_GUARD:
+                    connection.execute(text(statement))
+        except Exception as exc:  # noqa: BLE001 (the ORM guard still applies)
+            log.warning("audit trigger not installed", extra={"error": type(exc).__name__})
+
+
 def init_db(attempts: int = 30, delay: float = 2.0) -> None:
     """create_all with retries: the DB may still be starting, and api/worker/beat may race."""
     from app import models  # noqa: F401  (register tables)
@@ -106,6 +141,7 @@ def init_db(attempts: int = 30, delay: float = 2.0) -> None:
                     connection.execute(text("SELECT pg_advisory_xact_lock(74210011)"))
                 Base.metadata.create_all(connection)
             _add_missing_columns()
+            _upgrade_data()
             return
         except Exception as exc:  # noqa: BLE001
             last = exc

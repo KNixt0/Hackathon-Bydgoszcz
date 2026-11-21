@@ -76,3 +76,20 @@
   .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .alert { flex-wrap: wrap; }
 }
+
+/* ── Status column: status link + assignee (contract v3 workflow) */
+.queue__status { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.queue__status a { font-weight: 500; }
+.queue__assignee { display: block; max-width: 170px; font-size: var(--fs-sm); }
+
+/* ── Audit log table */
+.audit__filters { grid-template-columns: minmax(220px, 2fr) minmax(200px, 1fr); }
+.audit th { padding: 8px 12px; font-size: var(--fs-sm); color: var(--muted); border-bottom: 1px solid var(--line); background: var(--surface-sunken); }
+.audit td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: var(--fs-sm); }
+.audit th:first-child, .audit td:first-child { padding-left: var(--sp-4); }
+.audit__when { white-space: nowrap; color: var(--ink-2); }
+.audit__role { display: block; font-size: var(--fs-xs); }
+.audit__case { max-width: 260px; }
+.audit__case a { display: block; }
+.audit__change { display: block; color: var(--ink-2); }
+.audit__reason { max-width: 320px; overflow-wrap: anywhere; }

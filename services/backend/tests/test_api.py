@@ -28,6 +28,7 @@ SUMMARY_KEYS = {
     "advertiser",
     "firm",
     "failed_rules",
+    "workflow",
 }
 
 
@@ -107,10 +108,11 @@ def test_detail_patch_and_404(seeded):
         incident
     )
 
-    patched = seeded.patch(f"/api/incidents/{incident_id}", json={"status": "escalated"})
-    assert patched.status_code == 200 and patched.json()["status"] == "escalated"
-    assert seeded.get(f"/api/incidents/{incident_id}").json()["status"] == "escalated"
-    assert events_named(seeded, "incident:updated")[-1]["status"] == "escalated"
+    patched = seeded.patch(f"/api/incidents/{incident_id}", json={"status": "in_review"})  # transition alias
+    assert patched.status_code == 200 and patched.json()["status"] == "in_review"
+    assert seeded.get(f"/api/incidents/{incident_id}").json()["status"] == "in_review"
+    assert events_named(seeded, "incident:updated")[-1]["status"] == "in_review"
+    assert seeded.patch(f"/api/incidents/{incident_id}", json={"status": "escalated"}).status_code == 409
 
     for body in ({"status": "bogus"}, {}, {"status": "new", "risk_score": 0}):
         bad = seeded.patch(f"/api/incidents/{incident_id}", json=body)
@@ -142,7 +144,8 @@ def test_calibration_only_labelled(seeded):
         ("violation", 88.0, 3),
         ("ok", 12.0, 1),
     }
-    assert set(items[0]) == {"id", "title", "risk_score", "ground_truth", "module"}
+    assert set(items[0]) == {"id", "title", "risk_score", "ground_truth", "module", "label_source"}
+    assert {i["label_source"] for i in items} == {"sample"}
 
 
 def test_scan_validation_and_ssrf(client):
@@ -314,6 +317,7 @@ def test_socketio_handshake_and_origin_check(client):
     from app.main import app as asgi_app
 
     with TestClient(asgi_app) as sock:
+        sock.cookies.set("iw_session", client.cookies["iw_session"])  # Socket.IO needs the session too
         url = "/socket.io/?EIO=4&transport=polling"
         # nginx forwards Host without the published port: must still be accepted
         same = sock.get(url, headers={"Origin": "http://localhost:3000", "Host": "localhost"})

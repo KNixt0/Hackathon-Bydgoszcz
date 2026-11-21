@@ -22,16 +22,29 @@ os.environ.update(
         "SCAN_MAX_RETRIES": "0",
         "SEED_ON_START": "false",
         "CORS_ORIGINS": "",
+        "APP_ENV": "development",
+        "JWT_SECRET": "test-only-jwt-secret-0123456789abcdef0123456789",
+        "DEMO_LOGIN": "true",
+        "DEMO_ANALYST_EMAIL": "analityk@uknf.local",
+        "DEMO_ANALYST_PASSWORD": "analyst-pass-1",
+        "DEMO_SUPERVISOR_EMAIL": "kierownik@uknf.local",
+        "DEMO_SUPERVISOR_PASSWORD": "supervisor-pass-1",
     }
 )
+ANALYST = ("analityk@uknf.local", "analyst-pass-1")
+SUPERVISOR = ("kierownik@uknf.local", "supervisor-pass-1")
 
 import logging  # noqa: E402
 
 import httpx  # noqa: E402
 import pytest  # noqa: E402
+from argon2 import PasswordHasher  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app import ai_client, events, pipeline, storage  # noqa: E402
+from app.auth import passwords, tokens  # noqa: E402
+from app.auth.throttle import throttle  # noqa: E402
+from app.auth.users import seed_users  # noqa: E402
 from app.db import Base, get_engine  # noqa: E402
 from app.main import api  # noqa: E402
 from app.scraper import engine as scraper_engine  # noqa: E402
@@ -348,11 +361,33 @@ def samples_dir() -> Path:
     return _SAMPLES
 
 
+def login(test_client: TestClient, account: tuple[str, str]) -> TestClient:
+    response = test_client.post("/api/auth/login", json={"email": account[0], "password": account[1]})
+    assert response.status_code == 200, response.text
+    return test_client
+
+
+@pytest.fixture
+def anon(client):
+    """A second browser without a session, sharing the database of `client`."""
+    return TestClient(api, raise_server_exceptions=False)
+
+
+@pytest.fixture
+def analyst(client):
+    return login(TestClient(api, raise_server_exceptions=False), ANALYST)
+
+
 @pytest.fixture
 def client(samples_dir: Path, monkeypatch: pytest.MonkeyPatch):
+    """Logged in as the supervisor (every role check passes); see `analyst` and `anon`."""
     Base.metadata.drop_all(get_engine())
     Base.metadata.create_all(get_engine())
-    test_client = TestClient(api, raise_server_exceptions=False)
+    monkeypatch.setattr(passwords, "hasher", PasswordHasher(time_cost=1, memory_cost=8, parallelism=1))
+    tokens.reset_secret()
+    throttle.reset()
+    seed_users()
+    test_client = login(TestClient(api, raise_server_exceptions=False), SUPERVISOR)
     world = World(TestClient(api))
     transport = httpx.MockTransport(world.handler)
     monkeypatch.setattr(ai_client, "transport", transport)

@@ -1,8 +1,8 @@
 import type {
   EvidenceKind, GraphEdge, GraphNodeType, ModuleId, Platform, RegistryStatus, RiskLevel, RuleStatus, Status, Claim,
-  Finding, Recommendation, Forensics,
+  Finding, Recommendation, Forensics, CaseLabel, EscalationPath, ResolutionAction, Role,
 } from "../types/incident";
-import type { ScanState } from "../types/api";
+import type { AuditAction, ScanState } from "../types/api";
 
 export const LEVEL_LABEL: Record<RiskLevel, string> = {
   red: "Krytyczne",
@@ -12,12 +12,45 @@ export const LEVEL_LABEL: Record<RiskLevel, string> = {
 
 export const STATUS_LABEL: Record<Status, string> = {
   new: "Nowe",
-  in_review: "W analizie",
+  in_review: "W weryfikacji",
+  escalation_requested: "Wniosek o eskalację",
   escalated: "Eskalowane",
-  closed_violation: "Zamknięte: naruszenie",
-  closed_ok: "Zamknięte: bez naruszeń",
+  resolved: "Zamknięte: naruszenie",
+  false_positive: "Zamknięte: fałszywy alarm",
 };
-export const STATUSES: Status[] = ["new", "in_review", "escalated", "closed_violation", "closed_ok"];
+export const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
+
+export const ROLE_LABEL: Record<Role, string> = { ANALYST: "Analityk", SUPERVISOR: "Kierownik" };
+
+export const ESCALATION_PATH_LABEL: Record<EscalationPath, string> = {
+  SUPERVISION_RISK_DEPT: "Departament nadzoru: informacja o ryzyku",
+  LEGAL_WARNING_LIST: "Departament Prawny: lista ostrzeżeń publicznych",
+  THIRD_PARTY_AUDIT: "Audyt współpracy z podmiotem trzecim",
+};
+export const ESCALATION_PATHS = Object.keys(ESCALATION_PATH_LABEL) as EscalationPath[];
+
+export const RESOLUTION_ACTION_LABEL: Record<ResolutionAction, string> = {
+  evidence_report: "Raport dowodowy",
+  warning_list_request: "Wniosek o wpis na listę ostrzeżeń",
+  enhanced_monitoring: "Wzmożony monitoring (co 6 godzin)",
+  false_positive: "Fałszywy alarm",
+};
+
+export const CASE_LABEL_LABEL: Record<CaseLabel, string> = {
+  unlabeled: "Bez oceny",
+  true_positive: "Trafny alarm (naruszenie)",
+  false_positive: "Fałszywy alarm",
+};
+
+export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
+  login: "Logowanie",
+  assign: "Przypisanie sprawy",
+  transition: "Zmiana etapu",
+  label: "Ocena trafności",
+  thresholds: "Zmiana progów",
+  export: "Eksport",
+  rescan: "Ponowne skanowanie",
+};
 
 export const MODULE_LABEL: Record<ModuleId, string> = {
   1: "Finfluencerzy i podmioty trzecie",

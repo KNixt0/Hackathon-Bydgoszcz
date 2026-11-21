@@ -143,6 +143,11 @@ class Engine:
             ctx.evidence.archive(doc.archive.html_key, "Zarchiwizowany kod HTML materiału")
         if doc.archive.screenshot_key:
             ctx.evidence.archive(doc.archive.screenshot_key, "Zarchiwizowany zrzut ekranu")
+        shots = doc.archive.screenshots
+        for name, label in (("tablet", "tablet 768×1024"), ("mobile", "telefon 390×844")):
+            key = getattr(shots, name, None) if shots else None
+            if key and key != doc.archive.screenshot_key:
+                ctx.evidence.archive(key, f"Zarchiwizowany zrzut ekranu ({label})")
         ctx.evidence.url(doc.url, "Adres analizowanego materiału")
 
         ent = ctx.entities
@@ -167,6 +172,9 @@ class Engine:
                 content_hash=page.content_hash,
                 text=page.text,
                 archive=doc.archive,
+                final_url=doc.final_url,
+                redirect_chain=doc.redirect_chain or None,
+                affiliate_params=doc.affiliate_params if doc.final_url or doc.affiliate_params else None,
             ),
             entities=Entities(investment_firm=ent.firm, advertiser=ent.advertiser, others=ent.others),
             module_results=module_results,

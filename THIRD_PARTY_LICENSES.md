@@ -10,6 +10,8 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 | annotated-doc | 0.0.7 | MIT | runtime |
 | annotated-types | 0.8.0 | MIT | runtime |
 | anyio | 4.16.0 | MIT | runtime |
+| argon2-cffi | 25.1.0 | MIT | runtime |
+| argon2-cffi-bindings | 26.2.0 | MIT | runtime |
 | asn1crypto | 1.5.1 | MIT | runtime |
 | beautifulsoup4 | 4.15.0 | MIT | runtime |
 | bidict | 0.24.1 | MPL-2.0 | runtime |
@@ -18,10 +20,13 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 | botocore | 1.44.9 | Apache-2.0 | runtime |
 | celery | 5.7.0 | BSD-3-Clause | runtime |
 | certifi | 2026.11.20 | MPL-2.0 | runtime |
+| cffi | 2.1.1 | MIT-0 | runtime |
+| Chromium (Playwright build) | - | BSD-3-Clause | runtime |
 | click | 8.5.1 | BSD-3-Clause | runtime |
 | click-didyoumean | 0.3.1 | MIT | runtime |
 | click-plugins | 1.1.1.2 | BSD-3-Clause | runtime |
 | click-repl | 0.4.1 | MIT | runtime |
+| DejaVu fonts (`fonts-dejavu-core`) | - | Bitstream Vera / public domain (permissive) | runtime |
 | fastapi | 0.165.0 | MIT | runtime |
 | greenlet | 3.5.6 | MIT AND PSF-2.0 | runtime |
 | h11 | 0.16.0 | MIT | runtime |
@@ -36,17 +41,22 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 | opentelemetry-api | 1.45.2 | Apache-2.0 | runtime |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause | runtime |
 | pg8000 | 1.31.6 | BSD-3-Clause | runtime |
+| pip-audit | - | Apache-2.0 | dev |
 | playwright | 1.65.2 | Apache-2.0 | runtime |
 | prompt-toolkit | 3.0.53 | BSD-3-Clause | runtime |
+| pycparser | 3.12 | BSD-3-Clause | runtime |
 | pydantic | 2.14.4 | MIT | runtime |
 | pydantic-core | 2.50.5 | MIT | runtime |
 | pydantic-settings | 2.16.3 | MIT | runtime |
+| pyjwt | 2.15.1 | MIT | runtime |
+| pytest | - | MIT | dev |
 | python-dateutil | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause | runtime |
 | python-dotenv | 1.2.4 | BSD-3-Clause | runtime |
 | python-engineio | 4.15.1 | MIT | runtime |
 | python-socketio | 5.18.1 | MIT | runtime |
 | pyyaml | 6.0.4 | MIT | runtime |
 | redis | 8.1.0 | MIT | runtime |
+| ruff | - | MIT | dev |
 | s3transfer | 0.19.3 | Apache-2.0 | runtime |
 | scramp | 1.5.0 | MIT-0 | runtime |
 | simple-websocket | 1.1.0 | MIT | runtime |
@@ -66,11 +76,6 @@ Licence inventory for InvestWatch, generated from `services/backend/LICENSES.md`
 | wcwidth | 0.9.4 | MIT | runtime |
 | websockets | 17.4 | BSD-3-Clause | runtime |
 | wsproto | 1.3.2 | MIT | runtime |
-| Chromium (Playwright build) | - | BSD-3-Clause | runtime |
-| DejaVu fonts (`fonts-dejavu-core`) | - | Bitstream Vera / public domain (permissive) | runtime |
-| pytest | - | MIT | dev |
-| ruff | - | MIT | dev |
-| pip-audit | - | Apache-2.0 | dev |
 
 ## AI (services/ai)
 

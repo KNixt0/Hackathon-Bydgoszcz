@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { Misclassified } from "../../domain/calibration";
 import { formatScore } from "../../domain/format";
 import type { CalibrationItem } from "../../types/api";
+import { Badge } from "../ui/Badge";
 import { ModuleTag } from "../ui/ModuleTag";
 
 function Column({ title, hint, items, empty, testId }: { title: string; hint: string; items: CalibrationItem[]; empty: string; testId: string }) {
@@ -19,6 +20,7 @@ function Column({ title, hint, items, empty, testId }: { title: string; hint: st
             <li key={it.id} className="miss__item">
               <span className="miss__score num" title="Surowy wynik ryzyka">{formatScore(it.risk_score)}</span>
               <Link to={`/sprawy/${it.id}`} className="miss__name truncate" title={it.title}>{it.title}</Link>
+              {it.label_source === "analyst" && <Badge tone="accent" title="Etykieta nadana przez analityka w sprawie">analityk</Badge>}
               <ModuleTag module={it.module} compact />
             </li>
           ))}

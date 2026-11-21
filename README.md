@@ -65,6 +65,17 @@ Wartości domyślne z `.env.example`.
 | `EMBEDDINGS_BACKEND` | hash | `hash` lub `ollama` |
 | `OLLAMA_EMBED_MODEL` | embeddinggemma:300m | model embeddingów |
 | `LLM_TIMEOUT_S` | 60 | limit czasu zapytania do modelu (s) |
+| `APP_ENV` | development | `production` wymaga prawdziwego `JWT_SECRET` (min. 32 znaki) |
+| `JWT_SECRET` | (puste) | klucz HS256 sesji; puste + `DEMO_LOGIN=true` = losowy przy każdym starcie |
+| `JWT_EXPIRE_HOURS` | 8 | ważność sesji (h) |
+| `COOKIE_SECURE` | auto | flaga `Secure` ciasteczka: `auto` (gdy HTTPS), `true`, `false` |
+| `DEMO_LOGIN` | true | przyciski logowania demo na stronie logowania |
+| `DEMO_ANALYST_EMAIL` / `DEMO_ANALYST_PASSWORD` | analityk@uknf.local / change-me-analyst | konto analityka |
+| `DEMO_SUPERVISOR_EMAIL` / `DEMO_SUPERVISOR_PASSWORD` | kierownik@uknf.local / change-me-supervisor | konto kierownika |
+
+## Logowanie demo
+
+Przy starcie backend tworzy dwa konta z `.env`: analityka (`DEMO_ANALYST_*`) i kierownika (`DEMO_SUPERVISOR_*`). Przy `DEMO_LOGIN=true` strona logowania ma przyciski „Zaloguj jako analityk (demo)” i „Zaloguj jako kierownik (demo)”. Tylko kierownik zatwierdza eskalacje, zapisuje progi globalne i widzi dziennik audytu (`/audyt`). Puste hasło oznacza konto dostępne wyłącznie przez logowanie demo. Na produkcji: `APP_ENV=production`, `DEMO_LOGIN=false`, własne hasła i `JWT_SECRET`.
 
 ## Model lokalny (opcjonalnie)
 

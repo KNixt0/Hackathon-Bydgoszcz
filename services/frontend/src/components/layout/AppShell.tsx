@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { countLevels } from "../../domain/levels";
 import { useIncidents } from "../../hooks/useIncidents";
+import { useAuth, useUser } from "../../hooks/useAuth";
 import { useConnectionStatus } from "../../hooks/useLive";
 import { useScanJobs } from "../../hooks/useScanJobs";
 import { useThresholds } from "../../hooks/useThresholds";
@@ -13,13 +14,16 @@ import { JobsMenu } from "./JobsMenu";
 import { ScanDialog } from "./ScanDialog";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
+import { UserChip } from "./UserChip";
 
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 
 /** Container: wires providers' state into the presentational chrome. */
 export function AppShell() {
   const navigate = useNavigate();
-  const { thresholds, isDefault } = useThresholds();
+  const { thresholds, isGlobal } = useThresholds();
+  const user = useUser();
+  const { logout } = useAuth();
   const incidents = useIncidents();
   const connection = useConnectionStatus();
   const scans = useScanJobs();
@@ -65,9 +69,12 @@ export function AppShell() {
   return (
     <div className="shell">
       <a className="skip-link" href="#tresc">Przejdź do treści</a>
-      <Sidebar thresholds={thresholds} thresholdsAreDefault={isDefault} counts={counts} connection={connection} />
+      <Sidebar thresholds={thresholds} thresholdsAreGlobal={isGlobal} counts={counts} connection={connection} isSupervisor={user.role === "SUPERVISOR"} />
       <div className="main">
-        <TopBar onOpenPalette={() => ui.setPaletteOpen(true)} onOpenScan={() => ui.setScanOpen(true)} shortcutLabel={isMac ? "⌘K" : "Ctrl K"}>
+        <TopBar
+          onOpenPalette={() => ui.setPaletteOpen(true)} onOpenScan={() => ui.setScanOpen(true)} shortcutLabel={isMac ? "⌘K" : "Ctrl K"}
+          trailing={<UserChip user={user} onLogout={() => void logout()} />}
+        >
           <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
           <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
         </TopBar>

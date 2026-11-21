@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bursztyn-przykladowy.example/m2-vio-46-html-niski-kontrast",
+  "platform": "web",
+  "title": "Kontrakty CFD na surowce",
+  "published_at": "2026-11-12",
+  "seed": true,
+  "detected_days_ago": 9
+ },
+ "html_file": "m2-vio-46-html-niski-kontrast.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

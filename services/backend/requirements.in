@@ -12,3 +12,5 @@ jinja2
 beautifulsoup4
 pydantic-settings
 packaging  # imported by kombu's redis transport but not declared by it
+argon2-cffi==25.1.0  # password hashing (MIT)
+PyJWT==2.15.1  # session tokens, HS256 (MIT)

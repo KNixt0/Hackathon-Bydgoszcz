@@ -86,7 +86,7 @@ export function filtersToSearch(f: QueueFilters): URLSearchParams {
 }
 
 const PLATFORMS: Platform[] = ["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"];
-const STATUSES: Status[] = ["new", "in_review", "escalated", "closed_violation", "closed_ok"];
+const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
 const LEVELS: RiskLevel[] = ["red", "orange", "green"];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 

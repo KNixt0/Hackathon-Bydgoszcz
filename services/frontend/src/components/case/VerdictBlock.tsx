@@ -3,7 +3,8 @@ import { exportCsvUrl, exportPdfUrl } from "../../api/endpoints";
 import { formatScore } from "../../domain/format";
 import { SEVERITY_LABEL } from "../../domain/labels";
 import { complianceScore, deriveLevel, type Thresholds } from "../../domain/levels";
-import type { Incident, Status } from "../../types/incident";
+import type { ReactNode } from "react";
+import type { Incident } from "../../types/incident";
 import { Badge } from "../ui/Badge";
 import { ButtonLink } from "../ui/Button";
 import { LevelBadge } from "../ui/LevelBadge";
@@ -12,17 +13,16 @@ import { ScoreRail } from "../ui/ScoreRail";
 import { EvidenceChips } from "./EvidenceChips";
 import { PartiesCard } from "./PartiesCard";
 import { RecommendationCard } from "./RecommendationCard";
-import { StatusStepper } from "./StatusStepper";
 
 interface Props {
   incident: Incident;
   thresholds: Thresholds;
-  onStatusChange: (next: Status) => void;
-  statusBusy?: boolean;
+  /** The case workflow (stepper, assignee, actions). */
+  workflow: ReactNode;
 }
 
 /** Block 1: the verdict, readable in three seconds, plus what to do next. */
-export function VerdictBlock({ incident, thresholds, onStatusChange, statusBusy = false }: Props) {
+export function VerdictBlock({ incident, thresholds, workflow }: Props) {
   const level = deriveLevel(incident.risk_score, thresholds);
   const modules = incident.module_results.filter((m) => m.findings.length > 0);
   return (
@@ -68,7 +68,7 @@ export function VerdictBlock({ incident, thresholds, onStatusChange, statusBusy 
           <RecommendationCard recommendation={incident.recommendation} />
           <div>
             <p className="verdict__label" style={{ marginBottom: 6 }}>Etap sprawy</p>
-            <StatusStepper status={incident.status} onChange={onStatusChange} busy={statusBusy} />
+            {workflow}
           </div>
         </div>
         <div className="verdict__col">

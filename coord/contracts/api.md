@@ -185,3 +185,5 @@ JWT HS256 (`JWT_SECRET` from env) in an HttpOnly, SameSite=Strict cookie `iw_ses
 
 No login. The URL is normalised (tracking parameters such as `fbclid`, `gclid`, `utm_*` removed; fragment dropped) and hashed; a known URL increments `user_reports_count` and recomputes `priority_score`; a new one is queued through the normal scraper with `platform` detected as usual and `source: "user_report"` recorded on the report. Limits: one report per IP and URL per 24 h, `PUBLIC_REPORTS_PER_HOUR` per IP (default 20), a cap on queued report scans; SSRF guard applies. No browser fingerprinting.
 Events: `incident:updated` on every count change; `alert:viral` (`IncidentSummary`) when a case with `risk_score >= critical` threshold reaches 5 reports.
+
+`GET /api/auth/config` also returns `authenticated: boolean`, so a logged-out page load needs no failing `/api/auth/me` call. `GET /api/audit` also accepts `action`.

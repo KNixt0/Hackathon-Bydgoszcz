@@ -77,3 +77,9 @@
   .thr { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 700px) { .miss { grid-template-columns: 1fr; } .miss__col + .miss__col { border-left: 0; border-top: 1px solid var(--line); } }
+
+/* ── Global thresholds (contract v3 settings) */
+.thr__global { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-4); padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-sunken); }
+.thr__global > span:first-child { flex: 1; min-width: 260px; }
+.thr__preview { font-size: var(--fs-sm); color: var(--orange-ink); background: var(--orange-soft); border: 1px solid var(--orange-line); border-radius: 999px; padding: 1px 8px; }
+.thr__note { font-size: var(--fs-sm); }

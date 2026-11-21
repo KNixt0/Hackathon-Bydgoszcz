@@ -135,7 +135,7 @@ describe("calibration panel", () => {
     expect(screen.getByTestId("nav-flagged")).toHaveTextContent(String(expected.red + expected.orange));
   });
 
-  it("restores a stored v2 threshold on load and can reset to defaults", async () => {
+  it("restores a stored v2 preview on load and can reset to the global thresholds", async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(V2_KEY, JSON.stringify({ red: 55, orange: 25 }));
     mockApi();

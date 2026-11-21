@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api, exportListCsvUrl } from "../api/endpoints";
 import { AlertBanner } from "../components/queue/AlertBanner";
@@ -16,15 +16,13 @@ import { useIncidents } from "../hooks/useIncidents";
 import { useResource } from "../hooks/useResource";
 import { useThresholds } from "../hooks/useThresholds";
 import { useUi } from "../hooks/useUi";
-import type { Status } from "../types/incident";
 
 export function QueuePage() {
   const { thresholds } = useThresholds();
   const incidents = useIncidents();
-  const { notify, setScanOpen } = useUi();
+  const { setScanOpen } = useUi();
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => filtersFromSearch(params), [params]);
-  const [busyIds, setBusyIds] = useState<string[]>([]);
 
   const trends = useResource((signal) => api.trends(30, signal), "trends");
   const { refresh: refreshTrends } = trends;
@@ -50,17 +48,6 @@ export function QueuePage() {
   const rows = useMemo(
     () => (trends.resource.phase === "ready" ? trendRows(trends.resource.data.days ?? [], thresholds, filters.module) : []),
     [trends.resource, thresholds, filters.module],
-  );
-
-  const changeStatus = useCallback(
-    (id: string, status: Status) => {
-      setBusyIds((prev) => [...prev, id]);
-      incidents
-        .changeStatus(id, status)
-        .catch((err: unknown) => notify("error", `Nie zmieniono statusu. ${err instanceof Error ? err.message : ""}`.trim()))
-        .finally(() => setBusyIds((prev) => prev.filter((x) => x !== id)));
-    },
-    [incidents, notify],
   );
 
   const loading = incidents.phase === "loading";
@@ -114,10 +101,8 @@ export function QueuePage() {
               items={visible}
               thresholds={thresholds}
               freshIds={incidents.fresh}
-              busyIds={busyIds}
               loading={loading}
               filtered={filtered}
-              onStatusChange={changeStatus}
               emptyAction={filtered
                 ? <Button onClick={resetFilters}>Wyczyść filtry</Button>
                 : <Button variant="primary" onClick={() => setScanOpen(true)}>Skanuj URL</Button>}

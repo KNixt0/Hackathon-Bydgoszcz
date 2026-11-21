@@ -56,11 +56,27 @@ class Settings(BaseSettings):
     respect_robots: bool = True
     playwright_enabled: bool = True
     chromium_no_sandbox: bool = True  # Chromium's own sandbox needs extra container privileges
+    visual_audit_enabled: bool = True  # render HTML at 3 viewports and measure risk warnings
+    visual_audit_timeout_seconds: float = 20.0  # hard budget per document
     registry_min_entries: int = 3
 
     # --- exports ---
     csv_delimiter: str = ";"
     registry_max_pages: int = 60
+
+    # --- authentication ---
+    app_env: Literal["development", "production"] = "development"
+    jwt_secret: str = ""  # HS256 key; empty/placeholder -> refused in production, random with DEMO_LOGIN
+    jwt_expire_hours: float = 8.0
+    cookie_secure: Literal["auto", "true", "false"] = "auto"  # auto = Secure when the request is HTTPS
+    demo_login: bool = False
+    demo_analyst_email: str = "analityk@uknf.local"
+    demo_analyst_password: str = ""  # empty = the account can only be used through the demo login
+    demo_supervisor_email: str = "kierownik@uknf.local"
+    demo_supervisor_password: str = ""
+    login_max_failures_per_email: int = 5
+    login_max_failures_per_ip: int = 20
+    login_window_seconds: int = 900
 
     @field_validator("database_url")
     @classmethod

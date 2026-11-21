@@ -1,0 +1,154 @@
+{
+ "dominant_font_px": 16,
+ "max_font_px": 32,
+ "has_viewport_meta": true,
+ "viewports": [
+  {
+   "name": "desktop",
+   "width": 1920,
+   "height": 1080,
+   "page_height": 1080,
+   "layout_width": 1920,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1080,
+   "overflow_x": false,
+   "scroll_width": 1920,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "tablet",
+   "width": 768,
+   "height": 1024,
+   "page_height": 1024,
+   "layout_width": 768,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 1024,
+   "overflow_x": false,
+   "scroll_width": 768,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  },
+  {
+   "name": "mobile",
+   "width": 390,
+   "height": 844,
+   "page_height": 956,
+   "layout_width": 390,
+   "scale": 1.0,
+   "screenshot_key": null,
+   "screenshot_height": 956,
+   "overflow_x": false,
+   "scroll_width": 390,
+   "clipped_texts": [],
+   "min_risk_font_px": 16.0,
+   "dominant_font_px": 16
+  }
+ ],
+ "risk_elements": [
+  {
+   "text": "Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków. Kontrakty CFD są złożonymi instrumentami i wiążą się z dużym ryzykiem szybkiej utraty środków pieniężnych z powodu dźwigni finansowej. Większość rachunków inwestorów detalicznych odnotowuje straty pieniężne w wyniku handlu kontraktami CFD. Zastanów się, czy rozumiesz, jak działają kontrakty CFD, i czy możesz pozwolić sobie na wysokie ryzyko utraty pieniędzy.",
+   "font_px": 16,
+   "ratio_to_dominant": 1.0,
+   "color": "rgb(26, 26, 26)",
+   "background": "rgb(255, 244, 229)",
+   "contrast": 16.02,
+   "opacity": 1,
+   "visible": true,
+   "occluded": false,
+   "placement": "body",
+   "requires_interaction": null,
+   "control_text": null,
+   "chars": 445,
+   "bbox": {
+    "x": 594,
+    "y": 343,
+    "w": 727,
+    "h": 89,
+    "viewport": "desktop"
+   },
+   "bbox_of": "element",
+   "bboxes": [
+    {
+     "x": 594,
+     "y": 343,
+     "w": 727,
+     "h": 89,
+     "viewport": "desktop"
+    },
+    {
+     "x": 30,
+     "y": 398,
+     "w": 703,
+     "h": 89,
+     "viewport": "tablet"
+    },
+    {
+     "x": 30,
+     "y": 596,
+     "w": 330,
+     "h": 197,
+     "viewport": "mobile"
+    }
+   ],
+   "by_viewport": {
+    "desktop": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 16.02,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 594,
+      "y": 343,
+      "w": 727,
+      "h": 89,
+      "viewport": "desktop"
+     },
+     "bbox_of": "element"
+    },
+    "tablet": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 16.02,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 30,
+      "y": 398,
+      "w": 703,
+      "h": 89,
+      "viewport": "tablet"
+     },
+     "bbox_of": "element"
+    },
+    "mobile": {
+     "font_px": 16.0,
+     "css_font_px": 16,
+     "visible": true,
+     "occluded": false,
+     "clipped": false,
+     "contrast": 16.02,
+     "requires_interaction": null,
+     "bbox": {
+      "x": 30,
+      "y": 596,
+      "w": 330,
+      "h": 197,
+      "viewport": "mobile"
+     },
+     "bbox_of": "element"
+    }
+   }
+  }
+ ],
+ "performance_blocks": []
+}

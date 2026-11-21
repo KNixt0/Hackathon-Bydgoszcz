@@ -7,7 +7,8 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, field_validator
 
-Status = Literal["new", "in_review", "escalated", "closed_violation", "closed_ok"]
+# contract v3: the case workflow (old closed_violation -> resolved, closed_ok -> false_positive)
+Status = Literal["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"]
 ModuleId = Literal[1, 2, 3]
 Platform = Literal["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"]
 PLATFORMS: tuple[str, ...] = (
@@ -20,7 +21,18 @@ PLATFORMS: tuple[str, ...] = (
     "google_ads",
     "sample",
 )
-STATUSES: tuple[str, ...] = ("new", "in_review", "escalated", "closed_violation", "closed_ok")
+STATUSES: tuple[str, ...] = (
+    "new",
+    "in_review",
+    "escalation_requested",
+    "escalated",
+    "resolved",
+    "false_positive",
+)
+Role = Literal["ANALYST", "SUPERVISOR"]
+EscalationPath = Literal["SUPERVISION_RISK_DEPT", "LEGAL_WARNING_LIST", "THIRD_PARTY_AUDIT"]
+ResolutionAction = Literal["evidence_report", "warning_list_request", "enhanced_monitoring", "false_positive"]
+Label = Literal["unlabeled", "true_positive", "false_positive"]
 
 
 def iso(value: datetime | None) -> str | None:
@@ -50,7 +62,37 @@ class ScanRequest(Strict):
 
 
 class StatusPatch(Strict):
+    """PATCH /api/incidents/{id}: alias of the transition endpoint."""
+
     status: Status
+    reason: str | None = Field(default=None, max_length=2000)
+    escalation_path: EscalationPath | None = None
+    resolution_action: ResolutionAction | None = None
+
+
+class TransitionRequest(Strict):
+    to: Status
+    reason: str | None = Field(default=None, max_length=2000)
+    escalation_path: EscalationPath | None = None
+    resolution_action: ResolutionAction | None = None
+
+
+class LabelRequest(Strict):
+    label: Label
+
+
+class ThresholdsRequest(Strict):
+    flag: float = Field(ge=0, le=100)
+    critical: float = Field(ge=0, le=100)
+
+
+class LoginRequest(Strict):
+    email: str = Field(min_length=1, max_length=255)
+    password: str = Field(min_length=1, max_length=1024)
+
+
+class DemoLoginRequest(Strict):
+    role: Role
 
 
 class ImportRequest(Strict):

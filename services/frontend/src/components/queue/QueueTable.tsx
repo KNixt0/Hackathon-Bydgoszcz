@@ -2,25 +2,22 @@ import { SearchX } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { formatDateTime, hostOf, relativeTime } from "../../domain/format";
-import { PLATFORM_LABEL } from "../../domain/labels";
+import { PLATFORM_LABEL, STATUS_LABEL } from "../../domain/labels";
 import { deriveLevel, type Thresholds } from "../../domain/levels";
-import type { IncidentSummary, Status } from "../../types/incident";
+import type { IncidentSummary } from "../../types/incident";
 import { Badge } from "../ui/Badge";
 import { LevelBadge } from "../ui/LevelBadge";
 import { ModuleTag } from "../ui/ModuleTag";
 import { ScoreRail } from "../ui/ScoreRail";
 import { EmptyState, Skeleton } from "../ui/States";
-import { StatusSelect } from "./StatusSelect";
 
 interface RowProps {
   incident: IncidentSummary;
   thresholds: Thresholds;
   fresh: boolean;
-  busy: boolean;
-  onStatusChange: (id: string, status: Status) => void;
 }
 
-export function QueueRow({ incident: it, thresholds, fresh, busy, onStatusChange }: RowProps) {
+export function QueueRow({ incident: it, thresholds, fresh }: RowProps) {
   const level = deriveLevel(it.risk_score, thresholds);
   const parties = [it.advertiser, it.firm && it.firm !== it.advertiser ? it.firm : null].filter(Boolean).join(" → ");
   const shownRules = it.failed_rules.slice(0, 5);
@@ -60,7 +57,15 @@ export function QueueRow({ incident: it, thresholds, fresh, busy, onStatusChange
       </td>
       <td className="queue__when" title={formatDateTime(it.created_at)}>{relativeTime(it.created_at)}</td>
       <td>
-        <StatusSelect value={it.status} disabled={busy} label={`Status sprawy: ${it.title}`} onChange={(s) => onStatusChange(it.id, s)} />
+        {/* Transitions need context (reasons, escalation path): they happen on the case page. */}
+        <span className="queue__status">
+        <Link to={`/sprawy/${it.id}#werdykt`} aria-label={`Status sprawy: ${it.title}: ${STATUS_LABEL[it.status] ?? it.status}`} data-status={it.status}>
+          {STATUS_LABEL[it.status] ?? it.status}
+        </Link>
+        <span className="muted truncate queue__assignee" title={it.workflow?.assigned_to ?? undefined}>
+          {it.workflow?.assigned_to ?? "nieprzypisana"}
+        </span>
+        </span>
       </td>
     </tr>
   );
@@ -70,14 +75,12 @@ interface Props {
   items: IncidentSummary[];
   thresholds: Thresholds;
   freshIds: readonly string[];
-  busyIds: readonly string[];
   loading?: boolean;
-  onStatusChange: (id: string, status: Status) => void;
   emptyAction?: ReactNode;
   filtered?: boolean;
 }
 
-export function QueueTable({ items, thresholds, freshIds, busyIds, loading = false, onStatusChange, emptyAction, filtered = false }: Props) {
+export function QueueTable({ items, thresholds, freshIds, loading = false, emptyAction, filtered = false }: Props) {
   if (!loading && items.length === 0) {
     return filtered ? (
       <EmptyState icon={<SearchX />} title="Żadna sprawa nie spełnia filtrów" text="Zmień kryteria albo wyczyść filtry, aby zobaczyć całą kolejkę." action={emptyAction} />
@@ -101,7 +104,7 @@ export function QueueTable({ items, thresholds, freshIds, busyIds, loading = fal
             <th scope="col">Źródło</th>
             <th scope="col">Naruszone kryteria</th>
             <th scope="col">Wykryto</th>
-            <th scope="col">Status</th>
+            <th scope="col">Status i prowadzący</th>
           </tr>
         </thead>
         <tbody>
@@ -123,8 +126,6 @@ export function QueueTable({ items, thresholds, freshIds, busyIds, loading = fal
                   incident={it}
                   thresholds={thresholds}
                   fresh={freshIds.includes(it.id)}
-                  busy={busyIds.includes(it.id)}
-                  onStatusChange={onStatusChange}
                 />
               ))}
         </tbody>

@@ -251,3 +251,21 @@
 }
 
 @media (max-width: 820px) { .graph__side { grid-template-columns: minmax(0, 1fr); } }
+
+/* ── Case workflow (contract v3) */
+.workflow { display: flex; flex-direction: column; gap: 10px; }
+.workflow__facts { font-size: var(--fs-sm); }
+.workflow__assignee { display: inline-flex; align-items: center; gap: 5px; }
+.workflow__assignee svg { width: 13px; height: 13px; color: var(--muted); }
+.workflow__wait { font-size: var(--fs-sm); color: var(--orange-ink); }
+.workflow__row { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: flex-end; }
+.workflow__label { width: 220px; }
+.textarea { height: auto; min-height: 84px; padding: 8px 10px; resize: vertical; line-height: 1.45; }
+
+.history { display: flex; flex-direction: column; }
+.history__item { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: var(--sp-3); padding: 10px var(--sp-4); border-bottom: 1px solid var(--line); }
+.history__item:last-child { border-bottom: 0; }
+.history__when { color: var(--muted); font-size: var(--fs-sm); }
+.history__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.history__change { font-size: var(--fs-sm); color: var(--ink-2); }
+.history__reason { font-size: var(--fs-sm); color: var(--ink); background: var(--surface-sunken); border-left: 3px solid var(--line-strong); padding: 4px 8px; margin-top: 2px; overflow-wrap: anywhere; }
