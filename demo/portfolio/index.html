@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio</title>
+  <meta name="description" content="Portfolio: projekty, umiejętności i kontakt.">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <script type="module" src="components/site-nav.js"></script>
+  <script type="module" src="components/site-footer.js"></script>
+  <script type="module" src="components/site-hero.js"></script>
+  <script type="module" src="components/site-about.js"></script>
+  <script type="module" src="components/project-grid.js"></script>
+  <script type="module" src="components/contact-form.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Przejdź do treści</a>
+<site-nav></site-nav>
+<main id="main">
+  <site-hero id="top"></site-hero>
+  <site-about id="about"></site-about>
+  <project-grid id="projects" src="data/projects.json"></project-grid>
+  <contact-form id="contact"></contact-form>
+</main>
+<site-footer></site-footer>
+</body>
+</html>
