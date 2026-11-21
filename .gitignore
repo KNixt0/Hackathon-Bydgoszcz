@@ -1,0 +1,6 @@
+.worktrees/
+.claude/settings.local.json
+.DS_Store
+node_modules/
+.env
+.env.*

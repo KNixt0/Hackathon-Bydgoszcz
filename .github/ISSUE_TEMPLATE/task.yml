@@ -1,0 +1,26 @@
+name: Swarm task
+description: One unit of agent work (1–3h). See coord/PROTOCOL.md.
+labels: ["status:ready"]
+body:
+  - type: textarea
+    id: goal
+    attributes: { label: Goal, description: One sentence. }
+    validations: { required: true }
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - [ ]
+        - [ ] scripts/check.sh passes
+    validations: { required: true }
+  - type: textarea
+    id: owns
+    attributes: { label: Owns, description: "The only paths this task may change, e.g. src/feature-x/**" }
+    validations: { required: true }
+  - type: textarea
+    id: reads
+    attributes: { label: Reads, description: "Contracts / files to read first" }
+  - type: input
+    id: deps
+    attributes: { label: Dependencies, description: "Write as: Depends on: #12, #14", placeholder: "Depends on: " }
