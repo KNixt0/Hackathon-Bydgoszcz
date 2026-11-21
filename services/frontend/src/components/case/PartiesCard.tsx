@@ -56,9 +56,10 @@ function PartyRow({ role, party, checks }: { role: string; party: Party; checks:
 }
 
 /** Who is involved, with the register results that matter next to each name. */
-export function PartiesCard({ entities, registryChecks }: { entities: Entities; registryChecks: RegistryCheck[] }) {
+export function PartiesCard({ entities, registryChecks, inScope = true }: { entities: Entities; registryChecks: RegistryCheck[]; inScope?: boolean }) {
   const rows: { role: string; party: Party }[] = [];
-  if (entities.investment_firm) rows.push({ role: "Firma inwestycyjna (reklamowana)", party: entities.investment_firm });
+  // outside UKNF's remit the advertised entity is not treated as an investment firm (contract v4 scope)
+  if (entities.investment_firm) rows.push({ role: inScope ? "Firma inwestycyjna (reklamowana)" : "Podmiot reklamowany", party: entities.investment_firm });
   if (entities.advertiser && entities.advertiser.name !== entities.investment_firm?.name) rows.push({ role: "Publikujący materiał", party: entities.advertiser });
   for (const p of entities.others) rows.push({ role: KIND_LABEL[p.kind] ?? "Podmiot powiązany", party: p });
   if (rows.length === 0) return <p className="muted">Silnik nie ustalił podmiotów w tym materiale.</p>;

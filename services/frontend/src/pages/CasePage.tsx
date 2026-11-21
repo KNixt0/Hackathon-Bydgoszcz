@@ -214,7 +214,8 @@ export function CasePage() {
                 {PLATFORM_LABEL[inc.source.platform] ?? inc.source.platform},{" "}
                 {href ? <a href={href} target="_blank" rel="noopener noreferrer">{hostOf(inc.source.url)}<span className="sr-only"> (otwiera się w nowej karcie)</span></a> : hostOf(inc.source.url)}
               </dd>
-              <dt>Moduły</dt><dd>{inc.modules.map((m) => `${m} ${MODULE_LABEL[m]}`).join("; ")}</dd>
+              <dt>Moduły</dt>
+              <dd>{inc.scope?.in_scope === false ? <span className="muted">żaden: materiał poza właściwością UKNF</span> : inc.modules.map((m) => `${m} ${MODULE_LABEL[m]}`).join("; ")}</dd>
               <dt>Aktualizacja</dt><dd>{formatDateTime(inc.updated_at)}</dd>
               <dt>Silnik</dt>
               <dd>{inc.engine.version}{inc.engine.llm_used && inc.engine.model ? `, model ${inc.engine.model}` : ", bez modelu językowego"}, {(inc.engine.duration_ms / 1000).toFixed(1).replace(".", ",")} s</dd>
@@ -246,7 +247,7 @@ export function CasePage() {
             </section>
             <section className="csec" aria-labelledby="podmioty-h">
               <h2 className="section-title" id="podmioty-h">Podmioty</h2>
-              <PartiesCard entities={inc.entities} registryChecks={inc.registry_checks} />
+              <PartiesCard entities={inc.entities} registryChecks={inc.registry_checks} inScope={inc.scope?.in_scope !== false} />
             </section>
             <section className="csec" aria-labelledby="pliki-h">
               <h2 className="section-title" id="pliki-h">Pliki do pobrania</h2>

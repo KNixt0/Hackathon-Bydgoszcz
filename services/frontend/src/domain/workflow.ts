@@ -113,7 +113,9 @@ export function availableActions(status: Status, role: Role, assignedTo: string 
   if (status === "escalated") {
     out.push({ ...ACTIONS.record_intervention, primary: true }, ACTIONS.close_violation, ACTIONS.close_false_positive);
   }
-  if (status === "awaiting_correction") out.push(ACTIONS.close_after_follow_up, ACTIONS.reopen_review, ACTIONS.request_escalation);
+  if (status === "awaiting_correction") {
+    out.push(ACTIONS.close_after_follow_up, ACTIONS.reopen_review, { ...ACTIONS.request_escalation, primary: false });
+  }
   return out.filter((a) => !a.to || TRANSITIONS[status].includes(a.to));
 }
 
