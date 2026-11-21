@@ -1,0 +1,47 @@
+[
+  {
+    "id": "rozklad-mzk-bydgoszcz",
+    "title": "Rozkład MZK na żywo",
+    "year": 2025,
+    "summary": "Aplikacja PWA pokazująca odjazdy tramwajów i autobusów w Bydgoszczy, działająca także offline.",
+    "tags": ["pwa", "javascript", "offline"],
+    "url": "https://example.com/rozklad-mzk",
+    "image": null
+  },
+  {
+    "id": "brda-spacerownik",
+    "title": "Spacerownik nad Brdą",
+    "year": 2025,
+    "summary": "Interaktywna mapa tras spacerowych wzdłuż Brdy z opisami zabytków i punktów widokowych.",
+    "tags": ["react", "mapy", "a11y"],
+    "url": "https://example.com/spacerownik",
+    "image": null
+  },
+  {
+    "id": "sklep-ceramika",
+    "title": "Sklep z ceramiką",
+    "year": 2024,
+    "summary": "Responsywny sklep internetowy dla lokalnej pracowni ceramiki z koszykiem i szybkim filtrowaniem.",
+    "tags": ["vue", "e-commerce", "css"],
+    "url": "https://example.com/ceramika",
+    "image": null
+  },
+  {
+    "id": "panel-biblioteki",
+    "title": "Panel biblioteki osiedlowej",
+    "year": 2024,
+    "summary": "Dostępny panel do rezerwacji książek, zgodny z WCAG AA i w pełni obsługiwany klawiaturą.",
+    "tags": ["a11y", "typescript", "react"],
+    "url": "https://example.com/biblioteka",
+    "image": null
+  },
+  {
+    "id": "design-system-lite",
+    "title": "Design system Lite",
+    "year": 2023,
+    "summary": "Lekka biblioteka komponentów w Web Components z tokenami i trybem ciemnym dla małych zespołów.",
+    "tags": ["web-components", "css", "design-system"],
+    "url": "https://example.com/design-system",
+    "image": null
+  }
+]
