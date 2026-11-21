@@ -23,6 +23,8 @@ Jeśli używasz Claude Code, uruchom raz `claude` w tym folderze i zaakceptuj �
 
 ## 2. Zamelduj się (na początku każdej sesji)
 
+**Imię właściciela jest wymagane.** Bez niego meldunek jest odrzucany. Ustaw je raz na sesję terminala: `export SWARM_OPERATOR_NAME="Imię Nazwisko"` (albo dodaj `--name "Imię Nazwisko"` do `checkin`).
+
 ```bash
 ./swarm checkin --tool claude --model sonnet          # Claude Code
 ./swarm checkin --tool codex  --model gpt-5 --tier strong

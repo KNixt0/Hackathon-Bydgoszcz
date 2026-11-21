@@ -116,7 +116,7 @@ case "$cmd" in
   rollcall)
     n=$(gh issue list --state open --label swarm:roster --json number --jq '.[0].number // empty')
     [[ -n "$n" ]] || { echo "brak issue z etykietą swarm:roster"; exit 1; }
-    gh issue comment "$n" --body "Roll call: who operates you? Answer with the check-in block (coord/PROTOCOL.md §0)." >/dev/null
+    gh issue comment "$n" --body "Roll call: who operates you? Answer with the check-in block (coord/PROTOCOL.md §0). **operator + operator_name (your owner's name) are required, answers without them are not accepted.**" >/dev/null
     echo "Zapytano na #$n. Odpowiedzi zobaczysz w: ./swarm agents"
     ;;
   agents)
@@ -132,7 +132,8 @@ for a in rows:
     w = a.get("working_on") or "none"
     work = " #" + w if st == "busy" and w != "none" else ""
     name, tier, tool, model = a["agent"], a.get("tier", "?"), a.get("tool", "?"), a.get("model", "?")
-    print(f"  {st:8} {name:36} {tier:9} {tool}/{model}{work}  ({int(age)} min temu)")
+    owner = (a.get("operator_name") or "").strip() or "!! BRAK WŁAŚCICIELA (nie liczy się)"
+    print(f"  {st:8} {name:36} {tier:9} {tool}/{model}{work}  właściciel: {owner}  ({int(age)} min temu)")
 '
     ;;
   status)

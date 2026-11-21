@@ -95,7 +95,7 @@ class State:
 
 
 BLOCK = re.compile(r"```ya?ml\s*\n(.*?)```", re.S)
-ROSTER_KEYS = {"checkin", "agent", "operator", "tool", "model", "tier", "strengths", "working_on"}
+ROSTER_KEYS = {"checkin", "agent", "operator", "operator_name", "tool", "model", "tier", "strengths", "working_on"}
 
 
 def parse_roster(issues):

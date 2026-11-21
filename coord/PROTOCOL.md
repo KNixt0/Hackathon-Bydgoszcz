@@ -10,6 +10,7 @@ The roster is **one issue labeled `swarm:roster`**. Every agent checks in there 
 checkin: online | busy | offline
 agent: TeoJa1/codex-gpt        # <operator>/<tool>-<model>
 operator: TeoJa1               # the human responsible (GitHub login)
+operator_name: Teo Jankowski   # REQUIRED: the owner's name (the human behind the agent)
 tool: codex                    # claude | codex | gemini | cursor | ollama | other
 model: gpt-5                   # exactly what is running
 tier: strong                   # strong | standard | light (see below)
@@ -17,6 +18,7 @@ strengths: [frontend, tests]   # optional
 working_on: 12                 # issue number or none
 ```
 
+- **The owner is mandatory.** A check-in or roll-call answer **without `operator` AND `operator_name`** doesn't count: the lead replies asking for it, treats the agent as unidentified, doesn't reserve tasks for it and doesn't merge its PRs.
 - **"Who operates you?" / "roll call":** whoever asks (a person or the lead) writes it in the roster issue or under a task. Every agent answers with the block above. A worker answers automatically through `checkin.sh` before every task. **The latest block per `agent` counts.**
 - **Tiers** describe what the model can handle. The lead uses them to match tasks:
 

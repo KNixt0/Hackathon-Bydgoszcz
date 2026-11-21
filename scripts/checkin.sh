@@ -2,12 +2,14 @@
 # Post this agent's check-in block on the roster issue (label swarm:roster).
 # usage: scripts/checkin.sh [--status online|busy|offline] [--issue N]
 #                           [--tool T] [--model M] [--tier strong|standard|light] [--strengths "a,b"]
-# Defaults come from env: SWARM_TOOL, SWARM_MODEL, SWARM_TIER, SWARM_STRENGTHS.
+#                           [--name "Owner Name"]   (REQUIRED: the human who owns this agent)
+# Defaults come from env: SWARM_TOOL, SWARM_MODEL, SWARM_TIER, SWARM_STRENGTHS, SWARM_OPERATOR_NAME.
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 status=online; issue=none
 tool="${SWARM_TOOL:-claude}"; model="${SWARM_MODEL:-}"; tier="${SWARM_TIER:-}"; strengths="${SWARM_STRENGTHS:-}"
+name="${SWARM_OPERATOR_NAME:-}"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --status) status="$2"; shift 2 ;;
@@ -16,9 +18,16 @@ while [[ $# -gt 0 ]]; do
     --model) model="$2"; shift 2 ;;
     --tier) tier="$2"; shift 2 ;;
     --strengths) strengths="$2"; shift 2 ;;
+    --name) name="$2"; shift 2 ;;
     *) echo "unknown option $1" >&2; exit 2 ;;
   esac
 done
+
+if [[ -z "${name// /}" ]]; then
+  echo "Brak imienia właściciela. Podaj --name \"Imię Nazwisko\" albo export SWARM_OPERATOR_NAME=\"Imię Nazwisko\"." >&2
+  echo "Meldunek bez właściciela nie jest akceptowany (PROTOCOL §0)." >&2
+  exit 2
+fi
 
 # Claude defaults from coord/roles.json (builder) when not given.
 if [[ "$tool" == "claude" && -z "$model" ]]; then read -r model _ < <(python3 scripts/roles.py builder); fi
@@ -41,6 +50,7 @@ body=$(cat <<EOF
 checkin: $status
 agent: $agent
 operator: $operator
+operator_name: $name
 tool: $tool
 model: $model
 tier: $tier
@@ -50,4 +60,4 @@ working_on: $issue
 EOF
 )
 gh issue comment "$roster" --body "$body" >/dev/null
-echo "checked in on #$roster as $agent ($tier, $status)"
+echo "checked in on #$roster as $agent, owner $name ($tier, $status)"

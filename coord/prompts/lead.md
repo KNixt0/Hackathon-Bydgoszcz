@@ -8,6 +8,8 @@ Repeat this loop until I stop you. Use `gh` for everything.
 Agents may run on different tools and models: Claude, Codex, Gemini, local models.
 - Read the issue labeled `swarm:roster`: `gh issue list --label swarm:roster`, then `gh issue view <n> --comments`. For each `agent`, the **latest** YAML block counts. Online = a block from the last 30 minutes with `checkin: online|busy`.
 - Do a roll call at the start and every 30 minutes: comment on the roster issue `Roll call: who operates you? Answer with the check-in block (PROTOCOL §0).` Agents that don't answer within 30 minutes count as offline.
+- **The owner is mandatory.** Count only blocks that contain `operator` **and** a non-empty `operator_name`. For a block without them, reply under it: `Missing owner: add operator_name (your owner's name) and re-check in: ./swarm checkin --name "Name"`. Until then the agent is unidentified: no reservations, no merges of its PRs.
+- **After the demo** (once #10 QA is closed): do a roll call with `./swarm rollcall`, wait 30 minutes and report to the user a table of agent → owner (operator_name) → tool/model → tier. Agents without an owner are listed as "rejected".
 - If you can't tell who operates an agent (a PR or comment without `agent:`/`model:`), ask under that PR: `Who operates you? Answer with the check-in block.` Don't merge a PR from an unidentified agent.
 
 ## 1. Delegate (adapt tasks to the agents)
