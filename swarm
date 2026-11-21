@@ -19,6 +19,7 @@ $(b "./swarm") — sterowanie swarmem agentów
 
   $(b tasks)           wolne zadania z obszarem (area:…) i trudnością
   $(b claim) N         weź zadanie N do pracy ręcznej (np. w Cursorze / Antigravity)
+  $(b preview) [N]     podgląd produktu na żywo (docker compose) dla zadania N, osobne porty
   $(b done) N ["opis"] sprawdź, wypchnij i otwórz PR dla zadania N
   $(b unclaim) N       oddaj zadanie N z powrotem do puli
 
@@ -67,6 +68,23 @@ case "$cmd" in
       | { out=$(cat); echo "${out:-  (brak wolnych zadań)}"; } ;;
   roles)  role table ;;
   checkin) exec ./scripts/checkin.sh "$@" ;;
+  preview)
+    # Live preview of the PRODUCT for one task's worktree (or main checkout without N).
+    # Ports are offset per task, so several previews can run side by side.
+    n="${1:-}"; dir="."; [[ -n "$n" ]] && dir=".worktrees/$n"
+    [[ -d "$dir" ]] || { echo "brak $dir (najpierw ./swarm claim $n)"; exit 1; }
+    ls "$dir"/docker-compose.y*ml "$dir"/compose.y*ml >/dev/null 2>&1 || {
+      echo "brak docker-compose.yml w $dir — powstanie w zadaniu „skeleton”. Do tego czasu: ./swarm view (podgląd pracy swarmu)."; exit 1; }
+    off=$(( (${n:-0} % 100) * 10 ))
+    export COMPOSE_PROJECT_NAME="hb${n:+-$n}"
+    export FRONTEND_PORT=$((5000 + off)) BACKEND_PORT=$((6000 + off)) AI_PORT=$((7000 + off))
+    echo "▶ podgląd ${n:+zadania #$n }($dir)"
+    echo "  frontend  http://localhost:$FRONTEND_PORT"
+    echo "  backend   http://localhost:$BACKEND_PORT"
+    echo "  ai        http://localhost:$AI_PORT"
+    echo "  stop: Ctrl+C, sprzątanie: (cd $dir && docker compose down -v)"
+    cd "$dir" && exec docker compose up --build
+    ;;
   claim)
     [[ -n "${1:-}" ]] || { echo "użycie: ./swarm claim <nr zadania>"; exit 1; }
     out=$(./scripts/claim.sh "$1" "${SWARM_TOOL:-manual}") || exit 1
