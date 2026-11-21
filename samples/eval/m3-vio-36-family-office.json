@@ -1,0 +1,34 @@
+{
+ "meta": {
+  "url": "https://aurora-zmyslona.example/m3-vio-36-family-office",
+  "platform": "web",
+  "title": "Aurora Zmyślona Family Office",
+  "published_at": "2026-11-19",
+  "seed": true,
+  "detected_days_ago": 1
+ },
+ "text": "Aurora Zmyślona Family Office sp. z o.o. opiekuje się majątkiem zamożnych rodzin. Nasz zespół przygotuje dla Państwa indywidualne rekomendacje: wskażemy, które obligacje i akcje kupić, a których się pozbyć, na podstawie Państwa sytuacji. Umów bezpłatną konsultację.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Aurora Zmyślona Family Office sp. z o.o.",
+    "role": "investment_firm",
+    "country": "PL",
+    "incorporated_on": "2024-02-01",
+    "share_capital_pln": 50000,
+    "statements": [
+     {
+      "year": 2024,
+      "revenue_pln": 410000,
+      "net_result_pln": 35000,
+      "filed": true
+     }
+    ]
+   }
+  ]
+ }
+}

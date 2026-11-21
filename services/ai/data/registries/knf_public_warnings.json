@@ -13,7 +13,7 @@
     "zmyslonykapital.example"
    ],
    "status": "warning",
-   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia (art. 178 ustawy o obrocie)",
+   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia",
    "synthetic": true
   },
   {
@@ -22,7 +22,7 @@
     "FikcjaTrade"
    ],
    "status": "warning",
-   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia (art. 178 ustawy o obrocie)",
+   "detail": "Wpis przykładowy: podejrzenie prowadzenia działalności maklerskiej bez zezwolenia",
    "synthetic": true
   },
   {

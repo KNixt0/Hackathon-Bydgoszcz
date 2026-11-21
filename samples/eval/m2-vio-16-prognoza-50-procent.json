@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://wisla-zmyslona.example/m2-vio-16-prognoza-50-procent",
+  "platform": "web",
+  "title": "Akcje spółek AI wzrosną o 50%",
+  "published_at": "2026-10-29",
+  "seed": true,
+  "detected_days_ago": 22
+ },
+ "text": "Materiał promocyjny Dom Maklerski Wisła Zmyślona S.A.. Akcje spółek z sektora sztucznej inteligencji wzrosną o 50% do końca roku. Kup teraz przez nasz rachunek. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

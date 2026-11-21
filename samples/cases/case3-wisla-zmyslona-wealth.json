@@ -1,0 +1,530 @@
+{
+ "meta": {
+  "url": "https://wisla-zmyslona-vip.example/oferta",
+  "platform": "web",
+  "title": "Wisła Zmyślona Wealth Management: gwarantowany zysk 12% miesięcznie",
+  "published_at": "2026-11-18",
+  "seed": false,
+  "detected_days_ago": 0
+ },
+ "html_file": "case3-wisla-zmyslona-wealth.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": null,
+  "demo_case": "case3",
+  "module_hint": 3,
+  "cooperation_notified": null,
+  "declared": {
+   "advisor_licence_no": "4821"
+  },
+  "companies": [
+   {
+    "name": "Wisła Zmyślona Wealth Management Ltd",
+    "role": "investment_firm",
+    "incorporated_on": "2026-09-03",
+    "country": "SC",
+    "statements": []
+   }
+  ],
+  "graph": {
+   "nodes": [
+    {
+     "id": "shell",
+     "type": "company",
+     "label": "Wisła Zmyślona Wealth Management Ltd",
+     "meta": {
+      "role": "investment_firm",
+      "country": "SC",
+      "note": "podmiot fikcyjny"
+     }
+    },
+    {
+     "id": "nominee",
+     "type": "person",
+     "label": "Dyrektor nominowany (osoba fikcyjna)",
+     "meta": {
+      "country": "SC"
+     }
+    },
+    {
+     "id": "callcenter",
+     "type": "company",
+     "label": "Zmyślone Call Center OÜ",
+     "meta": {
+      "country": "EE",
+      "note": "podmiot fikcyjny"
+     }
+    },
+    {
+     "id": "bartek",
+     "type": "influencer",
+     "label": "Bartek Zmyślony (Giełda Bez Tajemnic)",
+     "meta": {
+      "note": "twórca fikcyjny"
+     }
+    },
+    {
+     "id": "brand",
+     "type": "company",
+     "label": "Dom Maklerski Wisła Zmyślona S.A.",
+     "meta": {
+      "note": "zarejestrowany podmiot fikcyjny, pod którego markę podszywa się oferta"
+     }
+    },
+    {
+     "id": "ad",
+     "type": "ad",
+     "label": "Strona oferty wisla-zmyslona-vip.example"
+    }
+   ],
+   "edges": [
+    {
+     "source": "nominee",
+     "target": "shell",
+     "type": "board_member",
+     "label": "jedyny dyrektor"
+    },
+    {
+     "source": "nominee",
+     "target": "callcenter",
+     "type": "owner",
+     "label": "właściciel"
+    },
+    {
+     "source": "callcenter",
+     "target": "bartek",
+     "type": "contract",
+     "label": "płatne polecenia"
+    },
+    {
+     "source": "bartek",
+     "target": "ad",
+     "type": "promotes",
+     "label": "poleca ofertę"
+    },
+    {
+     "source": "shell",
+     "target": "ad",
+     "type": "publishes",
+     "label": "publikuje"
+    }
+   ]
+  },
+  "comments": [
+   {
+    "handle": "@wealth_winner74854",
+    "account_created": "2026-11-11T20:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!",
+    "posted_at": "2026-11-18T09:58:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king36445",
+    "account_created": "2026-11-13T20:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!",
+    "posted_at": "2026-11-18T15:05:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny69222",
+    "account_created": "2026-11-11T20:00:00Z",
+    "country": "PK",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam Wisla Wealth!",
+    "posted_at": "2026-11-18T16:31:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip66080",
+    "account_created": "2026-11-12T21:00:00Z",
+    "country": "ID",
+    "lang": "en",
+    "text": "Guaranteed profit, no risk, thank you Wisla Wealth!",
+    "posted_at": "2026-11-18T15:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner63141",
+    "account_created": "2026-11-13T09:00:00Z",
+    "country": "BD",
+    "lang": "pl",
+    "text": "Polecam, gwarantowany zysk co miesiac!",
+    "posted_at": "2026-11-18T17:29:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king83411",
+    "account_created": "2026-11-10T09:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!!",
+    "posted_at": "2026-11-18T13:03:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny40635",
+    "account_created": "2026-11-14T15:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "My advisor told me exactly what to buy, thank you!",
+    "posted_at": "2026-11-18T06:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip97497",
+    "account_created": "2026-11-14T23:00:00Z",
+    "country": "PH",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam!",
+    "posted_at": "2026-11-18T17:33:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner55955",
+    "account_created": "2026-11-16T08:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!!",
+    "posted_at": "2026-11-18T11:27:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king72924",
+    "account_created": "2026-11-16T21:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Doradca powiedzial mi co kupic, zysk gwarantowany!",
+    "posted_at": "2026-11-18T10:11:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny15469",
+    "account_created": "2026-11-16T01:00:00Z",
+    "country": "PK",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!",
+    "posted_at": "2026-11-18T11:26:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip37382",
+    "account_created": "2026-11-11T02:00:00Z",
+    "country": "ID",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!",
+    "posted_at": "2026-11-18T18:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner48052",
+    "account_created": "2026-11-10T20:00:00Z",
+    "country": "BD",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam Wisla Wealth!",
+    "posted_at": "2026-11-18T11:29:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king31908",
+    "account_created": "2026-11-14T08:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Guaranteed profit, no risk, thank you Wisla Wealth!",
+    "posted_at": "2026-11-18T11:27:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny935",
+    "account_created": "2026-11-12T16:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, gwarantowany zysk co miesiac!",
+    "posted_at": "2026-11-18T17:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip39990",
+    "account_created": "2026-11-14T12:00:00Z",
+    "country": "PH",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!!",
+    "posted_at": "2026-11-18T12:38:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner24405",
+    "account_created": "2026-11-15T03:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "My advisor told me exactly what to buy, thank you!",
+    "posted_at": "2026-11-18T21:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king4414",
+    "account_created": "2026-11-12T20:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam!",
+    "posted_at": "2026-11-18T18:45:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny89613",
+    "account_created": "2026-11-14T03:00:00Z",
+    "country": "PK",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!!",
+    "posted_at": "2026-11-18T07:04:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip19623",
+    "account_created": "2026-11-10T03:00:00Z",
+    "country": "ID",
+    "lang": "pl",
+    "text": "Doradca powiedzial mi co kupic, zysk gwarantowany!",
+    "posted_at": "2026-11-18T19:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner41591",
+    "account_created": "2026-11-10T01:00:00Z",
+    "country": "BD",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!",
+    "posted_at": "2026-11-18T12:59:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king36197",
+    "account_created": "2026-11-12T06:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!",
+    "posted_at": "2026-11-18T20:47:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny25375",
+    "account_created": "2026-11-15T20:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam Wisla Wealth!",
+    "posted_at": "2026-11-18T12:37:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip60104",
+    "account_created": "2026-11-14T15:00:00Z",
+    "country": "PH",
+    "lang": "en",
+    "text": "Guaranteed profit, no risk, thank you Wisla Wealth!",
+    "posted_at": "2026-11-18T19:28:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner47031",
+    "account_created": "2026-11-14T17:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam, gwarantowany zysk co miesiac!",
+    "posted_at": "2026-11-18T13:45:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king40471",
+    "account_created": "2026-11-13T02:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!!",
+    "posted_at": "2026-11-18T06:09:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny63168",
+    "account_created": "2026-11-13T12:00:00Z",
+    "country": "PK",
+    "lang": "en",
+    "text": "My advisor told me exactly what to buy, thank you!",
+    "posted_at": "2026-11-18T18:56:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip47488",
+    "account_created": "2026-11-10T21:00:00Z",
+    "country": "ID",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam!",
+    "posted_at": "2026-11-18T20:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner32054",
+    "account_created": "2026-11-10T17:00:00Z",
+    "country": "BD",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!!",
+    "posted_at": "2026-11-18T16:49:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king58243",
+    "account_created": "2026-11-15T10:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Doradca powiedzial mi co kupic, zysk gwarantowany!",
+    "posted_at": "2026-11-18T20:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny92125",
+    "account_created": "2026-11-16T05:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!",
+    "posted_at": "2026-11-18T14:26:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip95699",
+    "account_created": "2026-11-14T15:00:00Z",
+    "country": "PH",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!",
+    "posted_at": "2026-11-18T06:34:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner90648",
+    "account_created": "2026-11-10T19:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam Wisla Wealth!",
+    "posted_at": "2026-11-18T18:27:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king37026",
+    "account_created": "2026-11-13T08:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "Guaranteed profit, no risk, thank you Wisla Wealth!",
+    "posted_at": "2026-11-18T13:12:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny66546",
+    "account_created": "2026-11-13T08:00:00Z",
+    "country": "PK",
+    "lang": "pl",
+    "text": "Polecam, gwarantowany zysk co miesiac!",
+    "posted_at": "2026-11-18T14:03:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip81647",
+    "account_created": "2026-11-16T15:00:00Z",
+    "country": "ID",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!!",
+    "posted_at": "2026-11-18T12:37:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner2791",
+    "account_created": "2026-11-16T12:00:00Z",
+    "country": "BD",
+    "lang": "en",
+    "text": "My advisor told me exactly what to buy, thank you!",
+    "posted_at": "2026-11-18T11:25:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@profit_king42692",
+    "account_created": "2026-11-11T03:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobilem 14% w miesiac, polecam!",
+    "posted_at": "2026-11-18T09:09:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zysk_pewny93380",
+    "account_created": "2026-11-12T19:00:00Z",
+    "country": "VN",
+    "lang": "en",
+    "text": "Wisla Wealth changed my life, guaranteed profit!!",
+    "posted_at": "2026-11-18T10:53:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@trader_vip81833",
+    "account_created": "2026-11-11T23:00:00Z",
+    "country": "PH",
+    "lang": "pl",
+    "text": "Doradca powiedzial mi co kupic, zysk gwarantowany!",
+    "posted_at": "2026-11-18T12:02:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@wealth_winner56209",
+    "account_created": "2026-11-13T10:00:00Z",
+    "country": "NG",
+    "lang": "en",
+    "text": "Best investment ever, 12% every month!",
+    "posted_at": "2026-11-18T17:01:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@zaniepokojona_anna",
+    "account_created": "2020-06-17T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Uwaga, tej firmy nie ma w rejestrze KNF!",
+    "posted_at": "2026-11-15T20:00:00Z",
+    "rating": 1
+   },
+   {
+    "handle": "@marcin_z_bydgoszczy",
+    "account_created": "2016-09-20T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Wpłaciłem 5 tys. i nie mogę wypłacić pieniędzy.",
+    "posted_at": "2026-11-16T12:00:00Z",
+    "rating": 1
+   },
+   {
+    "handle": "@uwazny_senior",
+    "account_created": "2018-11-20T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dzwonią do mnie codziennie, to wygląda na oszustwo.",
+    "posted_at": "2026-11-17T19:00:00Z",
+    "rating": 1
+   },
+   {
+    "handle": "@kasia_prawniczka",
+    "account_created": "2017-05-13T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Podszywają się pod dom maklerski, zgłosiłam to.",
+    "posted_at": "2026-11-18T16:00:00Z",
+    "rating": 1
+   },
+   {
+    "handle": "@tomek_analityk",
+    "account_created": "2022-11-15T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Licencja nr 4821 nie istnieje, sprawdziłem.",
+    "posted_at": "2026-11-19T13:00:00Z",
+    "rating": 1
+   }
+  ]
+ }
+}

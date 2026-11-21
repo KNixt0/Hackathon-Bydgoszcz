@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bank-jantarowy.example/m2-vio-10-gwarancja-knf",
+  "platform": "google_ads",
+  "title": "Gwarantowany zysk, produkt zatwierdzony przez KNF",
+  "published_at": "2026-11-16",
+  "seed": true,
+  "detected_days_ago": 4
+ },
+ "text": "Bank Jantarowy Fikcyjny S.A.: lokata inwestycyjna z gwarantowanym zyskiem 9%. Produkt zatwierdzony przez KNF, więc Twoje pieniądze są w pełni bezpieczne. Otwórz rachunek online.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

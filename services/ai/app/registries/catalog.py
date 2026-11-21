@@ -37,8 +37,11 @@ REGISTRIES: dict[str, tuple[str, str]] = {
 }
 
 KNF_FIRM_REGISTERS = [
-    "knf_investment_firms", "knf_banks_brokerage", "knf_brokerage_houses",
-    "knf_foreign_branches", "knf_foreign_cross_border",
+    "knf_investment_firms",
+    "knf_banks_brokerage",
+    "knf_brokerage_houses",
+    "knf_foreign_branches",
+    "knf_foreign_cross_border",
 ]
 # Sub-registers whose union forms the umbrella "Rejestr firm inwestycyjnych".
 KNF_SUB_REGISTERS = KNF_FIRM_REGISTERS[1:]

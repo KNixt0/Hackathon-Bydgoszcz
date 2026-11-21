@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://bank-jantarowy.example/m3-ok-43-wealth-management-bank",
+  "platform": "web",
+  "title": "Wealth management w Banku Jantarowym Fikcyjnym",
+  "published_at": "2026-10-26",
+  "seed": true,
+  "detected_days_ago": 25
+ },
+ "text": "Wealth management w Bank Jantarowy Fikcyjny S.A.: zarządzanie portfelem na zlecenie w ramach zezwolenia KNF. Strategię dobieramy do profilu ryzyka klienta. Zarządzanie nie daje gwarancji zysku. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

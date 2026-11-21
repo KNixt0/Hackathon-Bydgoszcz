@@ -20,6 +20,14 @@ interface Props {
   onCommand: (command: PaletteCommand) => void;
 }
 
+const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ł/g, "l");
+
+/** Every typed word must occur in the item (case- and diacritics-insensitive): predictable, unlike fuzzy matching. */
+export function paletteFilter(value: string, search: string): number {
+  const hay = fold(value);
+  return fold(search).split(/\s+/).filter(Boolean).every((w) => hay.includes(w)) ? 1 : 0;
+}
+
 export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCommand }: Props) {
   const run = (command: PaletteCommand) => {
     onOpenChange(false);
@@ -31,7 +39,7 @@ export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCo
         <Dialog.Overlay className="overlay" />
         <Dialog.Content className="dialog palette" aria-describedby={undefined}>
           <Dialog.Title className="sr-only">Paleta poleceń</Dialog.Title>
-          <Command label="Paleta poleceń" loop>
+          <Command label="Paleta poleceń" loop filter={paletteFilter}>
             <div className="palette__input-row">
               <Search aria-hidden="true" />
               <Command.Input className="palette__input" placeholder="Wpisz tytuł sprawy, podmiot lub polecenie" autoFocus />

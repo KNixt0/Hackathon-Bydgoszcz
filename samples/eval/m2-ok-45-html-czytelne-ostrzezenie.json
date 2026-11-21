@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://wisla-zmyslona.example/m2-ok-45-html-czytelne-ostrzezenie",
+  "platform": "web",
+  "title": "Kontrakty CFD na indeksy",
+  "published_at": "2026-10-23",
+  "seed": true,
+  "detected_days_ago": 28
+ },
+ "html_file": "m2-ok-45-html-czytelne-ostrzezenie.html",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m2-vio-13-ryzyko-po-angielsku",
+  "platform": "instagram",
+  "title": "Handluj CFD na indeksy",
+  "published_at": "2026-11-08",
+  "seed": true,
+  "detected_days_ago": 12,
+  "author": {
+   "name": "DM Bursztyn Przykładowy",
+   "handle": "@bursztyn_przykladowy"
+  }
+ },
+ "text": "Reklama Dom Maklerski Bursztyn Przykładowy S.A.. Handluj kontraktami CFD na największe indeksy świata i zarabiaj na wzrostach oraz spadkach. Niskie spready, szybkie zlecenia, aplikacja po polsku. CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage. 76% of retail investor accounts lose money when trading CFDs with this provider.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

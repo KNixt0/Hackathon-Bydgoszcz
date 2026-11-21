@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m2-ok-05-ike-podatki",
+  "platform": "instagram",
+  "title": "IKE w DM Wisła Zmyślona",
+  "published_at": "2026-11-09",
+  "seed": true,
+  "detected_days_ago": 11,
+  "author": {
+   "name": "DM Wisła Zmyślona",
+   "handle": "@dm_wisla_zmyslona"
+  }
+ },
+ "text": "#reklama Dom Maklerski Wisła Zmyślona S.A.: otwórz IKE i inwestuj z myślą o emeryturze. Zyski z IKE mogą być zwolnione z podatku od zysków kapitałowych po spełnieniu warunków ustawowych. Traktowanie podatkowe zależy od indywidualnej sytuacji klienta i może ulec zmianie w przyszłości. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

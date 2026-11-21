@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m1-vio-29-instagram-ukryty-hashtag",
+  "platform": "instagram",
+  "title": "Poranek z rynkami",
+  "published_at": "2026-10-28",
+  "seed": true,
+  "detected_days_ago": 23,
+  "author": {
+   "name": "Fikcyjna Iza Inwestuje",
+   "handle": "@fikcyjna_iza"
+  }
+ },
+ "text": "Poranna kawa i wykresy. Od pół roku inwestuję przez Dom Maklerski Bursztyn Przykładowy S.A. i jestem zachwycona. Inwestowanie wiąże się z ryzykiem. #kawa #poranek #gielda #inwestowanie #lifestyle #motywacja #ad #pieniadze",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": false,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

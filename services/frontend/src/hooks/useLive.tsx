@@ -29,8 +29,10 @@ export function LiveProvider({ children, socketFactory = createSocket }: { child
     s.on("disconnect", onDown);
     s.on("connect_error", onDown);
     setSocket(s);
-    s.connect();
+    // Deferred so that a mount/unmount in the same tick (React StrictMode) never opens a socket just to close it.
+    const timer = window.setTimeout(() => s.connect(), 0);
     return () => {
+      window.clearTimeout(timer);
       s.off("connect", onConnect);
       s.off("disconnect", onDown);
       s.off("connect_error", onDown);

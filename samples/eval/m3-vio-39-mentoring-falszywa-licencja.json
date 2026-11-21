@@ -1,0 +1,24 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m3-vio-39-mentoring-falszywa-licencja",
+  "platform": "instagram",
+  "title": "Mentoring inwestycyjny 1 na 1",
+  "published_at": "2026-11-10",
+  "seed": true,
+  "detected_days_ago": 10,
+  "author": {
+   "name": "Wymyślony Mentor Giełdy",
+   "handle": "@wymyslony_mentor"
+  }
+ },
+ "text": "Mentoring inwestycyjny 1 na 1. Jako doradca inwestycyjny (licencja nr 7777) powiem Ci dokładnie, które spółki kupić do Twojego portfela. Napisz w wiadomości prywatnej.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3,
+  "declared": {
+   "advisor_licence_no": "7777"
+  }
+ }
+}

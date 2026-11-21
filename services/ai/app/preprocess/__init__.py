@@ -10,9 +10,24 @@ from .normalize import content_hash, fold, normalize_line, normalize_text
 from .tokens import Sentence, detect_language, split_sentences, tokenize
 
 __all__ = [
-    "Embedder", "HashEmbedder", "OllamaEmbedder", "Page", "PageSignals", "Segment", "Sentence",
-    "Style", "build_embedder", "content_hash", "contrast_ratio", "cosine", "detect_language",
-    "fold", "normalize_text", "preprocess", "split_sentences", "tokenize",
+    "Embedder",
+    "HashEmbedder",
+    "OllamaEmbedder",
+    "Page",
+    "PageSignals",
+    "Segment",
+    "Sentence",
+    "Style",
+    "build_embedder",
+    "content_hash",
+    "contrast_ratio",
+    "cosine",
+    "detect_language",
+    "fold",
+    "normalize_text",
+    "preprocess",
+    "split_sentences",
+    "tokenize",
 ]
 
 
@@ -76,7 +91,13 @@ def preprocess(html: str, text: str, title: str = "", language: str | None = Non
     if conf < 0.5 and language:
         lang = language
     return Page(
-        text=full, folded=folded, segments=segments, signals=signals,
-        sentences=split_sentences(full, folded), language=lang, language_confidence=conf,
-        content_hash=content_hash(full), title=title,
+        text=full,
+        folded=folded,
+        segments=segments,
+        signals=signals,
+        sentences=split_sentences(full, folded),
+        language=lang,
+        language_confidence=conf,
+        content_hash=content_hash(full),
+        title=title,
     )

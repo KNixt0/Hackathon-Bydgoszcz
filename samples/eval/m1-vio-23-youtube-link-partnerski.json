@@ -1,0 +1,210 @@
+{
+ "meta": {
+  "url": "https://youtube.example/m1-vio-23-youtube-link-partnerski",
+  "platform": "youtube",
+  "title": "Jak zarobiłem na giełdzie? Moja platforma",
+  "published_at": "2026-11-18",
+  "seed": true,
+  "detected_days_ago": 2,
+  "author": {
+   "name": "Zmyślony Rekin Giełdy",
+   "handle": "@zmyslony_rekin"
+  }
+ },
+ "text": "Pokazuję platformę Dom Maklerski Bursztyn Przykładowy S.A., na której zarabiam od lat. Załóż konto z mojego linku partnerskiego w opisie i odbierz bonus powitalny. Zyski mogą być naprawdę wysokie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": false,
+  "companies": [
+   {
+    "name": "Dom Maklerski Bursztyn Przykładowy S.A.",
+    "role": "investment_firm"
+   }
+  ],
+  "comments": [
+   {
+    "handle": "@ania_krk",
+    "account_created": "2023-02-05T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Ciekawy materiał, dzięki.",
+    "posted_at": "2026-11-10T18:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@marek_waw",
+    "account_created": "2024-04-20T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Mam mieszane odczucia.",
+    "posted_at": "2026-11-11T11:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@ola_gda",
+    "account_created": "2020-06-13T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Warto poczytać regulamin przed założeniem konta.",
+    "posted_at": "2026-11-12T20:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@piotr_poz",
+    "account_created": "2025-01-11T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "U mnie działa bez zarzutu.",
+    "posted_at": "2026-11-13T19:00:00Z",
+    "rating": 3
+   },
+   {
+    "handle": "@ewa_lodz",
+    "account_created": "2020-07-03T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Trochę za dużo marketingu.",
+    "posted_at": "2026-11-14T08:00:00Z",
+    "rating": 2
+   },
+   {
+    "handle": "@jan_krk",
+    "account_created": "2023-02-20T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Dobrze wytłumaczone.",
+    "posted_at": "2026-11-15T06:00:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan8963",
+    "account_created": "2026-11-15T11:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T03:23:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan2567",
+    "account_created": "2026-11-14T14:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T07:24:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan8671",
+    "account_created": "2026-11-15T00:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T05:43:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan1149",
+    "account_created": "2026-11-14T10:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T02:34:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan608",
+    "account_created": "2026-11-14T17:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T05:04:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan6450",
+    "account_created": "2026-11-15T03:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T06:12:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan9552",
+    "account_created": "2026-11-15T04:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T07:29:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan6088",
+    "account_created": "2026-11-14T06:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T01:09:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan8208",
+    "account_created": "2026-11-14T13:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T08:14:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan7246",
+    "account_created": "2026-11-15T16:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T03:35:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan8410",
+    "account_created": "2026-11-15T00:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam każdemu, pewny zysk!",
+    "posted_at": "2026-11-17T04:33:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan9685",
+    "account_created": "2026-11-15T02:00:00Z",
+    "country": "NG",
+    "lang": "pl",
+    "text": "Zarobiłem w tydzień, polecam!",
+    "posted_at": "2026-11-17T07:42:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan5617",
+    "account_created": "2026-11-14T01:00:00Z",
+    "country": "VN",
+    "lang": "pl",
+    "text": "Polecam, zarobiłem w tydzień!",
+    "posted_at": "2026-11-17T05:10:00Z",
+    "rating": 5
+   },
+   {
+    "handle": "@rekin_fan2772",
+    "account_created": "2026-11-14T20:00:00Z",
+    "country": "PL",
+    "lang": "pl",
+    "text": "Najlepsza platforma, polecam!",
+    "posted_at": "2026-11-17T06:05:00Z",
+    "rating": 5
+   }
+  ]
+ }
+}

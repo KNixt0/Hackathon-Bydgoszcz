@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://facebook.example/m1-ok-22-facebook-oznaczona-krotka",
+  "platform": "facebook",
+  "title": "Promocja na rachunek",
+  "published_at": "2026-11-04",
+  "seed": true,
+  "detected_days_ago": 16,
+  "author": {
+   "name": "Zmyślony Portal Oszczędzania",
+   "handle": "@zmyslony_portal"
+  }
+ },
+ "text": "Post sponsorowany przez Dom Maklerski Wisła Zmyślona S.A.. Do końca miesiąca rachunek maklerski bez opłaty za prowadzenie. Inwestycje są ryzykowne, możesz stracić część pieniędzy.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Dom Maklerski Wisła Zmyślona S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

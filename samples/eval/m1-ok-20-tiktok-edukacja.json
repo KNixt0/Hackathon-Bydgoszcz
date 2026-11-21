@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://tiktok.example/m1-ok-20-tiktok-edukacja",
+  "platform": "tiktok",
+  "title": "Czym jest dźwignia?",
+  "published_at": "2026-11-10",
+  "seed": true,
+  "detected_days_ago": 10,
+  "author": {
+   "name": "Wymyślony Trader Uczy",
+   "handle": "@wymyslony_trader"
+  }
+ },
+ "text": "Współpraca reklamowa z Dom Maklerski Kormoran Fikcyjny S.A.. Dźwignia finansowa zwiększa zarówno możliwy wynik, jak i możliwą stratę. Przy dźwigni 1:10 spadek kursu o 10% oznacza utratę całego depozytu. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

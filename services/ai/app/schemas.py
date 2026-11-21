@@ -13,14 +13,37 @@ from pydantic import BaseModel, ConfigDict, Field, model_serializer
 ModuleId = Literal[1, 2, 3]
 RiskLevel = Literal["red", "orange", "green"]
 RuleId = Literal[
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12a", "12b",
-    "13", "14", "15", "16", "17", "18",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12a",
+    "12b",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
 ]
 Platform = Literal["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"]
 RegistryId = Literal[
-    "knf_investment_firms", "knf_banks_brokerage", "knf_brokerage_houses",
-    "knf_foreign_branches", "knf_foreign_cross_border", "knf_public_warnings",
-    "knf_investment_advisors", "kirp_legal_advisers", "kidp_tax_advisers",
+    "knf_investment_firms",
+    "knf_banks_brokerage",
+    "knf_brokerage_houses",
+    "knf_foreign_branches",
+    "knf_foreign_cross_border",
+    "knf_public_warnings",
+    "knf_investment_advisors",
+    "kirp_legal_advisers",
+    "kidp_tax_advisers",
     "uknf_cooperation_notice",
 ]
 Severity = Literal["high", "medium", "low", "info"]
@@ -63,8 +86,14 @@ class Source(Out):
 class Party(SparseOut):
     name: str
     kind: Literal[
-        "investment_firm", "advertiser", "influencer", "pr_agency", "advisor", "lawyer",
-        "company", "person",
+        "investment_firm",
+        "advertiser",
+        "influencer",
+        "pr_agency",
+        "advisor",
+        "lawyer",
+        "company",
+        "person",
     ]
     url: str | None = None
     handle: str | None = None
@@ -122,7 +151,13 @@ class GraphNode(SparseOut):
 
 
 EdgeType = Literal[
-    "board_member", "owner", "beneficial_owner", "employs", "contract", "promotes", "related",
+    "board_member",
+    "owner",
+    "beneficial_owner",
+    "employs",
+    "contract",
+    "promotes",
+    "related",
     "publishes",
 ]
 
@@ -178,9 +213,7 @@ class Accounts(Out):
 
 
 class Anomaly(Out):
-    type: Literal[
-        "opinion_spike", "fresh_account_cluster", "name_pattern_cluster", "foreign_origin_cluster"
-    ]
+    type: Literal["opinion_spike", "fresh_account_cluster", "name_pattern_cluster", "foreign_origin_cluster"]
     severity: Literal["high", "medium", "low"]
     description: str
 

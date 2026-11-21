@@ -18,18 +18,21 @@ import time
 import urllib.request
 from pathlib import Path
 
-BASE = (
-    "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/"
-    "Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych"
-)
+BASE = "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Firmy_inwestycyjne_i_Agenci_firm_inwestycyjnych"
 SOURCES = {
-    "knf_banks_brokerage": ("Banki prowadzące działalność maklerską (KNF)",
-                            BASE + "/Banki_prowadzace_dzialalnosc_maklerska"),
+    "knf_banks_brokerage": (
+        "Banki prowadzące działalność maklerską (KNF)",
+        BASE + "/Banki_prowadzace_dzialalnosc_maklerska",
+    ),
     "knf_brokerage_houses": ("Domy maklerskie (KNF)", BASE + "/domy_maklerskie"),
-    "knf_foreign_branches": ("Oddziały zagranicznych firm inwestycyjnych (KNF)",
-                             BASE + "/notyfikowane_firmy_inwestycyjne_oddzialy"),
-    "knf_foreign_cross_border": ("Zagraniczne firmy inwestycyjne bez otwierania oddziału (KNF)",
-                                 BASE + "/notyfikowane_zagraniczne_firmy_inwestycyjne"),
+    "knf_foreign_branches": (
+        "Oddziały zagranicznych firm inwestycyjnych (KNF)",
+        BASE + "/notyfikowane_firmy_inwestycyjne_oddzialy",
+    ),
+    "knf_foreign_cross_border": (
+        "Zagraniczne firmy inwestycyjne bez otwierania oddziału (KNF)",
+        BASE + "/notyfikowane_zagraniczne_firmy_inwestycyjne",
+    ),
 }
 DETAIL_ROWS = ("Data zezwolenia", "Państwo macierzyste", "Organ nadzoru", "Data wpływu zawiadomienia")
 
@@ -39,7 +42,7 @@ def get(url: str) -> str:
     last: Exception | None = None
     for _ in range(3):
         try:
-            with urllib.request.urlopen(req, timeout=40) as resp:  # noqa: S310 (fixed https host)
+            with urllib.request.urlopen(req, timeout=40) as resp:
                 return resp.read().decode("utf-8", "replace")
         except OSError as exc:
             last = exc
@@ -87,12 +90,14 @@ def to_entries(tables: list) -> list[dict]:
         for row in rows[1:]:
             if len(row) >= 2 and row[0] and row[0][0] in DETAIL_ROWS and row[1]:
                 details.append(f"{row[0][0]}: {' '.join(row[1])}")
-        entries.append({
-            "name": names[0],
-            "aliases": names[1:],
-            "status": "listed",
-            "detail": "; ".join(details),
-        })
+        entries.append(
+            {
+                "name": names[0],
+                "aliases": names[1:],
+                "status": "listed",
+                "detail": "; ".join(details),
+            }
+        )
     return entries
 
 
@@ -112,12 +117,18 @@ def main() -> None:
     for registry, (label, url) in SOURCES.items():
         entries = to_entries(raw[registry]["tables"])
         payload = {
-            "registry": registry, "label": label, "url": url, "snapshot_date": args.date,
+            "registry": registry,
+            "label": label,
+            "url": url,
+            "snapshot_date": args.date,
             "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
-            "partial": False, "synthetic_sample": False, "entries": entries,
+            "partial": False,
+            "synthetic_sample": False,
+            "entries": entries,
         }
         (args.out / f"{registry}.json").write_text(
-            json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
         print(registry, len(entries), file=sys.stderr)
 
 

@@ -38,14 +38,14 @@
   ],
   "knf_banks_brokerage": [
    {
-    "name": "Bank Zmyślony S.A.",
+    "name": "Bank Jantarowy Fikcyjny S.A.",
     "aliases": [
-     "Biuro Maklerskie Banku Zmyślonego"
+     "Biuro Maklerskie Banku Jantarowego Fikcyjnego"
     ],
     "status": "listed",
     "detail": "Podmiot fikcyjny (dane demonstracyjne)",
     "domains": [
-     "bank-zmyslony.example"
+     "bank-jantarowy.example"
     ]
    }
   ]

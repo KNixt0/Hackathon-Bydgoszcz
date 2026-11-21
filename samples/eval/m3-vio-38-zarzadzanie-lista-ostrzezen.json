@@ -1,0 +1,25 @@
+{
+ "meta": {
+  "url": "https://nibylandia-wealth.example/m3-vio-38-zarzadzanie-lista-ostrzezen",
+  "platform": "web",
+  "title": "Nibylandia Wealth Partners",
+  "published_at": "2026-11-13",
+  "seed": true,
+  "detected_days_ago": 7
+ },
+ "text": "Nibylandia Wealth Partners LLC: zarządzamy Twoim portfelem za Ciebie. Powierz nam kapitał, a my inwestujemy w akcje, opcje i forex. Stały zysk 8% miesięcznie, bez ryzyka. Zostaw numer, oddzwonimy.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Nibylandia Wealth Partners LLC",
+    "role": "investment_firm",
+    "country": "BZ",
+    "incorporated_on": "2026-06-01"
+   }
+  ]
+ }
+}

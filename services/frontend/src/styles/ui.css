@@ -171,7 +171,6 @@
 .menu__label { padding: 6px 10px 4px; font-size: var(--fs-sm); color: var(--muted); }
 .menu__sep { height: 1px; background: var(--line); margin: 4px 0; }
 
-.tooltip { z-index: 70; background: var(--ink); color: #fff; font-size: var(--fs-sm); padding: 5px 8px; border-radius: var(--r-sm); max-width: 280px; }
 
 /* ── Key hints */
 .kbd {

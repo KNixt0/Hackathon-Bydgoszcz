@@ -1,0 +1,28 @@
+{
+ "meta": {
+  "url": "https://instagram.example/m1-ok-18-instagram-oznaczona",
+  "platform": "instagram",
+  "title": "Moje konto maklerskie",
+  "published_at": "2026-11-16",
+  "seed": true,
+  "detected_days_ago": 4,
+  "author": {
+   "name": "Fikcyjna Ola o Finansach",
+   "handle": "@fikcyjna_ola"
+  }
+ },
+ "text": "Płatna współpraca z Bank Jantarowy Fikcyjny S.A.. Od miesiąca testuję ich aplikację maklerską, wygodna i czytelna. Pamiętajcie: inwestowanie wiąże się z ryzykiem utraty pieniędzy. #reklama #współpraca",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null,
+  "module_hint": 1,
+  "cooperation_notified": true,
+  "companies": [
+   {
+    "name": "Bank Jantarowy Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://tiktok.example/m2-vio-15-nadzor-bezpieczenstwo",
+  "platform": "tiktok",
+  "title": "Bezpieczne inwestycje pod nadzorem KNF",
+  "published_at": "2026-11-02",
+  "seed": true,
+  "detected_days_ago": 18,
+  "author": {
+   "name": "DM Kormoran Fikcyjny",
+   "handle": "@kormoran_fikcyjny"
+  }
+ },
+ "text": "Reklama. Dom Maklerski Kormoran Fikcyjny S.A. działa pod nadzorem KNF, dlatego Twoja inwestycja jest u nas bezpieczna. Inwestowanie wiąże się z ryzykiem utraty części lub całości zainwestowanych środków.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "violation",
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "Dom Maklerski Kormoran Fikcyjny S.A.",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}
