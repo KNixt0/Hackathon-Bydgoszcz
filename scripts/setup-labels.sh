@@ -14,3 +14,8 @@ create "needs:owner-review"    "e99695" "Waiting for KNixt0 approval before merg
 create "model:opus"            "8250df" "Hard task: builder runs on Opus, effort high"
 create "size:xs"               "c2e0c6" "Small task: builder runs on Haiku, effort low"
 create "swarm:roster"          "0052cc" "The single agent roster issue (check-ins)"
+create "area:frontend"         "1f6feb" "UI / dashboard (services/frontend)"
+create "area:backend"          "0e8a16" "Scraping, queue, API (services/backend)"
+create "area:ai"               "8250df" "Preprocessing, local model, scoring (services/ai)"
+create "area:devops"           "6e7781" "Docker compose, CI, security scans"
+create "area:docs"             "c5def5" "README, presentation, AI process doc"

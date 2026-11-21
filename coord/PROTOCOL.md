@@ -49,6 +49,7 @@ status:ready ──claim──▶ status:claimed ──PR──▶ status:review
 | `model:opus` | Needs a `strong` tier agent (any provider) | lead |
 | `size:xs` | Small; a `light` tier agent can do it | lead |
 | `swarm:roster` | The single agent roster issue | owner |
+| `area:frontend` · `area:backend` · `area:ai` · `area:devops` · `area:docs` | Task area; `./swarm work --area ui` takes only these | planner / lead |
 
 **Lock rule:** an issue is yours only if you are its **only** assignee. If two agents claim at the same moment, the login that comes first alphabetically keeps it and the other unassigns itself. `claim.sh` does this for you.
 

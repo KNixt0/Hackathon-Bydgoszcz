@@ -21,6 +21,12 @@ body:
   - type: textarea
     id: reads
     attributes: { label: Reads, description: "Contracts / files to read first" }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area (add the matching area:* label)
+      options: [frontend (UI), backend, ai, devops, docs]
+    validations: { required: true }
   - type: input
     id: deps
     attributes: { label: Dependencies, description: "Write as: Depends on: #12, #14", placeholder: "Depends on: " }
