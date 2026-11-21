@@ -24,7 +24,8 @@ _NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
 
 REWRITE_SYSTEM = (
     "Jesteś analitykiem nadzoru finansowego. Przeredaguj podane uzasadnienie na zwięzły, naturalny język polski "
-    "(3-5 zdań). Nie dodawaj żadnych nowych faktów, liczb ani ocen. Zachowaj wynik i rekomendację."
+    "(3-5 zdań). Nie dodawaj żadnych nowych faktów, liczb ani ocen. Zachowaj wynik i rekomendację. "
+    "Odpowiedz wyłącznie przeredagowanym tekstem, bez wstępu i bez komentarza."
 )
 CLAIMS_SYSTEM = (
     "Jesteś analitykiem nadzoru finansowego. Wskaż w tekście reklamy lub oferty fragmenty, które mogą naruszać "

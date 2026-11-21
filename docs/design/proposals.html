@@ -1,0 +1,1080 @@
+<title>Języki projektowe InvestWatch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Public+Sans:wght@400;500;700&family=Source+Sans+3:wght@400;600&family=Open+Sans:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: a quiet, neutral document frame (the "chrome") holds four light-theme specimen sheets.
+   Chrome follows the dark-mode token contract; the specimens always render in their own light themes. */
+:root {
+  --bg: #F3F4F6;
+  --surface: #FFFFFF;
+  --ink: #15181E;
+  --ink2: #3B424D;
+  --muted: #566070;
+  --line: #D9DCE2;
+  --line2: #AEB5C1;
+  --tint: #E8EAEE;
+  --focus: #2563EB;
+  --bar: #F3F4F6;
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1115; --surface: #171A20; --ink: #ECEEF2; --ink2: #C5CAD3; --muted: #9BA4B1;
+    --line: #2A2F39; --line2: #444B58; --tint: #20242C; --focus: #7AA2FF; --bar: #0F1115;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1115; --surface: #171A20; --ink: #ECEEF2; --ink2: #C5CAD3; --muted: #9BA4B1;
+  --line: #2A2F39; --line2: #444B58; --tint: #20242C; --focus: #7AA2FF; --bar: #0F1115;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bar); }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, table { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+h1, h2, h3 { text-wrap: balance; font-weight: 600; line-height: 1.2; }
+a { color: var(--ink); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- chrome: jump bar ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bar); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; gap: 8px 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+.jump { display: flex; gap: 4px; overflow-x: auto; max-width: 100%; scrollbar-width: thin; }
+.jump a { white-space: nowrap; text-decoration: none; font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 6px; color: var(--ink2); }
+.jump a:hover { background: var(--tint); color: var(--ink); }
+.jump a b { font-weight: 600; color: var(--muted); margin-right: 6px; }
+.view { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 8px; padding: 2px; gap: 2px; background: var(--surface); }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--ink2); cursor: pointer; white-space: nowrap; }
+.seg input:checked + span { background: var(--ink); color: var(--bg); }
+.seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 720px) { .bar { position: static; } body::before { display: none; } .view { width: 100%; flex-wrap: wrap; } .seg { flex-wrap: wrap; max-width: 100%; } }
+
+/* ---------- chrome: intro ---------- */
+.hero { padding-block: 56px 40px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.hero h1 { font-size: clamp(2rem, 4.4vw, 3.25rem); letter-spacing: -0.02em; font-weight: 600; }
+.hero .lead { margin-top: 20px; max-width: 58ch; color: var(--ink2); font-size: 1.125rem; }
+.read { border-top: 2px solid var(--ink); padding-top: 14px; font-size: 15px; color: var(--ink2); }
+.read h2 { font-size: 15px; margin-bottom: 8px; color: var(--ink); }
+.read li { padding-left: 16px; position: relative; margin-bottom: 6px; }
+.read li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 6px; height: 1.5px; background: var(--muted); }
+@media (max-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 36px 28px; } }
+
+/* ---------- chrome: comparison ---------- */
+.sec { padding-block: 40px; }
+.sec-h { display: flex; justify-content: space-between; gap: 16px 32px; align-items: end; flex-wrap: wrap; margin-bottom: 20px; }
+.sec-h h2 { font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.01em; }
+.sec-h p { color: var(--muted); max-width: 62ch; font-size: 15px; }
+.scroll { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.cmp { border-collapse: collapse; width: 100%; min-width: 880px; font-size: 14px; line-height: 1.45; }
+.cmp th, .cmp td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.cmp tbody tr:last-child th, .cmp tbody tr:last-child td { border-bottom: 0; }
+.cmp thead th { font-weight: 600; font-size: 15px; background: var(--tint); border-bottom: 1px solid var(--line2); }
+.cmp tbody th { width: 150px; font-weight: 500; color: var(--muted); }
+.cmp td { color: var(--ink2); }
+.dots { display: flex; gap: 6px; align-items: center; }
+.dots i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.18); display: block; }
+.cost { font-weight: 600; color: var(--ink); }
+
+/* ---------- chrome: proposal sections ---------- */
+.prop { padding-block: 48px; border-top: 1px solid var(--line2); }
+.prop-h { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px 40px; align-items: start; margin-bottom: 28px; }
+.prop-h h2 { font-size: clamp(1.75rem, 3.6vw, 2.5rem); letter-spacing: -0.015em; }
+.prop-h h2 small { display: block; font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-bottom: 6px; }
+.prop-h p { color: var(--ink2); font-size: 1.0625rem; max-width: 60ch; }
+.src { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border: 1px solid var(--line2); border-radius: 6px; font-size: 13px; color: var(--ink2); background: var(--surface); }
+@media (max-width: 860px) { .prop-h { grid-template-columns: minmax(0, 1fr); } }
+.stage { display: grid; gap: 28px; }
+.frag-cap { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+.frag-cap strong { color: var(--ink); font-weight: 600; font-size: 15px; }
+.frame { border: 1px solid var(--line2); border-radius: 4px; overflow: hidden; background: #fff; }
+main[data-view="a"] .frag:not([data-f="a"]), main[data-view="b"] .frag:not([data-f="b"]), main[data-view="c"] .frag:not([data-f="c"]) { display: none; }
+main:not([data-view="all"]) .docs { display: none; }
+main:not([data-view="all"]) .prop { padding-block: 32px; }
+.docs { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; margin-top: 40px; align-items: start; }
+@media (max-width: 960px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+.docs h3 { font-size: 17px; margin-bottom: 12px; }
+.docs h3:not(:first-child) { margin-top: 28px; }
+.tok { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+.tok th, .tok td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.tok thead th { font-size: 13px; font-weight: 500; color: var(--muted); background: var(--tint); }
+.tok tbody tr:last-child td, .tok tbody tr:last-child th { border-bottom: 0; }
+.tok tbody th { font-weight: 500; }
+.tok td.r { white-space: nowrap; }
+.smp { display: inline-grid; place-items: center; width: 44px; height: 28px; border-radius: 4px; font-weight: 600; font-size: 14px; border: 1px solid rgba(0,0,0,.2); }
+.smp i { display: block; width: 14px; height: 14px; border-radius: 50%; }
+.hex { font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+.tag { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--tint); color: var(--ink); margin-left: 6px; }
+.fnd { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 0; font-size: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.fnd dt, .fnd dd { padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.fnd dt { color: var(--muted); font-weight: 500; }
+.fnd dd:last-of-type, .fnd dt:nth-last-of-type(1) { border-bottom: 0; }
+.fnd dd { color: var(--ink2); }
+@media (max-width: 520px) { .fnd { grid-template-columns: minmax(0, 1fr); } .fnd dt { border-bottom: 0; padding-bottom: 0; } }
+.prov li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink2); align-items: baseline; }
+.prov li:last-child { border-bottom: 0; }
+.prov .chip { height: 24px; font-size: 12.5px; white-space: nowrap; }
+.sr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.sr > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+.sr h3 { margin: 0 0 8px !important; font-size: 15px; }
+.sr li { font-size: 14px; color: var(--ink2); padding-left: 16px; position: relative; margin-bottom: 8px; }
+.sr li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 6px; border-radius: 1px; background: var(--muted); }
+.sr .no li::before { background: transparent; border: 1.5px solid var(--muted); }
+
+/* ---------- chrome: sources, recommendation ---------- */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.note { font-size: 14px; color: var(--ink2); }
+.note li { margin-bottom: 10px; padding-left: 16px; position: relative; }
+.note li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 1.5px; background: var(--muted); }
+.note a { overflow-wrap: anywhere; }
+.reco-pick { border: 2px solid var(--ink); border-radius: 10px; background: var(--surface); padding: clamp(20px, 3vw, 36px); }
+.reco-pick h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin-bottom: 12px; }
+.reco-pick > p { max-width: 70ch; color: var(--ink2); margin-bottom: 12px; }
+.cost-tbl { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+.cost-tbl th, .cost-tbl td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.cost-tbl thead th { background: var(--tint); font-weight: 500; font-size: 13px; color: var(--muted); }
+.cost-tbl tbody tr:last-child td, .cost-tbl tbody tr:last-child th { border-bottom: 0; }
+.cost-tbl code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; overflow-wrap: anywhere; }
+footer.end { padding-block: 32px 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+/* =====================================================================
+   SPECIMEN BASE (shared structure, every visual decision comes from variables)
+   ===================================================================== */
+.spec { container: spec / inline-size; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: var(--fs-md); line-height: 1.5; font-variant-numeric: tabular-nums; color-scheme: light; -webkit-font-smoothing: antialiased; }
+.spec *, .spec *::before, .spec *::after { box-sizing: border-box; }
+.spec h4, .spec h5, .spec p, .spec dl, .spec dd, .spec ul, .spec figure, .spec table { margin: 0; padding: 0; }
+.spec ul { list-style: none; }
+.spec button, .spec select, .spec input { font: inherit; color: inherit; }
+.spec button { cursor: pointer; }
+.spec .ic { width: 1.125em; height: 1.125em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.spec :focus-visible { outline: var(--fw, 3px) solid var(--focus); outline-offset: var(--fo, 2px); }
+.spec .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.spec .app-bar { display: flex; align-items: center; gap: 12px 24px; flex-wrap: wrap; }
+.spec .brand { font-weight: 700; font-size: var(--fs-lg); line-height: 1.2; }
+.spec .brand small { display: block; font-weight: 400; font-size: var(--fs-xs); color: var(--muted); }
+.spec .nav { display: flex; flex-wrap: wrap; }
+.spec .nav button { background: none; border: 0; font-size: var(--fs-sm); }
+.spec .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.spec .lnk { background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; font-size: var(--fs-sm); color: var(--ink); }
+
+.spec .q-body { display: grid; gap: var(--gap); }
+.spec .q-h h4 { font-size: var(--fs-h); line-height: 1.2; font-weight: var(--w-h); }
+.spec .q-h p { color: var(--muted); font-size: var(--fs-sm); margin-top: 4px; }
+.spec .q-top { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--gap); }
+.spec .q-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.spec .q-tile { text-align: left; background: none; border: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.spec .q-tile .lv { font-size: var(--fs-sm); }
+.spec .q-tile .n { font-weight: var(--w-n); line-height: 1.05; }
+.spec .q-tile .r { font-size: var(--fs-sm); color: var(--muted); }
+.spec .q-trend h5 { font-size: var(--fs-sm); font-weight: var(--w-b); margin-bottom: 8px; }
+.spec .q-trend svg { display: block; width: 100%; height: auto; }
+.spec .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; font-size: var(--fs-xs); color: var(--ink2); }
+.spec .legend li { display: inline-flex; align-items: center; gap: 6px; }
+.spec .legend i { width: 12px; height: 12px; display: block; border-radius: var(--r-sw, 0); }
+.spec .t-red { fill: var(--m-red); } .spec .t-amb { fill: var(--m-amb); } .spec .t-grn { fill: var(--m-grn); }
+.spec .t-grid { stroke: var(--line); stroke-width: 1; }
+.spec .t-txt { fill: var(--muted); font-size: 11.5px; font-family: var(--font); }
+.spec .t-tot { fill: var(--ink); font-size: 12px; font-weight: 600; font-family: var(--font); }
+
+.spec .tbl-wrap { overflow-x: auto; position: relative; }
+.spec .q-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: var(--fs-sm); }
+.spec .q-table th { text-align: left; font-weight: var(--w-b); font-size: var(--fs-sm); white-space: nowrap; }
+.spec .q-table td, .spec .q-table th { vertical-align: middle; }
+.spec .c-lv { width: 190px; }
+.spec .c-case { min-width: 260px; }
+.spec .q-tile .lv { white-space: normal; }
+.spec .lvbox { display: grid; gap: 6px; justify-items: start; }
+.spec .lvline { display: flex; align-items: center; gap: 10px; }
+.spec .rv { font-weight: var(--w-b); min-width: 2ch; }
+.spec .c-case a, .spec .c-case .ttl { font-weight: var(--w-b); display: block; }
+.spec .c-case .sub { display: block; color: var(--muted); font-size: var(--fs-xs); margin-top: 2px; }
+.spec .mods { display: flex; gap: 4px; }
+.spec .rules { display: flex; flex-wrap: wrap; gap: 4px; }
+.spec .none { color: var(--muted); font-size: var(--fs-xs); }
+.spec .tbl-foot { font-size: var(--fs-xs); color: var(--muted); }
+
+.spec .lv { display: inline-flex; align-items: center; gap: 6px; font-weight: var(--w-b); white-space: nowrap; }
+.spec .lv-red { color: var(--t-red); } .spec .lv-amb { color: var(--t-amb); } .spec .lv-grn { color: var(--t-grn); }
+.spec .rail { position: relative; display: block; width: 100px; height: var(--rail-h, 8px); background: var(--rail-bg, var(--soft)); border-radius: var(--rail-r, 0); flex: none; }
+.spec .rail .f { position: absolute; inset: 0 auto 0 0; border-radius: inherit; }
+.spec .rail .tk { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); opacity: .7; }
+.spec .rail.red .f { background: var(--m-red); } .spec .rail.amb .f { background: var(--m-amb); } .spec .rail.grn .f { background: var(--m-grn); }
+.spec .rail.wide { width: 100%; }
+.spec .rail-l { position: relative; height: 18px; font-size: var(--fs-xs); color: var(--muted); margin-top: 6px; }
+.spec .rail-l span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+
+.spec .mt { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 8px; font-size: var(--fs-xs); font-weight: var(--w-b); background: var(--accent); color: var(--on-accent); border-radius: var(--r-xs, 0); }
+.spec .mt-l { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-sm); }
+.spec .rp { display: inline-grid; place-items: center; min-width: 32px; height: 24px; padding: 0 8px; font-size: var(--fs-xs); font-weight: var(--w-b); background: var(--b-red); color: var(--t-red); border-radius: var(--r-xs, 0); }
+.spec .rp.more { background: var(--soft); color: var(--ink2); }
+
+.spec .sel { appearance: none; -webkit-appearance: none; min-width: 216px; max-width: 100%; padding: 0 34px 0 12px; font-size: var(--fs-sm); background-color: var(--surface); background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23161616' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+
+.spec .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; font-weight: var(--w-b); font-size: var(--fs-sm); }
+.spec .btn-pri { background: var(--accent); color: var(--on-accent); }
+
+.spec .v-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.spec .v-head h4 { font-size: var(--fs-h); line-height: 1.2; font-weight: var(--w-h); }
+.spec .v-head p { color: var(--muted); font-size: var(--fs-sm); margin-top: 4px; }
+.spec .v-ex { display: flex; gap: 8px; flex-wrap: wrap; }
+.spec .v-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--gap); }
+.spec .v-score { display: grid; gap: 12px; align-content: start; justify-items: start; }
+.spec .v-score > * { max-width: 100%; }
+.spec .v-raw { width: 100%; }
+.spec .lv-lg { font-size: var(--fs-lg); }
+.spec .v-lab { font-size: var(--fs-sm); color: var(--muted); font-weight: var(--w-b); }
+.spec .v-num { display: flex; align-items: baseline; gap: 8px; line-height: 1; }
+.spec .v-num b { font-weight: var(--w-n); color: var(--t-red); }
+.spec .v-num small { color: var(--muted); font-size: var(--fs-lg); }
+.spec .v-raw { font-size: var(--fs-sm); color: var(--ink2); }
+.spec .v-raw .row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.spec .v-raw .row span:last-child { color: var(--muted); }
+.spec .v-tags { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.spec .v-side { display: grid; gap: var(--gap); align-content: start; }
+.spec .v-regs { display: flex; flex-wrap: wrap; gap: 8px; }
+.spec .reg { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-sm); padding: 6px 12px; min-height: 32px; }
+.spec .reg b { font-weight: var(--w-b); }
+.spec .reg-pos { background: var(--b-grn); color: var(--t-grn); }
+.spec .reg-neg { background: var(--b-red); color: var(--t-red); }
+.spec .reco-k { font-weight: var(--w-b); font-size: var(--fs-sm); }
+.spec .reco-t { font-weight: var(--w-b); font-size: var(--fs-md); margin-top: 2px; }
+.spec .reco-n { font-size: var(--fs-sm); margin-top: 8px; color: var(--ink2); }
+.spec .reco-n b { color: var(--ink); font-weight: var(--w-b); }
+
+.spec .c-strip { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr) minmax(0, .95fr); gap: var(--gap); align-items: start; }
+.spec .c-ctl label { font-weight: var(--w-b); font-size: var(--fs-sm); }
+.spec .c-ctl .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.spec .c-ctl output { font-weight: var(--w-n); font-size: var(--fs-xl); line-height: 1; }
+.spec .c-ctl .hint { margin-top: 6px; color: var(--muted); font-size: var(--fs-sm); }
+.spec .sl { position: relative; padding-bottom: 60px; }
+.spec .rng { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: var(--th); margin: 0; background: transparent; cursor: pointer; }
+.spec .rng::-webkit-slider-runnable-track { height: var(--trh); border-radius: var(--trr, 0); background: linear-gradient(to right, var(--fill) var(--p, 20%), var(--track) var(--p, 20%)); }
+.spec .rng::-moz-range-track { height: var(--trh); border-radius: var(--trr, 0); background: linear-gradient(to right, var(--fill) var(--p, 20%), var(--track) var(--p, 20%)); }
+.spec .rng::-webkit-slider-thumb { -webkit-appearance: none; box-sizing: border-box; width: var(--th); height: var(--th); margin-top: calc((var(--trh) - var(--th)) / 2); border-radius: var(--thr, 0); background: var(--thbg); border: var(--thbd); }
+.spec .rng::-moz-range-thumb { box-sizing: border-box; width: var(--th); height: var(--th); border-radius: var(--thr, 0); background: var(--thbg); border: var(--thbd); }
+.spec .sl-m { position: absolute; top: calc(var(--th) + 6px); left: calc(var(--th) / 2 + (100% - var(--th)) * var(--at) / 100); transform: translateX(-50%); font-size: var(--fs-xs); color: var(--muted); text-align: center; line-height: 1.3; white-space: nowrap; }
+.spec .sl-m::before { content: ""; display: block; width: 1px; height: 6px; background: var(--ink2); margin: 0 auto 2px; }
+.spec .c-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--mgap, 0); }
+.spec .met dt { font-size: var(--fs-sm); color: var(--muted); font-weight: var(--w-b); }
+.spec .met dd.v { font-weight: var(--w-n); line-height: 1.05; margin-top: 2px; }
+.spec .met dd.h { font-size: var(--fs-xs); color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.spec .cm { width: 100%; border-collapse: separate; border-spacing: var(--cmg, 0); font-size: var(--fs-xs); table-layout: fixed; }
+.spec .cm th { font-weight: var(--w-b); color: var(--muted); text-align: center; padding: 4px; font-size: var(--fs-xs); }
+.spec .cm tbody th { text-align: right; padding-right: 8px; width: 28%; }
+.spec .cm td { text-align: center; padding: 10px 8px; }
+.spec .cm td b { display: block; font-size: var(--fs-lg); line-height: 1.1; font-weight: var(--w-n); }
+.spec .cm td span { display: block; color: var(--ink2); line-height: 1.25; }
+.spec .cm .good { background: var(--accent-soft); }
+.spec .cm .bad { background: var(--b-amb); }
+
+
+/* =====================================================================
+   1. URZĘDOWY  (DSFR-lineage: square, bordered, dense)
+   ===================================================================== */
+.p1 { --font: "Public Sans", system-ui, "Segoe UI", sans-serif; --fs-xs: 12px; --fs-sm: 14px; --fs-md: 16px; --fs-lg: 18px; --fs-xl: 28px; --fs-h: 22px; --w-h: 700; --w-b: 500; --w-n: 700;
+  --bg: #FFFFFF; --surface: #FFFFFF; --soft: #F6F6F6; --ink: #161616; --ink2: #3A3A3A; --muted: #666666; --line: #DDDDDD; --line2: #6A6A6A;
+  --accent: #1A2F8C; --accent-soft: #E9ECFA; --on-accent: #FFFFFF;
+  --t-red: #8E0F16; --b-red: #FDE8E8; --m-red: #B3121B; --t-amb: #8A3300; --b-amb: #FFF0DE; --m-amb: #C25200; --t-grn: #0F5A2C; --b-grn: #E3F5E9; --m-grn: #2E8A53;
+  --focus: #0A6CD6; --fw: 3px; --fo: 2px; --gap: 24px;
+  --rail-h: 10px; --rail-bg: #EEEEEE; --th: 20px; --trh: 4px; --thbg: var(--accent); --thbd: 2px solid #fff; --fill: var(--accent); --track: #929292; --mgap: 0; }
+.p1 .app-bar { flex-direction: column; align-items: stretch; gap: 0; padding: 16px 24px 0; border-bottom: 1px solid var(--line); background: #fff; }
+.p1 .p1-top { display: flex; align-items: center; gap: 16px; padding-bottom: 12px; }
+.p1 .brand { font-size: 20px; }
+.p1 .tools { gap: 16px; }
+.p1 .nav { margin-bottom: -1px; }
+.p1 .nav button { padding: 10px 16px; font-weight: 500; border: 1px solid transparent; border-top: 2px solid transparent; }
+.p1 .nav button[aria-current] { color: var(--accent); font-weight: 700; border-color: var(--line); border-top-color: var(--accent); border-bottom-color: #fff; }
+.p1 .q-body { padding: 24px; }
+.p1 .q-tiles { border: 1px solid var(--line2); }
+.p1 .q-tile { padding: 16px; border-right: 1px solid var(--line); background: #fff; }
+.p1 .q-tile:last-child { border-right: 0; }
+.p1 .q-tile:hover { background: var(--soft); }
+.p1 .q-tile .n { font-size: 32px; margin-top: 4px; }
+.p1 .q-trend { border: 1px solid var(--line); padding: 16px; }
+.p1 .tbl-wrap { border: 1px solid var(--line2); }
+.p1 .q-table th { background: var(--soft); padding: 8px 12px; border-bottom: 1px solid var(--line2); }
+.p1 .q-table td { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.p1 .q-table tbody tr:last-child td { border-bottom: 0; }
+.p1 .q-table tbody tr:hover td { background: var(--soft); }
+.p1 .lv { padding: 2px 8px; border: 1px solid currentColor; font-weight: 700; font-size: var(--fs-sm); }
+.p1 .lv-red { background: var(--b-red); } .p1 .lv-amb { background: var(--b-amb); } .p1 .lv-grn { background: var(--b-grn); }
+.p1 .q-tile .lv { padding: 2px 8px; }
+.p1 .rail { border: 1px solid var(--ink2); }
+.p1 .rail .tk { top: -4px; bottom: -4px; }
+.p1 .rp { border: 1px solid currentColor; }
+.p1 .sel { height: 36px; background-color: #EEEEEE; border: 0; border-radius: 0; box-shadow: inset 0 -2px 0 var(--ink2); }
+.p1 .btn { height: 36px; padding: 0 16px; border-radius: 0; border: 0; }
+.p1 .btn-sec { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.p1 .btn-sec:hover { background: var(--accent-soft); }
+.p1 .v-card { padding: 24px; display: grid; gap: var(--gap); }
+.p1 .v-card { border-top: 0; }
+.p1 .v-score { border: 1px solid var(--line2); padding: 24px; }
+.p1 .v-num b { font-size: 64px; }
+.p1 .v-raw .rail { margin-top: 0; }
+.p1 .reco { display: grid; grid-template-columns: 48px minmax(0, 1fr); border: 1px solid var(--m-red); }
+.p1 .reco-ic { background: var(--m-red); color: #fff; display: grid; place-items: start center; padding-top: 14px; font-size: 22px; }
+.p1 .reco > div:last-child { padding: 16px; }
+.p1 .reco-k { color: var(--t-red); }
+.p1 .v-meta { border: 1px solid var(--line); padding: 16px; display: grid; gap: 12px; }
+.p1 .reg { border: 1px solid currentColor; }
+.p1 .c-strip { padding: 24px; }
+.p1 .c-ctl output { font-size: 28px; }
+.p1 .c-metrics { border: 1px solid var(--line2); }
+.p1 .met { padding: 12px 16px; border-right: 1px solid var(--line); }
+.p1 .met:last-child { border-right: 0; }
+.p1 .met dd.v { font-size: 32px; }
+.p1 .cm { --cmg: 2px; }
+.p1 .cm .good { border: 1px solid #B9C1EE; } .p1 .cm .bad { border: 1px solid #E8B98A; }
+.p1 .rng:focus-visible { outline-offset: 6px; }
+
+/* =====================================================================
+   2. RIJKS-SPOKOJNY  (NLDS lineage: airy, typographic, tokenised)
+   ===================================================================== */
+.p2 { --font: "Source Sans 3", system-ui, "Segoe UI", sans-serif; --fs-xs: 13px; --fs-sm: 15px; --fs-md: 17px; --fs-lg: 20px; --fs-xl: 36px; --fs-h: 32px; --w-h: 600; --w-b: 600; --w-n: 400;
+  --bg: #FFFFFF; --surface: #FFFFFF; --soft: #F3F5F7; --ink: #1C2229; --ink2: #39424C; --muted: #58626E; --line: #D4D8DD; --line2: #8D959E;
+  --accent: #1B5A8C; --accent-soft: #EAF1F7; --on-accent: #FFFFFF;
+  --t-red: #A32A20; --b-red: #FBEDEB; --m-red: #A32A20; --t-amb: #7A4F00; --b-amb: #FFF4DB; --m-amb: #B27A00; --t-grn: #2A6B35; --b-grn: #EAF4EA; --m-grn: #4C8C57;
+  --focus: #1C2229; --fw: 3px; --fo: 3px; --gap: 40px; --r-xs: 2px; --r-sw: 0;
+  --rail-h: 4px; --rail-bg: #E3E6EA; --th: 22px; --trh: 2px; --thr: 50%; --thbg: #1C2229; --thbd: 3px solid #fff; --fill: #1C2229; --track: #8D959E; }
+.p2 :focus-visible { box-shadow: 0 0 0 2px #FFD23F; }
+.p2 .app-bar { padding: 28px 48px; border-bottom: 1px solid var(--line); gap: 16px 56px; }
+.p2 .brand { font-size: 22px; font-weight: 600; }
+.p2 .nav { gap: 36px; }
+.p2 .nav button { font-size: var(--fs-md); padding: 4px 0; border-bottom: 2px solid transparent; color: var(--ink2); }
+.p2 .nav button[aria-current] { color: var(--ink); font-weight: 600; border-bottom-color: var(--ink); }
+.p2 .lnk { font-size: var(--fs-md); }
+.p2 .q-body { padding: 56px 48px 64px; gap: 56px; }
+.p2 .q-h h4 { font-size: 40px; letter-spacing: -0.01em; }
+.p2 .q-h p { font-size: var(--fs-lg); margin-top: 8px; }
+.p2 .q-top { gap: 56px; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.p2 .q-tiles { gap: 32px; }
+.p2 .q-tile { border-top: 2px solid var(--ink); padding-top: 16px; gap: 6px; }
+.p2 .q-tile .n { font-size: 60px; letter-spacing: -0.02em; }
+.p2 .q-tile .lv { font-size: var(--fs-md); }
+.p2 .q-tile:hover .n { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.p2 .q-trend h5 { font-size: var(--fs-md); margin-bottom: 16px; }
+.p2 .q-table th { padding: 0 16px 12px 0; border-bottom: 2px solid var(--ink); color: var(--ink); }
+.p2 .q-table td { padding: 20px 16px 20px 0; border-bottom: 1px solid var(--line); }
+.p2 .q-table tbody tr:last-child td { border-bottom: 1px solid var(--line); }
+.p2 .q-table .c-case a { font-size: var(--fs-md); color: var(--accent); text-underline-offset: 4px; }
+.p2 .lv { font-weight: 600; font-size: var(--fs-md); }
+.p2 .rail { width: 120px; }
+.p2 .rail .tk { top: -5px; bottom: -5px; width: 1px; opacity: 1; }
+.p2 .rp { background: transparent; border: 1px solid var(--line2); color: var(--ink); font-size: 14px; min-width: 36px; height: 24px; }
+.p2 .rp.more { border-color: var(--line); color: var(--muted); }
+.p2 .mt { background: transparent; color: var(--ink); border: 1px solid var(--line2); font-size: 14px; min-width: 24px; height: 24px; }
+.p2 .sel { height: 44px; border: 1px solid var(--line2); border-radius: 2px; background-color: #fff; font-size: var(--fs-md); }
+.p2 .btn { height: 44px; padding: 0 20px; border-radius: 2px; font-size: var(--fs-md); font-weight: 600; }
+.p2 .btn-sec { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+.p2 .btn-sec:hover { background: var(--accent-soft); }
+.p2 .v-card { padding: 56px 48px 64px; display: grid; gap: 40px; }
+.p2 .v-head { padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.p2 .v-head h4 { font-size: 32px; }
+.p2 .v-grid { gap: 64px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.p2 .v-score { gap: 16px; }
+.p2 .lv-lg { font-size: var(--fs-lg); }
+.p2 .v-num b { font-size: 112px; letter-spacing: -0.03em; }
+.p2 .v-num small { font-size: 24px; }
+.p2 .v-raw .row { margin-bottom: 14px; }
+.p2 .reco { border-top: 2px solid var(--ink); background: var(--soft); padding: 24px 28px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; }
+.p2 .reco-ic { grid-row: span 3; color: var(--t-red); font-size: 24px; margin-top: 1px; }
+.p2 .reco-k { color: var(--t-red); font-size: var(--fs-sm); }
+.p2 .reco-t { font-size: var(--fs-lg); }
+.p2 .reco-n { font-size: var(--fs-md); }
+.p2 .v-meta { display: grid; gap: 20px; }
+.p2 .reg { background: transparent; padding: 6px 0; font-size: var(--fs-md); }
+.p2 .v-regs { gap: 12px 32px; }
+.p2 .c-strip { padding: 56px 48px 64px; gap: 56px; }
+.p2 .c-ctl output { font-size: 44px; font-weight: 400; }
+.p2 .c-ctl label { font-size: var(--fs-md); }
+.p2 .c-metrics { gap: 20px; }
+.p2 .c-strip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, .95fr); }
+.p2 .met dd.v { font-size: 40px; letter-spacing: -0.02em; }
+.p2 .met { border-top: 2px solid var(--ink); padding-top: 12px; }
+.p2 .cm { --cmg: 0; }
+.p2 .cm td { border-top: 1px solid var(--line); padding: 14px 8px; } .p2 .cm .good, .p2 .cm .bad { background: transparent; }
+.p2 .cm .bad b { color: var(--t-amb); }
+.p2 .cm td b { font-size: var(--fs-xl); font-weight: 400; }
+@container spec (max-width: 760px) {
+  .p2 .app-bar, .p2 .q-body, .p2 .v-card, .p2 .c-strip { padding-left: 20px; padding-right: 20px; }
+  .p2 .q-body, .p2 .c-strip { padding-top: 32px; padding-bottom: 40px; gap: 40px; }
+  .p2 .q-top { gap: 40px; } .p2 .v-grid { gap: 32px; }
+  .p2 .q-h h4 { font-size: 32px; } .p2 .v-num b { font-size: 88px; }
+}
+
+/* =====================================================================
+   3. MOBYWATEL  (gov.pl / mObywatel lineage: rounded 16 px cards, 8 px controls, blue)
+   ===================================================================== */
+.p3 { --font: "Open Sans", system-ui, "Segoe UI", sans-serif; --fs-xs: 12px; --fs-sm: 14px; --fs-md: 16px; --fs-lg: 18px; --fs-xl: 24px; --fs-h: 24px; --w-h: 700; --w-b: 600; --w-n: 700;
+  --bg: #F4F6FB; --surface: #FFFFFF; --soft: #F4F6FB; --ink: #101317; --ink2: #3C424B; --muted: #52575F; --line: #DDE3EE; --line2: #8C95A6;
+  --accent: #0B4FAE; --accent-soft: #E7EEFA; --on-accent: #FFFFFF;
+  --t-red: #A8142F; --b-red: #FDECEF; --m-red: #BF1A3A; --t-amb: #7D4B00; --b-amb: #FFF3DC; --m-amb: #B86E00; --t-grn: #14663A; --b-grn: #E5F5EC; --m-grn: #2B8A57;
+  --focus: #0B4FAE; --fw: 3px; --fo: 2px; --gap: 16px; --r-xs: 6px; --r-sw: 4px;
+  --rail-h: 8px; --rail-r: 4px; --rail-bg: #E1E7F2; --th: 28px; --trh: 8px; --trr: 4px; --thr: 50%; --thbg: #fff; --thbd: 3px solid var(--accent); --fill: var(--accent); --track: #D3DCEC; --mgap: 12px; }
+.p3 .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,19,23,.06); }
+.p3 .app-bar { background: #fff; padding: 12px 24px; border-bottom: 1px solid var(--line); gap: 12px 32px; }
+.p3 .brand { display: flex; align-items: center; gap: 12px; }
+.p3 .brand-m { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+.p3 .brand small { margin-top: 1px; }
+.p3 .nav { background: var(--soft); padding: 4px; border-radius: 12px; gap: 4px; }
+.p3 .nav button { padding: 8px 16px; min-height: 40px; border-radius: 8px; font-weight: 600; color: var(--ink2); }
+.p3 .nav button[aria-current] { background: var(--accent); color: #fff; }
+.p3 .ibtn { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; color: var(--ink); }
+.p3 .q-body { padding: 24px; }
+.p3 .q-top { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.p3 .q-tiles { gap: 12px; }
+.p3 .q-tile { padding: 16px; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,19,23,.06); }
+.p3 .q-tile:hover { border-color: var(--line2); }
+.p3 .q-tile .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; }
+.p3 .q-tile[data-lv="red"] .ico { background: var(--b-red); color: var(--t-red); }
+.p3 .q-tile[data-lv="amb"] .ico { background: var(--b-amb); color: var(--t-amb); }
+.p3 .q-tile[data-lv="grn"] .ico { background: var(--b-grn); color: var(--t-grn); }
+.p3 .q-tile .lbl { font-weight: 600; font-size: var(--fs-sm); color: var(--ink); }
+.p3 .q-tile .n { font-size: 40px; margin-top: auto; }
+.p3 .q-trend { padding: 16px 16px 12px; }
+.p3 .q-trend h5 { font-size: var(--fs-md); font-weight: 700; }
+.p3 .tbl-wrap { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,19,23,.06); }
+.p3 .q-table th { background: var(--soft); padding: 12px 16px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.p3 .q-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); height: 64px; }
+.p3 .q-table tbody tr:last-child td { border-bottom: 0; }
+.p3 .q-table .c-case a { font-size: var(--fs-md); font-weight: 600; }
+.p3 .lv { padding: 4px 10px; border-radius: 8px; }
+.p3 .lv-red { background: var(--b-red); } .p3 .lv-amb { background: var(--b-amb); } .p3 .lv-grn { background: var(--b-grn); }
+.p3 .q-table .lvbox { gap: 8px; }
+.p3 .rail .tk { top: -2px; bottom: -2px; }
+.p3 .sel { height: 44px; border: 1px solid var(--line2); border-radius: 8px; font-weight: 400; background-color: #fff; }
+.p3 .btn { height: 44px; padding: 0 20px; border-radius: 8px; }
+.p3 .btn-sec { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+.p3 .btn-sec:hover { background: var(--accent-soft); }
+.p3 .v-card { margin: 24px; display: grid; }
+.p3 .v-card.card { gap: 0; overflow: hidden; }
+.p3 .v-head { padding: 16px 24px; border-bottom: 1px solid var(--line); align-items: center; }
+.p3 .v-grid { padding: 24px; }
+.p3 .v-score { background: var(--soft); border-radius: 12px; padding: 24px; }
+.p3 .v-num b { font-size: 64px; }
+.p3 .reco { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 4px 14px; background: var(--b-red); border-radius: 12px; padding: 20px; }
+.p3 .reco-ic { grid-row: span 3; width: 40px; height: 40px; border-radius: 12px; background: var(--m-red); color: #fff; display: grid; place-items: center; font-size: 20px; }
+.p3 .reco-k { color: var(--t-red); }
+.p3 .reco-t { font-size: var(--fs-lg); }
+.p3 .reco-n { color: var(--ink); }
+.p3 .v-meta { display: grid; gap: 12px; }
+.p3 .reg { border-radius: 8px; }
+.p3 .mt { border-radius: 6px; }
+.p3 .c-strip { margin: 24px; padding: 24px; gap: 24px; }
+.p3 .c-ctl output { font-size: 28px; color: var(--accent); font-weight: 700; }
+.p3 .met { background: var(--soft); border-radius: 12px; padding: 16px; }
+.p3 .met dd.v { font-size: 32px; }
+.p3 .cm { --cmg: 4px; }
+.p3 .cm td { border-radius: 8px; }
+.p3 .cm .bad { background: var(--b-amb); }
+@container spec (max-width: 760px) {
+  .p3 .q-body { padding: 16px; } .p3 .v-card, .p3 .c-strip { margin: 16px; } .p3 .c-strip { padding: 16px; }
+  .p3 .v-grid { padding: 16px; } .p3 .app-bar { padding: 12px 16px; }
+}
+
+/* =====================================================================
+   4. MIEKKI NADZOR  (owner references: soft bento, pill nav, big numerals, under regulator rules)
+   ===================================================================== */
+.p4 { --font: "Plus Jakarta Sans", system-ui, "Segoe UI", sans-serif; --fs-xs: 12px; --fs-sm: 14px; --fs-md: 16px; --fs-lg: 20px; --fs-xl: 28px; --fs-h: 40px; --w-h: 500; --w-b: 500; --w-n: 500;
+  --bg: #E6EAF0; --surface: #FFFFFF; --soft: #EEF1F5; --ink: #10141A; --ink2: #2B323D; --muted: #4B5362; --line: #D5DAE3; --line2: #858E9E;
+  --accent: #83A2DB; --accent-soft: #D7E2F5; --on-accent: #10141A;
+  --t-red: #8E2626; --b-red: #F6D2D2; --m-red: #CE6969; --f-red: #E69A9A;
+  --t-amb: #6B4600; --b-amb: #F8E7BF; --m-amb: #B47A10; --f-amb: #F1D08A;
+  --t-grn: #1B6641; --b-grn: #D2EEDD; --m-grn: #3F9A6B; --f-grn: #A9DDBF;
+  --focus: #10141A; --fw: 3px; --fo: 3px; --gap: 16px; --r-xs: 999px; --r-sw: 50%;
+  --rail-h: 12px; --rail-r: 999px; --rail-bg: #E6EAF0; --th: 32px; --trh: 12px; --trr: 999px; --thr: 50%; --thbg: #10141A; --thbd: 4px solid #fff; --fill: #83A2DB; --track: #E6EAF0; --mgap: 12px; }
+.p4 :focus-visible { box-shadow: 0 0 0 2px #fff; }
+.p4 .card { background: #fff; border-radius: 28px; box-shadow: 0 12px 32px rgba(16,20,26,.07); }
+.p4 .app-bar { padding: 20px 24px 0; gap: 16px 24px; }
+.p4 .brand { font-size: 20px; font-weight: 700; }
+.p4 .brand small { display: none; }
+.p4 .nav { background: #fff; border-radius: 999px; padding: 6px; gap: 4px; margin-left: 12px; }
+.p4 .nav button { padding: 8px 20px; border-radius: 999px; min-height: 40px; font-weight: 500; color: var(--ink2); }
+.p4 .nav button[aria-current] { background: var(--ink); color: #fff; }
+.p4 .ibtn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: #fff; display: grid; place-items: center; }
+.p4 .q-body { padding: 24px; gap: 20px; }
+.p4 .q-h h4 { letter-spacing: -0.02em; }
+.p4 .q-h p { font-size: var(--fs-md); }
+.p4 .q-top { gap: 16px; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.p4 .q-tiles { gap: 12px; grid-template-columns: 1fr 1fr; grid-template-areas: "red amb" "red grn"; }
+.p4 .q-tile { border-radius: 28px; padding: 20px 22px; gap: 6px; position: relative; justify-content: space-between; min-height: 120px; }
+.p4 .q-tile[data-lv="red"] { grid-area: red; background: #10141A; color: #fff; min-height: 260px; }
+.p4 .q-tile[data-lv="amb"] { grid-area: amb; background: var(--f-amb); color: var(--ink); }
+.p4 .q-tile[data-lv="grn"] { grid-area: grn; background: var(--f-grn); color: var(--ink); }
+.p4 .q-tile .lv { background: rgba(255,255,255,.55); color: var(--ink); padding: 5px 12px 5px 10px; border-radius: 999px; width: max-content; font-weight: 500; }
+.p4 .q-tile[data-lv="red"] .lv { background: var(--f-red); }
+.p4 .q-tile .n { font-size: 48px; letter-spacing: -0.03em; }
+.p4 .q-tile[data-lv="red"] .n { font-size: 96px; }
+.p4 .q-tile .r { color: inherit; opacity: .85; }
+.p4 .q-tile[data-lv="red"] .r { color: #C9CFDA; opacity: 1; }
+.p4 .q-tile .go { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.7); color: var(--ink); }
+.p4 .q-tile[data-lv="red"] .go { background: #fff; }
+.p4 .q-tile .top { display: flex; align-items: flex-start; }
+.p4 .q-trend { padding: 24px; }
+.p4 .q-trend h5 { font-size: var(--fs-lg); font-weight: 500; margin-bottom: 12px; }
+.p4 .legend { font-size: var(--fs-sm); gap: 6px 18px; }
+.p4 .legend i { width: 12px; height: 12px; }
+.p4 .tbl-wrap { margin: 0 -4px; padding: 0 4px; }
+.p4 .q-table { border-collapse: separate; border-spacing: 0 8px; }
+.p4 .q-table th { padding: 0 16px 0; color: var(--muted); }
+.p4 .q-table td { background: #fff; padding: 14px 16px; height: 68px; }
+.p4 .q-table td:first-child { border-radius: 24px 0 0 24px; padding-left: 24px; }
+.p4 .q-table td:last-child { border-radius: 0 24px 24px 0; }
+.p4 .q-table .c-case a { font-weight: 500; font-size: var(--fs-md); }
+.p4 .lv { padding: 5px 12px 5px 10px; border-radius: 999px; font-weight: 500; color: var(--ink); }
+.p4 .lv-red { background: var(--f-red); } .p4 .lv-amb { background: var(--f-amb); } .p4 .lv-grn { background: var(--f-grn); }
+.p4 .rp { background: var(--b-red); color: var(--ink); font-weight: 500; }
+.p4 .rp.more { background: var(--soft); }
+.p4 .mt { min-width: 28px; height: 28px; padding: 0 8px; border-radius: 999px; background: var(--ink); color: #fff; }
+.p4 .sel { height: 44px; border: 1px solid var(--line2); border-radius: 999px; padding-left: 18px; background-color: #fff; }
+.p4 .btn { height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 500; }
+.p4 .btn-sec { background: #fff; color: var(--ink); border: 1px solid var(--ink); }
+.p4 .btn-sec:hover { background: var(--soft); }
+.p4 .v-card { padding: 24px; display: grid; gap: 20px; }
+.p4 .v-head h4 { font-size: 32px; letter-spacing: -0.02em; }
+.p4 .v-grid { gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.p4 .v-score { background: #10141A; color: #fff; border-radius: 28px; padding: 28px; gap: 8px; }
+.p4 .v-score .v-lab, .p4 .v-score .v-raw, .p4 .v-score .v-raw .row span:last-child { color: #C9CFDA; }
+.p4 .v-score .lv { background: var(--f-red); width: max-content; }
+.p4 .gauge { position: relative; width: min(100%, 320px); margin: 8px auto 0; }
+.p4 .gauge svg { display: block; width: 100%; height: auto; }
+.p4 .gauge .v-num { position: absolute; left: 0; right: 0; bottom: 0; justify-content: center; flex-direction: column; align-items: center; gap: 2px; }
+.p4 .gauge .v-num b { font-size: 88px; color: #fff; letter-spacing: -0.04em; line-height: .9; }
+.p4 .gauge .v-num small { color: #C9CFDA; font-size: var(--fs-sm); }
+.p4 .gz-t { fill: #C9CFDA; font-size: 11.5px; font-family: var(--font); }
+.p4 .v-score .rail { --rail-bg: #2B323D; }
+.p4 .v-score .rail .tk { background: #fff; opacity: .9; }
+.p4 .v-score .rail-l { color: #C9CFDA; }
+.p4 .reco { border-radius: 28px; background: var(--f-red); color: var(--ink); padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 6px 16px; align-items: start; }
+.p4 .reco-ic { grid-column: 2; grid-row: 1; width: 44px; height: 44px; border-radius: 50%; background: #10141A; color: #fff; display: grid; place-items: center; font-size: 20px; }
+.p4 .reco > div { grid-column: 1; grid-row: 1; }
+.p4 .reco-k { font-size: var(--fs-sm); }
+.p4 .reco-t { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-top: 4px; }
+.p4 .reco-n { color: var(--ink); font-size: var(--fs-sm); }
+.p4 .v-meta { background: #fff; border-radius: 28px; padding: 20px 24px; display: grid; gap: 12px; box-shadow: 0 12px 32px rgba(16,20,26,.07); }
+.p4 .reg { border-radius: 999px; padding: 6px 14px 6px 10px; color: var(--ink); }
+.p4 .reg-pos { background: var(--f-grn); } .p4 .reg-neg { background: var(--f-red); }
+.p4 .c-strip { padding: 24px; gap: 16px; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr) minmax(0, .95fr); }
+.p4 .c-strip > * { background: #fff; border-radius: 28px; padding: 24px; box-shadow: 0 12px 32px rgba(16,20,26,.07); }
+.p4 .c-ctl output { font-size: 48px; letter-spacing: -0.03em; }
+.p4 .c-metrics { background: transparent !important; box-shadow: none !important; padding: 0 !important; gap: 12px; }
+.p4 .met { border-radius: 24px; padding: 18px 18px 16px; background: #fff; box-shadow: 0 12px 32px rgba(16,20,26,.07); }
+.p4 .met:nth-child(1) { background: var(--accent); }
+.p4 .met:nth-child(1) dt, .p4 .met:nth-child(1) dd.h { color: var(--ink); }
+.p4 .met:nth-child(3) { background: #10141A; color: #fff; }
+.p4 .met:nth-child(3) dt, .p4 .met:nth-child(3) dd.h { color: #C9CFDA; }
+.p4 .met dd.v { font-size: 44px; letter-spacing: -0.03em; }
+.p4 .cm { --cmg: 6px; }
+.p4 .cm td { border-radius: 16px; }
+.p4 .cm .good { background: var(--accent-soft); }
+.p4 .cm .bad { background: var(--b-amb); }
+@container spec (max-width: 760px) {
+  .p4 .q-tiles { grid-template-areas: "red red" "amb grn"; }
+  .p4 .q-tile[data-lv="red"] { min-height: 190px; }
+  .p4 .c-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@container spec (max-width: 520px) {
+  .p4 .q-tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "red" "amb" "grn"; }
+  .p4 .q-body, .p4 .v-card, .p4 .c-strip { padding: 16px; }
+  .p4 .app-bar { padding: 16px 16px 0; } .p4 .nav { margin-left: 0; }
+  .p4 .q-h h4 { font-size: 32px; } .p4 .c-metrics { grid-template-columns: minmax(0, 1fr); }
+  .p4 .q-tile[data-lv="red"] .n { font-size: 72px; }
+}
+/* responsive rules last, so they win over the per-proposal grids above */
+@container spec (max-width: 900px) {
+  .spec .q-top, .spec .c-strip { grid-template-columns: minmax(0, 1fr); }
+}
+@container spec (max-width: 760px) {
+  .spec .v-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@container spec (max-width: 520px) {
+  .spec .q-tiles { grid-template-columns: minmax(0, 1fr); }
+  .spec .c-metrics { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-crit" viewBox="0 0 24 24"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5M12 16.2v.01"/></symbol>
+    <symbol id="i-rev" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.8 2.8L16 9.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.4v.01"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></symbol>
+  </defs>
+</svg>
+
+<div class="bar">
+  <div class="wrap">
+    <nav class="jump" aria-label="Skok do propozycji">
+      <a href="#porownanie">Porównanie</a>
+      <a href="#urzedowy"><b>1</b>Urzędowy</a>
+      <a href="#rijks-spokojny"><b>2</b>Rijks-spokojny</a>
+      <a href="#mobywatel"><b>3</b>mObywatel</a>
+      <a href="#miekki-nadzor"><b>4</b>Miękki nadzór</a>
+      <a href="#rekomendacja">Rekomendacja</a>
+      <a href="#zrodla">Źródła</a>
+    </nav>
+    <div class="view" role="radiogroup" aria-label="Widok propozycji">
+      <span id="view-l">Pokaż</span>
+      <div class="seg">
+        <label><input type="radio" name="view" value="all" checked aria-describedby="view-l"><span>Wszystko</span></label>
+        <label><input type="radio" name="view" value="a"><span>A Kolejka</span></label>
+        <label><input type="radio" name="view" value="b"><span>B Werdykt</span></label>
+        <label><input type="radio" name="view" value="c"><span>C Kalibracja</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main data-view="all">
+  <header class="wrap hero">
+    <div>
+      <h1>Cztery języki projektowe dla InvestWatch</h1>
+      <p class="lead">Ten sam ekran kolejki, ta sama karta werdyktu i ten sam pasek kalibracji, narysowane w czterech systemach. Każda propozycja wywodzi się z państwowego systemu projektowego, a cztery fragmenty są żywe: suwak progu naprawdę przelicza metryki.</p>
+    </div>
+    <aside class="read" aria-labelledby="read-h">
+      <h2 id="read-h">Jak czytać tę stronę</h2>
+      <ul>
+        <li>Przełącznik „Pokaż” u góry zostawia w każdej propozycji tylko jeden fragment, więc cztery wersje karty werdyktu leżą jedna pod drugą.</li>
+        <li>Próbki zawsze mają jasny motyw. Tylko rama strony reaguje na tryb ciemny.</li>
+        <li>Nie użyto żadnych godeł, logo ani zastrzeżonych krojów pisma. Odcienie są własne i tylko nawiązują do wzorców.</li>
+      </ul>
+    </aside>
+  </header>
+
+  <section class="sec wrap" id="porownanie" aria-labelledby="cmp-h">
+    <div class="sec-h">
+      <h2 id="cmp-h">Porównanie w skrócie</h2>
+      <p>Kolumny to propozycje, wiersze to decyzje projektowe. Koszt dotyczy kodu w <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">services/frontend/src</code>.</p>
+    </div>
+    <div class="scroll" tabindex="0" role="region" aria-label="Tabela porównawcza">
+      <table class="cmp">
+        <thead><tr><th scope="col"></th><th scope="col">1 Urzędowy</th><th scope="col">2 Rijks-spokojny</th><th scope="col">3 mObywatel</th><th scope="col">4 Miękki nadzór</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Rodowód</th><td>DSFR (Francja)</td><td>NL Design System i Rijkshuisstijl (Holandia)</td><td>gov.pl i mObywatel (Polska)</td><td>Twoje referencje, ujęte w reguły 1 do 3</td></tr>
+          <tr><th scope="row">Kolory</th><td><div class="dots" aria-hidden="true"><i style="background:#B3121B"></i><i style="background:#C25200"></i><i style="background:#2E8A53"></i><i style="background:#1A2F8C"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#A32A20"></i><i style="background:#B27A00"></i><i style="background:#4C8C57"></i><i style="background:#1B5A8C"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#BF1A3A"></i><i style="background:#B86E00"></i><i style="background:#2B8A57"></i><i style="background:#0B4FAE"></i></div></td><td><div class="dots" aria-hidden="true"><i style="background:#E69A9A"></i><i style="background:#F1D08A"></i><i style="background:#A9DDBF"></i><i style="background:#10141A"></i></div></td></tr>
+          <tr><th scope="row">Narożniki</th><td>0 px wszędzie</td><td>2 px na przyciskach i polach</td><td>8 px kontrolki, 16 px karty</td><td>28 px karty, pigułki 999 px</td></tr>
+          <tr><th scope="row">Rozdzielanie bloków</th><td>Ramka 1 px, zero cieni</td><td>Białe pole i linie poziome, bez ramek</td><td>Ramka 1 px i cień 1 px, tylko na kartach</td><td>Różnica powierzchni i rozproszony cień</td></tr>
+          <tr><th scope="row">Wiersz kolejki</th><td>40 px, tabela w ramce</td><td>66 px, tylko linie poziome</td><td>64 px, tabela w karcie</td><td>68 px, wiersz jako osobna karta</td></tr>
+          <tr><th scope="row">Krój pisma</th><td>Public Sans</td><td>Source Sans 3</td><td>Open Sans</td><td>Plus Jakarta Sans</td></tr>
+          <tr><th scope="row">Najmocniejsza strona</th><td>Gęstość i kontrast, zaufanie bez oswajania</td><td>Czytelność liczb i uzasadnień, kolor tylko przy ryzyku</td><td>Znajomość wśród polskich urzędników, miękkość bez ryzyka</td><td>Wrażenie na jury i bliskość referencji</td></tr>
+          <tr><th scope="row">Główne ryzyko</th><td>Wygląda jak formularz sprzed dekady</td><td>Mało wierszy na ekran, brak efektu „wow”</td><td>Można go wziąć za kopię aplikacji mObywatel</td><td>Wygląda jak CRM, nie jak nadzór</td></tr>
+          <tr><th scope="row">Koszt w kodzie</th><td class="cost">Mały</td><td class="cost">Średni</td><td class="cost">Średni</td><td class="cost">Duży</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="props"></div>
+
+  <section class="sec wrap" id="rekomendacja" aria-labelledby="rec-h">
+    <div class="reco-pick">
+      <h2 id="rec-h">Rekomendacja: mObywatel jako baza, z wielką liczbą i miernikiem z „Miękkiego nadzoru”</h2>
+      <p>Użytkownikami są polscy urzędnicy, którzy codziennie widzą gov.pl, login.gov.pl i mObywatela. Ten język jest dla nich wiarygodny bez tłumaczenia, a jednocześnie spełnia nastrój z Twoich referencji: karty 16 px, duże cele dotyku, kafle z ikonami i jasne tło bez ozdobnych gradientów. Tabela zostaje gęsta i obramowana, więc analityk nie traci wierszy na ekranie.</p>
+      <p>Z propozycji 4 warto wziąć tylko dwie rzeczy: wielką liczbę Compliance Score z półokrągłym miernikiem na karcie werdyktu oraz pigułkową nawigację w nagłówku. Reszta bento zjadałaby miejsce, którego tabela potrzebuje. Jeśli priorytetem jest wyłącznie jury hackathonu, wybierz 4. Jeśli audyt dostępności i zaufanie urzędników, wybierz 1.</p>
+      <p style="margin-bottom:20px"><strong>Ryzyko do pilnowania:</strong> InvestWatch nie może udawać aplikacji państwowej. Bez logo mObywatela, bez układu kart dokumentów, z własnym monogramem i podpisem „narzędzie analityczne”.</p>
+      <h3 style="font-size:17px;margin-bottom:10px">Co zmieni się w kodzie React (bez dotykania logiki)</h3>
+      <div class="scroll" tabindex="0" role="region" aria-label="Koszt wdrożenia propozycji 3">
+        <table class="cost-tbl">
+          <thead><tr><th scope="col">Plik</th><th scope="col">Zmiana</th><th scope="col">Wysiłek</th></tr></thead>
+          <tbody>
+            <tr><td><code>styles/tokens.css</code></td><td>Podmiana około 35 zmiennych kolorów (tło #F4F6FB, akcent #0B4FAE, trzy trójki poziomów ryzyka: tekst, tło, znacznik), nowe <code>--r-md: 8px</code>, <code>--r-lg: 16px</code>, <code>--shadow-card</code>, <code>--font</code>, skala 12/14/16/18/24/40</td><td>Mały</td></tr>
+            <tr><td><code>main.tsx</code>, <code>package.json</code>, <code>LICENSES.md</code></td><td>Zamiana <code>@fontsource/ibm-plex-sans</code> na <code>@fontsource/open-sans</code> (OFL, wagi 400/600/700, latin i latin-ext), nadal samohostowany, bez CDN</td><td>Mały</td></tr>
+            <tr><td><code>styles/ui.css</code></td><td><code>.btn</code> (44 px, obrys 2 px akcentu), <code>.badge</code> i <code>.level</code> (tło i ikona zamiast kropki), <code>.panel</code> (promień 16 px, cień 1 px), <code>.rail</code>, <code>.module-tag</code>, <code>.chip</code>, <code>.select</code> (44 px)</td><td>Średni</td></tr>
+            <tr><td><code>styles/queue.css</code> i <code>LevelSummary.tsx</code></td><td>Trzy kafle z ikoną poziomu (krytyczne, weryfikacja, zgodne) zamiast listy, wiersz 64 px, tabela w karcie</td><td>Średni</td></tr>
+            <tr><td><code>styles/case.css</code>, <code>VerdictBlock.tsx</code>, <code>RecommendationCard.tsx</code></td><td>Ostylowanie karty werdyktu i rekomendacji; nowy mały komponent <code>ScoreGauge</code> (SVG, bez zależności) z progami 20 i 70</td><td>Średni</td></tr>
+            <tr><td><code>styles/calibration.css</code>, <code>ThresholdControl.tsx</code></td><td>Radix Slider: ścieżka 8 px, uchwyt 28 px z obwódką; kafle metryk i macierz z zaokrągleniem 8 px</td><td>Mały</td></tr>
+            <tr><td><code>TrendChart.tsx</code>, <code>PrCurve.tsx</code>, <code>RelationshipGraph.tsx</code></td><td>Kolory wykresów ze zmiennych (dziś w <code>PrCurve.tsx</code> i grafie są trzy zaszyte kolory), zaokrąglone końce słupków</td><td>Mały</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="zrodla" aria-labelledby="src-h">
+    <div class="sec-h"><h2 id="src-h">Źródła i zastrzeżenia</h2><p>Co zostało sprawdzone, czego nie udało się otworzyć i jakie elementy są chronione.</p></div>
+    <div class="two">
+      <div>
+        <ul class="note">
+          <li><strong>DSFR, Francja.</strong> Strona <a href="https://www.systeme-de-design.gouv.fr/">systeme-de-design.gouv.fr</a> odrzuciła automatyczne pobranie (HTTP 403). Użyto README repozytorium <a href="https://github.com/GouvernementFR/dsfr">GouvernementFR/dsfr</a> (modułowość, motywy, BEM, licencja: kod Etalab 2.0, kroje Marianne na osobnych warunkach, użycie tylko w administracji) oraz nieoficjalnego zestawienia tokenów <a href="https://www.ui-skills.com/design-md/dsfr">ui-skills.com/design-md/dsfr</a>: Bleu France #000091, Rouge Marianne #E1000F, komunikaty #1F8D49 / #D64D00 / #F60700 / #0078F3, fokus #0A76F6, jednostka 0,25 rem, promienie 0 / 4 px / pigułka, skala nagłówków od 22 do 40 px. Wartości z tego zestawienia są niezweryfikowane u źródła.</li>
+          <li><strong>NL Design System.</strong> <a href="https://nldesignsystem.nl/">nldesignsystem.nl</a> i <a href="https://www.nldesignsystem.nl/richtlijnen/">Richtlijnen</a>: podstawą jest WCAG 2.2 AA, a kryteria 2.4.13 (wygląd fokusu) i 2.5.5 (rozmiar celu) stosowane na poziomie AAA; etykieta pola zawsze nad polem; kolor ma wspierać, a nie jedyny nieść znaczenie. Strony Typografie, Kleuren i Ruimte nie zawierały liczb, więc skala i odstępy w propozycji 2 są własne.</li>
+          <li><strong>Rijkshuisstijl.</strong> <a href="https://www.rijksoverheid.nl/onderwerpen/overheidscommunicatie/rijkshuisstijl-en-rijkswebsites">rijksoverheid.nl</a>: niebieska wstęga jako znak państwa, błękit jako kolor wiodący, neutralność i ciągłość jako cel. <a href="https://github.com/nl-design-system/rijkshuisstijl-community">rijkshuisstijl-community</a>: oficjalne kroje „nie są open source”, logo tylko dla administracji centralnej. Serwis rijkshuisstijl.nl wymagał logowania i nie został odczytany. Wartości barw Rijkshuisstijl nie zostały zweryfikowane i nie są kopiowane.</li>
+          <li><strong>gov.pl i mObywatel.</strong> Zmierzone na żywo w przeglądarce, na publicznych stronach <a href="https://www.gov.pl/">gov.pl</a> i <a href="https://login.gov.pl/">login.gov.pl</a> (tylko odczyt stylów): Open Sans, tekst #1B1B1B i #101317, błękit #0052A5 i #0452A8, panel #F4F6FB, tekst pomocniczy #52575F, promienie 4 / 8 / 16 / 24 px, przyciski z obrysem 2 px, treść 14,5 do 16 px, nagłówki 700. Kontekst aplikacji: <a href="https://www.gov.pl/web/cyfryzacja/mobywatel--10-milionow-uzytkownikow-nowa-odslona-aplikacji-i-plany-jej-rozwoju">komunikat Ministerstwa Cyfryzacji o nowym wyglądzie</a> (dokumenty jako nakładające się karty, zakładka Usługi z kategoriami w kolorach, tryb jasny, ciemny i automatyczny). Oficjalna galeria design systemu mObywatela wymaga Profilu Zaufanego i nie została otwarta; <a href="https://codeberg.org/fajfer/mObywatel">kopia kodu</a> potwierdza jej istnienie, ale nie podaje wartości.</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="note">
+          <li><strong>Czego nie użyto.</strong> Logo, godeł, wstęgi Rijks, krojów Marianne i Rijksoverheid Sans, układów kart dokumentu mObywatela. Monogram „IW” i wszystkie ikony są własne. Kod i style tej strony są pisane od zera.</li>
+          <li><strong>Krój pisma.</strong> Wszystkie kroje mają licencję SIL OFL: Public Sans, Source Sans 3, Open Sans, Plus Jakarta Sans oraz IBM Plex Sans na ramie strony. Ta strona ładuje je z Google Fonts tylko dlatego, że wymaga tego środowisko publikacji. Produkt powinien nadal je samohostować przez <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">@fontsource</code>.</li>
+          <li><strong>Kontrast.</strong> Wszystkie współczynniki w tabelach tokenów liczone są na tej stronie ze wzoru WCAG 2.x z podanych kolorów. Tekst ma co najmniej 4,5:1, znaczniki graficzne co najmniej 3:1. Poziom ryzyka zawsze niesie ikona o innym kształcie i słowo, nigdy sam kolor.</li>
+          <li><strong>Referencje właściciela.</strong> Z siedmiu obrazów wzięto miękkość, promienie, grupowanie w karty, duże liczby i pigułkową nawigację. Pominięto zdjęcia osób, szkło, gradienty za tekstem i neonową zieleń. Paleta #10141A, #E4E4E4, #83A2DB, #CE6969 pochodzi z obrazu 7 i w propozycji 4 służy jako wypełnienie z ciemnym tekstem albo znacznik, nigdy jako tekst.</li>
+          <li><strong>Czego nie sprawdzono.</strong> Zachowania na prawdziwych danych, trybu ciemnego produktu i wydruku pakietu dowodowego w żadnej z czterech propozycji. Stronę sprawdzono w przeglądarce w szerokości stacjonarnej i 390 px.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <footer class="wrap end">Propozycje dotyczą wyłącznie warstwy wizualnej. Logika, API i treści produktu pozostają bez zmian.</footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var ic = function (n) { return '<svg class="ic" aria-hidden="true" focusable="false"><use href="#i-' + n + '"/></svg>'; };
+  var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+
+  /* ---------- shared content (Polish, invented entities) ---------- */
+  var LV = {
+    red: { key: "red", cls: "red", label: "Krytyczne", icon: "crit", range: "ryzyko od 70", count: 7 },
+    amb: { key: "amb", cls: "amb", label: "Do weryfikacji", icon: "rev", range: "ryzyko 20–69", count: 23 },
+    grn: { key: "grn", cls: "grn", label: "Zgodne", icon: "ok", range: "ryzyko poniżej 20", count: 118 }
+  };
+  var MOD = { 1: "Finfluencerzy", 2: "Informacja o ryzyku", 3: "Shadow advisory" };
+  var STATUS = [["new", "Nowe"], ["in_review", "W analizie"], ["escalated", "Eskalowane"], ["closed_violation", "Zamknięte: naruszenie"], ["closed_ok", "Zamknięte: bez naruszeń"]];
+  var ROWS = [
+    { lv: "red", risk: 86, title: "Reklama „Pewne 12% miesięcznie” bez informacji o ryzyku", sub: "Instagram, Nordhaven Capital Sp. z o.o.", mods: [1, 2], rules: ["R3", "R7", "R12", "R14"], st: "new" },
+    { lv: "red", risk: 74, title: "Płatne „sygnały” inwestycyjne bez uprawnień doradcy", sub: "YouTube, kanał „Giełdowy Wilk”, TradeSignal Polska", mods: [3], rules: ["R15", "R16"], st: "in_review" },
+    { lv: "amb", risk: 41, title: "Niejawna współpraca z brokerem w serii wideo o ETF-ach", sub: "TikTok, A. Wrona, Brokeria Group S.A.", mods: [1], rules: ["R5", "R9"], st: "new" },
+    { lv: "grn", risk: 8, title: "Webinar edukacyjny o lokatach strukturyzowanych", sub: "WWW, Fundacja Edukacji Kapitałowej Wisła", mods: [2], rules: [], st: "closed_ok" }
+  ];
+  var DAYS = ["12.11", "13.11", "14.11", "15.11", "16.11", "17.11", "18.11", "19.11", "20.11", "21.11"];
+  var TREND = [[1, 6, 14], [2, 5, 16], [0, 7, 12], [1, 4, 9], [0, 3, 8], [2, 8, 17], [1, 9, 19], [3, 7, 15], [2, 10, 21], [3, 8, 18]];
+
+  /* ---------- small renderers ---------- */
+  function lvBadge(l, big) { var v = LV[l]; return '<span class="lv lv-' + v.cls + (big ? " lv-lg" : "") + '">' + ic(v.icon) + "<span>" + v.label + "</span></span>"; }
+  function rail(v, wide) {
+    var l = v >= 70 ? "red" : v >= 20 ? "amb" : "grn";
+    return '<span class="rail ' + l + (wide ? " wide" : "") + '" role="img" aria-label="Ryzyko ' + v + ' na 100, progi 20 i 70"><i class="f" style="width:' + v + '%"></i><i class="tk" style="left:20%"></i><i class="tk" style="left:70%"></i></span>';
+  }
+  function railLabels() { return '<div class="rail-l" aria-hidden="true"><span style="left:20%">20</span><span style="left:70%">70</span></div>'; }
+
+  function trend(P, pid) {
+    var o = P.chart, W = 380, H = 176, pl = 30, pr = 6, pt = 16, pb = 26, iw = W - pl - pr, ih = H - pt - pb, n = TREND.length, step = iw / n, bw = o.bw, max = 40;
+    var y = function (v) { return pt + ih - (v / max) * ih; };
+    var s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-labelledby="tt-' + pid + '"><title id="tt-' + pid + '">Nowe oznaczone sprawy dziennie, od 12 do 21 listopada: krytyczne, do weryfikacji i zgodne. Ostatniego dnia 29 spraw, w tym 3 krytyczne.</title>';
+    s += "<defs>";
+    if (o.hatch) s += '<pattern id="h-' + pid + '" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="' + P.hatchBase + '"/><rect width="2.4" height="6" fill="#fff"/></pattern>';
+    if (o.r) TREND.forEach(function (d, i) { var tot = d[0] + d[1] + d[2], x = pl + step * i + (step - bw) / 2; s += '<clipPath id="c-' + pid + i + '"><rect x="' + x.toFixed(1) + '" y="' + y(tot).toFixed(1) + '" width="' + bw + '" height="' + (y(0) - y(tot)).toFixed(1) + '" rx="' + o.r + '"/></clipPath>'; });
+    s += "</defs>";
+    [0, 20, 40].forEach(function (v) { s += '<line class="t-grid" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y(v) + '" y2="' + y(v) + '"' + (o.dash && v ? ' stroke-dasharray="2 4"' : "") + "/>"; s += '<text class="t-txt" x="' + (pl - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + "</text>"; });
+    TREND.forEach(function (d, i) {
+      var x = pl + step * i + (step - bw) / 2, acc = 0, g = o.gap || 0;
+      s += '<g' + (o.r ? ' clip-path="url(#c-' + pid + i + ')"' : "") + ">";
+      ["t-red", "t-amb", "t-grn"].forEach(function (cl, k) {
+        var v = d[k]; if (!v) return;
+        var y1 = y(acc + v), y0 = y(acc), h = Math.max(0, y0 - y1 - (k < 2 ? g : 0));
+        var fill = (cl === "t-amb" && o.hatch) ? ' style="fill:url(#h-' + pid + ')"' : "";
+        s += '<rect class="' + cl + '" x="' + x.toFixed(1) + '" y="' + (y1 + (k < 2 ? g : 0)).toFixed(1) + '" width="' + bw + '" height="' + h.toFixed(1) + '"' + fill + (o.stroke && cl === "t-amb" ? ' stroke="' + o.stroke + '" stroke-width="1"' : "") + "/>";
+        acc += v;
+      });
+      s += "</g>";
+      if (i % 2 === 1) s += '<text class="t-txt" x="' + (x + bw / 2).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + DAYS[i] + "</text>";
+    });
+    var last = TREND[n - 1], lt = last[0] + last[1] + last[2], lx = pl + step * (n - 1) + step / 2;
+    s += '<text class="t-tot" x="' + lx.toFixed(1) + '" y="' + (y(lt) - 5).toFixed(1) + '" text-anchor="middle">' + lt + "</text></svg>";
+    return s;
+  }
+
+  function appBar(P) {
+    var brand, nav = '<nav class="nav" aria-label="Główna"><button type="button" aria-current="page">Kolejka spraw</button><button type="button">Kalibracja</button><button type="button">Skanowania</button></nav>';
+    if (P.cls === "p1") return '<header class="app-bar"><div class="p1-top"><div class="brand">InvestWatch<small>Narzędzie analityczne dla nadzoru</small></div><div class="tools"><button type="button" class="lnk">Pomoc</button><button type="button" class="lnk">Wyloguj</button></div></div>' + nav + "</header>";
+    if (P.cls === "p3") return '<header class="app-bar"><div class="brand"><span class="brand-m" aria-hidden="true">IW</span><span>InvestWatch<small>Narzędzie analityczne</small></span></div>' + nav + '<div class="tools"><button type="button" class="ibtn" aria-label="Szukaj">' + ic("search") + '</button><button type="button" class="ibtn" aria-label="Powiadomienia">' + ic("bell") + "</button></div></header>";
+    if (P.cls === "p4") return '<header class="app-bar"><div class="brand">InvestWatch</div>' + nav + '<div class="tools"><button type="button" class="ibtn" aria-label="Szukaj">' + ic("search") + '</button><button type="button" class="ibtn" aria-label="Powiadomienia">' + ic("bell") + "</button></div></header>";
+    return '<header class="app-bar"><div class="brand">InvestWatch<small>Narzędzie analityczne dla nadzoru</small></div>' + nav + '<div class="tools"><button type="button" class="lnk">Pomoc</button></div></header>';
+  }
+
+  function fragA(P) {
+    var pid = P.cls;
+    var tiles = ["red", "amb", "grn"].map(function (k) {
+      var v = LV[k], inner;
+      if (P.cls === "p3") inner = '<span class="ico">' + ic(v.icon) + '</span><span class="lbl">' + v.label + '</span><span class="n">' + v.count + '</span><span class="r">' + v.range + "</span>";
+      else if (P.cls === "p4") inner = '<span class="top">' + lvBadge(k) + '</span><span class="go" aria-hidden="true">' + ic("up") + '</span><span><span class="n" style="display:block">' + v.count + '</span><span class="r">' + v.range + "</span></span>";
+      else inner = lvBadge(k) + '<span class="n">' + v.count + '</span><span class="r">' + v.range + "</span>";
+      return '<button type="button" class="q-tile" data-lv="' + k + '" aria-pressed="false" aria-label="' + v.label + ": " + v.count + " spraw, " + v.range + '">' + inner + "</button>";
+    }).join("");
+    var legend = '<ul class="legend"><li><i class="t-red" style="background:var(--m-red)"></i>Krytyczne</li><li><i style="background:var(--m-amb)' + (P.chart.hatch ? ";background-image:repeating-linear-gradient(45deg,transparent 0 2px,#fff 2px 4px)" : "") + '"></i>Do weryfikacji</li><li><i style="background:var(--m-grn)"></i>Zgodne</li></ul>';
+    var rows = ROWS.map(function (r, i) {
+      var mods = '<span class="mods">' + r.mods.map(function (m) { return '<span class="mt" title="Moduł ' + m + ": " + MOD[m] + '">' + m + "</span>"; }).join("") + "</span>";
+      var rules = r.rules.length ? '<span class="rules">' + r.rules.slice(0, 3).map(function (x) { return '<span class="rp" title="Naruszona reguła ' + x.slice(1) + '">' + x + "</span>"; }).join("") + (r.rules.length > 3 ? '<span class="rp more">+' + (r.rules.length - 3) + "</span>" : "") + "</span>" : '<span class="none">brak naruszeń</span>';
+      var opts = STATUS.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === r.st ? " selected" : "") + ">" + s[1] + "</option>"; }).join("");
+      return '<tr><td class="c-lv"><div class="lvbox">' + lvBadge(r.lv) + '<div class="lvline">' + rail(r.risk) + '<span class="rv">' + r.risk + "</span></div></div></td>" +
+        '<td class="c-case"><a href="#' + pid + '" onclick="return false">' + esc(r.title) + '</a><span class="sub">' + esc(r.sub) + "</span></td><td>" + mods + "</td><td>" + rules + '</td><td><label class="sr-only" for="st-' + pid + i + '">Status sprawy: ' + esc(r.title) + '</label><select class="sel" id="st-' + pid + i + '">' + opts + "</select></td></tr>";
+    }).join("");
+    return '<div class="spec ' + P.cls + '">' + appBar(P) +
+      '<div class="q-body"><div class="q-h"><h4>Kolejka spraw</h4><p>21 listopada 2026, 148 spraw. Progi: oznaczenie od 20, krytyczne od 70.</p></div>' +
+      '<div class="q-top"><div class="q-tiles" role="group" aria-label="Liczba spraw według poziomu ryzyka">' + tiles + '</div>' +
+      '<figure class="q-trend ' + (P.cls === "p4" ? "card" : "") + '"><h5>Nowe oznaczone sprawy dziennie</h5>' + trend(P, pid) + legend + "</figure></div>" +
+      '<div class="tbl-wrap"><table class="q-table"><thead><tr><th scope="col">Poziom i ryzyko</th><th scope="col">Sprawa</th><th scope="col">Moduły</th><th scope="col">Naruszone reguły</th><th scope="col">Status</th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+      '<p class="tbl-foot">Moduły: 1 Finfluencerzy, 2 Informacja o ryzyku, 3 Shadow advisory. R oznacza regułę z macierzy 19 reguł.</p></div></div>';
+  }
+
+  function gauge() {
+    var cx = 160, cy = 150, r = 120, sw = 22;
+    function pt(c) { var a = Math.PI * (1 - c / 100); return [cx + r * Math.cos(a), cy - r * Math.sin(a)]; }
+    function arc(c0, c1, cls) { var a = pt(c0), b = pt(c1); return '<path d="M' + a[0].toFixed(1) + " " + a[1].toFixed(1) + " A" + r + " " + r + " 0 0 1 " + b[0].toFixed(1) + " " + b[1].toFixed(1) + '" fill="none" stroke-width="' + sw + '" class="gz ' + cls + '"/>'; }
+    var p = pt(14), t30 = pt(30), t80 = pt(80), lab = function (c, txt, dx, dy) { var q = pt(c); return '<text class="gz-t" x="' + (q[0] + dx) + '" y="' + (q[1] + dy) + '" text-anchor="middle">' + txt + "</text>"; };
+    return '<svg viewBox="0 0 320 172" role="img" aria-label="Miernik Compliance Score: 14 na 100, strefa krytyczna do 30, do weryfikacji 31 do 80, zgodna od 81"><style>.gz{stroke-linecap:butt}.gz.a{stroke:var(--f-red)}.gz.b{stroke:var(--f-amb)}.gz.c{stroke:var(--f-grn)}</style>' +
+      arc(0, 29, "a") + arc(31, 79, "b") + arc(81, 100, "c") +
+      '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="13" fill="#fff" stroke="#10141A" stroke-width="5"/>' +
+      lab(15, "0", -2, 28) + lab(85, "100", 6, 28) +
+      '<text class="gz-t" x="' + (t30[0] - 12).toFixed(1) + '" y="' + (t30[1] - 22).toFixed(1) + '" text-anchor="middle">30</text><text class="gz-t" x="' + (t80[0] + 8).toFixed(1) + '" y="' + (t80[1] - 22).toFixed(1) + '" text-anchor="middle">80</text></svg>';
+  }
+
+  function fragB(P) {
+    var exp = '<div class="v-ex"><button type="button" class="btn btn-sec">' + ic("file") + 'Pakiet dowodowy PDF</button><button type="button" class="btn btn-sec">' + ic("dl") + "CSV</button></div>";
+    var tags = '<ul class="v-tags" aria-label="Moduły sprawy">' + [1, 2].map(function (m) { return '<li class="mt-l"><span class="mt">' + m + "</span>" + MOD[m] + "</li>"; }).join("") + "</ul>";
+    var regs = '<ul class="v-regs" aria-label="Rejestry"><li class="reg reg-pos">' + ic("ok") + '<span><b>KRS:</b> wpis aktywny</span></li><li class="reg reg-neg">' + ic("warn") + '<span><b>Lista ostrzeżeń:</b> podmiot na liście</span></li></ul>';
+    var reco = '<div class="reco"><span class="reco-ic" aria-hidden="true">' + ic("up") + '</span><div><p class="reco-k">Rekomendacja: Eskalować</p><p class="reco-t">Skierować do postępowania wyjaśniającego</p><p class="reco-n"><b>Następne działanie:</b> przekazać pakiet dowodowy zespołowi ds. postępowań wyjaśniających i zabezpieczyć archiwum reklamy.</p></div></div>';
+    var raw = '<div class="v-raw"><div class="row"><span>Surowy wynik ryzyka: <b class="num" style="color:inherit;font-weight:700">86</b></span><span>progi 20 i 70</span></div>' + rail(86, true) + railLabels() + "</div>";
+    var score = P.gauge
+      ? lvBadge("red", true) + '<p class="v-lab">Compliance Score</p><div class="gauge">' + gauge() + '<p class="v-num"><b class="num">14</b><small>z 100</small></p></div>' + raw
+      : lvBadge("red", true) + '<div><p class="v-lab">Compliance Score</p><p class="v-num"><b class="num">14</b><small>/ 100</small></p></div>' + raw;
+    var shell = P.cls === "p3" ? "v-card card" : "v-card";
+    return '<div class="spec ' + P.cls + '"><article class="' + shell + '" aria-label="Werdykt"><header class="v-head"><div><h4>Werdykt</h4><p>Sprawa IW-2026-0412: Reklama „Pewne 12% miesięcznie”, Nordhaven Capital Sp. z o.o.</p></div>' + exp + '</header><div class="v-grid"><section class="v-score">' + score + '</section><div class="v-side">' + reco + '<div class="v-meta">' + tags + regs + "</div></div></div></article></div>";
+  }
+
+  function cmCalc(t) {
+    var tp = Math.max(0, Math.min(50, Math.round(42 - 0.45 * (t - 20)))), fp = Math.max(0, Math.round(4 + (20 - t) * 0.8));
+    return { tp: tp, fp: fp, fn: 50 - tp, tn: 154 - fp };
+  }
+  function pct(x) { return Math.round(x * 100) + "%"; }
+  function fragC(P) {
+    var pid = P.cls, strip = P.cls === "p3" ? "c-strip card" : "c-strip";
+    return '<div class="spec ' + P.cls + '"><section class="' + strip + '" aria-label="Kalibracja progu" data-pid="' + pid + '">' +
+      '<div class="c-ctl"><div class="top"><label for="thr-' + pid + '">Próg oznaczenia sprawy</label><output for="thr-' + pid + '" data-o>20</output></div>' +
+      '<div class="sl"><input class="rng" type="range" id="thr-' + pid + '" min="0" max="100" value="20" aria-describedby="hint-' + pid + '"><span class="sl-m" style="--at:20">20<br>oznaczenie</span><span class="sl-m" style="--at:70">70<br>krytyczne</span></div>' +
+      '<p class="hint" id="hint-' + pid + '">Sprawa trafia do kolejki, gdy ryzyko jest równe progowi lub wyższe. Przesuń suwak, aby zobaczyć koszt wyższej i niższej czułości.</p></div>' +
+      '<dl class="c-metrics" data-m><div class="met"><dt>Precyzja</dt><dd class="v" data-v="p">91%</dd><dd class="h" data-h="p">42 z 46 alarmów to naruszenia</dd></div><div class="met"><dt>Czułość</dt><dd class="v" data-v="r">84%</dd><dd class="h" data-h="r">wykryto 42 z 50 naruszeń</dd></div><div class="met"><dt>F1</dt><dd class="v" data-v="f">87%</dd><dd class="h">średnia harmoniczna obu miar</dd></div></dl>' +
+      '<table class="cm"><caption class="sr-only">Macierz pomyłek dla bieżącego progu</caption><thead><tr><td></td><th scope="col">Oznaczone</th><th scope="col">Nieoznaczone</th></tr></thead><tbody>' +
+      '<tr><th scope="row">Naruszenie</th><td class="good"><b data-c="tp">42</b><span>wykryte</span></td><td class="bad"><b data-c="fn">8</b><span>pominięte</span></td></tr>' +
+      '<tr><th scope="row">Zgodne</th><td class="bad"><b data-c="fp">4</b><span>fałszywy alarm</span></td><td class="good"><b data-c="tn">146</b><span>trafnie pominięte</span></td></tr></tbody></table></section></div>';
+  }
+  function wireStrip(root) {
+    root.querySelectorAll(".c-strip").forEach(function (s) {
+      var inp = s.querySelector("input"), out = s.querySelector("[data-o]");
+      function upd() {
+        var t = +inp.value, c = cmCalc(t), p = c.tp + c.fp ? c.tp / (c.tp + c.fp) : 0, r = c.tp / (c.tp + c.fn), f = p + r ? 2 * p * r / (p + r) : 0;
+        inp.style.setProperty("--p", t + "%"); out.textContent = t;
+        s.querySelector('[data-v="p"]').textContent = pct(p); s.querySelector('[data-v="r"]').textContent = pct(r); s.querySelector('[data-v="f"]').textContent = pct(f);
+        s.querySelector('[data-h="p"]').textContent = c.tp + " z " + (c.tp + c.fp) + " alarmów to naruszenia";
+        s.querySelector('[data-h="r"]').textContent = "wykryto " + c.tp + " z " + (c.tp + c.fn) + " naruszeń";
+        ["tp", "fn", "fp", "tn"].forEach(function (k) { s.querySelector('[data-c="' + k + '"]').textContent = c[k]; });
+      }
+      inp.addEventListener("input", upd); upd();
+    });
+  }
+
+  /* ---------- contrast ---------- */
+  function lum(h) { h = h.replace("#", ""); var c = [0, 2, 4].map(function (i) { var v = parseInt(h.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  function cr(a, b) { var x = lum(a), y = lum(b); if (x < y) { var t = x; x = y; y = t; } return (x + 0.05) / (y + 0.05); }
+  function grade(r, kind) { if (kind === "g") return r >= 3 ? "UI 3:1" : "poniżej 3:1"; return r >= 7 ? "AAA" : r >= 4.5 ? "AA" : r >= 3 ? "tylko duży tekst" : "poniżej AA"; }
+
+  /* ---------- proposals ---------- */
+  var PROPS = [
+    {
+      id: "urzedowy", cls: "p1", n: 1, name: "Urzędowy",
+      line: "Kwadratowe komponenty, ramki zamiast cieni i gęste tabele: maksimum powagi i czytelności dla analityka pracującego na dwóch monitorach.",
+      src: ["DSFR: kształt, tabela, pola, fokus", "gov.pl: linki podkreślone, akcent niebieski"],
+      chart: { bw: 20, r: 0, gap: 1.5, hatch: true, stroke: "#8A3300" }, hatchBase: "#C25200",
+      tokens: [
+        ["Tekst główny", "#161616", "#FFFFFF", "Treść, nagłówki"],
+        ["Tekst pomocniczy", "#666666", "#FFFFFF", "Podpisy, zakresy"],
+        ["Akcent", "#1A2F8C", "#FFFFFF", "Linki, przyciski, zaznaczenie. Biały tekst na akcencie: 11,5:1"],
+        ["Neutralny, powierzchnia", "#3A3A3A", "#F6F6F6", "Nagłówek tabeli, pola"],
+        ["Krytyczne, tekst", "#8E0F16", "#FDE8E8", "Plakietka poziomu, rekomendacja"],
+        ["Krytyczne, znacznik", "#B3121B", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Do weryfikacji, tekst", "#8A3300", "#FFF0DE", "Plakietka poziomu"],
+        ["Do weryfikacji, znacznik", "#C25200", "#FFFFFF", "Pasek ryzyka, wykres (kreskowanie)", "g"],
+        ["Zgodne, tekst", "#0F5A2C", "#E3F5E9", "Plakietka poziomu"],
+        ["Zgodne, znacznik", "#2E8A53", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Fokus", "#0A6CD6", "#FFFFFF", "Kontur 3 px, odstęp 2 px", "g"],
+        ["Krawędź kontrolki", "#6A6A6A", "#FFFFFF", "Ramka tabeli i pól", "g"]
+      ],
+      found: [
+        ["Krój", "Public Sans (SIL OFL), wagi 400, 500, 700. Zamiast zastrzeżonej Marianne."],
+        ["Skala", "12 / 14 / 16 / 18 / 22 / 28 / 64 px. Interlinia 1,5 w treści, 1,2 w nagłówkach."],
+        ["Jednostka", "4 px. Kroki 8, 16, 24. Wiersz tabeli 40 px, przycisk 36 px."],
+        ["Promienie", "0 px na wszystkim, bez wyjątków."],
+        ["Obramowanie i cień", "Ramka 1 px (#DDDDDD, mocna #6A6A6A). Cienie: brak. Pole z dolną krawędzią 2 px."],
+        ["Fokus", "Kontur 3 px #0A6CD6, odstęp 2 px, bez zmiany układu."],
+        ["Poziom ryzyka", "Ikona o osobnym kształcie, słowo i ramka w kolorze poziomu."]
+      ],
+      prov: [
+        ["Ostre narożniki, ramki 1 px, brak cieni", "DSFR"],
+        ["Pole z szarym tłem i dolną krawędzią 2 px", "DSFR"],
+        ["Nagłówek tabeli na jasnoszarym tle, gęste wiersze", "DSFR"],
+        ["Zakładki nawigacji z górną linią akcentu", "DSFR"],
+        ["Komunikat z blokiem ikony po lewej", "DSFR"],
+        ["Przyciski z obrysem akcentu zamiast cienia", "DSFR i gov.pl"],
+        ["Niebieski akcent z czerwonym tylko dla ryzyka", "DSFR (własne odcienie)"]
+      ],
+      good: ["Najwyższy kontrast i największa gęstość: 12 wierszy kolejki w jednym ekranie.", "Brak cieni i promieni to zmiana polegająca głównie na usuwaniu reguł, więc najtańsza.", "Naturalnie spełnia wymagania audytu dostępności, łatwo to wykazać."],
+      bad: ["Wygląda jak system z poprzedniej dekady i nie wyróżni się na pokazie.", "Nie realizuje miękkości z Twoich referencji.", "Zbyt dosłowne kopiowanie DSFR mogłoby sugerować pochodzenie z Francji, dlatego odcienie są własne."]
+    },
+    {
+      id: "rijks-spokojny", cls: "p2", n: 2, name: "Rijks-spokojny",
+      line: "Dużo powietrza, jeden akcent i typografia zamiast ramek: decyzja widoczna bez hałasu.",
+      src: ["NLDS: etykiety, fokus AAA, WCAG 2.2", "Rijkshuisstijl: spokój, błękit, neutralność"],
+      chart: { bw: 12, r: 0, gap: 1, dash: true }, hatchBase: "#B27A00",
+      tokens: [
+        ["Tekst główny", "#1C2229", "#FFFFFF", "Treść, nagłówki, liczby"],
+        ["Tekst pomocniczy", "#58626E", "#FFFFFF", "Podpisy, zakresy"],
+        ["Akcent", "#1B5A8C", "#FFFFFF", "Linki, przyciski. Biały tekst na akcencie: 7,3:1"],
+        ["Neutralny, powierzchnia", "#58626E", "#F3F5F7", "Blok rekomendacji, pola"],
+        ["Krytyczne, tekst", "#A32A20", "#FBEDEB", "Słowo poziomu, rekomendacja"],
+        ["Krytyczne, znacznik", "#A32A20", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Do weryfikacji, tekst", "#7A4F00", "#FFF4DB", "Słowo poziomu"],
+        ["Do weryfikacji, znacznik", "#B27A00", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Zgodne, tekst", "#2A6B35", "#EAF4EA", "Słowo poziomu"],
+        ["Zgodne, znacznik", "#4C8C57", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Fokus", "#1C2229", "#FFFFFF", "Podwójny pierścień: grafit 3 px i żółty 2 px", "g"],
+        ["Krawędź kontrolki", "#8D959E", "#FFFFFF", "Pole, przycisk drugorzędny", "g"]
+      ],
+      found: [
+        ["Krój", "Source Sans 3 (SIL OFL), wagi 400 i 600. Zamiast zastrzeżonej Rijksoverheid Sans."],
+        ["Skala", "13 / 15 / 17 / 20 / 32 / 40 / 112 px. Interlinia 1,55 w treści."],
+        ["Jednostka", "8 px. Odstępy między sekcjami 56 i 64 px. Wiersz tabeli około 66 px."],
+        ["Promienie", "2 px na przyciskach i polach, 0 na reszcie."],
+        ["Obramowanie i cień", "Linie poziome 1 px, nagłówek tabeli z linią 2 px. Ramek wokół bloków i cieni brak."],
+        ["Fokus", "Pierścień grafitowy 3 px z odstępem 3 px i żółta obwódka 2 px, dla kontrastu na każdym tle (kierunek AAA z NLDS)."],
+        ["Poziom ryzyka", "Ikona i słowo w kolorze. Kolor poza tym prawie się nie pojawia."]
+      ],
+      prov: [
+        ["Etykieta nad polem, wysokie cele 44 px", "NLDS"],
+        ["Fokus o podwyższonej widoczności (AAA)", "NLDS"],
+        ["Hierarchia przez rozmiar i odstęp, nie przez ramki", "NLDS i Rijkshuisstijl"],
+        ["Błękit jako jedyny akcent, reszta neutralna", "Rijkshuisstijl"],
+        ["Wąski blok tekstu, max. 65 znaków", "NLDS"],
+        ["Kolor nigdy nie jest jedynym nośnikiem znaczenia", "NLDS"]
+      ],
+      good: ["Wielkie liczby i krótkie uzasadnienia czytają się w trzy sekundy.", "Bardzo mało koloru, więc czerwień ryzyka naprawdę wyróżnia sprawę.", "Dobrze znosi tryb ciemny i wydruk pakietu dowodowego do PDF."],
+      bad: ["Mniej wierszy na ekran (około 8 przy 900 px wysokości) i więcej przewijania.", "Przy małej liczbie spraw demo wygląda na puste.", "Brak miękkości z referencji i brak efektu „wow” dla jury."]
+    },
+    {
+      id: "mobywatel", cls: "p3", n: 3, name: "mObywatel",
+      line: "Znane z aplikacji i gov.pl: niebieski akcent, karty 16 px i duże cele dotyku, ale z gęstą tabelą dla analityka.",
+      src: ["gov.pl: Open Sans, błękit, przyciski z obrysem 2 px", "mObywatel: karty, kafle z ikonami, tryby jasny i ciemny"],
+      chart: { bw: 18, r: 5, gap: 1.5 }, hatchBase: "#B86E00",
+      tokens: [
+        ["Tekst główny", "#101317", "#F4F6FB", "Treść. Na białym 18,6:1"],
+        ["Tekst pomocniczy", "#52575F", "#FFFFFF", "Podpisy, zakresy"],
+        ["Akcent", "#0B4FAE", "#FFFFFF", "Linki, przyciski, aktywna zakładka. Biały na akcencie: 7,7:1"],
+        ["Neutralny, powierzchnia", "#52575F", "#E7EEFA", "Tło sekcji, uchwyty, kafle metryk"],
+        ["Krytyczne, tekst", "#A8142F", "#FDECEF", "Plakietka, rekomendacja"],
+        ["Krytyczne, znacznik", "#BF1A3A", "#FFFFFF", "Pasek ryzyka, wykres, kafel ikony", "g"],
+        ["Do weryfikacji, tekst", "#7D4B00", "#FFF3DC", "Plakietka"],
+        ["Do weryfikacji, znacznik", "#B86E00", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Zgodne, tekst", "#14663A", "#E5F5EC", "Plakietka"],
+        ["Zgodne, znacznik", "#2B8A57", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Fokus", "#0B4FAE", "#FFFFFF", "Kontur 3 px, odstęp 2 px", "g"],
+        ["Krawędź kontrolki", "#8C95A6", "#FFFFFF", "Pola, selecty", "g"]
+      ],
+      found: [
+        ["Krój", "Open Sans (SIL OFL), wagi 400, 600, 700. Ten sam krój mierzony na gov.pl."],
+        ["Skala", "12 / 14 / 16 / 18 / 24 / 40 / 64 px. Interlinia 1,5."],
+        ["Jednostka", "8 px, mikro 4 px. Wiersz tabeli 64 px, przyciski i pola 44 px."],
+        ["Promienie", "8 px kontrolki, 12 px kafle ikon i bloki, 16 px karty."],
+        ["Obramowanie i cień", "Ramka 1 px #DDE3EE i cień 0 1px 2px o alfie 0,06, tylko na kartach."],
+        ["Fokus", "Kontur 3 px #0B4FAE, odstęp 2 px."],
+        ["Poziom ryzyka", "Kafel z ikoną o osobnym kształcie, plakietka z tłem i słowem."]
+      ],
+      prov: [
+        ["Błękit akcentu, ciemny tekst, panel #F4F6FB", "gov.pl (mierzone)"],
+        ["Open Sans, nagłówki 700, treść 16 px", "gov.pl (mierzone)"],
+        ["Przycisk z obrysem 2 px i promieniem 8 px", "gov.pl (mierzone)"],
+        ["Karty 16 px, kafle z ikoną w zaokrąglonym kwadracie", "mObywatel"],
+        ["Segmentowa nawigacja z aktywną zakładką w akcencie", "mObywatel"],
+        ["Duże cele dotyku 44 px", "mObywatel i NLDS"]
+      ],
+      good: ["Polscy urzędnicy rozpoznają ten język z gov.pl i logowania, więc narzędzie wydaje się oficjalne.", "Karty 16 px i kafle z ikonami dają miękkość z referencji bez gradientów i szkła.", "Duże cele dotyku pomagają przy pracy na tablecie w terenie."],
+      bad: ["Można go wziąć za kopię aplikacji państwowej, dlatego nie używamy logo ani układu kart dokumentów.", "Open Sans jest neutralny. Charakter dają dopiero duże liczby i miernik z propozycji 4.", "Wiersz 64 px zmniejsza gęstość. Potrzebny wariant zwarty (48 px) dla długich kolejek."]
+    },
+    {
+      id: "miekki-nadzor", cls: "p4", n: 4, name: "Miękki nadzór",
+      line: "Zaokrąglone kafle bento, nawigacja w pigułkach i wielkie cyfry z Twoich referencji, pod reżimem kontrastu i etykiet tekstowych.",
+      src: ["Referencje właściciela: bento, pigułki, miernik, wielkie cyfry", "NLDS: fokus, etykiety. gov.pl: ciemny tekst na jasnym tle"],
+      chart: { bw: 20, r: 8, gap: 2 }, hatchBase: "#B47A10", gauge: true,
+      tokens: [
+        ["Tekst główny", "#10141A", "#E6EAF0", "Na białej karcie 18,5:1"],
+        ["Tekst pomocniczy", "#4B5362", "#FFFFFF", "Podpisy, zakresy"],
+        ["Tekst na ciemnej karcie", "#FFFFFF", "#10141A", "Kafel Krytyczne, karta wyniku"],
+        ["Akcent, wypełnienie", "#10141A", "#83A2DB", "Aktywna pigułka jest czarna, wypełnienia mierników błękitne"],
+        ["Akcent, tekst i linki", "#2B4F94", "#FFFFFF", "Odnośniki w treści"],
+        ["Krytyczne, wypełnienie", "#10141A", "#E69A9A", "Plakietka, rekomendacja, kafel (tekst ciemny)"],
+        ["Krytyczne, znacznik", "#CE6969", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Do weryfikacji, wypełnienie", "#10141A", "#F1D08A", "Kafel, plakietka"],
+        ["Do weryfikacji, znacznik", "#B47A10", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Zgodne, wypełnienie", "#10141A", "#A9DDBF", "Kafel, plakietka"],
+        ["Zgodne, znacznik", "#3F9A6B", "#FFFFFF", "Pasek ryzyka, wykres", "g"],
+        ["Krawędź kontrolki", "#858E9E", "#FFFFFF", "Select, uchwyt", "g"]
+      ],
+      found: [
+        ["Krój", "Plus Jakarta Sans (SIL OFL), wagi 400, 500, 700. Geometryczny, jak na referencjach."],
+        ["Skala", "12 / 14 / 16 / 20 / 28 / 40 / 96 px. Liczby 44 do 96 px, waga 500."],
+        ["Jednostka", "8 px. Karty z wypełnieniem 24 do 28 px, odstęp między kartami 12 do 16 px."],
+        ["Promienie", "28 px karty i kafle, 24 px wiersze i mierniki, 16 px komórki macierzy, 999 px pigułki."],
+        ["Obramowanie i cień", "Zwykle bez ramek, rozdział różnicą powierzchni. Cień 0 12px 32px, alfa 0,07, tylko na kartach na tle strony. Kontrolki z ramką 1 px #858E9E."],
+        ["Fokus", "Kontur 3 px czarny, odstęp 3 px i biała obwódka 2 px."],
+        ["Poziom ryzyka", "Pigułka z ikoną o osobnym kształcie i słowem. Ciemny kafel Krytyczne wyróżnia się też rozmiarem."]
+      ],
+      prov: [
+        ["Kafle bento o różnej wielkości, ciemny kafel główny", "Referencje 3 i 7"],
+        ["Nawigacja w pigułkach z czarną aktywną pigułką", "Referencja 7"],
+        ["Okrągłe przyciski ikon i strzałki na kafelkach", "Referencje 3 i 7"],
+        ["Półokrągły miernik z progami", "Referencja 3"],
+        ["Wiersze jako osobne zaokrąglone karty", "Referencje 7 i 1"],
+        ["Pastelowe wypełnienia z ciemnym tekstem (AA)", "Reguły kontrastu NLDS"],
+        ["Bez zdjęć osób, szkła i gradientów za tekstem", "Reguły rządowe 1 do 3"]
+      ],
+      good: ["Największe wrażenie na jury i najbliżej tego, co Ci się podoba.", "Wielka liczba i miernik wyniku czyta się w trzy sekundy.", "Kolor to wypełnienie, ale poziom zawsze mówi też ikona i słowo."],
+      bad: ["Może wyglądać na CRM lub aplikację finansową dla klientów, a nie narzędzie urzędu.", "Największy koszt kodu: kafle bento, wiersze-karty, miernik i nawigacja pigułkowa.", "Promienie 28 px i odstępy marnują miejsce, kolejka mieści o połowę mniej wierszy."]
+    }
+  ];
+
+  /* ---------- assemble sections ---------- */
+  var host = document.getElementById("props");
+  PROPS.forEach(function (P) {
+    var sw = P.tokens.map(function (t) {
+      var r = cr(t[1], t[2]), k = t[4] || "t";
+      return '<tr><th scope="row">' + t[0] + '</th><td><span class="smp" style="background:' + t[2] + ";color:" + t[1] + '" aria-hidden="true">' + (k === "g" ? '<i style="background:' + t[1] + '"></i>' : "Aa") + '</span></td><td class="hex">' + t[1] + '</td><td class="hex">' + t[2] + '</td><td class="r"><span class="num">' + r.toFixed(1).replace(".", ",") + ':1</span><span class="tag">' + grade(r, k) + "</span></td></tr>";
+    }).join("");
+    var fnd = P.found.map(function (f) { return "<dt>" + f[0] + "</dt><dd>" + f[1] + "</dd>"; }).join("");
+    var prov = P.prov.map(function (p) { return "<li><span>" + p[0] + '</span><span class="chip">' + p[1] + "</span></li>"; }).join("");
+    var li = function (a) { return a.map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+    var frags = [["a", "A", "Nagłówek kolejki", fragA], ["b", "B", "Karta werdyktu", fragB], ["c", "C", "Pasek kalibracji", fragC]].map(function (f) {
+      return '<section class="frag" data-f="' + f[0] + '" aria-label="' + P.name + ": " + f[2] + '"><div class="frag-cap"><span><strong>' + f[1] + ". " + f[2] + "</strong></span><span>" + P.name + '</span></div><div class="frame">' + f[3](P) + "</div></section>";
+    }).join("");
+    host.insertAdjacentHTML("beforeend",
+      '<section class="prop" id="' + P.id + '"><div class="wrap"><header class="prop-h"><div><h2><small>Propozycja ' + P.n + "</small>" + P.name + "</h2></div><div><p>" + P.line + '</p><div class="src">' + P.src.map(function (s) { return '<span class="chip">' + s + "</span>"; }).join("") + "</div></div></header>" +
+      '<div class="stage">' + frags + "</div>" +
+      '<div class="docs"><div><h3>Tokeny kolorów</h3><div class="scroll" tabindex="0" role="region" aria-label="Tokeny kolorów: ' + P.name + '"><table class="tok"><thead><tr><th scope="col">Rola</th><th scope="col">Próbka</th><th scope="col">Tekst lub znak</th><th scope="col">Na tle</th><th scope="col">Kontrast</th></tr></thead><tbody>' + sw + "</tbody></table></div>" +
+      '<h3>Podstawy</h3><dl class="fnd">' + fnd + "</dl></div>" +
+      '<div><h3>Skąd co pochodzi</h3><ul class="prov">' + prov + '</ul><div class="sr" style="margin-top:28px"><div><h3>Mocne strony</h3><ul>' + li(P.good) + '</ul></div><div class="no"><h3>Ryzyka</h3><ul>' + li(P.bad) + "</ul></div></div></div></div></div></section>");
+  });
+  wireStrip(host);
+
+  /* ---------- view switch ---------- */
+  var main = document.querySelector("main");
+  document.querySelectorAll('input[name="view"]').forEach(function (r) {
+    r.addEventListener("change", function () { main.setAttribute("data-view", r.value); try { sessionStorage.setItem("iw-view", r.value); } catch (e) {} });
+  });
+  try { var v = sessionStorage.getItem("iw-view"); if (v) { var el = document.querySelector('input[name="view"][value="' + v + '"]'); if (el) { el.checked = true; main.setAttribute("data-view", v); } } } catch (e) {}
+})();
+</script>

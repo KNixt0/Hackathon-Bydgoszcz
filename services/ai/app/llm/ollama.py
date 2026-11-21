@@ -57,9 +57,15 @@ class OllamaClient:
         }
         if json_mode:
             payload["format"] = "json"
+        # Reasoning models (Gemma 4, Qwen 3) spend the whole token budget on hidden thinking and return
+        # an empty answer; these are short rewrite/extract tasks, so thinking is switched off.
+        payload["think"] = False
         try:
             async with httpx.AsyncClient(timeout=self.timeout_s) as client:
                 resp = await client.post(f"{self.base_url}/api/generate", json=payload)
+                if resp.status_code == 400:  # model without a thinking switch
+                    payload.pop("think")
+                    resp = await client.post(f"{self.base_url}/api/generate", json=payload)
                 resp.raise_for_status()
                 return (resp.json().get("response") or "").strip() or None
         except (httpx.HTTPError, ValueError) as exc:
