@@ -66,6 +66,7 @@ class State:
             "collaborators": ("api", f"repos/{R}/collaborators", "--jq", "[.[].login]"),
             "roster": ("issue", "list", "-R", R, "--state", "open", "--label", "swarm:roster",
                        "--limit", "1", "--json", "number,comments"),
+            "comments": ("api", f"repos/{R}/issues/comments?sort=created&direction=desc&per_page=30"),
         }
         with ThreadPoolExecutor(len(jobs)) as pool:
             futures = {k: pool.submit(gh, *a) for k, a in jobs.items()}
@@ -74,6 +75,16 @@ class State:
         for p in data["prs"]:
             p["checks"] = checks(p.pop("statusCheckRollup", None))
         data["agents"] = parse_roster(data.pop("roster") or [])
+        data["comments"] = [
+            {
+                "issue": int((c.get("issue_url") or "0").rsplit("/", 1)[-1] or 0),
+                "author": (c.get("user") or {}).get("login"),
+                "at": c.get("created_at"),
+                "url": c.get("html_url"),
+                "body": (c.get("body") or "")[:600],
+            }
+            for c in data["comments"] or []
+        ]
         data["events"] = [
             {
                 "type": e.get("type"),
@@ -85,6 +96,18 @@ class State:
         ]
         data.update(repo=R, owner=self.owner, fetchedAt=time.time())
         return data
+
+    def invalidate(self):
+        with self.lock:
+            self.cached = None
+
+    def comment(self, issue, body):
+        r = subprocess.run(["gh", "issue", "comment", str(issue), "-R", self.repo, "--body-file", "-"],
+                           input=body, capture_output=True, text=True, timeout=40, cwd=HERE.parent)
+        if r.returncode != 0:
+            raise RuntimeError(r.stderr.strip() or "gh issue comment failed")
+        self.invalidate()
+        return r.stdout.strip()
 
     def get(self):
         with self.lock:
@@ -161,6 +184,32 @@ def make_handler(state):
                 return
             self.path = "/index.html"
             super().do_GET()
+
+        def do_POST(self):
+            """POST /api/comment {"issue": 12, "body": "..."}: posts as your local gh user."""
+            def reply(code, payload):
+                body = json.dumps(payload).encode()
+                self.send_response(code)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(body)
+            if self.path.split("?")[0] != "/api/comment":
+                return reply(404, {"error": "not found"})
+            # Same-origin only: a page on another site must not post as you.
+            host = self.headers.get("Host", "")
+            origin = self.headers.get("Origin", "")
+            if self.headers.get("X-Swarm") != "1" or origin not in (f"http://{host}",):
+                return reply(403, {"error": "forbidden"})
+            try:
+                length = min(int(self.headers.get("Content-Length", "0")), 20000)
+                data = json.loads(self.rfile.read(length) or b"{}")
+                issue, text = int(data.get("issue", 0)), str(data.get("body", "")).strip()
+                if issue <= 0 or not (1 <= len(text) <= 5000):
+                    return reply(200, {"error": "Podaj numer zadania i treść (1–5000 znaków)."})
+                return reply(200, {"ok": True, "url": state.comment(issue, text)})
+            except Exception as exc:
+                return reply(200, {"error": str(exc)[:300]})
 
         def log_message(self, fmt, *args):
             if "/api/state" not in str(args[0] if args else ""):
