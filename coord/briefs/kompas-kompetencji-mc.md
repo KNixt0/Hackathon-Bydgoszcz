@@ -1,0 +1,44 @@
+1. TL;DR (Cel, odbiorca, stawka)
+Przesłany dokument to regulamin prawno-formalny zadania „Kompas Kompetencji” na HackNation 2026 – sama specyfikacja techniczna i kryteria oceny zostaną ujawnione dopiero w dniu startu o 11:00. Odbiorcą i fundatorem nagrody jest Ministerstwo Cyfryzacji (Biuro Dyrektora Generalnego / Departament GovTech). Stawką za I miejsce jest 22 223 zł brutto (po potrąceniu podatku przez Ministerstwo to ok. 20 000 zł na rękę, do podziału na maks. 6 osób) w zamian za pełne przeniesienie praw autorskich, a dla II i III miejsca przewidziano opcjonalnie 1–2-miesięczne płatne staże w MC oraz mentoring.
+2. Zakres MVP – co dokładnie musimy zbudować
+Uwaga operacyjna: Ten dokument nie zawiera jeszcze opisu funkcjonalnego „Kompasu Kompetencji” (publikacja o 11:00 w dniu startu). Poniższa tabela mapuje twarde wymogi techniczno-prawne już teraz wymuszone przez regulamin na poszczególne role w zespole.
+
+Obszar / Rola	Must-Have (wymuszone już przez ten regulamin)	Do uzupełnienia natychmiast po 11:00
+Backend & Architektura	Czysty, pisany od zera kod bez gotowców z pracy/poprzednich projektów (gwarancja braku wad prawnych i pełnych praw majątkowych). Wyłącznie biblioteki o permisywnych licencjach (MIT / Apache 2.0 / BSD) – zero copyleftu (GPL/AGPL).	Zakres API, bazy danych, wymogi integracyjne i hostingowe (on-premise vs chmura).
+AI / Analityka	Wykorzystanie narzędzi AI dozwolone wyłącznie jako wsparcie – musi istnieć udokumentowany autorski wkład i analiza człowieka (§2 pkt 7). Sprawdzenie ToS modeli/narzędzi AI pod kątem pełnych praw komercyjnych do wygenerowanego kodu i danych.	Dobór modeli, źródła danych i zakres logiki kompetencyjnej.
+Frontend & UI/UX	Przygotowanie pod publikację w publicznym Internecie/Intranecie oraz standardy dostępności dla osób z niepełnosprawnościami (zapisy o tym wprost pojawiają się w §4 pkt 7b i 7d – warto od startu pilnować kontrastu, semantycznego HTML i nawigacji klawiaturą pod WCAG).	Konkretne widoki, przepływy użytkownika i wymagany stack UI.
+DevOps & Zarządzanie Kodem	Czyste repozytorium z jawną listą zewnętrznych zależności (np. plik NOTICE / THIRD_PARTY_LICENSES), brak obcych assetów (ikony/fonty wyłącznie na otwartych licencjach). Nie kodujcie na służbowych laptopach, jeśli umowy z pracodawcą przenoszą prawa do wszystkiego, co powstaje na sprzęcie firmowym.	Wymogi dot. konteneryzacji, uruchomienia demo i struktury repo.
+Prezentacja & Formalności	Rejestracja każdego członka zespołu w HackNation 2026 (maks. 6 osób do podziału nagrody). Pobranie i przeczytanie Załącznika nr 1 (wzór umowy przeniesienia praw) jeszcze przed rozpoczęciem kodowania.	Dopasowanie pitchu do konkretnych wag punktowych jury ogłoszonych o 11:00.
+3. Twarde wymogi i „pułapki” (Dealbreakery)
+Całkowita utrata praw do własnego kodu w razie wygranej (§4 pkt 3–7): Zwycięzca przenosi na Ministerstwo Cyfryzacji pełne autorskie prawa majątkowe do kodu źródłowego, dokumentacji i prezentacji na wszystkich polach eksploatacji (w tym modyfikacje, prawa zależne i publiczne udostępnienie każdemu do kopiowania). Nie wkładajcie tu własnego gotowego produktu ani kodu, na którym chcecie budować prywatny startup.
+Pułapka 7 dni i formy pisemnej (§3 pkt 10, §4 pkt 5 i 8): Umowa przeniesienia praw musi zostać zawarta w formie pisemnej i podpisana wspólnie przez wszystkich współtwórców w ciągu 7 dni od jej przekazania. Jeśli choć jedna osoba z zespołu nie zdąży jej podpisać (np. wyjazd, brak dostępu do podpisu kwalifikowanego lub kuriera), zespół traci całą nagrodę, a ta przechodzi na kolejną drużynę.
+Mina „AI a prawo autorskie” (§2 pkt 7 + §4 pkt 1): Regulamin dopuszcza AI, ale pod warunkiem, że efekt końcowy jest wynikiem analizy człowieka i zespół ma do niego pełne prawa. W polskim prawie autorskim czysto wygenerowany kod bez twórczego wkładu człowieka może nie podlegać ochronie, co tworzy ryzyko prawne przy podpisywaniu oświadczenia z §4 pkt 1.
+Mina licencji Open Source i klauzul u pracodawców (§4 pkt 1–2): Każdy uczestnik ręczy prawnie, że kod jest wolny od wad prawnych i nie narusza praw osób trzecich. Wrzucenie paczki na licencji GPL/AGPL albo kodowanie w ramach konfliktu z umową o pracę/B2B (zakaz konkurencji, prawa do utworów powstałych na sprzęcie pracodawcy) może zablokować podpisanie umowy.
+Limit 6 osób i domyślny równy podział (§3 pkt 7): Jeśli zespół ma więcej niż 6 osób, nagroda dzieli się maksymalnie na 6. Domyślnie każdy dostaje równą część – każdy inny podział wymaga złożenia wspólnego oświadczenia wszystkich członków.
+Brak gwarantowanych nagród za 2. i 3. miejsce (§3 pkt 12): Płatne staże (1–2 mies.) i mentoring dla miejsc na podium są wyłącznie opcją („Przyrzekający zastrzega sobie prawo”), nie gwarantowanym świadczeniem.
+Brak trybu odwoławczego (§2 pkt 6): Decyzje jury są ostateczne – spory merytoryczne po werdykcie są wykluczone.
+4. Strategia pod kryteria oceny (Gdzie leżą punkty)
+Dokładne kryteria i ich wagi zostaną opublikowane dopiero w dniu startu o 11:00 (§2 pkt 4). Już teraz można jednak wyczytać z regulaminu trzy kluczowe kierunki, pod które warto ustawić projekt od pierwszej minuty:
+Trafienie w potrzeby administracji publicznej / MC (Jury specjalistyczne, min. 3 osoby – §2 pkt 2):
+Co przygotować: Zadanie firmuje Biuro Dyrektora Generalnego Ministerstwa Cyfryzacji oraz Departament GovTech. Jury będzie patrzeć pod kątem realnej użyteczności w sektorze publicznym (HR/rozwój kadr lub usługi obywatelskie zależnie od briefu), prostoty wdrożenia i zgodności z realiami urzędowymi, a nie tylko efektownego „fajwerku” technologicznego.
+Gotowość prawna i wdrożeniowa pod sektor publiczny (§4 pkt 7b, 7d, 7f):
+Co pokazać: Regulamin wprost przewiduje późniejsze kompilowanie, wdrażanie, publikację w sieciach publicznych/Intranecie oraz dostosowanie do osób z niepełnosprawnościami. Zapunktujecie, jeśli w demo/prezentacji wyraźnie pokażecie: czystą higienę licencyjną (100% permisywne Open Source), dostępność (podstawy WCAG) oraz czytelną dokumentację techniczną gotową do przekazania zespołowi IT Ministerstwa.
+Transparentny, ludzki proces tworzenia przy wsparciu AI (§2 pkt 7):
+Co pokazać: Na prezentacji podkreślcie własną architekturę, analizę domeny i decyzje projektowe zespołu (AI jako akcelerator, nie „autor”). Rozwieje to ewentualne wątpliwości jury dotyczące klauzuli autorskiej.
+5. Checklista oddania projektu (Deliverables)
+Lista techniczna (repo, PDF, wideo) do uzupełnienia po godzinie 11:00. Poniżej obowiązkowe wymogi formalne wynikające z tego regulaminu:
+Przed startem i w trakcie hackathonu:
+[ ] Potwierdzona rejestracja wszystkich członków zespołu jako Uczestników HackNation 2026 (§1 pkt 7).
+[ ] Skład zespołu liczący maksymalnie 6 osób uprawnionych do podziału nagrody (§3 pkt 7).
+[ ] Pobrany i przeczytany Załącznik nr 1 (wzór Umowy przeniesienia praw autorskich – udostępniany na hacknation.pl przed startem).
+[ ] Audyt licencji użytych paczek (brak GPL/AGPL i niejasnych zasobów trzecich) przed oddaniem kodu.
+Krytyczne formalności po ogłoszeniu wygranej (warunek wypłaty w ciągu 28 dni):
+[ ] Umowa przeniesienia praw autorskich podpisana pisemnie przez wszystkich współtwórców – twardy termin: 7 dni od jej przekazania!
+[ ] Załącznik nr 2 do Umowy – oświadczenie z danymi do przelewu nagrody.
+[ ] (Opcjonalnie) Wspólne oświadczenie wszystkich członków zespołu, jeśli dzielicie nagrodę inaczej niż po równo.
+6. Pytania do mentorów na start (Luki w specyfikacji)
+Pełny brief zadania, kryteria oceny i format oddania (11:00): Gdzie dokładnie na hacknation.pl lub na miejscu pojawia się pełna specyfikacja „Kompasu Kompetencji”, jakie są dokładne wagi kryteriów oceny oraz jakie artefakty (repo, prezentacja, wideo) są wymagane?
+Wyłączenie bibliotek Open Source w Umowie przeniesienia praw (Załącznik nr 1): Ponieważ §4 wymaga pełnego przeniesienia praw majątkowych do kodów źródłowych, w jaki sposób w Załączniku nr 1 wydzielamy standardowe zależności Open Source (MIT / Apache 2.0), żeby nie podpisywać fałszywego oświadczenia, że jesteśmy autorami np. Reacta czy FastAPI?
+Forma pisemna umowy i termin 7 dni: Czy w ramach „formy pisemnej” (§4 pkt 5) Ministerstwo akceptuje kwalifikowany podpis elektroniczny (równoważny z formą pisemną w KC), czy wszyscy członkowie zespołu muszą podpisać fizyczny egzemplarz papierowy na miejscu lub odesłać go kurierem w ciągu 7 dni?
+Podatek i rozliczenie nagród (§3 pkt 3, 8–9): Czy kwota 22 223 zł brutto jest skalkulowana tak, aby po pobraniu przez Ministerstwo 10% zryczałtowanego podatku od nagród w konkursach dać ok. 20 000 zł netto do podziału, i czy uczestnicy muszą później wykazywać ją w rocznym PIT?
+Warunki dla II i III miejsca (§3 pkt 12): Czy staże w Ministerstwie Cyfryzacji są przewidziane jako praca zdalna/hybrydowa, czy wyłącznie stacjonarnie w Warszawie (ul. Królewska 27)?

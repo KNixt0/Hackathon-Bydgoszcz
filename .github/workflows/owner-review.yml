@@ -44,9 +44,10 @@ jobs:
             AUTHOR: ${{ github.event.pull_request.user.login }}
 
             Review this pull request for the repo owner (KNixt0), who approves the merge after you.
-            Read CLAUDE.md and coord/PROTOCOL.md first, then the linked issue (`Closes #n`).
+            Read CLAUDE.md, coord/GUIDELINES.md (hard rules) and coord/PROTOCOL.md first, then the linked issue (`Closes #n`).
             Check:
               - correctness bugs and security problems in the diff,
+              - any violation of coord/GUIDELINES.md (paid AI APIs, GPL/AGPL/LGPL deps, secrets, console.log, services not separated, decorative threshold),
               - the diff stays inside the issue's "Owns" paths,
               - coord/contracts/* unchanged (or the change is justified),
               - "Done when" criteria are met,

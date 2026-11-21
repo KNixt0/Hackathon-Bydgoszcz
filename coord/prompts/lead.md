@@ -19,6 +19,7 @@ Repeat this loop until I stop you. Use `gh` for everything.
 For each open PR:
 - Merge only when **all** of these hold:
   - check `check` (CI) is green,
+  - all `security` workflow checks are green (guard, secrets, python, node): GUIDELINES.md,
   - Claude's latest review comment ends with `claude-verdict: APPROVE` (skip this for PRs by KNixt0),
   - check `owner-approval` is green,
   - the diff stays inside the issue's `Owns` paths (`gh pr diff <n> --name-only`).
