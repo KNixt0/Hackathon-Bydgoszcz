@@ -88,8 +88,8 @@ def test_case3_red(analyze_sample):
         "REGISTRY_NOT_LISTED",
         "BRAND_IMPERSONATION",
         "FAKE_LICENCE",
-        "FOREIGN_SHELL",
     } <= codes(a)
+    assert "FOREIGN_SHELL" not in codes(a)  # WatchIt: no EU / EEA origin marker
     firm_registers = {
         "knf_investment_firms",
         "knf_banks_brokerage",

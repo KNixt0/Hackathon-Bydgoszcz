@@ -290,7 +290,13 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     by_actor = client.get(f"/api/audit?actor={ANALYST[0].upper()}").json()["items"]
     assert by_actor and all(e["actor_email"] == ANALYST[0] for e in by_actor)
     assert len(client.get("/api/audit?limit=2").json()["items"]) == 2
-    assert analyst.get("/api/audit").status_code == 403
+    # WatchIt: an analyst reads the log too, but only their own entries
+    own = analyst.get("/api/audit").json()["items"]
+    assert own and all(e["actor_email"] == ANALYST[0] for e in own)
+    assert all(
+        e["actor_email"] == ANALYST[0]
+        for e in analyst.get(f"/api/audit?actor={SUPERVISOR[0]}").json()["items"]
+    )
 
 
 def test_failed_transitions_write_no_audit_row(client, cases):

@@ -65,3 +65,25 @@ def test_trends_by_hour_for_the_24_hour_range(client):
     days = client.get("/api/stats/trends?hours=24").json()["days"]
     assert len(days) == 24 and days[-1]["date"].endswith(":00:00Z")
     assert sum(len(d["items"]) for d in days) == 1
+
+
+def test_audit_log_filters(client, analyst):
+    from datetime import UTC, datetime
+
+    cid = case_id(client)
+    move(client, cid, "in_review")
+    move(client, cid, "resolved", reason="Treść usunięta po piśmie")
+    analyst.post("/api/settings/thresholds/preview", json={"flag": 22, "critical": 70})
+    today = datetime.now(UTC).date().isoformat()
+
+    by_case = client.get(f"/api/audit?incident_id={cid.replace('-', '')[-8:]}").json()["items"]
+    assert by_case and all(e["incident_id"] == cid for e in by_case)
+    assert all(e["incident_title"] for e in by_case)
+    actions = client.get("/api/audit?action=transition,calibration_preview").json()["items"]
+    assert {e["action"] for e in actions} == {"transition", "calibration_preview"}
+    assert {e["actor_role"] for e in client.get("/api/audit?role=ANALYST").json()["items"]} == {"ANALYST"}
+    assert client.get(f"/api/audit?from={today}&to={today}").json()["items"]
+    assert client.get("/api/audit?to=2000-01-01").json()["items"] == []
+    found = client.get("/api/audit?q=pi%C5%9Bmie").json()["items"]
+    assert [e["reason"] for e in found] == ["Treść usunięta po piśmie"]
+    assert client.get("/api/audit?from=wczoraj").status_code == 422
