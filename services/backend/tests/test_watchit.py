@@ -112,7 +112,7 @@ def test_notifications_need_a_session(anon):
     assert anon.get("/api/notifications").status_code == 401
 
 
-def test_date_filters_reject_before_system_start_and_future(client):
+def test_date_filters_reject_future_and_an_end_before_system_start(client):
     from datetime import UTC, datetime, timedelta
 
     case_id(client)
@@ -122,8 +122,14 @@ def test_date_filters_reject_before_system_start_and_future(client):
     before = (earliest - timedelta(days=1)).date().isoformat()
     future = (datetime.now(UTC) + timedelta(days=2)).isoformat()
     for path in ("/api/incidents", "/api/audit"):
-        assert client.get(path, params={"from": before}).status_code == 422
+        assert client.get(path, params={"to": before}).status_code == 422
         assert client.get(path, params={"to": future}).status_code == 422
-        assert "uruchomienia systemu" in client.get(path, params={"from": before}).json()["detail"]
+        assert client.get(path, params={"from": future}).status_code == 422
+        assert "uruchomienia systemu" in client.get(path, params={"to": before}).json()["detail"]
+        # a start before the system existed means "from the beginning" (the 7 / 30-day quick ranges)
+        assert client.get(path, params={"from": before}).status_code == 200
     today = datetime.now(UTC).date().isoformat()
-    assert client.get("/api/incidents", params={"from": earliest.date().isoformat(), "to": today}).json()["items"]
+    assert client.get("/api/incidents", params={"from": earliest.date().isoformat(), "to": today}).json()[
+        "items"
+    ]
+    assert client.get("/api/incidents", params={"from": before}).json()["items"]

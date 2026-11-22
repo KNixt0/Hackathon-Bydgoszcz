@@ -65,8 +65,8 @@ class IncidentFilters:
         self.module, self.source, self.status, self.q = module, source, status, q
         self.start = _parse_bound(from_, "from", end=False)
         self.end = _parse_bound(to, "to", end=True)
-        check_bound(from_, self.start)
-        check_bound(to, self.end)
+        check_bound(from_, self.start, lower=True)
+        check_bound(to, self.end, lower=False)
         self.end_inclusive = bool(to) and len(to or "") > 10
 
     def apply(self, query: SAQuery) -> SAQuery:

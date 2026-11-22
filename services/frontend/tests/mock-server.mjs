@@ -125,6 +125,8 @@ function handleReport(io, req, body) {
   return [202, { status: "accepted", known: false }, {}];
 }
 
+/** Calibration notifications (ported from #33), one per user with its own read state. */
+const notifications = [];
 const send = (res, status, body, type = "application/json; charset=utf-8") => {
   const payload = typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body);
   res.writeHead(status, { "Content-Type": type, "Cache-Control": "no-store" });
@@ -313,9 +315,28 @@ const server = createServer(async (req, res) => {
       const critical = Number(body?.critical);
       if (!(flag >= 0 && critical <= 100 && flag <= critical)) return send(res, 422, { detail: "invalid thresholds" });
       record(user, "thresholds", null, { flag: thresholds.flag, critical: thresholds.critical }, { flag, critical });
+      if (flag !== thresholds.flag || critical !== thresholds.critical) {
+        const message = `${user.name} zmienił(a) kalibrację: próg oznaczenia ${thresholds.flag} → ${flag}, próg krytyczny ${thresholds.critical} → ${critical}.`;
+        for (const email of [analystUser.email, supervisorUser.email]) {
+          notifications.unshift({ id: notifications.length + 1, email, created_at: new Date().toISOString(), read_at: null, message, details: {} });
+        }
+      }
       thresholds = { flag, critical, updated_by: user.email, updated_at: new Date().toISOString() };
     }
     return send(res, 200, thresholds);
+  }
+  if (path === "/api/settings/thresholds/history") {
+    return send(res, 200, { items: audit.filter((e) => e.action === "thresholds" || e.action === "calibration_preview") });
+  }
+  if (path === "/api/notifications") {
+    return send(res, 200, { items: notifications.filter((n) => n.email === user.email).map(({ email: _email, ...n }) => n) });
+  }
+  const readCall = path.match(/^\/api\/notifications\/(\d+)\/read$/);
+  if (readCall && method === "POST") {
+    const note = notifications.find((n) => n.id === Number(readCall[1]) && n.email === user.email);
+    if (!note) return send(res, 404, { detail: "Nie znaleziono powiadomienia." });
+    note.read_at = note.read_at ?? new Date().toISOString();
+    return send(res, 200, { id: note.id, read_at: note.read_at });
   }
   if (path === "/api/audit") {
     if (user.role !== "SUPERVISOR") return send(res, 403, { detail: "supervisor role required" });

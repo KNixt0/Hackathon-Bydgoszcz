@@ -263,7 +263,6 @@ class AppSetting(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
-
 class Notification(Base):
     """A calibration change, one row per user, each with its own read state."""
 

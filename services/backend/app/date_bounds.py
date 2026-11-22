@@ -1,7 +1,8 @@
 """Date filters reach only from the system start date to the present moment (ported from #33).
 
-A date before the system existed or in the future cannot match anything real, so it is rejected
-with a plain message instead of silently returning an empty list.
+A date in the future, or an end date before the system existed, cannot match anything real, so it
+is rejected with a plain message instead of silently returning an empty list. A start date before
+the system existed simply means "from the beginning": the quick ranges (7 / 30 days) send one.
 """
 
 from __future__ import annotations
@@ -27,16 +28,16 @@ def window() -> dict:
     }
 
 
-def check_bound(value: str | None, moment: datetime | None) -> None:
-    """422 when a parsed `from` / `to` lies before the system start or after now."""
+def check_bound(value: str | None, moment: datetime | None, *, lower: bool) -> None:
+    """422 when a parsed bound lies after now, or when an upper bound (`to`) lies before the start."""
     if not value or moment is None:
         return
     start, now = get_settings().system_start, utcnow()
     if len(value) <= 10:  # a bare day: compare calendar days in Polish time
         day = datetime.fromisoformat(value).date()
-        valid = start.astimezone(WARSAW).date() <= day <= now.astimezone(WARSAW).date()
+        valid = (lower or start.astimezone(WARSAW).date() <= day) and day <= now.astimezone(WARSAW).date()
     else:
-        valid = start <= moment <= now + CLOCK_SKEW
+        valid = (lower or start <= moment) and moment <= now + CLOCK_SKEW
     if not valid:
         first = start.astimezone(WARSAW).strftime("%d.%m.%Y")
         raise HTTPException(422, f"Wybierz datę od uruchomienia systemu ({first}) do bieżącej chwili.")

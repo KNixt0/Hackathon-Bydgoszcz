@@ -146,11 +146,11 @@ def _bound(value: str, end_of_day: bool) -> datetime:
     try:
         if len(value) == 10:
             day = date.fromisoformat(value)
-            check_bound(value, datetime.combine(day, time.min, tzinfo=UTC))
+            check_bound(value, datetime.combine(day, time.min, tzinfo=UTC), lower=not end_of_day)
             return datetime.combine(day, time.max if end_of_day else time.min, tzinfo=UTC)
         moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
         moment = moment if moment.tzinfo else moment.replace(tzinfo=UTC)
     except ValueError as exc:
         raise HTTPException(422, "from / to must be ISO dates") from exc
-    check_bound(value, moment)
+    check_bound(value, moment, lower=not end_of_day)
     return moment
