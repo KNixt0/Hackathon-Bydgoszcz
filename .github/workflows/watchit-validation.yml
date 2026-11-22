@@ -104,7 +104,7 @@ jobs:
       EMBEDDINGS_BACKEND: hash
       OLLAMA_URL: http://127.0.0.1:11434
       AI_URL: http://127.0.0.1:8124
-      AI_TIMEOUT_SECONDS: '240'
+      AI_TIMEOUT_SECONDS: '600'
       DEMO_LOGIN: 'true'
       TASK_MODE: eager
       DATABASE_URL: sqlite:////tmp/watchit-model-workload.db
@@ -113,6 +113,7 @@ jobs:
       SCRAPE_HOST_DELAY_SECONDS: '0'
       VALIDATION_OUTPUT: ${{ github.workspace }}/workload-results
       CAPTURE_DIRECTORY: ${{ github.workspace }}/workload-capture
+      MODEL_LOG_FILE: /tmp/watchit-ai-model.log
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

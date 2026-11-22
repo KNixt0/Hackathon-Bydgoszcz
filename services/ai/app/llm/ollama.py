@@ -6,6 +6,7 @@ timeout and failures are swallowed: the deterministic engine never depends on th
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import time
 from collections import OrderedDict
@@ -28,6 +29,7 @@ class OllamaClient:
         self.timeout_s = settings.llm_timeout_s
         self._available: bool | None = None
         self._checked_at = 0.0
+        self._generation_lock = asyncio.Semaphore(1)
         self._responses: OrderedDict[tuple[str, str, bool], tuple[float, str]] = OrderedDict()
 
     async def available(self) -> bool:
@@ -41,7 +43,17 @@ class OllamaClient:
             async with httpx.AsyncClient(timeout=2.0) as client:
                 resp = await client.get(f"{self.base_url}/api/tags")
                 resp.raise_for_status()
-                names = {m.get("name", "") for m in resp.json().get("models", [])}
+                body = resp.json()
+                models = body.get("models", []) if isinstance(body, dict) else []
+                names = (
+                    {
+                        model["name"]
+                        for model in models
+                        if isinstance(model, dict) and isinstance(model.get("name"), str)
+                    }
+                    if isinstance(models, list)
+                    else set()
+                )
                 ok = any(n == self.model or n.split(":")[0] == self.model for n in names)
         except (httpx.HTTPError, ValueError) as exc:
             log.info("ollama not reachable: %s", exc)
@@ -49,6 +61,11 @@ class OllamaClient:
         return ok
 
     async def generate(self, prompt: str, system: str, json_mode: bool = False) -> str | None:
+        """Bound local inference concurrency; queued calls do not spend their HTTP timeout waiting."""
+        async with self._generation_lock:
+            return await self._generate(prompt, system, json_mode)
+
+    async def _generate(self, prompt: str, system: str, json_mode: bool) -> str | None:
         """One completion, or None on any failure or timeout."""
         if not await self.available():
             return None
@@ -88,5 +105,7 @@ class OllamaClient:
                         self._responses.popitem(last=False)
                 return answer or None
         except (httpx.HTTPError, ValueError) as exc:
-            log.warning("ollama generate failed, falling back to deterministic output: %s", exc)
+            log.warning(
+                "ollama generate failed (%s), falling back to deterministic output: %s", type(exc).__name__, exc
+            )
             return None

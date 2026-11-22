@@ -56,3 +56,42 @@ def test_empty_and_malformed_answers_do_not_poison_later_requests(monkeypatch):
         assert asyncio.run(client.generate("materiał", "instrukcja")) is None
     assert asyncio.run(client.generate("materiał", "instrukcja")) == "poprawny"
     assert len(calls) == 4
+
+
+def test_concurrent_identical_requests_share_one_model_completion(monkeypatch):
+    client, calls = configured(monkeypatch, [{"response": "odpowiedź"}])
+
+    async def run():
+        return await asyncio.gather(
+            client.generate("materiał", "instrukcja"), client.generate("materiał", "instrukcja")
+        )
+
+    assert asyncio.run(run()) == ["odpowiedź", "odpowiedź"]
+    assert len(calls) == 1
+
+
+def test_different_requests_do_not_compete_inside_the_model_server(monkeypatch):
+    active, peak = 0, 0
+
+    async def handler(request):
+        nonlocal active, peak
+        active += 1
+        peak = max(peak, active)
+        await asyncio.sleep(0.01)
+        active -= 1
+        return httpx.Response(200, json={"response": "odpowiedź"})
+
+    original = httpx.AsyncClient
+    monkeypatch.setattr(
+        "app.llm.ollama.httpx.AsyncClient", lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs)
+    )
+    client = OllamaClient(replace(load_settings(), llm_enabled=True, ollama_model="local-test"))
+    import time
+
+    client._available, client._checked_at = True, time.monotonic()
+
+    async def run():
+        return await asyncio.gather(client.generate("pierwszy", "instrukcja"), client.generate("drugi", "instrukcja"))
+
+    assert asyncio.run(run()) == ["odpowiedź", "odpowiedź"]
+    assert peak == 1

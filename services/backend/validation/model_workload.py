@@ -170,6 +170,14 @@ with (
 times = [job["elapsed_ms"] for job in report["jobs"]]
 report["latency_ms"] = {"median": statistics.median(times), "max": max(times)}
 report["llm_used_cases"] = sum(case["engine"]["llm_used"] for case in report["incidents"])
+log_path = Path(os.environ["MODEL_LOG_FILE"])
+report["model_errors"] = (
+    [line for line in log_path.read_text().splitlines() if "ollama generate failed" in line]
+    if log_path.exists()
+    else None
+)
 (out / "model-workload.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))
 print("WATCHIT_WORKLOAD|" + json.dumps(report, ensure_ascii=False))
 assert report["llm_used_cases"] > 0, "The model answered but every analysis rejected or timed out its output"
+
+assert report["model_errors"] == [], "Model calls failed or inference logs were unavailable"

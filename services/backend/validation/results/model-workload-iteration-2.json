@@ -1,0 +1,125 @@
+{
+  "model": "qwen2.5:0.5b",
+  "workers": 2,
+  "jobs": [
+    {
+      "id": "50f27eef-86b4-4dde-9929-4792667201ea",
+      "elapsed_ms": 130599,
+      "retry_delay": null
+    },
+    {
+      "id": "9ad41f4e-f40f-46fa-9dcc-83190e9d7df2",
+      "elapsed_ms": 148313,
+      "retry_delay": null
+    },
+    {
+      "id": "4bca3f94-c7cf-446b-b58b-996f689f93ac",
+      "elapsed_ms": 114936,
+      "retry_delay": null
+    },
+    {
+      "id": "fe7efc48-5b62-4f9d-a8f9-f262bbd23380",
+      "elapsed_ms": 507,
+      "retry_delay": null
+    },
+    {
+      "id": "ebeeae92-0e5e-45f5-a899-457ec25e5e43",
+      "elapsed_ms": 90943,
+      "retry_delay": null
+    },
+    {
+      "id": "f93335d9-11cd-4707-88ff-c351e256ec8b",
+      "elapsed_ms": 74504,
+      "retry_delay": null
+    }
+  ],
+  "checks": [
+    "six_jobs_completed",
+    "three_cases_deduplicated",
+    "nineteen_rule_rows",
+    "two_versions_each",
+    "archive_read",
+    "csv_export",
+    "pdf_export",
+    "assignment_survives_rescan",
+    "closure_time_saved",
+    "reason_required",
+    "audit_filter_sort",
+    "future_date_rejected",
+    "per_user_notification_read_state",
+    "supervisor_permissions"
+  ],
+  "incidents": [
+    {
+      "url": "https://www.xtb.com/pl/konto-i-oplaty",
+      "firm": {
+        "name": "XTB S.A.",
+        "kind": "investment_firm"
+      },
+      "engine": {
+        "version": "0.1.0",
+        "plugins": [
+          "m2_risk_disclosure"
+        ],
+        "llm_used": true,
+        "model": "qwen2.5:0.5b",
+        "duration_ms": 90433.4
+      },
+      "rationale": "Ryzyko podwyższone: 39/100 (zgodność 61/100). Za naruszeniem przemawia 4 tez, z czego 0 osłabionych przez krytyka; 0 odrzucono. Najmocniejsze argumenty: (1) Reguła 3 (Informacja o ryzyku): Informacja o ryzyku jest oddalona od twierdzeń o zyskach (ok. 5382 znaków), więc nie towarzyszy im bezpośrednio. (2) Reguła 7 (Dostępność za 1 kliknięciem): Przeważająca część informacji o ryzyku jest dostępna dopiero po rozwinięciu elementu lub kliknięciu (inna warstwa strony). (3) Reguła 6 (Zakrywanie / ukrywanie ryzyka): Przeważająca część informacji o ryzyku znajduje się w przypisie, stopce lub sekcji typu „Nota prawna”, czyli w miejscu o niskiej widoczności. Okoliczności łagodzące: (1) Materiał jest oznaczony jako reklamowy. Łącznie obniżają one wynik o 4%. Rekomendacja: postępowanie wyjaśniające.",
+      "versions": 2
+    },
+    {
+      "url": "https://www.bm.pkobp.pl/oferta/rachunek-inwestycyjny",
+      "firm": {
+        "name": "POWSZECHNA KASA OSZCZĘDNOŚCI BANK POLSKI S.A. (PKO BP S.A.)",
+        "kind": "investment_firm"
+      },
+      "engine": {
+        "version": "0.1.0",
+        "plugins": [
+          "m2_risk_disclosure",
+          "m3_shadow_advisory"
+        ],
+        "llm_used": true,
+        "model": "qwen2.5:0.5b",
+        "duration_ms": 74279
+      },
+      "rationale": "Ryzyko podwyższone: 26/100 (zgodność 74/100). Za naruszeniem przemawia 5 tez, z czego 1 osłabionych przez krytyka; 1 odrzucono. Najmocniejsze argumenty: (1) Reguła 2 (Oznaczenie reklamy): Materiał ma charakter promocyjny, ale nie zawiera jednoznacznego oznaczenia (np. „reklama”, „materiał promocyjny”, „współpraca płatna”). (2) Reguła 11 (Porównania produktów / usług): Wykryto porównanie, ale nie podano: źródła informacji ani przyjętych założeń. (3) Reguła 16 (Informacja podatkowa): Odwołanie do podatków bez wyraźnej informacji o: zależności od indywidualnej sytuacji klienta oraz możliwości zmian w przyszłości. Okoliczności łagodzące: (1) Podmiot „POWSZECHNA KASA OSZCZĘDNOŚCI BANK POLSKI S.A. (PKO BP S.A.)” figuruje w rejestrach firm inwestycyjnych KNF. (2) „POWSZECHNA KASA OSZCZĘDNOŚCI BANK POLSKI S.A. (PKO BP S.A.)” nie figuruje na liście ostrzeżeń publicznych KNF; na tym etapie nie ma dowodu wyłudzenia środków ani szkody klientów. Łącznie obniżają one wynik o 16%. Rekomendacja: monitorowanie.",
+      "versions": 2
+    },
+    {
+      "url": "https://bossa.pl/oferta",
+      "firm": {
+        "name": "DOM MAKLERSKI BANKU OCHRONY ŚRODOWISKA S.A.",
+        "kind": "investment_firm"
+      },
+      "engine": {
+        "version": "0.1.0",
+        "plugins": [
+          "m2_risk_disclosure",
+          "m3_shadow_advisory"
+        ],
+        "llm_used": true,
+        "model": "qwen2.5:0.5b",
+        "duration_ms": 102.4
+      },
+      "rationale": "Ryzyko niskie: 20/100 (zgodność 80/100). Za naruszeniem przemawia 3 tez, z czego 0 osłabionych przez krytyka; 2 odrzucono. Najmocniejsze argumenty: (1) Reguła 11 (Porównania produktów / usług): Wykryto porównanie, ale nie podano: przyjętego założeń. (2) Reguła 16 (Informacja podatkowa): Odwołanie do podatków bez wyraźnej informacji o: możliwości zmian w przyszłości. (3) Reguła 1 (Identyfikacja firmy): W materiale pada tylko nazwa handlowa „Dom Maklerski Banku Ochrony Środowiska”, bez pełnej oficjalnej nazwy firmy inwestycyjnej (z formą prawną). Okoliczności łagodzące: (1) Podmiot \"DOM MAKLERSKI BANKU OCHRONY ŚRODOWISKA S.A.\" figuruje w rejestrach firm inwestycyjnych KNF. (2) Materiał jest oznaczony jako reklamowy. (3) Twierdzeniom o zyskach towarzyszy w materiale informacja o ryzyku, choć nie w pełnym, standardowym brzmieniu. Łącznie obniżają one wynik o 27%. Rekomendacja: monitorowanie.",
+      "versions": 2
+    }
+  ],
+  "model_digest": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+  "model_warmup": {
+    "model": "qwen2.5:0.5b",
+    "done": true,
+    "eval_count": 3,
+    "eval_duration": 71606243,
+    "load_duration": 1196656983
+  },
+  "waves_completed": 2,
+  "workload_elapsed_ms": 337727,
+  "latency_ms": {
+    "median": 102939.5,
+    "max": 148313
+  },
+  "llm_used_cases": 3
+}
