@@ -50,7 +50,7 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   label: "Ocena trafności",
   thresholds: "Zmiana progów",
   export: "Eksport",
-  rescan: "Ponowne skanowanie",
+  rescan: "Ponowna analiza",
   public_report: "Zgłoszenie użytkownika",
 };
 
@@ -73,11 +73,11 @@ export const REPORT_CATEGORY_LABEL: Record<ReportCategory, string> = {
 };
 
 export const MODULE_LABEL: Record<ModuleId, string> = {
-  1: "Finfluencerzy i podmioty trzecie",
+  1: "Twórcy finansowi i podmioty trzecie",
   2: "Zgodność i informacja o ryzyku",
-  3: "Shadow advisory",
+  3: "Doradztwo bez zezwolenia",
 };
-export const MODULE_SHORT: Record<ModuleId, string> = { 1: "Finfluencerzy", 2: "Informacja o ryzyku", 3: "Shadow advisory" };
+export const MODULE_SHORT: Record<ModuleId, string> = { 1: "Twórcy finansowi", 2: "Informacja o ryzyku", 3: "Doradztwo bez zezwolenia" };
 export const MODULES: ModuleId[] = [1, 2, 3];
 
 export const PLATFORM_LABEL: Record<Platform, string> = {

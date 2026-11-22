@@ -56,7 +56,7 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
 
   useEffect(() => {
     const controller = new AbortController();
-    api
+    const refresh = () => api
       .thresholds(controller.signal)
       .then((s) => {
         if (!controller.signal.aborted) setGlobal(s);
@@ -64,7 +64,9 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
       .catch(() => {
         // offline or not allowed: the defaults stay in force locally
       });
-    return () => controller.abort();
+    void refresh();
+    const timer = window.setInterval(refresh, 15000);
+    return () => { controller.abort(); window.clearInterval(timer); };
   }, []);
 
   const globalThresholds = useMemo(() => (global ? fromSettings(global) : DEFAULT_THRESHOLDS), [global]);

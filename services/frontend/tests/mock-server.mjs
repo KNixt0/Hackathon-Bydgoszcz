@@ -5,7 +5,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { deflateSync, crc32 } from "node:zlib";
 import { Server } from "socket.io";
 import {
-  analystUser, globalThresholds, incidentSummaries, incidentsById, minimalIncident, priorityScore, redCase, reportsForCase, supervisorUser, toSummary, trendsFrom,
+  analystUser, globalThresholds, incidentSummaries, incidentsById, minimalIncident, redCase, supervisorUser, toSummary,
 } from "./fixtures/data.mjs";
 
 const PORT = Number(process.env.MOCK_PORT) || 8000;
@@ -22,6 +22,9 @@ const sessions = new Map();
 const audit = [];
 let thresholds = { ...globalThresholds };
 let auditId = 1;
+let notificationId = 1;
+const notifications = [];
+const bounds = { earliest: new Date(Math.min(...[...summaries.values()].map((s) => Date.parse(s.created_at)))).toISOString(), latest: new Date().toISOString(), timezone: "Europe/Warsaw" };
 
 function userOf(req) {
   const cookie = String(req.headers.cookie ?? "").split(";").map((c) => c.trim()).find((c) => c.startsWith("iw_session="));
@@ -64,60 +67,6 @@ function transition(user, inc, body) {
   const keys = Object.keys(after).filter((k) => k === "status" || before[k] !== after[k]);
   record(user, "transition", inc.id, Object.fromEntries(keys.map((k) => [k, before[k]])), Object.fromEntries(keys.map((k) => [k, after[k]])), reason);
   return [200, updated];
-}
-
-// Public reports: remembered by url so that the second report of the same page counts (known: true).
-const publicReports = new Map(); // normalised url -> { incidentId | null, items: [] }
-const reporters = new Map(); // ip -> { hits: number[], urls: Set }
-function normalise(raw) {
-  const u = new URL(raw);
-  for (const key of [...u.searchParams.keys()]) if (/^(utm_|fbclid$|gclid$|mc_eid$|igshid$)/i.test(key)) u.searchParams.delete(key);
-  u.searchParams.sort();
-  u.hash = "";
-  return u.toString();
-}
-function handleReport(io, req, body) {
-  const ip = String(req.headers["x-real-ip"] ?? req.socket.remoteAddress ?? "");
-  const state = reporters.get(ip) ?? { hits: [], urls: new Set() };
-  reporters.set(ip, state);
-  const now = Date.now();
-  state.hits = state.hits.filter((t) => now - t < 3600000);
-  if (state.hits.length >= 20) return [429, { detail: "too many reports" }, { "Retry-After": "600" }];
-  let url;
-  try {
-    if (typeof body?.url !== "string" || !/^https?:\/\//i.test(body.url)) throw new Error("scheme");
-    url = normalise(body.url);
-  } catch {
-    return [422, { detail: "url: invalid" }, {}];
-  }
-  if (typeof body.comment === "string" && body.comment.length > 500) return [422, { detail: "comment: too long" }, {}];
-  if (/localhost|127\.0\.0\.1|\.local\b/.test(new URL(url).hostname)) return [422, { detail: "url: this address cannot be checked" }, {}];
-  state.hits.push(now);
-  const existing = [...summaries.values()].find((s) => { try { return normalise(s.source.url) === url; } catch { return false; } });
-  if (state.urls.has(url)) return [202, { status: "accepted", known: Boolean(existing) }, {}];
-  state.urls.add(url);
-  if (existing) {
-    const count = (existing.user_reports_count ?? 0) + 1;
-    const items = [...(details.get(existing.id)?.__reports ?? reportsForCase(existing))];
-    items.unshift({ created_at: new Date().toISOString(), category_hint: body.category_hint ?? null, comment: body.comment || null });
-    const updated = { ...(detailOf(existing.id)), user_reports_count: count, priority_score: priorityScore(existing.risk_score, count), __reports: items };
-    store(io, updated);
-    const summary = summaries.get(existing.id);
-    if (count === 5 && summary.risk_score >= thresholds.critical) io.emit("alert:viral", summary);
-    return [202, { status: "accepted", known: true }, {}];
-  }
-  const entry = publicReports.get(url) ?? { items: [] };
-  entry.items.unshift({ category_hint: body.category_hint ?? null, comment: body.comment || null });
-  publicReports.set(url, entry);
-  if (entry.items.length === 1) {
-    runJob(io, url, () => {
-      const incident = scannedIncident(url, body.category_hint ?? undefined);
-      const items = publicReports.get(url).items.map((r) => ({ created_at: new Date().toISOString(), ...r }));
-      const count = items.length;
-      return { ...incident, user_reports_count: count, priority_score: priorityScore(incident.risk_score, count), __reports: items };
-    });
-  }
-  return [202, { status: "accepted", known: false }, {}];
 }
 
 const send = (res, status, body, type = "application/json; charset=utf-8") => {
@@ -293,13 +242,17 @@ const server = createServer(async (req, res) => {
     startSession(res, found);
     return send(res, 200, { user: found });
   }
-  if (path === "/api/public/reports" && method === "POST") {
-    const [status, out, headers] = handleReport(io, req, await readJson(req));
-    res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers });
-    return res.end(JSON.stringify(out));
-  }
+  if (path.startsWith("/api/public/")) return notFound(res);
   if (path.startsWith("/api/") && !path.startsWith("/api/public/") && !user) return send(res, 401, { detail: "authentication required" });
 
+  if (path === "/api/notifications") return send(res, 200, { items: notifications.filter((item) => item.user_id === user.id) });
+  const readNotification = path.match(/^\/api\/notifications\/(\d+)\/read$/);
+  if (readNotification && method === "POST") {
+    const item = notifications.find((item) => item.id === Number(readNotification[1]) && item.user_id === user.id);
+    if (!item) return notFound(res);
+    item.read_at = item.read_at || new Date().toISOString();
+    return send(res, 200, item);
+  }
   if (path === "/api/settings/thresholds") {
     if (method === "PUT") {
       if (user.role !== "SUPERVISOR") return send(res, 403, { detail: "supervisor role required" });
@@ -308,6 +261,9 @@ const server = createServer(async (req, res) => {
       const critical = Number(body?.critical);
       if (!(flag >= 0 && critical <= 100 && flag <= critical)) return send(res, 422, { detail: "invalid thresholds" });
       record(user, "thresholds", null, { flag: thresholds.flag, critical: thresholds.critical }, { flag, critical });
+      if (flag !== thresholds.flag || critical !== thresholds.critical) {
+        for (const recipient of [analystUser, supervisorUser]) notifications.unshift({ id: notificationId++, user_id: recipient.id, read_at: null, created_at: new Date().toISOString(), message: `${user.name} zmienił(a) kalibrację: ${thresholds.flag} → ${flag}, krytyczne ${thresholds.critical} → ${critical}.`, details: { actor: user.email, previous: { ...thresholds }, new: { flag, critical } } });
+      }
       thresholds = { flag, critical, updated_by: user.email, updated_at: new Date().toISOString() };
     }
     return send(res, 200, thresholds);
@@ -318,12 +274,6 @@ const server = createServer(async (req, res) => {
     const actor = url.searchParams.get("actor");
     const items = audit.filter((e) => (!incidentId || e.incident_id === incidentId) && (!actor || e.actor_email === actor));
     return send(res, 200, { items: items.slice(0, Number(url.searchParams.get("limit")) || 200) });
-  }
-  const reportsCall = path.match(/^\/api\/incidents\/([^/]+)\/reports$/);
-  if (reportsCall) {
-    const inc = detailOf(reportsCall[1]);
-    if (!inc) return notFound(res);
-    return send(res, 200, { items: inc.__reports ?? reportsForCase(inc) });
   }
   const wfCall = path.match(/^\/api\/incidents\/([^/]+)\/(transition|assign|label|history|warning-list-request\.pdf)$/);
   if (wfCall) {
@@ -381,7 +331,20 @@ const server = createServer(async (req, res) => {
     }
   }
   if (path === "/api/stats/trends") {
-    return send(res, 200, trendsFrom([...summaries.values()], Number(url.searchParams.get("days")) || 30, Date.now()));
+    const period = url.searchParams.get("period");
+    const end = Math.min(Date.now(), Date.parse(url.searchParams.get("to") || new Date().toISOString()));
+    const start = Date.parse(url.searchParams.get("from") || new Date(end - (period === "24h" ? 86400000 : (period === "7d" ? 7 : 30) * 86400000)).toISOString());
+    const hourly = period === "24h";
+    const step = hourly ? 3600000 : 86400000;
+    const buckets = new Map();
+    for (let at = Math.floor(start / step) * step; at <= end; at += step) buckets.set(hourly ? new Date(at).toISOString() : new Date(at).toISOString().slice(0, 10), []);
+    for (const item of summaries.values()) {
+      const at = Date.parse(item.created_at);
+      if (at < start || at > end) continue;
+      const key = hourly ? new Date(Math.floor(at / step) * step).toISOString() : item.created_at.slice(0, 10);
+      buckets.get(key)?.push({ id: item.id, risk_score: item.risk_score, module: item.primary_module, modules: item.modules });
+    }
+    return send(res, 200, { days: [...buckets].map(([date, items]) => ({ date, items })), date_bounds: bounds, interval: hourly ? "hour" : "day" });
   }
   if (path === "/api/calibration") {
     const truth = { true_positive: "violation", false_positive: "ok" };
@@ -397,7 +360,7 @@ const server = createServer(async (req, res) => {
   if (path === "/api/scans" && method === "POST") {
     const body = await readJson(req);
     if (!body || typeof body.url !== "string" || !/^https?:\/\//.test(body.url)) return send(res, 422, { detail: "Podaj pełny adres URL zaczynający się od http:// lub https://." });
-    const job = runJob(io, body.url, () => scannedIncident(body.url, body.module_hint));
+    const job = runJob(io, body.url, () => scannedIncident(body.url));
     return send(res, 202, { job_id: job.id });
   }
   if (path === "/api/demo/trigger" && method === "POST") {
@@ -430,5 +393,5 @@ const io = new Server(server, { path: "/socket.io", cors: { origin: true } });
 io.use((socket, next) => (userOf(socket.request) ? next() : next(new Error("authentication required"))));
 
 server.listen(PORT, () => {
-  process.stdout.write(`InvestWatch mock backend: http://localhost:${PORT}\n`);
+  process.stdout.write(`Watchit mock backend: http://localhost:${PORT}\n`);
 });

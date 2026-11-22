@@ -1,7 +1,6 @@
 import { useId, useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatDate, formatDayMonth } from "../../domain/format";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { LEVEL_LABEL } from "../../domain/labels";
 import { LEVELS } from "../../domain/levels";
 import type { TrendRow } from "../../domain/trends";
@@ -12,19 +11,19 @@ const COLOR: Record<RiskLevel, string> = { green: "var(--m-grn)", orange: "var(-
 const STACK: RiskLevel[] = ["green", "orange", "red"];
 
 /** New cases per day, stacked by the level at the current thresholds; 120px, square bars, a text legend and a data table. */
-export function TrendStrip({ rows }: { rows: TrendRow[] }) {
+export function TrendStrip({ rows, hourly = false }: { rows: TrendRow[]; hourly?: boolean }) {
   const [table, setTable] = useState(false);
   // Below 640 px the strip collapses to the sentence and the table link (the chart is not mounted at all).
-  const narrow = useMediaQuery("(max-width: 640px)");
+  const tick = (value: string) => hourly ? new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", hour: "2-digit", minute: "2-digit" }).format(new Date(value)) : formatDayMonth(value);
   const tableId = useId();
   const max = Math.max(1, ...rows.map((r) => r.red + r.orange + r.green));
   return (
     <>
-      {!narrow && <div className="trend" data-testid="trend-chart" aria-hidden="true">
-        <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 900, height: 120 }}>
+      {<div className="trend" data-testid="trend-chart" aria-hidden="true">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 900, height: 200 }}>
           <BarChart data={rows} margin={{ top: 4, right: 4, bottom: 0, left: 0 }} barCategoryGap={2}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="date" tickFormatter={formatDayMonth} tickLine={false} axisLine={{ stroke: "var(--ink-2)" }} minTickGap={24} height={22} />
+            <XAxis dataKey="date" tickFormatter={tick} tickLine={false} axisLine={{ stroke: "var(--ink-2)" }} minTickGap={24} height={22} />
             <YAxis allowDecimals={false} width={28} tickLine={false} axisLine={false} tickCount={3} domain={[0, Math.ceil(max / 2) * 2]} />
             <Tooltip cursor={{ fill: "rgba(22,22,22,0.06)" }} content={<ChartTip labels={LEVEL_LABEL} />} isAnimationActive={false} />
             {STACK.map((k) => (
@@ -34,7 +33,7 @@ export function TrendStrip({ rows }: { rows: TrendRow[] }) {
         </ResponsiveContainer>
       </div>}
       <div className="trend__foot">
-        {!narrow && <span className="legend" aria-hidden="true">
+        {<span className="legend" aria-hidden="true">
           {LEVELS.map((k) => (
             <span key={k} className="legend__item"><span className="legend__swatch" style={{ background: COLOR[k] }} />{LEVEL_LABEL[k]}</span>
           ))}
@@ -52,7 +51,7 @@ export function TrendStrip({ rows }: { rows: TrendRow[] }) {
           <tbody>
             {rows.map((r) => (
               <tr key={r.date}>
-                <td>{formatDate(r.date)}</td>
+                <td>{hourly ? `${formatDate(r.date)} ${tick(r.date)}` : formatDate(r.date)}</td>
                 {LEVELS.map((k) => <td key={k} className="r num">{r[k]}</td>)}
                 <td className="r num">{r.red + r.orange + r.green}</td>
               </tr>

@@ -4,12 +4,14 @@ import type { EscalationPath, GroundTruth, IncidentSummary, ModuleId, Resolution
 export interface IncidentList {
   items: IncidentSummary[];
   total: number;
+  date_bounds?: import("../domain/dates").DateBounds;
 }
 
 export interface TrendItem {
   id: string;
   risk_score: number;
   module: ModuleId;
+  modules?: ModuleId[];
 }
 export interface TrendDay {
   date: string;
@@ -17,6 +19,8 @@ export interface TrendDay {
 }
 export interface Trends {
   days: TrendDay[];
+  date_bounds?: import("../domain/dates").DateBounds;
+  interval?: "hour" | "day";
 }
 
 export interface CalibrationItem {
@@ -120,4 +124,13 @@ export interface CaseReport {
   created_at: string;
   category_hint: ReportCategory | null;
   comment: string | null;
+}
+
+
+export interface CalibrationNotification {
+  id: number;
+  created_at: string;
+  read_at: string | null;
+  message: string;
+  details: { actor: string; previous: ThresholdSettings; new: ThresholdSettings };
 }

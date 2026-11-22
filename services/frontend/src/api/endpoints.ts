@@ -1,5 +1,5 @@
 import type {
-  AuditEntry, AuthConfig, CalibrationSet, CaseReport, Health, IncidentList, PublicReportAccepted, PublicReportRequest, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
+  CalibrationNotification, AuditEntry, AuthConfig, CalibrationSet, Health, IncidentList, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
 } from "../types/api";
 import type { CaseLabel, Incident, Role } from "../types/incident";
 import { request, requestText } from "./client";
@@ -11,6 +11,12 @@ export interface AuditQuery {
   incident_id?: string;
   actor?: string;
   limit?: number;
+  offset?: number;
+  action?: string;
+  from?: string;
+  to?: string;
+  sort?: string;
+  order?: string;
 }
 
 function query(params: Record<string, string | number | undefined>): string {
@@ -28,10 +34,9 @@ export const api = {
   assign: (incidentId: string) => request<Incident>(`/api/incidents/${id(incidentId)}/assign`, post()),
   label: (incidentId: string, label: CaseLabel) => request<Incident>(`/api/incidents/${id(incidentId)}/label`, post({ label })),
   history: (incidentId: string, signal?: AbortSignal) => request<{ items: AuditEntry[] }>(`/api/incidents/${id(incidentId)}/history`, { signal }),
-  incidentReports: (incidentId: string, signal?: AbortSignal) => request<{ items: CaseReport[] }>(`/api/incidents/${id(incidentId)}/reports`, { signal }),
-  /** Public: no session needed. */
-  submitReport: (body: PublicReportRequest) => request<PublicReportAccepted>("/api/public/reports", post(body)),
-  trends: (days = 30, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?days=${days}`, { signal }),
+  trends: (days = 30, signal?: AbortSignal, range?: { period: string; from?: string; to?: string }) => request<Trends>(`/api/stats/trends${query({ days, ...range })}`, { signal }),
+  notifications: (signal?: AbortSignal) => request<{ items: CalibrationNotification[] }>("/api/notifications", { signal }),
+  readNotification: (notificationId: number) => request<{ id: number; read_at: string }>(`/api/notifications/${notificationId}/read`, post()),
   calibration: (signal?: AbortSignal) => request<CalibrationSet>("/api/calibration", { signal }),
   startScan: (body: ScanRequest) => request<{ job_id: string }>("/api/scans", post(body)),
   listScans: (signal?: AbortSignal) => request<{ items: ScanJob[] }>("/api/scans", { signal }),
@@ -42,7 +47,7 @@ export const api = {
   saveThresholds: (flag: number, critical: number) =>
     request<ThresholdSettings>("/api/settings/thresholds", { method: "PUT", body: JSON.stringify({ flag, critical }) }),
   audit: (q: AuditQuery = {}, signal?: AbortSignal) =>
-    request<{ items: AuditEntry[] }>(`/api/audit${query({ incident_id: q.incident_id, actor: q.actor, limit: q.limit })}`, { signal }),
+    request<{ items: AuditEntry[]; total?: number }>(`/api/audit${query({ ...q })}`, { signal }),
   authConfig: (signal?: AbortSignal) => request<AuthConfig>("/api/auth/config", { signal }),
   me: (signal?: AbortSignal) => request<{ user: User }>("/api/auth/me", { signal }),
   login: (email: string, password: string) => request<{ user: User }>("/api/auth/login", post({ email, password })),

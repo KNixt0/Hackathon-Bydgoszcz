@@ -27,6 +27,8 @@ def workflow_dict(row: Incident) -> dict[str, Any]:
     """Contract v3 `Workflow`."""
     return {
         "assigned_to": row.assigned_to,
+        "processing_started_at": iso(row.processing_started_at),
+        "processing_finished_at": iso(row.processing_finished_at),
         "escalation_path": row.escalation_path,
         "resolution_action": row.resolution_action,
         "resolution_note": row.resolution_note or "",
@@ -35,11 +37,7 @@ def workflow_dict(row: Incident) -> dict[str, Any]:
 
 
 def _priority(row: Incident) -> float:
-    if row.priority_score is not None:
-        return row.priority_score
-    from app.public_reports import priority_score
-
-    return priority_score(row.risk_score, row.user_reports_count)
+    return row.risk_score
 
 
 def to_incident(row: Incident) -> dict[str, Any]:
@@ -80,7 +78,12 @@ def to_summary(row: Incident) -> dict[str, Any]:
         "advertiser": _party_name(p, "advertiser"),
         "firm": _party_name(p, "investment_firm"),
         "failed_rules": [str(r.get("id")) for r in p.get("rules") or [] if r.get("status") == "fail"],
-        "workflow": {"assigned_to": row.assigned_to, "label": row.label or "unlabeled"},
+        "failed_rule_details": [
+            {k: r.get(k, "") for k in ("id", "name", "legal_basis", "explanation")}
+            for r in p.get("rules") or []
+            if r.get("status") == "fail"
+        ],
+        "workflow": workflow_dict(row),
         "user_reports_count": row.user_reports_count or 0,
         "priority_score": _priority(row),
     }
@@ -108,6 +111,9 @@ def apply_payload(row: Incident, payload: dict) -> None:
     modules = [m for m in payload.get("modules") or [] if m in (1, 2, 3)]
     primary = int(payload["primary_module"])
     platform = source.get("platform")
+    from app.jurisdiction import scope
+
+    row.jurisdiction_scope = scope(payload)
     row.payload = payload
     row.risk_score = float(payload["risk_score"])
     row.primary_module = primary
@@ -123,7 +129,7 @@ def apply_payload(row: Incident, payload: dict) -> None:
     from app.public_reports import normalized_hash, priority_score
 
     row.norm_url_hash = normalized_hash(row.source_url)
-    row.priority_score = priority_score(row.risk_score, row.user_reports_count)  # risk moved: recompute
+    row.priority_score = priority_score(row.risk_score, 0)
 
 
 def upsert_incident(

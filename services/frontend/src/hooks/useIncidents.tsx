@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import { errorMessage } from "../api/client";
 import { api } from "../api/endpoints";
+import { defaultDateBounds, type DateBounds } from "../domain/dates";
 import { incidentsReducer, INITIAL_INCIDENTS, type IncidentsState } from "../domain/liveState";
 import type { TransitionRequest } from "../types/api";
 import type { CaseLabel, Incident, IncidentSummary } from "../types/incident";
@@ -18,6 +19,7 @@ interface IncidentsContextValue extends IncidentsState {
   setLabel: (id: string, label: CaseLabel) => Promise<Incident>;
   /** Bumps whenever the set of incidents changed (trend chart refetches on it). */
   revision: number;
+  dateBounds: DateBounds;
 }
 
 const IncidentsContext = createContext<IncidentsContextValue | null>(null);
@@ -30,7 +32,8 @@ export function toSummary(inc: Incident): IncidentSummary {
     demo_case: inc.demo_case, source: { platform: inc.source.platform, url: inc.source.url },
     advertiser: inc.entities.advertiser?.name ?? null, firm: inc.entities.investment_firm?.name ?? null,
     failed_rules: inc.rules.filter((r) => r.status === "fail").map((r) => r.id),
-    workflow: { assigned_to: inc.workflow.assigned_to, label: inc.workflow.label },
+    workflow: { ...inc.workflow },
+    failed_rule_details: inc.rules.filter((r) => r.status === "fail"),
     user_reports_count: inc.user_reports_count ?? 0, priority_score: inc.priority_score ?? inc.risk_score,
   };
 }
@@ -38,6 +41,7 @@ export function toSummary(inc: Incident): IncidentSummary {
 export function IncidentsProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(incidentsReducer, INITIAL_INCIDENTS);
   const [revision, bump] = useReducer((n: number) => n + 1, 0);
+  const [dateBounds, setDateBounds] = useState<DateBounds>(() => defaultDateBounds());
   const timers = useRef(new Map<string, number>());
 
   const load = useCallback((signal?: AbortSignal) => {
@@ -45,7 +49,10 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
     api
       .listIncidents(signal)
       .then((res) => {
-        if (!signal?.aborted) dispatch({ type: "load:ok", items: Array.isArray(res.items) ? res.items : [] });
+        if (!signal?.aborted) {
+          dispatch({ type: "load:ok", items: Array.isArray(res.items) ? res.items : [] });
+          if (res.date_bounds) setDateBounds(res.date_bounds);
+        }
       })
       .catch((err: unknown) => {
         if (!signal?.aborted) dispatch({ type: "load:error", message: errorMessage(err) });
@@ -113,8 +120,8 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
   const dismissViralAlert = useCallback((id: string) => dispatch({ type: "alert:viral:dismiss", id }), []);
 
   const value = useMemo(
-    () => ({ ...state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision }),
-    [state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision],
+    () => ({ ...state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision, dateBounds }),
+    [state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision, dateBounds],
   );
   return <IncidentsContext.Provider value={value}>{children}</IncidentsContext.Provider>;
 }

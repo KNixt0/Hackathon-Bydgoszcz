@@ -60,6 +60,7 @@ def assign(db: Session, row: Incident, actor: Any) -> None:
         raise WorkflowError(409, "a closed case cannot be reassigned")
     previous = row.assigned_to
     row.assigned_to = actor.email
+    row.processing_started_at = row.processing_started_at or utcnow()
     row.updated_at = utcnow()
     audit.record(
         db,
@@ -112,6 +113,7 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
     before = _snapshot(row)
     row.status = target
     if target == "in_review":
+        row.processing_started_at = row.processing_started_at or utcnow()
         if current == "new" and row.assigned_to is None:
             row.assigned_to = actor.email  # starting the review takes the case
         if current == "escalation_requested":
@@ -133,6 +135,8 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
         if row.resolution_action == "enhanced_monitoring":
             _watch(db, row)
     row.updated_at = utcnow()
+    if target in CLOSED:
+        row.processing_finished_at = row.updated_at
     previous, new = _changed(before, _snapshot(row))
     previous["status"], new["status"] = current, target
     audit.record(db, actor, "transition", incident_id=row.id, previous=previous, new=new, reason=reason)

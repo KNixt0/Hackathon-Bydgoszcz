@@ -237,7 +237,7 @@ describe("scan, demo and jobs", () => {
     mockApi();
     renderApp();
     await ready();
-    const trigger = screen.getByRole("button", { name: "Skanuj URL" });
+    const trigger = screen.getByRole("button", { name: "Analiza URL" });
     await user.click(trigger);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByLabelText("Adres materiału")).toHaveFocus();
@@ -253,16 +253,16 @@ describe("scan, demo and jobs", () => {
     renderApp({ socket });
     await ready();
 
-    await user.click(screen.getByRole("button", { name: "Skanuj URL" }));
+    await user.click(screen.getByRole("button", { name: "Analiza URL" }));
     const dialog = await screen.findByRole("dialog");
     await user.type(within(dialog).getByLabelText("Adres materiału"), "nie-adres");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.click(within(dialog).getByRole("button", { name: "Rozpocznij analizę" }));
     expect(within(dialog).getByRole("alert")).toHaveTextContent("Podaj pełny adres");
     expect(calls.some((c) => c.method === "POST")).toBe(false);
 
     await user.clear(within(dialog).getByLabelText("Adres materiału"));
     await user.type(within(dialog).getByLabelText("Adres materiału"), "https://broker.example/oferta");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.click(within(dialog).getByRole("button", { name: "Rozpocznij analizę" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(calls.find((c) => c.method === "POST" && c.path === "/api/scans")?.body).toEqual({ url: "https://broker.example/oferta" });
 
@@ -279,10 +279,10 @@ describe("scan, demo and jobs", () => {
     mockApi((call) => (call.method === "POST" && call.path === "/api/scans" ? { status: 422, json: { detail: "Domena jest na liście wykluczeń." } } : undefined));
     renderApp();
     await ready();
-    await user.click(screen.getByRole("button", { name: "Skanuj URL" }));
+    await user.click(screen.getByRole("button", { name: "Analiza URL" }));
     const dialog = await screen.findByRole("dialog");
     await user.type(within(dialog).getByLabelText("Adres materiału"), "https://x.example");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.click(within(dialog).getByRole("button", { name: "Rozpocznij analizę" }));
     expect(await within(dialog).findByText("Domena jest na liście wykluczeń.")).toBeInTheDocument();
   });
 

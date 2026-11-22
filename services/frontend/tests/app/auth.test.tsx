@@ -132,7 +132,7 @@ describe("audit log page", () => {
     expect(first.getByText("Brak oznaczenia współpracy")).toBeInTheDocument();
     expect(first.getByRole("link", { name: orangeCase.title })).toHaveAttribute("href", `/sprawy/${orangeCase.id}#historia`);
 
-    await user.selectOptions(screen.getByLabelText("Użytkownik"), analystUser.email);
+    await user.type(screen.getByLabelText("Użytkownik"), analystUser.email);
     await waitFor(() => expect(screen.getAllByTestId("audit-row")).toHaveLength(2));
     expect(calls.some((c) => c.path.includes(`actor=${encodeURIComponent(analystUser.email)}`))).toBe(true);
     await user.selectOptions(screen.getByLabelText("Sprawa"), orangeCase.id);

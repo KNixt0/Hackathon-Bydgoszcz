@@ -16,7 +16,7 @@ export function trendRows(days: TrendDay[], t: Thresholds, module: ModuleId | 0 
     .map((day) => {
       const row: TrendRow = { date: day.date, red: 0, orange: 0, green: 0 };
       for (const it of day.items) {
-        if (module && it.module !== module) continue;
+        if (module && !(it.modules ?? [it.module]).includes(module)) continue;
         row[deriveLevel(it.risk_score, t)] += 1;
       }
       return row;

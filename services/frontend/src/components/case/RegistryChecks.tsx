@@ -11,6 +11,7 @@ const ICON: Record<RegistryStatus, LucideIcon> = { listed: CircleCheck, warning_
 
 /** Register and licence checks as a ruled table: register, result in words, "stan na" date. */
 export function RegistryChecks({ checks }: { checks: RegistryCheck[] }) {
+  checks = checks.filter((check) => !(check.status === "not_checked" && ["knf_foreign_branches", "knf_foreign_cross_border"].includes(check.registry)));
   if (checks.length === 0) {
     return <EmptyState compact title="Brak sprawdzeń w rejestrach" text="Dla tego materiału nie wykonano weryfikacji w rejestrach KNF, KIRP ani KIDP." />;
   }

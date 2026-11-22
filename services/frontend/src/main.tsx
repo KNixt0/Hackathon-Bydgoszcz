@@ -15,7 +15,6 @@ import "./styles/queue.css";
 import "./styles/calibration.css";
 import "./styles/case.css";
 import "./styles/auth.css";
-import "./styles/report.css";
 import { App } from "./App";
 
 const container = document.getElementById("root");

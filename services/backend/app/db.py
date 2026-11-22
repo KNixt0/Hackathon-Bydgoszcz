@@ -136,6 +136,33 @@ def _upgrade_data() -> None:
             "UPDATE incidents SET priority_score = risk_score WHERE priority_score IS NULL",
         ):
             connection.execute(text(statement))
+    with engine.begin() as connection:
+        connection.execute(
+            text("""UPDATE incidents SET processing_started_at = (
+            SELECT MIN(at) FROM audit_logs WHERE audit_logs.incident_id = incidents.id
+            AND (action = 'assign' OR action = 'transition'))
+            WHERE processing_started_at IS NULL""")
+        )
+        connection.execute(
+            text("""UPDATE incidents SET processing_finished_at = updated_at
+            WHERE status IN ('resolved', 'false_positive') AND processing_finished_at IS NULL
+            AND processing_started_at IS NOT NULL""")
+        )
+    with engine.begin() as connection:
+        # Recover actual ingestion times of legacy synthetic samples from their first version.
+        connection.execute(
+            text("""UPDATE incidents SET created_at = (
+            SELECT MIN(created_at) FROM incident_versions WHERE incident_versions.incident_id = incidents.id)
+            WHERE synthetic = true AND created_at < (
+            SELECT MIN(created_at) FROM incident_versions WHERE incident_versions.incident_id = incidents.id)
+            """)
+        )
+    from app.jurisdiction import scope
+    from app.models import Incident
+
+    with session_scope() as db:
+        for row in db.query(Incident).filter(Incident.jurisdiction_scope.is_(None)).all():
+            row.jurisdiction_scope = scope(row.payload)
     _backfill_norm_hash(engine)
     if engine.dialect.name == "postgresql":
         try:

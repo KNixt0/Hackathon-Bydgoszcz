@@ -57,7 +57,7 @@ export function SourcesBlock({ evidence, source, onOpen }: Props) {
           <h3 className="subhead">Materiał źródłowy</h3>
           <dl className="kv kv--compact">
             <dt>Platforma</dt><dd>{PLATFORM_LABEL[source.platform] ?? source.platform}</dd>
-            <dt>Adres</dt>
+            <dt>Adres URL</dt>
             <dd>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{source.url}<span className="sr-only"> (otwiera się w nowej karcie)</span></a> : source.url}</dd>
             <dt>Pobrano</dt><dd>{formatDateTime(source.fetched_at)}</dd>
             <dt>Język</dt><dd>{source.language}</dd>

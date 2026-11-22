@@ -17,7 +17,7 @@ function edge(v: number): string {
 }
 
 /**
- * Dual ruled scale: risk on top, Compliance Score (100 minus risk) below, one needle for this case.
+ * Dual ruled scale: risk on top, Wskaźnik zgodności (100 minus risk) below, one needle for this case.
  * Thresholds come from the threshold context. Everything but the caption is hidden from screen readers.
  */
 export function ScoreScale({ riskScore, thresholds }: Props) {
@@ -47,7 +47,7 @@ export function ScoreScale({ riskScore, thresholds }: Props) {
         {FIVES.map((v) => <span key={v} className={`ds__tk${v % 10 ? " ds__tk--mi" : ""}`} style={{ left: `${v}%` }} />)}
         {marks.map((m, i) => <span key={`${m}-${i}`} className="ds__tt" style={{ left: `${m}%` }} />)}
       </div>
-      <span className="ds__c ds__c2" aria-hidden="true">Compliance Score</span>
+      <span className="ds__c ds__c2" aria-hidden="true">Wskaźnik zgodności</span>
       <div className="ds__lc" aria-hidden="true">
         {labels.map((v) => (
           <span key={v} style={{ left: `${v}%` }} className={`${edge(v)}${!marks.includes(v) && v % 20 !== 0 ? " ds__l--odd" : ""}`}>{100 - v}</span>
@@ -55,9 +55,9 @@ export function ScoreScale({ riskScore, thresholds }: Props) {
       </div>
       <div className="ds__mk" aria-hidden="true"><span className="ds__nd" style={{ left: `${risk}%` }} /></div>
       <figcaption>
-        Odczyt: ryzyko <b className="num">{formatScore(riskScore)}</b> z 100, Compliance Score <b className="num">{complianceScore(riskScore)}</b>.
+        Odczyt: ryzyko <b className="num">{formatScore(riskScore)}</b> z 100, Wskaźnik zgodności <b className="num">{complianceScore(riskScore)}</b>.
         Progi na skali ryzyka: oznaczenie od <b className="num">{thresholds.orange}</b>, krytyczne od <b className="num">{thresholds.red}</b>.
-        <span className="ds__nar"> Górna skala to ryzyko, dolna to Compliance Score (100 minus ryzyko).</span>
+        <span className="ds__nar"> Górna skala to ryzyko, dolna to Wskaźnik zgodności (100 minus ryzyko).</span>
       </figcaption>
     </figure>
   );

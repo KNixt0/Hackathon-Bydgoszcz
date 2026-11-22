@@ -2,6 +2,7 @@ import { CircleCheck, CircleHelp, CircleMinus, CircleX, type LucideIcon } from "
 import { formatPercent } from "../../domain/format";
 import { RULE_METHOD_LABEL, RULE_STATUS_LABEL } from "../../domain/labels";
 import type { RuleResult, RuleStatus } from "../../types/incident";
+import { RuleTip } from "../ui/RuleTip";
 import { Mark, type MarkTone } from "../ui/Mark";
 import { EmptyState } from "../ui/States";
 import { EvidenceChips } from "./EvidenceChips";
@@ -40,7 +41,7 @@ export function ComplianceMatrix({ rules }: { rules: RuleResult[] }) {
           <tbody>
             {rules.map((r) => (
               <tr key={r.id} id={`kryterium-${r.id}`} className={`matrix__row matrix__row--${r.status}`} data-testid="rule-row">
-                <td className="matrix__id r num">{r.id}</td>
+                <td className="matrix__id r num"><RuleTip id={r.id} definition={r} /></td>
                 <td className="matrix__crit">
                   <span className="matrix__name">{r.name}</span>
                   <span className="rt__sub">{r.legal_basis}</span>

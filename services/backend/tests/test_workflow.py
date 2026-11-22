@@ -121,13 +121,15 @@ def test_workflow_shape_defaults_and_escalation_path(client, analyst, cases):
     incident = client.get(f"/api/incidents/{cases['red']}").json()
     assert incident["workflow"] == {
         "assigned_to": None,
+        "processing_started_at": None,
+        "processing_finished_at": None,
         "escalation_path": None,
         "resolution_action": None,
         "resolution_note": "",
         "label": "unlabeled",
     }
     summary = next(i for i in client.get("/api/incidents").json()["items"] if i["id"] == cases["red"])
-    assert summary["workflow"] == {"assigned_to": None, "label": "unlabeled"}
+    assert summary["workflow"] == incident["workflow"]
 
     started = move(analyst, cases["red"], "in_review").json()
     assert started["workflow"]["assigned_to"] == ANALYST[0]  # starting the review takes the case

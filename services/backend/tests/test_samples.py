@@ -46,7 +46,7 @@ def test_seed_goes_through_real_pipeline(client):
     )
     assert green["synthetic"] and green["ground_truth"] == "ok" and green["advertiser"] == "Kanał Spokojny"
     age = datetime.now(UTC) - datetime.fromisoformat(green["created_at"].replace("Z", "+00:00"))
-    assert 2.9 < age.total_seconds() / 86400 < 3.1
+    assert 0 <= age.total_seconds() < 60  # detection time is real, not fabricated history
 
     red_call = next(c for c in client.world.ai_calls if c["document"]["platform"] == "instagram")
     assert red_call["document"]["text"] == RED_TEXT and red_call["document"]["html"] == ""

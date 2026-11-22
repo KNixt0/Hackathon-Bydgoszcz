@@ -3,11 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
 import { api, exportCsvUrl, exportPdfUrl } from "../api/endpoints";
-import { DebateBlock } from "../components/case/DebateBlock";
 import { DecisionHistory } from "../components/case/DecisionHistory";
 import { EvidenceDrawer } from "../components/case/EvidenceDrawer";
 import { EvidenceProvider } from "../components/case/EvidenceContext";
-import { UserReports } from "../components/case/UserReports";
 import { SourcesBlock } from "../components/case/SourcesBlock";
 import { VerdictBlock } from "../components/case/VerdictBlock";
 import { VISUAL_TABS, VisualsBlock, type VisualTab } from "../components/case/VisualsBlock";
@@ -21,7 +19,6 @@ import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { formatDateTime, hostOf, safeHref } from "../domain/format";
 import { MODULE_LABEL, PLATFORM_LABEL } from "../domain/labels";
 import { deriveLevel } from "../domain/levels";
-import { reportsOf, tierOf } from "../domain/priority";
 import { useUser } from "../hooks/useAuth";
 import { useIncidents } from "../hooks/useIncidents";
 import { useLiveEvent } from "../hooks/useLive";
@@ -59,8 +56,6 @@ export function CasePage() {
   const [statusBusy, setStatusBusy] = useState(false);
   const history = useResource((signal) => api.history(id, signal), `history:${id}`);
   const { refresh: refreshHistory } = history;
-  const reports = useResource((signal) => api.incidentReports(id, signal), `reports:${id}`);
-  const { refresh: refreshReports } = reports;
   const [notFound, setNotFound] = useState(false);
 
   const { resource, reload, refresh, setData } = useResource(
@@ -82,16 +77,15 @@ export function CasePage() {
     if (summary.id === id) {
       refresh();
       refreshHistory();
-      refreshReports();
     }
   });
 
   const incident = resource.phase === "ready" ? resource.data : null;
   const title = incident?.title;
   useEffect(() => {
-    document.title = title ? `${title} · InvestWatch` : "InvestWatch · UKNF";
+    document.title = title ? `${title} · Watchit` : "Watchit · UKNF";
     return () => {
-      document.title = "InvestWatch · UKNF";
+      document.title = "Watchit · UKNF";
     };
   }, [title]);
 
@@ -179,12 +173,11 @@ export function CasePage() {
           <h1 className="case-head__title">{inc.title}</h1>
           <nav className="case-nav" aria-label="Sekcje sprawy">
             <span className="muted">Na tej stronie:</span>
-            <a href="#werdykt">Ocena</a>
+            <a href="#werdykt">Werdykt AI</a>
             <a href="#workflow-h">Postępowanie</a>
             <a href="#wizualizacje">Analiza</a>
-            <a href="#argumenty">Argumenty</a>
+            <a href="#argumenty">Rekomendacja AI</a>
             <a href="#zrodla">Źródła dowodowe</a>
-            <a href="#zgloszenia">Zgłoszenia</a>
             <a href="#historia">Historia decyzji</a>
           </nav>
         </header>
@@ -206,8 +199,11 @@ export function CasePage() {
               <dt>Silnik</dt>
               <dd>{inc.engine.version}{inc.engine.llm_used && inc.engine.model ? `, model ${inc.engine.model}` : ", bez modelu językowego"}, {(inc.engine.duration_ms / 1000).toFixed(1).replace(".", ",")} s</dd>
             </dl>
-            <VerdictBlock incident={inc} thresholds={thresholds} />
-            <RecommendationCard recommendation={inc.recommendation} />
+            <details className="disclosure verdict-disclosure" id="werdykt">
+              <summary>Werdykt AI</summary>
+              <VerdictBlock incident={inc} thresholds={thresholds} />
+            </details>
+            <RecommendationCard recommendation={inc.recommendation} debate={inc.debate} />
             <WorkflowPanel incident={inc} user={user} busy={statusBusy} onTransition={onTransition} onAssign={onAssign} onLabel={onLabel} />
           </div>
           <div className="case-col">
@@ -241,15 +237,7 @@ export function CasePage() {
         </div>
 
         <VisualsBlock incident={inc} tab={tab} onTabChange={setTab} />
-        <DebateBlock debate={inc.debate} />
         <SourcesBlock evidence={inc.evidence} source={inc.source} onOpen={openEvidence} />
-        <UserReports
-          count={inc.user_reports_count ?? 0}
-          tier={tierOf({ risk_score: inc.risk_score, user_reports_count: reportsOf(inc) }, thresholds)}
-          items={reports.resource.phase === "ready" ? reports.resource.data.items ?? [] : null}
-          error={reports.resource.phase === "error" ? reports.resource.error : null}
-          onRetry={reports.reload}
-        />
       </div>
       <EvidenceDrawer incident={inc} evidenceId={evidenceId} onClose={closeEvidence} onNavigate={openEvidence} />
     </EvidenceProvider>

@@ -15,7 +15,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
-from app.api import admin, auth, discovery, incidents, public, scans, system
+from app.api import admin, auth, discovery, incidents, notifications, scans, system
 from app.auth import session_guard
 from app.auth.socket import SocketAuthGate
 from app.auth.tokens import get_secret
@@ -69,7 +69,7 @@ def create_api() -> FastAPI:
     settings = get_settings()
     # every /api route needs a session except /api/health, /api/auth/*, /api/public/* (app.auth.deps)
     api = FastAPI(
-        title="#InvestWatch backend",
+        title="Watchit",
         version=__version__,
         lifespan=lifespan,
         dependencies=[Depends(session_guard)],
@@ -104,7 +104,7 @@ def create_api() -> FastAPI:
 
     api.include_router(auth.router)
     api.include_router(admin.router)
-    api.include_router(public.router)
+    api.include_router(notifications.router)
     api.include_router(incidents.router)
     api.include_router(scans.router)
     api.include_router(discovery.router)

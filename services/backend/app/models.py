@@ -37,6 +37,7 @@ class Incident(Base):
     content_hash: Mapped[str] = mapped_column(String(64), index=True)
     source_url: Mapped[str] = mapped_column(Text)
     source_url_hash: Mapped[str] = mapped_column(String(64), index=True)
+    jurisdiction_scope: Mapped[str | None] = mapped_column(String(16), index=True, nullable=True)
     synthetic: Mapped[bool] = mapped_column(Boolean, default=False)
     search_text: Mapped[str] = mapped_column(Text, default="")
     # how to fetch it again (periodic re-scan)
@@ -48,6 +49,8 @@ class Incident(Base):
     scan_context: Mapped[dict | None] = mapped_column(JSONType, nullable=True)  # AI Context sent with it
     # case workflow (contract v3 `Workflow`); all nullable so existing volumes are upgraded in place
     assigned_to: Mapped[str | None] = mapped_column(String(255), index=True, nullable=True)
+    processing_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    processing_finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     escalation_path: Mapped[str | None] = mapped_column(String(32), nullable=True)
     resolution_action: Mapped[str | None] = mapped_column(String(32), nullable=True)
     resolution_note: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -230,6 +233,17 @@ class AppSetting(Base):
     value: Mapped[dict] = mapped_column(JSONType, default=dict)
     updated_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), index=True)
+    message: Mapped[str] = mapped_column(Text)
+    details: Mapped[dict] = mapped_column(JSONType, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 Index("ix_incidents_score_created", Incident.risk_score.desc(), Incident.created_at.desc())

@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from datetime import timedelta
 from typing import Any
 
 from pydantic import ValidationError
@@ -15,8 +14,7 @@ from app.config import get_settings
 from app.db import session_scope
 from app.incidents import level_for, to_summary, upsert_incident
 from app.jobs import set_state
-from app.models import ScanJob, utcnow
-from app.public_reports import crossed_viral, link_pending
+from app.models import ScanJob
 from app.schemas import PLATFORMS, AnalysisIn
 from app.scraper import BlockedURL, FetchedPage, Fetcher, FetchError
 from app.scraper.parsers import GENERIC, detect_platform, select_parser
@@ -186,7 +184,9 @@ def _run(job_id: str) -> None:
 
     set_state(job_id, "analyzing")
     context = dict(job.context or {})
-    if job.module_hint and "module_hint" not in context:
+    if job.origin == "scan":
+        context.pop("module_hint", None)  # every submitted URL uses all three modules
+    elif job.module_hint and "module_hint" not in context:
         context["module_hint"] = job.module_hint
     try:
         analysis = ai_client.analyze(document, context)
@@ -195,17 +195,16 @@ def _run(job_id: str) -> None:
     except ai_client.AIRejected as exc:
         raise _Fail(str(exc)) from exc
     payload = _normalise_analysis(analysis, document, context)
+    from app.jurisdiction import scope
 
-    created_at = None
-    days_ago = (job.meta or {}).get("detected_days_ago")
-    if isinstance(days_ago, int | float) and not isinstance(days_ago, bool) and 0 <= days_ago <= 3650:
-        created_at = utcnow() - timedelta(days=float(days_ago))
+    if scope(payload) == "outside":
+        raise _Fail("Podmiot pozostaje poza zakresem nadzoru UKNF obsługiwanym przez tę instalację.")
 
     with session_scope() as db:
         row, created = upsert_incident(
             db,
             payload,
-            created_at=created_at,
+            created_at=None,
             meta=job.meta,
             context=job.context,
             origin=job.origin,
@@ -213,7 +212,6 @@ def _run(job_id: str) -> None:
             render=job.render,
             module_hint=job.module_hint,
         )
-        linked = link_pending(db, row, job_id)  # reports that were waiting for this scan
         summary = to_summary(row)
         incident_id = row.id
 
@@ -222,8 +220,6 @@ def _run(job_id: str) -> None:
     critical = alert_threshold()  # global "critical" threshold
     if created and summary["risk_score"] >= critical:
         events.emit("alert:high", summary)
-    if linked and crossed_viral(*linked) and summary["risk_score"] >= critical:
-        events.emit("alert:viral", summary)
     log.info(
         "incident stored",
         extra={

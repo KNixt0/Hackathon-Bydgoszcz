@@ -11,6 +11,8 @@ export type CaseLabel = "unlabeled" | "true_positive" | "false_positive";
 
 export interface Workflow {
   assigned_to: string | null;
+  processing_started_at?: string | null;
+  processing_finished_at?: string | null;
   escalation_path: EscalationPath | null;
   resolution_action: ResolutionAction | null;
   resolution_note: string;
@@ -270,7 +272,8 @@ export type IncidentSummary = Pick<
   advertiser: string | null;
   firm: string | null;
   failed_rules: RuleId[];
-  workflow: Pick<Workflow, "assigned_to" | "label">;
+  failed_rule_details?: Pick<RuleResult, "id" | "name" | "legal_basis" | "explanation">[];
+  workflow: Pick<Workflow, "assigned_to" | "label" | "processing_started_at" | "processing_finished_at">;
   user_reports_count: number;
   priority_score: number;
 };

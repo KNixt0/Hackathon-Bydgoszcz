@@ -1,7 +1,7 @@
 import { MODULE_LABEL } from "../../domain/labels";
 import type { ModuleId } from "../../types/incident";
 
-/** Plain text, no pill: "1 Finfluencerzy i podmioty trzecie" (or just the number with a full name for screen readers). */
+/** Plain text, no pill: "1 Twórcy finansowi i podmioty trzecie" (or just the number with a full name for screen readers). */
 export function ModuleTag({ module, compact = false }: { module: ModuleId; compact?: boolean }) {
   if (compact) {
     return (

@@ -32,7 +32,7 @@ function Column({ stance, claims, kept }: { stance: Claim["stance"]; claims: Cla
         <span className="debate__count num">{claims.filter((c) => kept.has(c.id)).length} z {claims.length} utrzymanych</span>
       </div>
       {claims.length === 0 ? (
-        <p className="muted">{isFor ? "Agenci nie sformułowali argumentów za naruszeniem." : "Agenci nie znaleźli okoliczności łagodzących."}</p>
+        <p className="muted">{isFor ? "Analiza nie wykazała argumentów za naruszeniem." : "Analiza nie wykazała okoliczności łagodzących."}</p>
       ) : (
         <ul className="claims">
           {claims.map((c) => <ClaimCard key={c.id} claim={c} counted={kept.has(c.id)} />)}
@@ -56,15 +56,14 @@ export function DebateBlock({ debate }: { debate: Debate }) {
   const forClaims = debate.claims.filter((c) => c.stance === "for").sort(byConfidence);
   const againstClaims = debate.claims.filter((c) => c.stance === "against").sort(byConfidence);
   return (
-    <section className="csec" id="argumenty" aria-labelledby="argumenty-h">
-      <h2 className="section-title" id="argumenty-h">Argumenty „za” i „przeciw”</h2>
+    <div className="recommendation-arguments">
       {empty ? (
-        <EmptyState compact title="Brak debaty agentów" text="Dla tej sprawy silnik nie przeprowadził debaty. Ocena opiera się wyłącznie na regułach i rejestrach." />
+        <EmptyState compact title="Brak dodatkowych argumentów" text="Dla tej sprawy silnik nie przygotował argumentów. Ocena opiera się wyłącznie na regułach i rejestrach." />
       ) : (
         <>
           {debate.arbiter_rationale && (
             <div className="arbiter">
-              <h3 className="subhead">Uzasadnienie arbitra</h3>
+              <h3 className="subhead">Uzasadnienie</h3>
               <p className="arbiter__text">{debate.arbiter_rationale}</p>
             </div>
           )}
@@ -73,12 +72,12 @@ export function DebateBlock({ debate }: { debate: Debate }) {
             <Column stance="against" claims={againstClaims} kept={kept} />
           </div>
           {debate.rounds.length > 0 && (
-            <div className="rounds">
-              <h3 className="subhead">Przebieg debaty</h3>
+            <details className="rounds disclosure">
+              <summary>Tok rozumowania</summary>
               <ol className="rounds__grid">
                 {groupRounds(debate.rounds).map(([n, entries]) => (
                   <li key={n} className="round">
-                    <span className="round__n">Runda {n} z 3</span>
+                    <span className="round__n">Etap {n} z 3</span>
                     {entries.map((r, i) => (
                       <div key={`${r.agent}-${i}`} className="round__entry">
                         <p className="round__agent">{r.agent} <span className="round__role">{r.role}</span></p>
@@ -88,10 +87,10 @@ export function DebateBlock({ debate }: { debate: Debate }) {
                   </li>
                 ))}
               </ol>
-            </div>
+            </details>
           )}
         </>
       )}
-    </section>
+    </div>
   );
 }

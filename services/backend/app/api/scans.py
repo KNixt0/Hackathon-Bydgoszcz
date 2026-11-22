@@ -33,7 +33,7 @@ def _checked_url(url: str) -> str:
 @router.post("/scans", status_code=202)
 def create_scan(body: ScanRequest) -> dict:
     url = _checked_url(str(body.url))
-    job_id = create_job(url, render=body.render, module_hint=body.module_hint)
+    job_id = create_job(url, render=body.render, module_hint=None)
     dispatch(job_id)
     return {"job_id": job_id}
 

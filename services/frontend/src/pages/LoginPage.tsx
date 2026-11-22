@@ -1,6 +1,6 @@
 import { CircleAlert, Info } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { PublicHeader } from "../components/layout/PublicHeader";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
@@ -21,9 +21,9 @@ export function LoginPage() {
   const [busy, setBusy] = useState<"form" | Role | null>(null);
 
   useEffect(() => {
-    document.title = "Logowanie · InvestWatch";
+    document.title = "Logowanie · Watchit";
     return () => {
-      document.title = "InvestWatch · UKNF";
+      document.title = "Watchit · UKNF";
     };
   }, []);
 
@@ -102,7 +102,6 @@ export function LoginPage() {
           </section>
         )}
         <p className="login__foot">Narzędzie analityczne UKNF, dane przetwarzane lokalnie. Logowania i decyzje w sprawach są zapisywane w dzienniku audytu.</p>
-        <p className="login__foot"><Link to="/zglos">Zgłoś ofertę lub reklamę</Link> (dla osób spoza UKNF)</p>
       </main>
     </div>
   );

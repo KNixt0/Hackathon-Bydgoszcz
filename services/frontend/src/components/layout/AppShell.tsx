@@ -9,6 +9,7 @@ import { useUi } from "../../hooks/useUi";
 import { Notices } from "../ui/Notices";
 import { CommandPalette, type PaletteCommand } from "./CommandPalette";
 import { DemoMenu } from "./DemoMenu";
+import { NotificationsMenu } from "./NotificationsMenu";
 import { JobsMenu } from "./JobsMenu";
 import { ScanDialog } from "./ScanDialog";
 import { ConnectionIndicator } from "./ConnectionIndicator";
@@ -50,7 +51,7 @@ export function AppShell() {
   };
   const startScan = async (req: Parameters<typeof scans.startScan>[0]) => {
     const failure = await scans.startScan(req);
-    if (!failure) notify("info", "Skanowanie zlecone. Postęp widać w zadaniach.");
+    if (!failure) notify("info", "Analiza zlecona. Postęp widać w zadaniach.");
     return failure;
   };
 
@@ -68,6 +69,7 @@ export function AppShell() {
         isSupervisor={user.role === "SUPERVISOR"}
         trailing={<UserChip user={user} onLogout={() => void logout()} />}
       >
+        <NotificationsMenu />
         <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
         <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
         <ConnectionIndicator status={connection} />

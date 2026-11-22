@@ -97,6 +97,7 @@ export function mockApi(override?: Route, { user = analystUser, demoLogin = true
       const body = call.body as { flag: number; critical: number };
       return json({ ...body, updated_by: session.email, updated_at: "2026-11-21T10:00:00Z" });
     }
+    if (path === "/api/notifications") return json({ items: [] });
     if (path === "/api/settings/thresholds") return json(globalThresholds);
     if (path === "/api/audit") return session?.role === "SUPERVISOR" ? json({ items: [] }) : json({ detail: "supervisor role required" }, 403);
     if (/^\/api\/incidents\/[^/]+\/history$/.test(path)) return json({ items: [] });

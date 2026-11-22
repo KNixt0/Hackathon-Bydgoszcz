@@ -30,6 +30,7 @@ SUMMARY_KEYS = {
     "advertiser",
     "firm",
     "failed_rules",
+    "failed_rule_details",
     "workflow",
 }
 
@@ -87,10 +88,9 @@ def test_list_filters(seeded):
     assert total("status=new") == 3 and total("status=escalated") == 0
     assert total("q=SZYBKI") == 1 and total("q=promo.example") == 1 and total("q=%25") == 0
     today = datetime.now(UTC).date()
-    assert total(f"from={today.isoformat()}") == 1  # samples are back-dated 3 and 10 days
-    assert total(f"to={(today - timedelta(days=5)).isoformat()}") == 1
-    assert total(f"from={(today - timedelta(days=4)).isoformat()}&to={today.isoformat()}") == 2
-    assert total(f"from={(today - timedelta(days=4)).isoformat()}T00:00:00Z") == 2
+    assert total(f"from={today.isoformat()}") == 3  # actual detection time, including imports
+    assert seeded.get(f"/api/incidents?to={(today - timedelta(days=5)).isoformat()}").status_code == 422
+    assert seeded.get(f"/api/incidents?from={(today + timedelta(days=1)).isoformat()}").status_code == 422
     assert total("module=3&source=instagram&status=new&q=zysk") == 1
 
 
@@ -132,11 +132,11 @@ def test_detail_patch_and_404(seeded):
 
 def test_trends(seeded):
     body = seeded.get("/api/stats/trends").json()
-    assert len(body["days"]) == 30 and body["days"][-1]["date"] == datetime.now(UTC).date().isoformat()
+    assert 1 <= len(body["days"]) <= 30 and body["days"][-1]["date"] == datetime.now(UTC).date().isoformat()
     items = [item for day in body["days"] for item in day["items"]]
-    assert len(items) == 3 and set(items[0]) == {"id", "risk_score", "module"}
-    assert len(body["days"][-4]["items"]) == 1  # the sample detected 3 days ago
-    assert sum(len(d["items"]) for d in seeded.get("/api/stats/trends?days=2").json()["days"]) == 1
+    assert len(items) == 3 and set(items[0]) == {"id", "risk_score", "module", "modules"}
+    assert sum(len(d["items"]) for d in body["days"]) == 3
+    assert sum(len(d["items"]) for d in seeded.get("/api/stats/trends?days=2").json()["days"]) == 3
     assert seeded.get("/api/stats/trends?days=0").status_code == 422
 
 

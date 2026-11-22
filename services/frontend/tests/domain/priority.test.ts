@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { reportsLabel } from "../../src/domain/format";
 import { DEFAULT_THRESHOLDS } from "../../src/domain/levels";
 import { deriveTier, priorityScore, REPORTS_N } from "../../src/domain/priority";
-import { applyQueue, EMPTY_FILTERS, filtersFromSearch, filtersToApiQuery, filtersToSearch, matchesFilters } from "../../src/domain/queue";
+import { applyQueue, EMPTY_FILTERS, filtersFromSearch } from "../../src/domain/queue";
 import { incidentSummaries } from "../fixtures/data.mjs";
 
 const T = DEFAULT_THRESHOLDS; // orange = 20
@@ -41,27 +41,10 @@ describe("priority tier (T = T_orange, N = 5)", () => {
   });
 });
 
-describe("queue by tier and priority", () => {
-  it("filters by tier and the crowd anomaly exists in the fixtures", () => {
-    const anomalies = incidentSummaries.filter((it) => matchesFilters(it, { ...EMPTY_FILTERS, tier: "crowd_anomaly" }, T));
-    expect(anomalies.length).toBeGreaterThanOrEqual(2);
-    expect(anomalies.every((it) => it.risk_score < 20 && it.user_reports_count >= 5)).toBe(true);
-  });
-
-  it("sorts by priority instead of risk, pinned cases stay first", () => {
-    const byRisk = applyQueue(incidentSummaries, EMPTY_FILTERS, T);
-    const byPriority = applyQueue(incidentSummaries, { ...EMPTY_FILTERS, sort: "priority" }, T);
-    expect(byPriority.map((i) => i.id)).not.toEqual(byRisk.map((i) => i.id));
-    const scores = byPriority.map((i) => i.priority_score);
-    expect(scores).toEqual([...scores].sort((a, b) => b - a));
-    const pinned = byPriority[byPriority.length - 1]?.id ?? "";
-    expect(applyQueue(incidentSummaries, { ...EMPTY_FILTERS, sort: "priority" }, T, [pinned])[0]?.id).toBe(pinned);
-  });
-
-  it("round-trips tier and sort through the URL and sends the sort to the export", () => {
-    const f = { ...EMPTY_FILTERS, tier: "crowd_anomaly" as const, sort: "priority" as const };
-    expect(filtersFromSearch(filtersToSearch(f))).toEqual(f);
-    expect(filtersFromSearch(new URLSearchParams("priorytet=nonsense"))).toEqual(EMPTY_FILTERS);
-    expect(filtersToApiQuery(f)).toBe("?sort=priority");
+describe("queue after public reports were removed", () => {
+  it("ignores old report filters and uses the model risk", () => {
+    expect(filtersFromSearch(new URLSearchParams("priorytet=crowd_anomaly&sortowanie=priorytet"))).toEqual(EMPTY_FILTERS);
+    const risk = applyQueue(incidentSummaries, EMPTY_FILTERS, T);
+    expect(applyQueue(incidentSummaries, { ...EMPTY_FILTERS, sort: "priority" }, T)).toEqual(risk);
   });
 });

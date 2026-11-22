@@ -38,7 +38,7 @@ def test_happy_path_stores_incident_and_emits(client):
     assert "Gwarantowany zysk" in document["text"] and document["html"].startswith("<html")
     assert document["language"] == "pl" and document["fetch"]["engine"] == "httpx"
     assert document["fetch"]["proxy"] is None and "Mozilla" in document["fetch"]["user_agent"]
-    assert call["context"] == {"module_hint": 2}
+    assert "module_hint" not in call.get("context", {})
 
     # raw HTML archived, key stored on the incident, readable as text/plain
     key = document["archive"]["html_key"]

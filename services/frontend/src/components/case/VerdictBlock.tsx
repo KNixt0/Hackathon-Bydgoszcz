@@ -20,8 +20,8 @@ export function VerdictBlock({ incident, thresholds }: Props) {
   const failed = incident.rules.filter((r) => r.status === "fail").map((r) => r.id);
   const findings = incident.module_results.flatMap((m) => m.findings.map((f) => ({ ...f, module: m.module })));
   return (
-    <section className="csec csec--first" id="werdykt" aria-labelledby="werdykt-h">
-      <h2 className="section-title" id="werdykt-h">Ocena</h2>
+    <section className="csec csec--first" aria-labelledby="werdykt-h">
+      <h2 className="section-title" id="werdykt-h">Werdykt AI</h2>
       <p className="verd" data-testid="verdict-sentence">
         <b className={`verd__lead verd__lead--${level}`}>{LEAD[level]}</b> {incident.summary}
         {failed.length > 0 && !/naruszone kryteria/i.test(incident.summary) && <> Naruszone kryteria: {listPl(failed)}.</>}
@@ -29,7 +29,7 @@ export function VerdictBlock({ incident, thresholds }: Props) {
       <div className="score-row">
         <LevelBadge level={level} size="lg" />
         <span className="score-row__item">
-          <span className="score-row__label">Compliance Score</span>
+          <span className="score-row__label">Wskaźnik zgodności</span>
           <span className="score-row__value num" data-testid="compliance-score">{complianceScore(incident.risk_score)}</span>
           <span className="score-row__label">z 100</span>
         </span>
