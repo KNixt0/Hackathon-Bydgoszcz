@@ -287,36 +287,58 @@ def best_match(query: str, entries: list[dict]) -> Match | None:
     return best
 
 
-def find_brands_in_text(text: str, folded: str, entries: list[dict]) -> list[tuple[int, int, dict]]:
-    """Occurrences of register names (legal form optional) in a text: (start, end, entry).
+def _names_brand(key: str) -> bool:
+    return len(key) >= 3 and not set(key.split()) <= (GENERIC_TOKENS | NEUTRAL_DESCRIPTORS)
 
-    Single-word names must start with a capital letter in the original text, so that a
-    register entry never matches an ordinary lower-case word.
-    """
-    index: dict[str, dict] = {}
+
+def compile_brand_index(entries: list[dict]) -> dict:
+    """A longest-prefix index. Sector words alone never identify a particular firm."""
+    root: dict = {}
     for entry in entries:
-        for key, _ in _keys(entry):
-            # A key made only of generic words ("dom maklerski" left of "DOM MAKLERSKI INC S.A.")
-            # names no brand and would match every brokerage house mentioned in a text.
-            if len(key) >= 3 and not set(key.split()) <= (GENERIC_TOKENS | NEUTRAL_DESCRIPTORS):
-                index.setdefault(key, entry)
+        # A key made only of generic words ("dom maklerski" left of "DOM MAKLERSKI INC S.A.")
+        # names no brand and would match every brokerage house mentioned in a text.
+        # key -> whether the match needs a capital letter: a name that is one word once its legal
+        # form is dropped ("mBank S.A." -> "mbank") must not match an ordinary lower-case word.
+        keys = {key: len(key.split()) == 1 for key, _ in _keys(entry) if _names_brand(key)}
+        # Preserve a literal full legal name too: INC can be a brand inside a Polish
+        # registered name, although it is normally an English legal-form token.
+        for name in [entry["name"], *entry.get("aliases", [])]:
+            literal = " ".join(re.findall(r"[^\W_]+", fold(name)))
+            if _names_brand(literal):
+                keys.setdefault(literal, len(normalize_name(name).split()) <= 1)
+        for key, needs_capital in keys.items():
+            node = root
+            for token in key.split():
+                node = node.setdefault(token, {})
+            node.setdefault(None, (entry, needs_capital))
+    return root
+
+
+def find_brands_in_text(
+    text: str, folded: str, entries: list[dict], index: dict | None = None
+) -> list[tuple[int, int, dict]]:
+    """Longest register-name occurrences, with original source offsets.
+
+    One-word brands (legal form aside) require a capital letter. A trie removes the old six-word limit
+    and lets RegistryStore reuse its index across documents without repeated rebuilding.
+    """
+    index = compile_brand_index(entries) if index is None else index
     words = [(m.start(), m.end(), m.group(0)) for m in re.finditer(r"[^\W_]+", folded)]
     hits: list[tuple[int, int, dict]] = []
     i = 0
     while i < len(words):
-        found = False
-        for n in range(min(6, len(words) - i), 0, -1):
-            key = " ".join(w for _, _, w in words[i : i + n])
-            entry = index.get(key)
-            if entry is None:
-                continue
-            start, end = words[i][0], words[i + n - 1][1]
-            if n == 1 and not text[start].isupper():
-                continue
-            hits.append((start, end, entry))
-            i += n
-            found = True
-            break
-        if not found:
+        node, j, best = index, i, None
+        while j < len(words) and words[j][2] in node:
+            node = node[words[j][2]]
+            j += 1
+            if None in node:
+                entry, needs_capital = node[None]
+                if not needs_capital or text[words[i][0]].isupper():
+                    best = (j, entry)
+        if best is None:
             i += 1
+            continue
+        end, entry = best
+        hits.append((words[i][0], words[end - 1][1], entry))
+        i = end
     return hits
