@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=H5N8X1do86Q",
+  "platform": "youtube",
+  "title": "Dowiedz się jak handlować na UP&DOWN",
+  "published_at": "2013-05-20",
+  "author": {
+   "name": "xtbpolska",
+   "handle": "@XTBPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 4934
+ },
+ "text": "Dowiedz się jak handlować na UP&DOWN\n\nW tutorialu dowiesz się jak inwestować w UP&DOWN w łatwy i szybki sposób. Pokażemy w trzech szybkich krokach jak zawrzeć pierwszą inwestycję.",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "UP&DOWN",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

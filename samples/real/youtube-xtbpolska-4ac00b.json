@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=L-ASHA3c8WU",
+  "platform": "youtube",
+  "title": "Forex Cup Young",
+  "published_at": "2013-11-08",
+  "author": {
+   "name": "xtbpolska",
+   "handle": "@XTBPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 4762
+ },
+ "text": "Forex Cup Young\n\nGraj od 18.11\nWygraj HP ENVY 15-joooew i staż w XTB,\nHP SlateBooka,\njednego z 11 tabeltów HP Slate 7!",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "XTB",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

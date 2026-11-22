@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=1toaY7iqcCI",
+  "platform": "youtube",
+  "title": "100% akcji, reguła 4% i środki wyczerpane po 16 latach?! Ryzyko sekwencji stóp zwrotu",
+  "published_at": "2026-10-04",
+  "author": {
+   "name": "Inwestomat",
+   "handle": "@inwestomat"
+  },
+  "seed": true,
+  "detected_days_ago": 49
+ },
+ "text": "100% akcji, reguła 4% i środki wyczerpane po 16 latach?! Ryzyko sekwencji stóp zwrotu\n\n📖 Moja nowa książka „Wolność finansowa” jest dostępna do zamówienia: https://inwestomat.eu/wolnosc-finansowa/\n➡️ Wpis na blogu - https://inwestomat.eu/najwiekszy-wrog-wczesnego-emeryta-sekwencja-stop-zwrotu\n\nZ tego klipu dowiesz się, czym jest ryzyko sekwencji stóp zwrotu i jak w praktyce objawiało się dla polskiego inwestora akcyjnego.\n\n00:00:00 Wstęp\n00:02:02 Czym jest ryzyko sekwencji stóp zwrotu?\n00:07:29 Czym jest reguła 4%?\n00:09:06 Rozszerzenie reguły 4% - Trinity Study\n00:12:59 Czemu reguła 4% może nie działać dla Polaka w XXI wieku?\n00:15:30 20-letnie emerytury Amerykanów w latach 1993-2025\n00:16:49 20-letnie emerytury Polaków w latach 1993-2025. Co poszło nie tak?\n00:18:30 Bardzo zły okres dla akcji (2000-2020)\n00:20:28 Najgorszy okres dla polskiego emeryta\n00:25:39 Wyniki Polaka a Amerykanina\n00:26:45 Dlaczego Polakowi skończył się kapitał, a Amerykaninowi nie?\n00:28:27 Skąd bierze się ryzyko sekwencji stóp zwrotu?\n00:30:04 Jak walczyć z ryzykiem sekwencji stóp zwrotu?\n00:33:08 Podsumowanie materiału\n\nZastrzeżenie: Informacje przedstawione w tym nagraniu są prywatnymi opiniami autora i nie stanowią rekomendacji inwestycyjnych w rozumieniu Rozporządzenia Ministra Finansów z dnia 19 października 2005 roku w sprawie informacji stanowiących rekomendacje dotyczące instrumentów finansowych, ich emitentów lub wystawców (Dz. U. z 2005 roku, Nr 206, poz. 1715). Widz podejmuje decyzje inwestycyjne na własną odpowiedzialność.",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "Inwestomat",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

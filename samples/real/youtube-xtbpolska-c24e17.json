@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=0ZWlWXFZESY",
+  "platform": "youtube",
+  "title": "xStation wyświetlaj wiele wykresów",
+  "published_at": "2013-04-10",
+  "author": {
+   "name": "xtbpolska",
+   "handle": "@XTBPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 4974
+ },
+ "text": "xStation wyświetlaj wiele wykresów\n\n",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "xStation",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

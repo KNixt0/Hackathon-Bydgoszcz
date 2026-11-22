@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://www.etoro.com/pl/",
+  "platform": "web",
+  "title": "etoro. Wiedz więcej.etoroetoro",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0
+ },
+ "html_file": "etoro-com-pl-1af1bb.html",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 2,
+  "companies": [
+   {
+    "name": "etoro",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

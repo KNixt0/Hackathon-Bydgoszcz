@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=uUOh3Xtmj0g",
+  "platform": "youtube",
+  "title": "#1 Bitcoin to ponowne odkrycie pieniądza (Der Gigi)",
+  "published_at": "2023-01-25",
+  "author": {
+   "name": "Bitcoin Polska",
+   "handle": "@BitcoinPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 1397
+ },
+ "text": "#1 Bitcoin to ponowne odkrycie pieniądza (Der Gigi)\n\nNowa seria, w której będę czytał przetłumaczone na język polski artykuły o Bitcoinie.\n\nNa pierwszy ogień poszedł artykuł Gigiego: https://dergigi.com/2022/12/02/bitcoin-is-the-rediscovery-of-money/",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "Der Gigi",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=ZODBpJdk0IM",
+  "platform": "youtube",
+  "title": "Jaki ETF na bitcoina kupić? Ranking ETF i ETP 2026",
+  "published_at": "2026-11-01",
+  "author": {
+   "name": "Inwestomat",
+   "handle": "@inwestomat"
+  },
+  "seed": true,
+  "detected_days_ago": 21
+ },
+ "text": "Jaki ETF na bitcoina kupić? Ranking ETF i ETP 2026\n\n📖 Lubisz moje materiały? Sprawdź też książkę - https://inwestomat.eu/ksiazka/\n➡️ Wpis na blogu - https://inwestomat.eu/jaki-etf-na-bitcoina-kupic\n\nZ tego klipu dowiesz się, jakie ETP i ETF na bitcoina są obecnie najlepsze.\n\n00:00:00 Wstęp\n00:00:51 Kryteria oceny ETF-ów w tym rankingu\n00:03:46 Omówienie europejskich ETP na bitcoina\n00:08:59 Ranking europejskich ETP na bitcoina\n00:12:10 Gdzie kupić europejskie ETP na bitcoina?\n00:13:10 Omówienie amerykańskich ETF na bitcoina\n00:15:59 Ranking amerykańskich ETF na bitcoina\n00:21:31 Bitcoin - co dalej + pytania do widzów\n00:19:16 Podsumowanie\n\nZastrzeżenie: Informacje przedstawione w tym nagraniu są prywatnymi opiniami autora i nie stanowią rekomendacji inwestycyjnych w rozumieniu Rozporządzenia Ministra Finansów z dnia 19 października 2005 roku w sprawie informacji stanowiących rekomendacje dotyczące instrumentów finansowych, ich emitentów lub wystawców (Dz. U. z 2005 roku, Nr 206, poz. 1715). Widz podejmuje decyzje inwestycyjne na własną odpowiedzialność.",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "Inwestomat",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

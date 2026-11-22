@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=damd9gCebcI",
+  "platform": "youtube",
+  "title": "#2 Stopniowo, a potem nagle (Parker Lewis)",
+  "published_at": "2023-02-01",
+  "author": {
+   "name": "Bitcoin Polska",
+   "handle": "@BitcoinPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 1390
+ },
+ "text": "#2 Stopniowo, a potem nagle (Parker Lewis)\n\nSeria, w której czytam wartościowe artykuły o Bitcoinie po polsku:\n#1 Bitcoin to ponowne odkrycie pieniądza (Der Gigi): https://youtu.be/uUOh3Xtmj0g\n\nOryginał: https://unchained.com/blog/dollar-crisis-to-bitcoin/",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "null",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

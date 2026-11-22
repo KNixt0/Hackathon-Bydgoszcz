@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://whop.com/1h-rozmowa-z-antkiemict/krypto-sygnaly-vip/",
+  "platform": "web",
+  "title": "Forex House Krypto VIP | Whop",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "null"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Forex House",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m3-whop-1h-rozmowa-z-antkiemict-krypto-sygn-c4bb9c.html"
+}

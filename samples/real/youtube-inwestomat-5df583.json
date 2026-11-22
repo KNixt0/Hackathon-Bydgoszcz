@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=V3C3zZMqozI",
+  "platform": "youtube",
+  "title": "Momentum Akcje + Obligacje + Złoto. +20% rocznie w długim terminie",
+  "published_at": "2026-10-18",
+  "author": {
+   "name": "Inwestomat",
+   "handle": "@inwestomat"
+  },
+  "seed": true,
+  "detected_days_ago": 35
+ },
+ "text": "Momentum Akcje + Obligacje + Złoto. +20% rocznie w długim terminie\n\n📖 Lubisz moje materiały? Sprawdź też książkę - https://inwestomat.eu/ksiazka/\n➡️ Wpis na blogu - https://inwestomat.eu/strategia-momentum-ze-zlotem\n\nZ tego klipu dowiesz się:\n- Jak działa rozbudowanie GEM o dodatkową gałąź ze złotem.\n- Czy Gold Momentum daje dużo lepsze wyniki od innych strategii algorytmicznych.\n- Z czego wynika przewaga Gold Momentum nad indeksami akcji.\n- Jak skuteczna byłaby ta strategia w regularnym inwestowaniu oraz w ostatnich latach.\n- Jak wpływają na nią podatki i koszty inwestowania.\n\n00:00:00 Wstęp \n00:00:51 Jak działa strategia Gold Momentum?\n00:02:35 Jakie ETF-y do tej strategii?\n00:02:59 Wyniki Gold Momentum w długim terminie bez podatku - jednorazowa inwestycja\n00:04:10 Uwzględnienie podatku w Gold Momentum w długim terminie\n00:06:30 Wpływ kosztów transakcyjnych na wyniki Gold Momentum\n00:08:55 Regularna inwestycja w Gold Momentum - długi termin\n00:10:03 Jak często robiliśmy zmiany w portfelu?\n00:11:10 Co było w portfelu Gold Momentum przez ile % czasu?\n00:13:01 Okresy 5-letnie strategii Gold Momentum\n00:14:27 Szczerze opisane wady Gold Momentum\n00:15:35 Wyniki Gold Momentum w okresie 2006-2025\n00:17:00 Wyniki po podatkach Gold Momentum w okresie 2006-2025\n00:18:02 Fatalne 15 lat strategii Gold Momentum\n00:19:27 Najtrudniejsze 3 okresy z Gold Momentum\n00:23:45 Wpływ doboru okna porównawczego (lookback window) na wyniki w długim terminie\n00:25:09 Wpływ doboru okna porównawczego (lookback window) na wyniki w krótszym terminie\n00:28:30 Podsumowanie\n\nZastrzeżenie: Informacje przedstawione w tym nagraniu są prywatnymi opiniami autora i nie stanowią rekomendacji inwestycyjnych w rozumieniu Rozporządzenia Ministra Finansów z dnia 19 października 2005 roku w sprawie informacji stanowiących rekomendacje dotyczące instrumentów finansowych, ich emitentów lub wystawców (Dz. U. z 2005 roku, Nr 206, poz. 1715). Widz podejmuje decyzje inwestycyjne na własną odpowiedzialność.",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "Inwestomat",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}

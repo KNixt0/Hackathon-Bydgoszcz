@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "url": "https://www.youtube.com/watch?v=4txBD9vqer8",
+  "platform": "youtube",
+  "title": "Live Traidng 3",
+  "published_at": "2013-06-11",
+  "author": {
+   "name": "xtbpolska",
+   "handle": "@XTBPolska"
+  },
+  "seed": true,
+  "detected_days_ago": 4912
+ },
+ "text": "Live Traidng 3\n\n",
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "null",
+    "role": "investment_firm"
+   }
+  ]
+ }
+}
