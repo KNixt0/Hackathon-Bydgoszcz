@@ -145,7 +145,7 @@ def html_to_pdf(html: str, settings: Settings | None = None) -> bytes:
                     footer_template=(
                         '<div style="font-size:8px;width:100%;text-align:center;color:#666;'
                         "font-family:'DejaVu Sans',sans-serif\">"
-                        '#InvestWatch · strona <span class="pageNumber"></span> z '
+                        '#Watchit · strona <span class="pageNumber"></span> z '
                         '<span class="totalPages"></span>'
                         "</div>"
                     ),

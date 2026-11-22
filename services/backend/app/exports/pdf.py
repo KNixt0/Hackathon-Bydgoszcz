@@ -19,7 +19,7 @@ _env = Environment(
 )
 
 MODULES = {
-    1: "Moduł 1 · Finfluencerzy",
+    1: "Moduł 1 · Twórcy finansowi",
     2: "Moduł 2 · Zgodność informacji o ryzyku",
     3: "Moduł 3 · Doradztwo w szarej strefie",
 }

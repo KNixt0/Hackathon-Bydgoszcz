@@ -1,0 +1,46 @@
+{
+  "runtime": "Ollama 0.13.0, CPU",
+  "model": "qwen2.5:0.5b",
+  "workers": 2,
+  "jobs": [
+    {
+      "id": "94131c9e-9ca7-4f22-8abd-93341750bf3b",
+      "state": "done",
+      "processing_ms": 105784,
+      "queued_ms": 391
+    },
+    {
+      "id": "b50ed056-05ed-483c-8d01-ba1c8e457a7c",
+      "state": "done",
+      "processing_ms": 119100,
+      "queued_ms": 311
+    },
+    {
+      "id": "b9df6486-16fc-424f-a90d-03cc7354b383",
+      "state": "done",
+      "processing_ms": 82976,
+      "queued_ms": 105818
+    },
+    {
+      "id": "f1b2ccd3-5a8b-4867-9abe-27a940e548f8",
+      "state": "done",
+      "processing_ms": 104388,
+      "queued_ms": 438
+    },
+    {
+      "id": "79b75524-4d3c-47d2-82d2-b434c7a978a9",
+      "state": "done",
+      "processing_ms": 117770,
+      "queued_ms": 334
+    },
+    {
+      "id": "1a617216-d83c-4af6-be1b-1c6e7e5a91fd",
+      "state": "done",
+      "processing_ms": 83003,
+      "queued_ms": 104398
+    }
+  ],
+  "analysis_generation_http200": 12,
+  "workflow_result": "failed at PDF export: Chromium binary missing from isolated runner; analysis phase completed; remaining workflow checks not yet executed",
+  "source": "Actions run 44983776649, job 137089776030"
+}

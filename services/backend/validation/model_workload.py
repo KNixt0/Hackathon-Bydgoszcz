@@ -20,6 +20,7 @@ from fastapi.testclient import TestClient
 
 from app.main import api
 from app.pipeline import process_job
+from app.scraper.browser import html_to_pdf
 from validation.captured_input import CapturedFetcher
 
 out = Path(os.environ.get("VALIDATION_OUTPUT", "validation-results"))
@@ -49,6 +50,13 @@ with (
     patch("app.pipeline.get_fetcher", return_value=fetcher),
 ):
     request(client, "POST", "/api/auth/demo", json={"role": "SUPERVISOR"})
+    assert html_to_pdf("<html><body>Kontrola eksportu PDF</body></html>").startswith(b"%PDF")
+    report["model_digest"] = next(
+        model["digest"]
+        for model in httpx.get("http://127.0.0.1:11434/api/tags").json()["models"]
+        if model["name"] == report["model"]
+    )
+    assert report["model_digest"].startswith("a8b0c5157701"), "The test model tag changed"
     health = request(client, "GET", "/api/health").json()
     assert health["ai"]["llm_available"], health
     # Prove that the model actually generated text, rather than silently using fallback.
@@ -81,6 +89,13 @@ with (
             assert job["state"] == "done", job
         listing = request(client, "GET", "/api/incidents").json()
         assert listing["total"] == 3, "Replays created duplicate cases"
+        report["waves_completed"] = wave + 1
+        (out / "model-workload-progress.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))
+        print(
+            "WATCHIT_PHASE|"
+            + json.dumps({"wave": wave + 1, "cases": listing["total"], "jobs": report["jobs"]}),
+            flush=True,
+        )
         if wave == 0:
             first = listing["items"][0]["id"]
             assigned = request(client, "POST", f"/api/incidents/{first}/assign").json()
@@ -88,8 +103,11 @@ with (
             assert processing_start
             request(client, "POST", f"/api/incidents/{first}/transition", json={"to": "in_review"})
     report["workload_elapsed_ms"] = round((time.perf_counter() - started) * 1000)
+    analyses = []
     for summary in listing["items"]:
         case = request(client, "GET", f"/api/incidents/{summary['id']}").json()
+        analyses.append(case)
+        (out / "model-analyses.json").write_text(json.dumps(analyses, ensure_ascii=False, indent=2))
         assert len(case["rules"]) == 19
         versions = request(client, "GET", f"/api/incidents/{case['id']}/versions").json()["items"]
         assert len(versions) == 2
@@ -105,6 +123,7 @@ with (
                 "url": case["source"]["url"],
                 "firm": case["entities"]["investment_firm"],
                 "engine": case["engine"],
+                "rationale": case["debate"]["arbiter_rationale"],
                 "versions": len(versions),
             }
         )
