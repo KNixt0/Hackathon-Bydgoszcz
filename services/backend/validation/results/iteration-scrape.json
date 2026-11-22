@@ -1,0 +1,42 @@
+{
+  "at": "2026-11-22T03:58:10.732134+00:00",
+  "limit": 3,
+  "results": [
+    {
+      "url": "https://bossa.pl/oferta",
+      "at": "2026-11-22T03:58:01.167984+00:00",
+      "http_status": 200,
+      "final_url": "https://bossa.pl/oferta",
+      "html_bytes": 141550,
+      "engine": "httpx",
+      "title": "Oferta giełdowa",
+      "text_chars": 10040,
+      "sha256": "95bb6655a3d3bf3f8f88a94191c65b7086b09e2b7b575fff92a6d924aa466eee",
+      "elapsed_ms": 3272
+    },
+    {
+      "url": "https://www.xtb.com/pl/konto-i-oplaty",
+      "at": "2026-11-22T03:58:04.439729+00:00",
+      "http_status": 200,
+      "final_url": "https://www.xtb.com/pl/konto-i-oplaty",
+      "html_bytes": 437322,
+      "engine": "httpx",
+      "title": "Warunki, opłaty i prowizje",
+      "text_chars": 11751,
+      "sha256": "ea006b7daff02627671f98666ce0d326a6e1804c677a43f46195c5feb3a29f3d",
+      "elapsed_ms": 2721
+    },
+    {
+      "url": "https://www.bm.pkobp.pl/oferta/rachunek-inwestycyjny",
+      "at": "2026-11-22T03:58:07.160438+00:00",
+      "http_status": 200,
+      "final_url": "https://www.bm.pkobp.pl/oferta/rachunek-inwestycyjny",
+      "html_bytes": 649867,
+      "engine": "httpx",
+      "title": "Rachunek inwestycyjny",
+      "text_chars": 9476,
+      "sha256": "82534c6e8394e40766db362fa988d1cbe47e72775fa703e8cde82840cd1a9d1b",
+      "elapsed_ms": 3572
+    }
+  ]
+}

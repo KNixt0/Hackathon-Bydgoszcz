@@ -20,6 +20,15 @@ export function warsawInstant(input: string): number {
   return guess;
 }
 
+/** Reject malformed URL filters, impossible calendar dates and nonexistent Warsaw clock times. */
+export function validDateInput(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/.test(value)) return false;
+  const local = value.length === 10 ? `${value}T00:00` : value;
+  const parsed = Date.parse(`${local}:00Z`);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 16) === local
+    && (value.length === 10 || warsawInput(new Date(warsawInstant(value))) === value);
+}
+
 export function apiDate(value: string): string {
   return value.length === 10 || /Z$|[+-]\d\d:\d\d$/.test(value) ? value : new Date(warsawInstant(value)).toISOString();
 }

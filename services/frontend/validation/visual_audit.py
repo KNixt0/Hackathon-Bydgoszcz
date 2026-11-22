@@ -114,10 +114,10 @@ with sync_playwright() as playwright:
             reasoning.click()
             inspect(page, "reasoning", width)
         page.get_by_role("link", name="Kalibracja", exact=True).click()
-        page.get_by_label("Próg flagowania").wait_for()
+        page.get_by_label("Próg oznaczenia").wait_for()
         inspect(page, "calibration", width)
-        page.get_by_label("Próg flagowania").focus()
-        page.get_by_label("Próg flagowania").press("ArrowRight")
+        page.get_by_label("Próg oznaczenia").focus()
+        page.get_by_label("Próg oznaczenia").press("ArrowRight")
         save = page.get_by_role("button", name="Zapisz jako progi globalne")
         if save.count():
             save.click()

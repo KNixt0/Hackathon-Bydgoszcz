@@ -103,6 +103,6 @@ html=html.replace(/<link[^>]*href="([^"]+\.css)"[^>]*>/,(tag,file)=>{
  return '<style>'+css+'</style>';
 });
 html=html.replace(/<script[^>]*src="([^"]+\.js)"[^>]*><\/script>/,(tag,file)=>'<script type="module">'+fs.readFileSync(path.join(out,file),'utf8').replace(/<\/script/gi,'<\\/script')+'</script>');
-html=html.replace('<body>','<body><div style="padding:8px 24px;background:#eef2f7;border-bottom:1px solid #cad2dc;font:13px system-ui;color:#334155">3 rzeczywiste strony: BOŚ, XTB, PKO BP · pobrano 22.11.2026 · analiza lokalna bez modelu językowego · wyniki do weryfikacji · zmiany tylko w podglądzie</div>');
+html=html.replace('<body>','<body><div style="padding:12px 24px;background:#fff;border-left:4px solid #1a2f8c;border-bottom:1px solid #ddd;font:14px/1.45 Public Sans,system-ui;color:#161616">3 rzeczywiste strony: BOŚ, XTB, PKO BP · pobrano 22.11.2026 · analiza lokalna bez modelu językowego · wyniki do weryfikacji · zmiany tylko w podglądzie</div>');
 fs.writeFileSync(destination,html);
 process.stdout.write('Preview created: '+html.length+' bytes\n');

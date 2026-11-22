@@ -8,7 +8,7 @@ const FIELD_LABEL: Record<string, string> = {
   resolution_action: "Działanie końcowe",
   resolution_note: "Notatka",
   label: "Ocena",
-  flag: "Próg flagowania",
+  flag: "Próg oznaczenia",
   critical: "Próg krytyczny",
   method: "Sposób",
   format: "Format",

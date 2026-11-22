@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { apiDate, defaultDateBounds, matchesDates, processingDuration, warsawInput, warsawInstant } from "../../src/domain/dates";
+import { apiDate, defaultDateBounds, matchesDates, processingDuration, validDateInput, warsawInput, warsawInstant } from "../../src/domain/dates";
 
 describe("monitoring dates", () => {
+  it("rejects impossible URL dates and clock times instead of crashing an export", () => {
+    expect(validDateInput("2026-02-30T12:00")).toBe(false);
+    expect(validDateInput("2026-99-22T20:50")).toBe(false);
+    expect(validDateInput("2026-03-29T02:30")).toBe(false);
+    expect(validDateInput("2026-11-22T20:50")).toBe(true);
+  });
   it("uses the latest 20:50 in Warsaw and does not choose a future start", () => {
     const before = defaultDateBounds(new Date("2026-11-22T01:00:00Z"));
     expect(warsawInput(before.earliest)).toBe("2026-11-21T20:50");

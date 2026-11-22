@@ -29,3 +29,8 @@ def test_explicit_article_author_retains_precedence():
 def test_unrelated_organization_does_not_become_the_site_publisher():
     other = {**ORGANIZATION, "url": "https://unrelated.example/"}
     assert extract(page(WEBSITE, other)).author["name"] == "xtbpl"
+
+
+def test_malformed_publisher_url_does_not_crash_extraction():
+    invalid = {**ORGANIZATION, "url": "https://[invalid/"}
+    assert extract(page(WEBSITE, invalid)).author["name"] == "xtbpl"

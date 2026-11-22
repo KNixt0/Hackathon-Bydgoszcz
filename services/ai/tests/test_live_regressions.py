@@ -45,3 +45,19 @@ def test_all_three_modules_are_checked_even_when_not_all_apply(analyze, engine, 
         3,
     }
     assert len(result.rules) == 19
+
+
+def test_cached_brand_index_is_reused_and_replaced_with_registry_snapshot(tmp_path):
+    from app.registries.store import RegistryStore
+
+    store = RegistryStore(data_dir=tmp_path, demo_overlay=False)
+    registry = "knf_investment_firms"
+    old_name, new_name = "Zorza Alfa Testowa", "Zorza Beta Testowa"
+    store.replace(registry, "2026-11-22", [{"name": old_name}])
+    assert store.brands_in_text(registry, old_name, fold(old_name))
+    cached = store.snapshot(registry).brand_index
+    store.brands_in_text(registry, old_name, fold(old_name))
+    assert store.snapshot(registry).brand_index is cached
+    store.replace(registry, "2026-11-22", [{"name": new_name}])
+    assert not store.brands_in_text(registry, old_name, fold(old_name))
+    assert store.brands_in_text(registry, new_name, fold(new_name))

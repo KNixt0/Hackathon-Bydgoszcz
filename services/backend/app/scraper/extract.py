@@ -128,6 +128,16 @@ _CONTENT_TYPES = {
 }
 
 
+def _metadata_host(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        parts = urlsplit(value)
+        return parts.hostname if parts.scheme in ("http", "https") else None
+    except ValueError:
+        return None
+
+
 def _author_from(value: Any) -> dict[str, str] | None:
     if isinstance(value, list):
         value = value[0] if value else None
@@ -255,11 +265,8 @@ def extract(html: str) -> Extracted:
             organization = organizations[0]
             organization_url = organization.get("url")
             if isinstance(organization_url, str):
-                host = urlsplit(organization_url).hostname
-                if host and any(
-                    isinstance(site.get("url"), str) and urlsplit(site["url"]).hostname == host
-                    for site in websites
-                ):
+                host = _metadata_host(organization_url)
+                if host and any(_metadata_host(site.get("url")) == host for site in websites):
                     author = _author_from(organization)
     handle = meta.get("twitter:creator") or meta.get("twitter:site")
     if handle and handle.startswith("@"):

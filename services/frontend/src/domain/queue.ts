@@ -1,4 +1,4 @@
-import { apiDate, matchesDates } from "./dates";
+import { apiDate, matchesDates, validDateInput } from "./dates";
 import type { IncidentSummary, ModuleId, Platform, RiskLevel, Status } from "../types/incident";
 import { deriveLevel, LEVEL_ORDER, type Thresholds } from "./levels";
 import { type PriorityTier } from "./priority";
@@ -121,7 +121,6 @@ export function filtersToSearch(f: QueueFilters): URLSearchParams {
 const PLATFORMS: Platform[] = ["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"];
 const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"];
 const LEVELS: RiskLevel[] = ["red", "orange", "green"];
-const DATE_RE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/;
 
 function oneOf<T extends string>(value: string | null, allowed: readonly T[]): T | "" {
   return value && (allowed as readonly string[]).includes(value) ? (value as T) : "";
@@ -133,8 +132,8 @@ export function filtersFromSearch(p: URLSearchParams): QueueFilters {
   const to = p.get("do") ?? "";
   return {
     q: p.get("q") ?? "",
-    from: DATE_RE.test(from) ? from : "",
-    to: DATE_RE.test(to) ? to : "",
+    from: validDateInput(from) ? from : "",
+    to: validDateInput(to) ? to : "",
     platform: oneOf(p.get("zrodlo"), PLATFORMS),
     level: oneOf(p.get("poziom"), LEVELS),
     module: m === 1 || m === 2 || m === 3 ? m : 0,

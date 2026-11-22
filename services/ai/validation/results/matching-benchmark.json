@@ -1,0 +1,32 @@
+{
+  "method": "same process, same captures and register entries; one warmup and 25 measured iterations per function; reusable trie index prebuilt",
+  "scope": "brand matching only, not whole analysis or production throughput",
+  "index_build_ms": 18.302,
+  "entries": 751,
+  "results": [
+    {
+      "url": "https://bossa.pl/oferta",
+      "before_median_ms": 2.366,
+      "before_inc_hits": 1,
+      "after_median_ms": 0.262,
+      "after_inc_hits": 0,
+      "speedup": 9.03
+    },
+    {
+      "url": "https://www.xtb.com/pl/konto-i-oplaty",
+      "before_median_ms": 2.901,
+      "before_inc_hits": 0,
+      "after_median_ms": 0.334,
+      "after_inc_hits": 0,
+      "speedup": 8.69
+    },
+    {
+      "url": "https://www.bm.pkobp.pl/oferta/rachunek-inwestycyjny",
+      "before_median_ms": 2.228,
+      "before_inc_hits": 1,
+      "after_median_ms": 0.249,
+      "after_inc_hits": 0,
+      "speedup": 8.95
+    }
+  ]
+}
