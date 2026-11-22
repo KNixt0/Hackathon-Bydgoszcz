@@ -102,6 +102,7 @@ export function mockApi(override?: Route, { user = analystUser, demoLogin = true
     if (/^\/api\/incidents\/[^/]+\/history$/.test(path)) return json({ items: [] });
     if (/^\/api\/incidents\/[^/]+\/versions$/.test(path)) return json({ items: [] });
     if (path === "/api/settings/thresholds/history") return json({ items: [] });
+    if (path === "/api/notifications") return json({ items: [] });
     if (path === "/api/settings/thresholds/preview") return json(null, 204);
     if (/^\/api\/incidents\/[^/]+\/rescan$/.test(path)) return json({ job_id: "job-rescan" }, 202);
     const reportsOf = path.match(/^\/api\/incidents\/([^/]+)\/reports$/);

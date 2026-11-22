@@ -10,6 +10,7 @@ import { Notices } from "../ui/Notices";
 import { CommandPalette, type PaletteCommand } from "./CommandPalette";
 import { DemoMenu } from "./DemoMenu";
 import { JobsMenu } from "./JobsMenu";
+import { NotificationsMenu } from "./NotificationsMenu";
 import { ScanDialog } from "./ScanDialog";
 import { ConnectionIndicator } from "./ConnectionIndicator";
 import { Header } from "./Header";
@@ -69,6 +70,7 @@ export function AppShell() {
         trailing={<UserChip user={user} onLogout={() => void logout()} />}
       >
         <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
+        <NotificationsMenu />
         <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
         <ConnectionIndicator status={connection} />
       </Header>

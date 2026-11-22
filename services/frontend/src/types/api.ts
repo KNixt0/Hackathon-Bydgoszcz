@@ -78,6 +78,15 @@ export interface TransitionRequest {
   resolution_action?: ResolutionAction;
 }
 
+/** A calibration change, one per user with its own read state (GET /api/notifications). */
+export interface CalibrationNotification {
+  id: number;
+  created_at: string;
+  read_at: string | null;
+  message: string;
+  details: Record<string, unknown>;
+}
+
 export interface ThresholdSettings {
   flag: number;
   critical: number;

@@ -1,5 +1,5 @@
 import type {
-  AuditEntry, AuthConfig, CalibrationSet, Health, IncidentList, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
+  AuditEntry, AuthConfig, CalibrationNotification, CalibrationSet, Health, IncidentList, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
 } from "../types/api";
 import type { CaseLabel, Incident, ObservationVersion, Role } from "../types/incident";
 import { request, requestText } from "./client";
@@ -29,6 +29,9 @@ function query(params: Record<string, string | number | undefined>): string {
 }
 
 export const api = {
+  notifications: (signal?: AbortSignal) => request<{ items: CalibrationNotification[] }>("/api/notifications", { signal }),
+  readNotification: (notificationId: number) =>
+    request<{ id: number; read_at: string }>(`/api/notifications/${notificationId}/read`, post()),
   health: (signal?: AbortSignal) => request<Health>("/api/health", { signal }),
   listIncidents: (signal?: AbortSignal) => request<IncidentList>("/api/incidents", { signal }),
   getIncident: (incidentId: string, signal?: AbortSignal) => request<Incident>(`/api/incidents/${id(incidentId)}`, { signal }),

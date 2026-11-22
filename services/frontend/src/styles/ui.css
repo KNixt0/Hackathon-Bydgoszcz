@@ -228,6 +228,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); visibility: hidden; opacity: 0; transition: opacity var(--dur) ease-out; pointer-events: none;
 }
 .hint:hover .hint__bubble, .hint__trigger:focus-visible + .hint__bubble { visibility: visible; opacity: 1; }
+.hint--dismissed .hint__bubble { visibility: hidden !important; opacity: 0 !important; }
 @media (prefers-reduced-motion: reduce) { .hint__bubble { transition: none; } }
 
 /* WatchIt audit log (Entra-style): folding filter bar of pills, table + detail pane */
