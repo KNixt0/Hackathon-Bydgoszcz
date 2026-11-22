@@ -41,10 +41,6 @@ export function AppShell() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setPaletteOpen]);
 
-  const triggerDemo = async () => {
-    const failure = await scans.triggerDemo();
-    notify(failure ? "error" : "info", failure ?? "Próbka demonstracyjna została przekazana do analizy. Postęp widać w zadaniach.");
-  };
   const importSamples = async () => {
     const failure = await scans.importSamples();
     notify(failure ? "error" : "info", failure ?? "Import próbek rozpoczęty. Nowe sprawy pojawią się w kolejce.");
@@ -57,8 +53,7 @@ export function AppShell() {
 
   const onCommand = (command: PaletteCommand) => {
     if (command.type === "navigate") navigate(command.to);
-    else if (command.type === "scan") ui.setScanOpen(true);
-    else void triggerDemo();
+    else ui.setScanOpen(true);
   };
 
   return (
@@ -71,7 +66,7 @@ export function AppShell() {
       >
         <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
         <NotificationsMenu />
-        <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
+        <DemoMenu onImportSamples={() => void importSamples()} />
       </Header>
       <main id="tresc" tabIndex={-1} className="main">
         <Outlet />

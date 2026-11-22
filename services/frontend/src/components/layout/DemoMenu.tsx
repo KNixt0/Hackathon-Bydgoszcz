@@ -1,12 +1,12 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ChevronDown, FolderInput, Play } from "lucide-react";
+import { ChevronDown, FolderInput } from "lucide-react";
 
 interface Props {
-  onTriggerDemo: () => void;
   onImportSamples: () => void;
 }
 
-export function DemoMenu({ onTriggerDemo, onImportSamples }: Props) {
+/** WatchIT works on real scraped data only, so the synthetic demo sample is not offered here. */
+export function DemoMenu({ onImportSamples }: Props) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -17,13 +17,6 @@ export function DemoMenu({ onTriggerDemo, onImportSamples }: Props) {
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="menu" align="end" sideOffset={8}>
           <DropdownMenu.Label className="menu__label">Dane demonstracyjne</DropdownMenu.Label>
-          <DropdownMenu.Item className="menu__item" onSelect={onTriggerDemo}>
-            <Play aria-hidden="true" />
-            <span>
-              <span className="menu__item-title">Uruchom próbkę demonstracyjną</span>
-              <span className="menu__item-hint">Przepuszcza nieznaną próbkę przez pełny potok: pobranie, analiza, alert.</span>
-            </span>
-          </DropdownMenu.Item>
           <DropdownMenu.Item className="menu__item" onSelect={onImportSamples}>
             <FolderInput aria-hidden="true" />
             <span>

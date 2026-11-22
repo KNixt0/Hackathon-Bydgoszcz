@@ -287,15 +287,14 @@ describe("scan, demo and jobs", () => {
     expect(await within(dialog).findByText("Domena jest na liście wykluczeń.")).toBeInTheDocument();
   });
 
-  it("triggers the demo sample from the demo menu", async () => {
+  it("offers only the sample import in the demo menu (real data, no synthetic demo sample)", async () => {
     const user = userEvent.setup();
-    const { calls } = mockApi();
+    mockApi();
     renderApp();
     await ready();
     await user.click(screen.getByRole("button", { name: "Dane demonstracyjne" }));
-    await user.click(await screen.findByRole("menuitem", { name: /Uruchom próbkę demo/ }));
-    await waitFor(() => expect(calls.find((c) => c.path === "/api/demo/trigger")?.body).toEqual({ case: "case3" }));
-    expect(await screen.findByText(/Próbka demonstracyjna została przekazana/)).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Importuj próbki/ })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Uruchom próbkę demo/ })).not.toBeInTheDocument();
   });
 
   it("opens the command palette with Ctrl+K and jumps to a case", async () => {

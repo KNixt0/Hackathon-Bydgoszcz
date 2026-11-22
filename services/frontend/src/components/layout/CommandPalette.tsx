@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Command } from "cmdk";
-import { CornerDownLeft, FileSearch, Filter, Inbox, Play, Radar, Search, SlidersHorizontal } from "lucide-react";
+import { CornerDownLeft, FileSearch, Filter, Inbox, Radar, Search, SlidersHorizontal } from "lucide-react";
 import { deriveLevel, type Thresholds } from "../../domain/levels";
 import { LEVEL_LABEL, MODULE_LABEL, MODULES } from "../../domain/labels";
 import { LEVELS } from "../../domain/levels";
@@ -10,8 +10,7 @@ import { LevelBadge } from "../ui/LevelBadge";
 
 export type PaletteCommand =
   | { type: "navigate"; to: string }
-  | { type: "scan" }
-  | { type: "demo" };
+  | { type: "scan" };
 
 interface Props {
   open: boolean;
@@ -58,9 +57,6 @@ export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCo
                 </Command.Item>
                 <Command.Item value="analiza url adres strona skanuj" onSelect={() => run({ type: "scan" })}>
                   <Radar aria-hidden="true" /><span className="palette__item-main">Analiza URL</span>
-                </Command.Item>
-                <Command.Item value="uruchom próbkę demo" onSelect={() => run({ type: "demo" })}>
-                  <Play aria-hidden="true" /><span className="palette__item-main">Uruchom próbkę demonstracyjną</span>
                 </Command.Item>
               </Command.Group>
 
