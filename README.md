@@ -4,6 +4,8 @@ System on-premise dla UKNF: zbiera reklamy i oferty, a następnie oznacza (1) re
 
 ## Szybki start
 
+Pełna instrukcja krok po kroku dla jury: [SETUP.md](SETUP.md).
+
 ```sh
 cp .env.example .env
 docker compose up --build
