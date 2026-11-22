@@ -52,28 +52,33 @@
 .dl svg { width: 1.125em; height: 1.125em; flex: none; }
 
 /* ── Queue table: 14px, 2px rule under the header, 1px rules between rows, no fills */
-.queue { min-width: 1100px; table-layout: fixed; }
+.queue { min-width: 1240px; table-layout: fixed; }
+.queue col.c-id { width: 96px; }
+.queue col.c-started { width: 150px; }
 .queue col.c-level { width: 144px; }
 .queue col.c-src { width: 108px; }
 .queue col.c-mod { width: 64px; }
 .queue col.c-rules { width: 132px; }
-.queue col.c-crowd { width: 164px; }
 .queue col.c-status { width: 180px; }
-.queue col.c-when { width: 96px; }
+.queue col.c-when { width: 132px; }
 .queue th { padding: 8px 12px; border-bottom: 2px solid var(--ink); white-space: nowrap; vertical-align: bottom; }
 .queue td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-.queue th:first-child, .queue td:first-child { padding-left: 0; }
 .queue th:last-child, .queue td:last-child { padding-right: 0; }
-.queue tbody tr:hover td { background: var(--hover); }
+.queue--striped tbody tr:nth-child(even) td { background: var(--stripe); }
+.queue th:first-child, .queue td:first-child { padding-left: 8px; }
+.queue tbody tr:hover td { background: var(--sel); }
+/* sortable headers: the whole label is the button */
+.sortbtn { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; color: var(--ink); cursor: pointer; text-align: left; white-space: normal; }
+.sortbtn svg { width: 14px; height: 14px; flex: none; color: var(--muted); }
+.sortbtn--on svg { color: var(--accent); }
+.sortbtn:hover { color: var(--accent); }
+.sortbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .queue__level { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
 .queue__case { min-width: 0; }
 .queue__title { display: block; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .queue__sub { display: block; color: var(--muted); }
 .queue__cell-main { display: block; }
 .queue__rules { overflow-wrap: anywhere; }
-.queue__crowd { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
-.queue__reports { color: var(--ink); }
-.queue__crowd .tier { font-size: var(--fs-14); }
 .queue__status { display: flex; flex-direction: column; min-width: 0; }
 .queue__status a { font-weight: 500; }
 .queue__new { margin-left: 8px; }
@@ -108,3 +113,20 @@
 }
 .audit__f-case { width: min(360px, 100%); }
 .qpanel .state, .strip .state, .calib__sec .state, .csec .state, .vpanel .state { padding-left: 0; padding-right: 0; }
+
+/* WatchIt: the extra filters fold away under the level tabs */
+.qtool__toggle { align-self: flex-end; }
+.qtool__toggle svg { width: 16px; height: 16px; }
+.qtool__chev { transition: transform var(--dur) ease-out; }
+.qtool__toggle--on .qtool__chev { transform: rotate(180deg); }
+.qtool__row--filters[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .qtool__chev { transition: none; } }
+
+/* WatchIt: range presets for the inflow chart (segmented control, square, register style) */
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--r-sm); overflow: hidden; }
+.seg__btn { padding: 4px 12px; border: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-14); cursor: pointer; }
+.seg__btn + .seg__btn { border-left: 1px solid var(--line-strong); }
+.seg__btn:hover { background: var(--tint); }
+.seg__btn--on { background: var(--accent); color: #fff; font-weight: 700; }
+.seg__btn--on:hover { background: var(--accent-hover); }
+.seg__btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }

@@ -85,7 +85,8 @@ export interface ThresholdSettings {
   updated_at: string | null;
 }
 
-export type AuditAction = "login" | "assign" | "transition" | "label" | "thresholds" | "export" | "rescan" | "public_report";
+export type AuditAction =
+  | "login" | "assign" | "transition" | "label" | "thresholds" | "calibration_preview" | "export" | "rescan" | "public_report";
 
 export interface AuditEntry {
   id: number | string;

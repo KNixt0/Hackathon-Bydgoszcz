@@ -4,7 +4,6 @@ import type {
   ContentState, FollowUpOutcome, ScopeCategory,
 } from "../types/incident";
 import type { AuditAction, ReportCategory, ScanState } from "../types/api";
-import type { PriorityTier } from "./priority";
 
 export const LEVEL_LABEL: Record<RiskLevel, string> = {
   red: "Krytyczne",
@@ -77,20 +76,9 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   label: "Ocena trafności",
   thresholds: "Zmiana progów",
   export: "Eksport",
-  rescan: "Ponowne skanowanie",
+  rescan: "Ponowne sprawdzenie źródła",
+  calibration_preview: "Zmiana progów (podgląd własny)",
   public_report: "Zgłoszenie użytkownika",
-};
-
-export const TIER_LABEL: Record<Exclude<PriorityTier, "low_watch">, string> = {
-  critical_viral: "Krytyczne i zgłaszane",
-  high_risk_early: "Wysokie ryzyko",
-  crowd_anomaly: "Rozbieżność: zgłaszane przez użytkowników",
-};
-export const TIER_FILTER_LABEL: Record<PriorityTier, string> = { ...TIER_LABEL, low_watch: "Niskie ryzyko, mało zgłoszeń" };
-export const TIER_HINT: Record<Exclude<PriorityTier, "low_watch">, string> = {
-  critical_viral: "Wysoki wynik silnika i co najmniej 5 zgłoszeń użytkowników.",
-  high_risk_early: "Wysoki wynik silnika, jeszcze mało zgłoszeń użytkowników.",
-  crowd_anomaly: "Silnik ocenił materiał nisko, a użytkownicy zgłaszają go masowo. To możliwy fałszywie ujemny wynik modelu: warto zweryfikować ręcznie.",
 };
 
 export const REPORT_CATEGORY_LABEL: Record<ReportCategory, string> = {
@@ -100,11 +88,11 @@ export const REPORT_CATEGORY_LABEL: Record<ReportCategory, string> = {
 };
 
 export const MODULE_LABEL: Record<ModuleId, string> = {
-  1: "Finfluencerzy i podmioty trzecie",
+  1: "Reklamy podmiotów trzecich",
   2: "Zgodność i informacja o ryzyku",
-  3: "Shadow advisory",
+  3: "Doradztwo bez zezwolenia",
 };
-export const MODULE_SHORT: Record<ModuleId, string> = { 1: "Finfluencerzy", 2: "Informacja o ryzyku", 3: "Shadow advisory" };
+export const MODULE_SHORT: Record<ModuleId, string> = { 1: "Podmioty trzecie", 2: "Informacja o ryzyku", 3: "Doradztwo bez zezwolenia" };
 export const MODULES: ModuleId[] = [1, 2, 3];
 
 export const PLATFORM_LABEL: Record<Platform, string> = {
@@ -155,7 +143,7 @@ export const NODE_TYPE_LABEL: Record<GraphNodeType, string> = {
   company: "Spółka",
   person: "Osoba",
   pr_agency: "Agencja PR",
-  influencer: "Influencer",
+  influencer: "Twórca internetowy",
   ad: "Materiał reklamowy",
   advisor: "Doradca",
 };

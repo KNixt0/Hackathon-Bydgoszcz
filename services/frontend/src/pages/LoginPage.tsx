@@ -1,6 +1,6 @@
 import { CircleAlert, Info } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { PublicHeader } from "../components/layout/PublicHeader";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
@@ -21,9 +21,9 @@ export function LoginPage() {
   const [busy, setBusy] = useState<"form" | Role | null>(null);
 
   useEffect(() => {
-    document.title = "Logowanie · InvestWatch";
+    document.title = "Logowanie · WatchIt";
     return () => {
-      document.title = "InvestWatch · UKNF";
+      document.title = "WatchIt · UKNF";
     };
   }, []);
 
@@ -96,13 +96,12 @@ export function LoginPage() {
             <h2 className="subhead" id="login-demo-h">Konta demonstracyjne</h2>
             <p className="field__hint">Dostęp bez hasła, tylko w trybie demonstracyjnym.</p>
             <div className="login__demo-acts">
-              <Button onClick={() => void demo("ANALYST")} disabled={busy !== null}>Zaloguj jako analityk (demo)</Button>
-              <Button onClick={() => void demo("SUPERVISOR")} disabled={busy !== null}>Zaloguj jako kierownik (demo)</Button>
+              <Button onClick={() => void demo("ANALYST")} disabled={busy !== null}>Zaloguj jako analityk (konto demonstracyjne)</Button>
+              <Button onClick={() => void demo("SUPERVISOR")} disabled={busy !== null}>Zaloguj jako kierownik (konto demonstracyjne)</Button>
             </div>
           </section>
         )}
         <p className="login__foot">Narzędzie analityczne UKNF, dane przetwarzane lokalnie. Logowania i decyzje w sprawach są zapisywane w dzienniku audytu.</p>
-        <p className="login__foot"><Link to="/zglos">Zgłoś ofertę lub reklamę</Link> (dla osób spoza UKNF)</p>
       </main>
     </div>
   );

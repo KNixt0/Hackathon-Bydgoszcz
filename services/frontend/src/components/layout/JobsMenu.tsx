@@ -51,7 +51,7 @@ export function JobsMenu({ jobs, activeCount, onClearFinished }: Props) {
             )}
           </div>
           {jobs.length === 0 ? (
-            <EmptyState compact title="Brak zadań" text="Zeskanuj adres URL albo uruchom próbkę demo, aby zobaczyć postęp przetwarzania." />
+            <EmptyState compact title="Brak zadań" text="Przeanalizuj adres URL albo uruchom próbkę demonstracyjną, aby zobaczyć postęp przetwarzania." />
           ) : (
             <ul className="jobs__list">
               {jobs.map((job) => <JobProgress key={job.id} job={job} />)}

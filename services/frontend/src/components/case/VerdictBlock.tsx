@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { formatScore } from "../../domain/format";
 import { MODULE_LABEL, SEVERITY_LABEL } from "../../domain/labels";
 import { complianceScore, deriveLevel, type Thresholds } from "../../domain/levels";
@@ -14,14 +16,24 @@ interface Props {
   thresholds: Thresholds;
 }
 
-/** "Ocena": the verdict as a sentence first (finding word + the engine's summary + violated criteria), then the numbers. */
+/**
+ * WatchIt "Werdykt AI": optional, folded behind a button. Inside: the sentence first (finding word + the
+ * engine's summary + violated criteria), then the numbers and the findings.
+ */
 export function VerdictBlock({ incident, thresholds }: Props) {
+  const [open, setOpen] = useState(false);
   const level = deriveLevel(incident.risk_score, thresholds);
   const failed = incident.rules.filter((r) => r.status === "fail").map((r) => r.id);
   const findings = incident.module_results.flatMap((m) => m.findings.map((f) => ({ ...f, module: m.module })));
   return (
     <section className="csec csec--first" id="werdykt" aria-labelledby="werdykt-h">
-      <h2 className="section-title" id="werdykt-h">Ocena</h2>
+      <h2 className="section-title" id="werdykt-h">Werdykt AI</h2>
+      <button
+        type="button" className="btn verdict__toggle" aria-expanded={open} aria-controls="werdykt-tresc" onClick={() => setOpen((v) => !v)}
+      >
+        {open ? "Ukryj werdykt AI" : "Pokaż werdykt AI"}<ChevronDown aria-hidden="true" className={open ? "chev chev--up" : "chev"} />
+      </button>
+      <div id="werdykt-tresc" hidden={!open}>
       <p className="verd" data-testid="verdict-sentence">
         <b className={`verd__lead verd__lead--${level}`}>{LEAD[level]}</b> {incident.summary}
         {failed.length > 0 && !/naruszone kryteria/i.test(incident.summary) && <> Naruszone kryteria: {listPl(failed)}.</>}
@@ -29,7 +41,7 @@ export function VerdictBlock({ incident, thresholds }: Props) {
       <div className="score-row">
         <LevelBadge level={level} size="lg" />
         <span className="score-row__item">
-          <span className="score-row__label">Compliance Score</span>
+          <span className="score-row__label">Wskaźnik zgodności</span>
           <span className="score-row__value num" data-testid="compliance-score">{complianceScore(incident.risk_score)}</span>
           <span className="score-row__label">z 100</span>
         </span>
@@ -59,6 +71,7 @@ export function VerdictBlock({ incident, thresholds }: Props) {
           </ol>
         </div>
       )}
+      </div>
     </section>
   );
 }

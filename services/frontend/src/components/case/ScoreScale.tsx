@@ -55,7 +55,7 @@ export function ScoreScale({ riskScore, thresholds }: Props) {
       </div>
       <div className="ds__mk" aria-hidden="true"><span className="ds__nd" style={{ left: `${risk}%` }} /></div>
       <figcaption>
-        Odczyt: ryzyko <b className="num">{formatScore(riskScore)}</b> z 100, Compliance Score <b className="num">{complianceScore(riskScore)}</b>.
+        Odczyt: ryzyko <b className="num">{formatScore(riskScore)}</b> z 100, wskaźnik zgodności <b className="num">{complianceScore(riskScore)}</b>.
         Progi na skali ryzyka: oznaczenie od <b className="num">{thresholds.orange}</b>, krytyczne od <b className="num">{thresholds.red}</b>.
         <span className="ds__nar"> Górna skala to ryzyko, dolna to Compliance Score (100 minus ryzyko).</span>
       </figcaption>

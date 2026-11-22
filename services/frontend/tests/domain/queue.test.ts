@@ -78,7 +78,7 @@ describe("applyQueue on the fixture queue", () => {
 
 describe("filters ↔ URL", () => {
   it("round-trips through search params", () => {
-    const f = { q: "cfd", from: "2026-11-01", to: "2026-11-20", platform: "youtube" as const, level: "red" as const, module: 2 as const, status: "new" as const, tier: "" as const, sort: "risk" as const };
+    const f = { q: "cfd", from: "2026-11-21", to: "2026-11-21", platform: "youtube" as const, level: "red" as const, module: 2 as const, status: "new" as const, sort: "detected" as const, dir: "asc" as const };
     expect(filtersFromSearch(filtersToSearch(f))).toEqual(f);
     expect(activeFilterCount(f)).toBe(7);
   });
@@ -160,5 +160,22 @@ describe("trendRows", () => {
   it("can be limited to one module", () => {
     const m3 = trendRows(trends.days, T, 3).reduce((n, r) => n + r.red + r.orange + r.green, 0);
     expect(m3).toBe(incidentSummaries.filter((i) => i.primary_module === 3).length);
+  });
+});
+
+describe("WatchIt: dates and column sorting", () => {
+  it("never accepts a date before the system start or after today from the URL", () => {
+    const f = filtersFromSearch(new URLSearchParams("od=2026-10-01&do=2999-01-01"));
+    expect(f.from).toBe("2026-11-21");
+    expect(f.to <= new Date().toISOString().slice(0, 10) || f.to.length === 10).toBe(true);
+  });
+
+  it("sorts by any column in both directions", () => {
+    const a = make("a", 10, { created_at: "2026-11-21T08:00:00Z", workflow: { assigned_to: null, label: "unlabeled", started_at: "2026-11-21T09:00:00Z", closed_at: null } });
+    const b = make("b", 90, { created_at: "2026-11-21T10:00:00Z", workflow: { assigned_to: null, label: "unlabeled", started_at: null, closed_at: null } });
+    expect(sortQueue([a, b], T, [], "detected", "asc").map((i) => i.id)).toEqual(["a", "b"]);
+    expect(sortQueue([a, b], T, [], "detected", "desc").map((i) => i.id)).toEqual(["b", "a"]);
+    expect(sortQueue([a, b], T, [], "started", "desc").map((i) => i.id)).toEqual(["a", "b"]);
+    expect(sortQueue([a, b], T, [], "risk", "asc").map((i) => i.id)).toEqual(["a", "b"]);
   });
 });

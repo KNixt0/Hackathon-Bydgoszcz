@@ -26,9 +26,8 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
   return (
     <header className="hd">
       <div className="hd__top">
-        <Link to="/" className="hd__svc" aria-label="InvestWatch, kolejka spraw">
-          <span className="hd__name">InvestWatch</span>
-          <span className="hd__tag">Nadzór nad reklamą finansową</span>
+        <Link to="/" className="hd__svc" aria-label="WatchIt, kolejka spraw">
+          <span className="hd__name">WatchIt</span>
         </Link>
         <div className="hd__qa">
           <span className="hd__actions">
@@ -39,7 +38,7 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
               <Search aria-hidden="true" />Szukaj<kbd className="kbd hd__kbd" aria-hidden="true">{shortcutLabel}</kbd>
             </Button>
             <Button variant="primary" onClick={onOpenScan}>
-              <Radar aria-hidden="true" />Skanuj URL
+              <Radar aria-hidden="true" />Analiza URL
             </Button>
           </span>
           {children}

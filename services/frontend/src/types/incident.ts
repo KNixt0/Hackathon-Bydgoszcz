@@ -18,6 +18,9 @@ export interface Workflow {
   resolution_action: ResolutionAction | null;
   resolution_note: string;
   label: CaseLabel;
+  /** WatchIt: when somebody started working on the case, and when it was closed */
+  started_at?: string | null;
+  closed_at?: string | null;
 }
 export type RuleId =
   | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11"
@@ -320,7 +323,7 @@ export type IncidentSummary = Pick<
   advertiser: string | null;
   firm: string | null;
   failed_rules: RuleId[];
-  workflow: Pick<Workflow, "assigned_to" | "label">;
+  workflow: Pick<Workflow, "assigned_to" | "label" | "started_at" | "closed_at">;
   user_reports_count: number;
   priority_score: number;
   /** Contract v4 */

@@ -4,7 +4,7 @@ import { REGISTRY_STATUS_LABEL } from "../../domain/labels";
 import { Mark, type MarkTone } from "../ui/Mark";
 
 const KIND_LABEL: Record<Party["kind"], string> = {
-  investment_firm: "Firma inwestycyjna", advertiser: "Reklamujący", influencer: "Influencer", pr_agency: "Agencja PR",
+  investment_firm: "Firma inwestycyjna", advertiser: "Reklamujący", influencer: "Twórca internetowy", pr_agency: "Agencja PR",
   advisor: "Doradca", lawyer: "Prawnik", company: "Spółka", person: "Osoba",
 };
 

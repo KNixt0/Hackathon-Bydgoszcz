@@ -34,7 +34,7 @@ describe("login and session", () => {
     const socket = new FakeSocket();
     renderApp({ route: `/sprawy/${orangeCase.id}`, socket });
     await onLoginPage();
-    await user.click(screen.getByRole("button", { name: "Zaloguj jako analityk (demo)" }));
+    await user.click(screen.getByRole("button", { name: "Zaloguj jako analityk (konto demonstracyjne)" }));
     expect(await screen.findByRole("heading", { level: 1, name: orangeCase.title })).toBeInTheDocument();
     expect(calls.find((c) => c.path === "/api/auth/demo")?.body).toEqual({ role: "ANALYST" });
     const chip = within(screen.getByTestId("user-chip"));

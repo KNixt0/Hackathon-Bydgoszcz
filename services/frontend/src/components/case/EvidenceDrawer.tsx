@@ -148,12 +148,12 @@ function EvidenceBody({ evidence: ev, incident }: { evidence: Evidence; incident
       )}
 
       {ev.url && (
-        <Section title="Adres"><ExternalUrl url={ev.url} /></Section>
+        <Section title="Adres URL"><ExternalUrl url={ev.url} /></Section>
       )}
 
       <Section title="Materiał źródłowy">
         <dl className="kv kv--compact">
-          <dt>Adres</dt><dd><ExternalUrl url={incident.source.url} /></dd>
+          <dt>Adres URL</dt><dd><ExternalUrl url={incident.source.url} /></dd>
           <dt>Pobrano</dt><dd>{formatDateTime(incident.source.fetched_at)}</dd>
         </dl>
       </Section>

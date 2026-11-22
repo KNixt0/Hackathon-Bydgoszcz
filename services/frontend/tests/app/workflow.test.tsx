@@ -202,7 +202,7 @@ describe("global thresholds", () => {
     await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     await waitFor(() => expect(calls.find((c) => c.method === "PUT")?.body).toEqual({ flag: 30, critical: 70 }));
     expect(await screen.findByText(/Ustawił kierownik@uknf.local/)).toBeInTheDocument();
-    expect(await screen.findByText(/Zapisano progi globalne: oznaczenie od 30, krytyczne od 70/)).toBeInTheDocument();
+    expect(screen.queryByText(/Zapisano progi globalne/)).not.toBeInTheDocument(); // WatchIt: no notification, the history records it
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
     expect(window.localStorage.getItem("investwatch.thresholds.v2")).toBeNull();
   });

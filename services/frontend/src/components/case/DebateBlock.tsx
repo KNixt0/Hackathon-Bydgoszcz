@@ -1,7 +1,7 @@
 import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { formatPercent } from "../../domain/format";
-import { CLAIM_VERDICT_LABEL } from "../../domain/labels";
-import type { Claim, Debate, DebateRound } from "../../types/incident";
+import { ACTION_LABEL, CLAIM_VERDICT_LABEL } from "../../domain/labels";
+import type { Claim, Debate, DebateRound, Recommendation } from "../../types/incident";
 import { EmptyState } from "../ui/States";
 import { EvidenceChips } from "./EvidenceChips";
 
@@ -27,12 +27,12 @@ function Column({ stance, claims, kept }: { stance: Claim["stance"]; claims: Cla
     <div className="debate__col" data-testid={`debate-${stance}`}>
       <div className="debate__head">
         <h3 className={`debate__title debate__title--${stance}`}>
-          <Icon aria-hidden="true" />{isFor ? "Za naruszeniem" : "Przeciw: okoliczności łagodzące"}
+          <Icon aria-hidden="true" />{isFor ? "Za naruszeniem" : "Okoliczności łagodzące"}
         </h3>
         <span className="debate__count num">{claims.filter((c) => kept.has(c.id)).length} z {claims.length} utrzymanych</span>
       </div>
       {claims.length === 0 ? (
-        <p className="muted">{isFor ? "Agenci nie sformułowali argumentów za naruszeniem." : "Agenci nie znaleźli okoliczności łagodzących."}</p>
+        <p className="muted">{isFor ? "Silnik nie utrzymał żadnego argumentu za naruszeniem." : "Silnik nie znalazł okoliczności łagodzących."}</p>
       ) : (
         <ul className="claims">
           {claims.map((c) => <ClaimCard key={c.id} claim={c} counted={kept.has(c.id)} />)}
@@ -48,33 +48,50 @@ function groupRounds(rounds: DebateRound[]): [number, DebateRound[]][] {
   return [...map.entries()].sort((a, b) => a[0] - b[0]);
 }
 
-/** The agents' debate: incriminating and mitigating claims side by side, the critic's verdict on each, then the arbiter. */
-export function DebateBlock({ debate }: { debate: Debate }) {
+/**
+ * WatchIt "Rekomendacja AI" (in the place of the former "Argumenty za i przeciw"): what the engine
+ * recommends and why, then the arguments it kept. The full reasoning (every claim with the critic's
+ * verdict, round by round) is folded under "Tok rozumowania" and closed by default.
+ */
+export function DebateBlock({ debate, recommendation }: { debate: Debate; recommendation: Recommendation }) {
   const empty = debate.claims.length === 0 && debate.rounds.length === 0 && !debate.arbiter_rationale;
   const kept = new Set([...debate.arguments_for, ...debate.arguments_against]);
   const byConfidence = (a: Claim, b: Claim) => b.confidence - a.confidence;
   const forClaims = debate.claims.filter((c) => c.stance === "for").sort(byConfidence);
   const againstClaims = debate.claims.filter((c) => c.stance === "against").sort(byConfidence);
+  const keptFor = forClaims.filter((c) => kept.has(c.id));
+  const keptAgainst = againstClaims.filter((c) => kept.has(c.id));
   return (
-    <section className="csec" id="argumenty" aria-labelledby="argumenty-h">
-      <h2 className="section-title" id="argumenty-h">Argumenty „za” i „przeciw”</h2>
+    <section className="csec" id="rekomendacja" aria-labelledby="rekomendacja-h">
+      <h2 className="section-title" id="rekomendacja-h">Rekomendacja AI</h2>
+      <div className="callout" data-testid="recommendation">
+        <p className="callout__title">{ACTION_LABEL[recommendation.action] ?? recommendation.action}</p>
+        {recommendation.label && recommendation.label !== ACTION_LABEL[recommendation.action] && <p className="reco__label">{recommendation.label}</p>}
+        <p><span className="reco__next">Następne działanie:</span> {recommendation.next_step}</p>
+        <p className="muted">Wynik automatycznej analizy wspierającej. Decyzję podejmuje analityk.</p>
+      </div>
       {empty ? (
-        <EmptyState compact title="Brak debaty agentów" text="Dla tej sprawy silnik nie przeprowadził debaty. Ocena opiera się wyłącznie na regułach i rejestrach." />
+        <EmptyState compact title="Brak toku rozumowania" text="Dla tej sprawy silnik nie przeprowadził analizy argumentów. Ocena opiera się wyłącznie na regułach i rejestrach." />
       ) : (
         <>
           {debate.arbiter_rationale && (
             <div className="arbiter">
-              <h3 className="subhead">Uzasadnienie arbitra</h3>
+              <h3 className="subhead">Uzasadnienie</h3>
               <p className="arbiter__text">{debate.arbiter_rationale}</p>
             </div>
           )}
           <div className="debate">
-            <Column stance="for" claims={forClaims} kept={kept} />
-            <Column stance="against" claims={againstClaims} kept={kept} />
+            <Column stance="for" claims={keptFor} kept={kept} />
+            <Column stance="against" claims={keptAgainst} kept={kept} />
           </div>
-          {debate.rounds.length > 0 && (
-            <div className="rounds">
-              <h3 className="subhead">Przebieg debaty</h3>
+          <details className="reasoning" data-testid="reasoning">
+            <summary className="reasoning__summary"><h3 className="subhead">Tok rozumowania</h3></summary>
+            <p className="muted">Wszystkie argumenty rozważone przez silnik, także odrzucone, z oceną krytyka i przebiegiem kolejnych rund.</p>
+            <div className="debate">
+              <Column stance="for" claims={forClaims} kept={kept} />
+              <Column stance="against" claims={againstClaims} kept={kept} />
+            </div>
+            {debate.rounds.length > 0 && (
               <ol className="rounds__grid">
                 {groupRounds(debate.rounds).map(([n, entries]) => (
                   <li key={n} className="round">
@@ -88,8 +105,8 @@ export function DebateBlock({ debate }: { debate: Debate }) {
                   </li>
                 ))}
               </ol>
-            </div>
-          )}
+            )}
+          </details>
         </>
       )}
     </section>

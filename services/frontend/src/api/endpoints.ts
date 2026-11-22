@@ -1,5 +1,5 @@
 import type {
-  AuditEntry, AuthConfig, CalibrationSet, CaseReport, Health, IncidentList, PublicReportAccepted, PublicReportRequest, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
+  AuditEntry, AuthConfig, CalibrationSet, Health, IncidentList, ScanJob, ScanRequest, ThresholdSettings, TransitionRequest, Trends, User,
 } from "../types/api";
 import type { CaseLabel, Incident, ObservationVersion, Role } from "../types/incident";
 import { request, requestText } from "./client";
@@ -31,10 +31,13 @@ export const api = {
   versions: (incidentId: string, signal?: AbortSignal) =>
     request<{ items: ObservationVersion[] }>(`/api/incidents/${id(incidentId)}/versions`, { signal }),
   rescan: (incidentId: string) => request<{ job_id: string }>(`/api/incidents/${id(incidentId)}/rescan`, post()),
-  incidentReports: (incidentId: string, signal?: AbortSignal) => request<{ items: CaseReport[] }>(`/api/incidents/${id(incidentId)}/reports`, { signal }),
-  /** Public: no session needed. */
-  submitReport: (body: PublicReportRequest) => request<PublicReportAccepted>("/api/public/reports", post(body)),
   trends: (days = 30, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?days=${days}`, { signal }),
+  /** WatchIt: the 24-hour range, one bar per hour */
+  trendsHourly: (hours = 24, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?hours=${hours}`, { signal }),
+  /** WatchIt: a user's own thresholds are recorded (who changed what), without any notification */
+  recordPreview: (flag: number, critical: number) =>
+    request<void>("/api/settings/thresholds/preview", post({ flag, critical })),
+  thresholdsHistory: (signal?: AbortSignal) => request<{ items: AuditEntry[] }>("/api/settings/thresholds/history", { signal }),
   calibration: (signal?: AbortSignal) => request<CalibrationSet>("/api/calibration", { signal }),
   startScan: (body: ScanRequest) => request<{ job_id: string }>("/api/scans", post(body)),
   listScans: (signal?: AbortSignal) => request<{ items: ScanJob[] }>("/api/scans", { signal }),

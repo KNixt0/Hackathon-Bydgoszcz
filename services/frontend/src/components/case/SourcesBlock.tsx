@@ -57,14 +57,14 @@ export function SourcesBlock({ evidence, source, onOpen }: Props) {
           <h3 className="subhead">Materiał źródłowy</h3>
           <dl className="kv kv--compact">
             <dt>Platforma</dt><dd>{PLATFORM_LABEL[source.platform] ?? source.platform}</dd>
-            <dt>Adres</dt>
+            <dt>Adres URL</dt>
             <dd>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{source.url}<span className="sr-only"> (otwiera się w nowej karcie)</span></a> : source.url}</dd>
             <dt>Pobrano</dt><dd>{formatDateTime(source.fetched_at)}</dd>
             <dt>Język</dt><dd>{source.language}</dd>
             <dt>Skrót treści</dt><dd className="num" title={`SHA-256 znormalizowanego tekstu: ${source.content_hash}`}>{source.content_hash.slice(0, 12)}<span className="muted"> (pierwsze 12 znaków)</span></dd>
             <dt>Archiwum</dt>
             <dd>
-              {[source.archive.html_key && "kod HTML", source.archive.screenshot_key && "zrzut ekranu"].filter(Boolean).join(", ") || "nie zarchiwizowano"}
+              {[source.archive.html_key && "kod strony", source.archive.screenshot_key && "zrzut ekranu"].filter(Boolean).join(", ") || "nie zarchiwizowano"}
             </dd>
           </dl>
         </div>

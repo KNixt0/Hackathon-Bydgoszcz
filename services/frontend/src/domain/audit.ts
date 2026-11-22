@@ -29,7 +29,7 @@ const VALUE_LABEL: Record<string, string> = {
   ...RESOLUTION_ACTION_LABEL,
   ...CASE_LABEL_LABEL,
   password: "hasło",
-  demo: "konto demo",
+  demo: "konto demonstracyjne",
   evidence_package: "raport z wykrycia",
   detection_report: "raport z wykrycia",
   // entries written before contract v4
