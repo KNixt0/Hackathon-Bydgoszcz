@@ -1,0 +1,60 @@
+name: Watchit browser and live validation
+on:
+  push:
+    branches: [agent/KNixt0/32]
+permissions:
+  contents: read
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: services/frontend/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned test dependencies
+        run: |
+          npm ci --prefix services/frontend --no-audit --no-fund
+          python -m pip install -r services/backend/requirements-dev.txt
+          python -m playwright install --with-deps chromium
+      - name: Build and start isolated preview
+        run: |
+          npm --prefix services/frontend run build
+          cd services/frontend
+          MOCK_PORT=8123 node tests/mock-server.mjs > /tmp/watchit-mock.log 2>&1 &
+          VITE_BACKEND_URL=http://127.0.0.1:8123 npm run preview -- --host 127.0.0.1 --port 5193 --strictPort > /tmp/watchit-preview.log 2>&1 &
+      - name: Browser layout and interaction audit
+        env:
+          VALIDATION_OUTPUT: ${{ github.workspace }}/validation-results
+        run: python services/frontend/validation/visual_audit.py
+      - name: Bounded real public-page scrape
+        if: contains(github.event.head_commit.message, '[live-probe]')
+        env:
+          PYTHONPATH: services/backend
+          VALIDATION_OUTPUT: ${{ github.workspace }}/validation-results
+          PLAYWRIGHT_ENABLED: 'false'
+          SCRAPE_RETRIES: '0'
+          SCRAPE_TIMEOUT_SECONDS: '15'
+          SCRAPE_MAX_BYTES: '2000000'
+          AI_DEMO_OVERLAY: 'false'
+          LLM_ENABLED: 'false'
+          EMBEDDINGS_BACKEND: hash
+        run: |
+          python services/backend/validation/live_probe.py
+          PYTHONPATH=services/ai python services/ai/validation/analyze_probe.py
+      - name: Attach validation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watchit-validation
+          path: validation-results/
+          retention-days: 7
+      - name: Include service logs
+        if: failure()
+        run: cat /tmp/watchit-mock.log /tmp/watchit-preview.log
