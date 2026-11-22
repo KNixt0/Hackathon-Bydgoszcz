@@ -443,13 +443,13 @@ def test_pdf_endpoints_render_and_audit(client, cases):
         html_to_pdf("<p>x</p>")
     except BrowserUnavailable:
         pytest.skip("Chromium not installed")
-    for path in ("export.pdf", "warning-list-request.pdf"):
-        response = client.get(f"/api/incidents/{cases['red']}/{path}")
-        assert response.status_code == 200 and response.content.startswith(b"%PDF-"), path
+    # Contract v4 (decision 22): only the detection report remains; warning-list-request.pdf is a 404
+    response = client.get(f"/api/incidents/{cases['red']}/export.pdf")
+    assert response.status_code == 200 and response.content.startswith(b"%PDF-")
     documents = [
         e["new"].get("document") for e in client.get("/api/audit").json()["items"] if e["action"] == "export"
     ]
-    assert set(documents) == {"evidence_package", "warning_list_request"}
+    assert documents == ["detection_report"]
 
 
 def test_internal_callers_need_no_session(client, samples_dir):
