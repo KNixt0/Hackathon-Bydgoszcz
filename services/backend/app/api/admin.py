@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 
 from app import audit
-from app.auth import Supervisor
+from app.auth import Actor, Supervisor
 from app.db import get_db
 from app.models import AuditLog
 from app.schemas import ThresholdsRequest
@@ -39,6 +39,43 @@ def write_thresholds(body: ThresholdsRequest, db: Db, user: Supervisor) -> dict:
     )
     db.commit()
     return after
+
+
+CALIBRATION_ACTIONS = ("thresholds", "calibration_preview")
+
+
+@router.post("/settings/thresholds/preview", status_code=204)
+def record_preview(body: ThresholdsRequest, db: Db, user: Actor) -> Response:
+    """WatchIt: any user who changes the thresholds for their own view leaves a trace (who and what).
+
+    Nothing is shown to the user (no toast): the entry appears in the calibration history."""
+    if body.flag > body.critical:
+        raise HTTPException(422, "flag must not be higher than critical")
+    last = (
+        db.query(AuditLog)
+        .filter(AuditLog.action == "calibration_preview", AuditLog.actor_email == user.email)
+        .order_by(AuditLog.at.desc(), AuditLog.id.desc())
+        .first()
+    )
+    previous = last.new if last is not None and isinstance(last.new, dict) else None
+    new = {"flag": body.flag, "critical": body.critical}
+    if previous != new:
+        audit.record(db, user, "calibration_preview", previous=previous, new=new)
+        db.commit()
+    return Response(status_code=204)
+
+
+@router.get("/settings/thresholds/history")
+def thresholds_history(db: Db, _: Actor, limit: Annotated[int, Query(ge=1, le=500)] = 100) -> dict:
+    """Calibration history for every logged-in user: global changes (supervisor) and personal previews."""
+    rows = (
+        db.query(AuditLog)
+        .filter(AuditLog.action.in_(CALIBRATION_ACTIONS))
+        .order_by(AuditLog.at.desc(), AuditLog.id.desc())
+        .limit(limit)
+        .all()
+    )
+    return {"items": [audit.entry_dict(row) for row in rows]}
 
 
 @router.get("/audit")

@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app import audit, events
 from app.auth import Actor
+from app.config import get_settings
 from app.db import get_db, session_scope
 from app.exports import csv_export
 from app.incidents import rescan_options, to_incident, to_summary
@@ -66,6 +67,8 @@ class IncidentFilters:
         self.end_inclusive = bool(to) and len(to or "") > 10
 
     def apply(self, query: SAQuery) -> SAQuery:
+        # WatchIt analyses only entities under UKNF's remit: material outside it is not listed or counted
+        query = query.filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
         if self.module is not None:
             # an incident shows under every module that produced findings, not only the primary one
             query = query.filter(Incident.modules_mask.bitwise_and(1 << (self.module - 1)) != 0)
@@ -174,13 +177,6 @@ def label_incident(incident_id: str, body: LabelRequest, db: Db, user: Actor) ->
     row = _get_or_404(db, incident_id)
     set_label(db, row, user, body.label)
     return _commit_and_announce(db, row)
-
-
-@router.get("/incidents/{incident_id}/reports")
-def incident_reports(incident_id: str, db: Db) -> dict:
-    """Logged-in only: what citizens wrote about the case (no reporter data)."""
-    row = _get_or_404(db, incident_id)
-    return {"items": _report_items(db, row.id)}
 
 
 def _report_items(db: Session, incident_id: str, limit: int = 50) -> list[dict]:
@@ -304,20 +300,39 @@ def export_incident_pdf(incident_id: str, db: Db, user: Actor) -> Response:
 
 
 @router.get("/stats/trends")
-def trends(db: Db, days: Annotated[int, Query(ge=1, le=366)] = 30) -> dict:
-    today = utcnow().date()
-    first = today - timedelta(days=days - 1)
-    start = datetime.combine(first, time.min, tzinfo=UTC)
+def trends(
+    db: Db,
+    days: Annotated[int, Query(ge=1, le=366)] = 30,
+    hours: Annotated[int | None, Query(ge=1, le=168)] = None,
+) -> dict:
+    """Detections per day (or per hour with `hours`), never before the system start date.
+
+    Items keep raw scores so the client recomputes levels for its thresholds. Material outside UKNF's
+    remit is left out."""
+    now = utcnow()
+    system_start = get_settings().system_start
+    if hours:
+        step = timedelta(hours=1)
+        first = now.replace(minute=0, second=0, microsecond=0) - step * (hours - 1)
+        count = hours
+    else:
+        step = timedelta(days=1)
+        first = datetime.combine(now.date() - timedelta(days=days - 1), time.min, tzinfo=UTC)
+        count = days
+    while first < system_start and count > 1:  # no buckets from before the system existed
+        first, count = first + step, count - 1
     rows = (
         db.query(Incident.id, Incident.risk_score, Incident.primary_module, Incident.created_at)
-        .filter(Incident.created_at >= start)
+        .filter(Incident.created_at >= first)
+        .filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
         .order_by(Incident.created_at)
         .all()
     )
-    buckets: dict[str, list[dict]] = {(first + timedelta(days=n)).isoformat(): [] for n in range(days)}
+    fmt = "%Y-%m-%dT%H:00:00Z" if hours else "%Y-%m-%d"
+    buckets: dict[str, list[dict]] = {(first + step * n).strftime(fmt): [] for n in range(count)}
     for incident_id, score, module, created_at in rows:
-        moment = created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)
-        key = moment.astimezone(UTC).date().isoformat()
+        moment = (created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)).astimezone(UTC)
+        key = moment.strftime(fmt)
         if key in buckets:
             buckets[key].append({"id": incident_id, "risk_score": score, "module": module})
     return {"days": [{"date": key, "items": items} for key, items in buckets.items()]}

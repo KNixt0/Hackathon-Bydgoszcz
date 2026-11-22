@@ -32,6 +32,8 @@ def workflow_dict(row: Incident) -> dict[str, Any]:
         "resolution_action": row.resolution_action,
         "resolution_note": row.resolution_note or "",
         "label": row.label or "unlabeled",
+        "started_at": iso(row.review_started_at),
+        "closed_at": iso(row.closed_at),
     }
 
 
@@ -106,7 +108,12 @@ def to_summary(row: Incident) -> dict[str, Any]:
         "advertiser": _party_name(p, "advertiser"),
         "firm": _party_name(p, "investment_firm"),
         "failed_rules": [str(r.get("id")) for r in p.get("rules") or [] if r.get("status") == "fail"],
-        "workflow": {"assigned_to": row.assigned_to, "label": row.label or "unlabeled"},
+        "workflow": {
+            "assigned_to": row.assigned_to,
+            "label": row.label or "unlabeled",
+            "started_at": iso(row.review_started_at),
+            "closed_at": iso(row.closed_at),
+        },
         "user_reports_count": row.user_reports_count or 0,
         "priority_score": _priority(row),
         "in_scope": _in_scope(row),
@@ -283,7 +290,12 @@ def store_observation(
     recurrence = row is not None and row.status in CLOSED and changed and flagged
     if row is None or recurrence:
         previous_id = row.id if recurrence else None
-        row = Incident(status="new", created_at=created_at or now)
+        from app.config import get_settings
+
+        detected = max(
+            created_at or now, min(get_settings().system_start, now)
+        )  # never before the system existed
+        row = Incident(status="new", created_at=detected)
         db.add(row)
         apply_payload(row, payload)
         row.previous_incident_id = previous_id

@@ -53,7 +53,11 @@ def move(client, incident_id, to, **extra):
 
 def drive(client, incident_id, status):
     for step in ROUTE[status]:
-        body = {"reason": "uzasadnienie"} if step in ("resolved", "false_positive", "awaiting_correction") else {}
+        body = (
+            {"reason": "uzasadnienie"}
+            if step in ("resolved", "false_positive", "awaiting_correction")
+            else {}
+        )
         response = move(client, incident_id, step, **body)
         assert response.status_code == 200, (step, response.text)
 
@@ -133,9 +137,16 @@ def test_workflow_shape_defaults_and_escalation_path(client, analyst, cases):
         "resolution_action": None,
         "resolution_note": "",
         "label": "unlabeled",
+        "started_at": None,  # WatchIt: processing time
+        "closed_at": None,
     }
     summary = next(i for i in client.get("/api/incidents").json()["items"] if i["id"] == cases["red"])
-    assert summary["workflow"] == {"assigned_to": None, "label": "unlabeled"}
+    assert summary["workflow"] == {
+        "assigned_to": None,
+        "label": "unlabeled",
+        "started_at": None,
+        "closed_at": None,
+    }
 
     started = move(analyst, cases["red"], "in_review").json()
     assert started["workflow"]["assigned_to"] == ANALYST[0]  # starting the review takes the case
@@ -192,7 +203,9 @@ def test_intervention_follow_up_watches_the_url_and_records_the_outcome(client, 
 
     drive(client, cases["red"], "in_review")
     assert move(client, cases["red"], "awaiting_correction").status_code == 422  # what was done is required
-    moved = move(client, cases["red"], "awaiting_correction", reason="Pismo do podmiotu z 21.11", follow_up_days=7)
+    moved = move(
+        client, cases["red"], "awaiting_correction", reason="Pismo do podmiotu z 21.11", follow_up_days=7
+    )
     assert moved.status_code == 200
     body = moved.json()
     assert body["status"] == "awaiting_correction"
@@ -214,7 +227,9 @@ def test_intervention_follow_up_watches_the_url_and_records_the_outcome(client, 
         item.last_scanned_at = utcnow() - timedelta(hours=6)
     assert len(enqueue_rescan()) == 1
 
-    closed = move(client, cases["red"], "resolved", reason="Treść usunięta", resolution_action="content_removed")
+    closed = move(
+        client, cases["red"], "resolved", reason="Treść usunięta", resolution_action="content_removed"
+    )
     assert closed.status_code == 200 and closed.json()["workflow"]["resolution_action"] == "content_removed"
     assert client.get("/api/watchlist").json()["items"] == []  # the follow-up ends with the case
 
@@ -259,8 +274,7 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     assert history[3]["actor_email"] == SUPERVISOR[0] and history[3]["actor_role"] == "SUPERVISOR"
     closing = history[4]
     assert (
-        closing["new"]["resolution_action"] == "evidence_report"
-        and closing["reason"] == "Raport przekazany"
+        closing["new"]["resolution_action"] == "evidence_report" and closing["reason"] == "Raport przekazany"
     )
     assert history[5]["previous"] == {"label": "unlabeled"} and history[5]["new"] == {
         "label": "true_positive"

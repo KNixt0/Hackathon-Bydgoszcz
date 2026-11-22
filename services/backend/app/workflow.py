@@ -76,6 +76,7 @@ def assign(db: Session, row: Incident, actor: Any) -> None:
     previous = row.assigned_to
     row.assigned_to = actor.email
     row.updated_at = utcnow()
+    row.review_started_at = row.review_started_at or row.updated_at  # taking the case starts the work
     audit.record(
         db,
         actor,
@@ -160,6 +161,10 @@ def transition(db: Session, row: Incident, actor: Any, body: TransitionInput) ->
         row.resolution_note = reason
     if target in CLOSED and row.intervention_at is not None:
         _unwatch(db, row)  # the follow-up ends with the case
+    now = utcnow()
+    if row.review_started_at is None and target != "new":
+        row.review_started_at = now
+    row.closed_at = now if target in CLOSED else None
     row.updated_at = utcnow()
     previous, new = _changed(before, _snapshot(row))
     previous["status"], new["status"] = current, target

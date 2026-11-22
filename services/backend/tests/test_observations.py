@@ -124,6 +124,7 @@ def test_cases_from_before_v4_get_their_evidence_frozen_on_start(client):
 def test_db_session_is_closed_when_the_request_is_cancelled(client):
     """Regression (scripts/stress.py): a cancelled request must not leak its connection."""
     import asyncio
+    import contextlib
 
     from sqlalchemy import text
 
@@ -134,10 +135,26 @@ def test_db_session_is_closed_when_the_request_is_cancelled(client):
         session = await gen.__anext__()
         session.execute(text("SELECT 1"))  # a transaction is open now
         assert session.in_transaction()
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await gen.athrow(asyncio.CancelledError())
-        except asyncio.CancelledError:
-            pass
         return session.in_transaction()
 
     assert asyncio.run(scenario()) is False
+
+
+def test_no_detection_before_the_system_start(monkeypatch):
+    """WatchIt: the system did not exist before SYSTEM_START_DATE; demo back-dating is squeezed after it."""
+    from datetime import UTC, datetime
+
+    from app import pipeline
+    from app.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "system_start_date", "2026-11-21")
+    now = datetime(2026, 11, 22, 12, 0, tzinfo=UTC)
+    monkeypatch.setattr(pipeline, "utcnow", lambda: now)
+    start = datetime(2026, 11, 21, tzinfo=UTC)
+    times = [pipeline.detection_time(d) for d in (0, 0.5, 1, 3, 10, 29, 400)]
+    assert all(start <= t <= now for t in times)
+    assert times[0] == now and times[-1] == start  # newest stays now, the oldest lands on the start
+    assert times == sorted(times, reverse=True)  # older samples stay older
+    assert pipeline.detection_time(None) is None and pipeline.detection_time(True) is None

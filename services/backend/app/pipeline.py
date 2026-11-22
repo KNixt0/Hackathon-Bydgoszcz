@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 from pydantic import ValidationError
@@ -154,6 +154,23 @@ def _normalise_analysis(analysis: dict, document: dict, context: dict) -> dict:
     return payload
 
 
+def detection_time(days_ago: object) -> datetime | None:
+    """When a sample is shown as detected. Never before the system existed (SYSTEM_START_DATE).
+
+    Demo samples carry `detected_days_ago` (0-30). While the system is younger than 30 days these are
+    scaled into the time since the start, one monotonic mapping for all samples, so the queue keeps its
+    order without showing dates the system could not have produced."""
+    if not isinstance(days_ago, int | float) or isinstance(days_ago, bool) or not 0 <= days_ago <= 3650:
+        return None
+    now = utcnow()
+    window = now - get_settings().system_start
+    if window <= timedelta(0):
+        return now
+    if window >= timedelta(days=30):
+        return now - min(timedelta(days=float(days_ago)), window)
+    return now - window * (min(float(days_ago), 30.0) / 30.0)
+
+
 def _run(job_id: str) -> None:
     with session_scope() as db:
         job = db.get(ScanJob, job_id)
@@ -198,10 +215,7 @@ def _run(job_id: str) -> None:
         raise _Fail(str(exc)) from exc
     payload = _normalise_analysis(analysis, document, context)
 
-    created_at = None
-    days_ago = (job.meta or {}).get("detected_days_ago")
-    if isinstance(days_ago, int | float) and not isinstance(days_ago, bool) and 0 <= days_ago <= 3650:
-        created_at = utcnow() - timedelta(days=float(days_ago))
+    created_at = detection_time((job.meta or {}).get("detected_days_ago"))
 
     with session_scope() as db:
         stored = store_observation(
