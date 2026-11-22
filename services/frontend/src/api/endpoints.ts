@@ -44,6 +44,7 @@ export const api = {
   rescan: (incidentId: string) => request<{ job_id: string }>(`/api/incidents/${id(incidentId)}/rescan`, post()),
   trends: (days = 30, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?days=${days}`, { signal }),
   /** WatchIt: the 24-hour range, one bar per hour */
+  trendsRange: (from: string, to: string, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?${new URLSearchParams({ from, to })}`, { signal }),
   trendsHourly: (hours = 24, signal?: AbortSignal) => request<Trends>(`/api/stats/trends?hours=${hours}`, { signal }),
   /** WatchIt: a user's own thresholds are recorded (who changed what), without any notification */
   recordPreview: (flag: number, critical: number) =>

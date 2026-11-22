@@ -10,6 +10,7 @@ import { Button } from "../components/ui/Button";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { LEVEL_LABEL, MODULE_LABEL } from "../domain/labels";
 import { countLevels } from "../domain/levels";
+import { apiDate, clampDateTime, SYSTEM_START_LOCAL, warsawInput } from "../domain/dates";
 import { pl, plN } from "../domain/plural";
 import { activeFilterCount, applyQueue, EMPTY_FILTERS, filtersFromSearch, filtersToApiQuery, filtersToSearch, matchesFilters, type QueueFilters as Filters } from "../domain/queue";
 import { trendRows, type TrendRow } from "../domain/trends";
@@ -21,17 +22,18 @@ import { useUi } from "../hooks/useUi";
 const PANEL_ID = "kolejka-panel";
 
 /** WatchIt: quick ranges for the inflow chart. 24 h is drawn per hour, the others per day. */
-type Range = "24h" | "7d" | "30d";
+type Range = "24h" | "7d" | "30d" | "custom";
 const RANGES: { key: Range; label: string }[] = [
   { key: "24h", label: "24 godz." },
   { key: "7d", label: "7 dni" },
   { key: "30d", label: "30 dni" },
+  { key: "custom", label: "Własny zakres" },
 ];
 
 /** "W ostatnich 24 godzinach wpłynęły 3 sprawy." from the trend rows (nothing invented). */
 function inflowSentence(rows: TrendRow[], range: Range): string {
   const total = rows.reduce((sum, r) => sum + r.red + r.orange + r.green, 0);
-  const period = range === "24h" ? "W ostatnich 24 godzinach" : `W ostatnich ${rows.length} ${rows.length === 1 ? "dniu" : "dniach"}`;
+  const period = range === "custom" ? "W wybranym okresie" : range === "24h" ? "W ostatnich 24 godzinach" : `W ostatnich ${rows.length} ${rows.length === 1 ? "dniu" : "dniach"}`;
   if (total === 0) return `${period} nie wpłynęła żadna sprawa.`;
   return `${period} ${pl(total, "wpłynęła", "wpłynęły", "wpłynęło")} ${plN(total, "sprawa", "sprawy", "spraw")}.`;
 }
@@ -44,9 +46,12 @@ export function QueuePage() {
   const filters = useMemo(() => filtersFromSearch(params), [params]);
 
   const [range, setRange] = useState<Range>("7d");
+  const [draft, setDraft] = useState({ from: SYSTEM_START_LOCAL, to: warsawInput(new Date()) });
+  const [custom, setCustom] = useState(draft);
+  const invalidRange = draft.from > draft.to || !draft.from || !draft.to;
   const trends = useResource(
-    (signal) => (range === "24h" ? api.trendsHourly(24, signal) : api.trends(range === "7d" ? 7 : 30, signal)),
-    `trends:${range}`,
+    (signal) => (range === "custom" ? api.trendsRange(apiDate(custom.from), apiDate(custom.to), signal) : range === "24h" ? api.trendsHourly(24, signal) : api.trends(range === "7d" ? 7 : 30, signal)),
+    `trends:${range}:${custom.from}:${custom.to}`,
   );
   const { refresh: refreshTrends } = trends;
   useEffect(() => {
@@ -120,6 +125,12 @@ export function QueuePage() {
               </div>
               {trends.resource.phase === "ready" && rows.length > 0 && <p className="strip__text">{inflowSentence(rows, range)} Słupki według poziomu przy obecnych progach.</p>}
             </div>
+            {range === "custom" && <form className="qtool__row chart-range" onSubmit={(e) => { e.preventDefault(); if (!invalidRange) setCustom(draft); }}>
+              <label className="field"><span className="field__label">Wykres od (czas polski)</span><input className="input" type="datetime-local" required min={SYSTEM_START_LOCAL} max={draft.to || warsawInput(new Date())} value={draft.from} onChange={(e) => setDraft({ ...draft, from: clampDateTime(e.target.value) })} /></label>
+              <label className="field"><span className="field__label">Wykres do (czas polski)</span><input className="input" type="datetime-local" required min={draft.from || SYSTEM_START_LOCAL} max={warsawInput(new Date())} value={draft.to} onChange={(e) => setDraft({ ...draft, to: clampDateTime(e.target.value) })} /></label>
+              <Button type="submit" disabled={invalidRange}>Zastosuj zakres</Button>
+              {invalidRange && <p className="form-error" role="alert">Wybierz początek nie późniejszy niż koniec zakresu.</p>}
+            </form>}
             {trends.resource.phase === "loading" && <div className="trend"><Skeleton height="100%" /></div>}
             {trends.resource.phase === "error" && <ErrorState compact title="Nie udało się wczytać napływu spraw" message={trends.resource.error} onRetry={trends.reload} />}
             {trends.resource.phase === "ready" && (rows.some((r) => r.red + r.orange + r.green > 0)

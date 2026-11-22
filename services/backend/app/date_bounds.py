@@ -7,7 +7,7 @@ the system existed simply means "from the beginning": the quick ranges (7 / 30 d
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
@@ -16,7 +16,6 @@ from app.config import get_settings
 from app.models import utcnow
 
 WARSAW = ZoneInfo("Europe/Warsaw")
-CLOCK_SKEW = timedelta(minutes=2)  # a browser clock slightly ahead of the server is not "the future"
 
 
 def window() -> dict:
@@ -37,7 +36,7 @@ def check_bound(value: str | None, moment: datetime | None, *, lower: bool) -> N
         day = datetime.fromisoformat(value).date()
         valid = (lower or start.astimezone(WARSAW).date() <= day) and day <= now.astimezone(WARSAW).date()
     else:
-        valid = (lower or start <= moment) and moment <= now + CLOCK_SKEW
+        valid = (lower or start <= moment) and moment <= now
     if not valid:
-        first = start.astimezone(WARSAW).strftime("%d.%m.%Y")
+        first = start.astimezone(WARSAW).strftime("%d.%m.%Y %H:%M")
         raise HTTPException(422, f"Wybierz datę od uruchomienia systemu ({first}) do bieżącej chwili.")

@@ -116,7 +116,7 @@ const ENTRIES: AuditEntry[] = [
 ];
 
 describe("audit log page", () => {
-  it("Entra-style log: rows open a detail pane with field · before · after; filters go to the server", async () => {
+  it("register: collapsible filters and entry details retain old and new values", async () => {
     const user = userEvent.setup();
     const { calls } = mockApi((call) => {
       if (!call.path.startsWith("/api/audit")) return undefined;
@@ -140,6 +140,9 @@ describe("audit log page", () => {
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByTestId("audit-pane")).not.toBeInTheDocument());
 
+    expect(screen.getByTestId("audit-filters")).not.toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Rozwiń" }));
+    expect(screen.getByTestId("audit-filters")).toBeVisible();
     await user.type(screen.getByLabelText("ID sprawy"), orangeCase.id);
     await waitFor(() => expect(calls.some((c) => c.path.includes(`incident_id=${orangeCase.id}`))).toBe(true));
     await waitFor(() => expect(screen.getAllByTestId("audit-row").length).toBeGreaterThan(0));

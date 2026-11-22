@@ -6,6 +6,7 @@ from datetime import UTC, date, datetime, time
 from functools import lru_cache
 from typing import Literal
 from urllib.parse import urlsplit
+from zoneinfo import ZoneInfo
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -24,11 +25,16 @@ class Settings(BaseSettings):
     # WatchIt: the system did not exist before this day. No detection is dated earlier and no
     # date picker or chart goes back further.
     system_start_date: str = "2026-11-21"
+    system_start_time: str = "20:50"
 
     @property
     def system_start(self) -> datetime:
-        """Midnight UTC of `system_start_date`."""
-        return datetime.combine(date.fromisoformat(self.system_start_date), time.min, tzinfo=UTC)
+        """The launch instant, interpreted in Warsaw independently of the server timezone."""
+        return datetime.combine(
+            date.fromisoformat(self.system_start_date),
+            time.fromisoformat(self.system_start_time),
+            tzinfo=ZoneInfo("Europe/Warsaw"),
+        ).astimezone(UTC)
 
     db_pool_size: int = 20
     db_max_overflow: int = 10

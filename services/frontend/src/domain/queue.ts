@@ -1,5 +1,5 @@
 import type { IncidentSummary, ModuleId, Platform, RiskLevel, Status } from "../types/incident";
-import { clampDate } from "./dates";
+import { apiDate, clampDate, clampDateTime, matchesDates, validDateInput } from "./dates";
 import { deriveLevel, LEVEL_ORDER, type Thresholds } from "./levels";
 /** Sortable columns of the queue table (WatchIt: every header sorts, ascending or descending). */
 export type SortKey = "risk" | "id" | "title" | "source" | "module" | "rules" | "status" | "detected" | "started";
@@ -34,9 +34,7 @@ export function matchesFilters(it: IncidentSummary, f: QueueFilters, t: Threshol
   if (f.module && !it.modules.includes(f.module) && it.primary_module !== f.module) return false;
   if (f.status && it.status !== f.status) return false;
   if (f.level && deriveLevel(it.risk_score, t) !== f.level) return false;
-  const day = it.created_at.slice(0, 10);
-  if (f.from && day < f.from) return false;
-  if (f.to && day > f.to) return false;
+  if (!matchesDates(it.created_at, f.from, f.to)) return false;
   if (f.q.trim()) {
     const hay = fold([it.title, it.summary, it.advertiser ?? "", it.firm ?? "", it.source.url].join(" "));
     const words = fold(f.q).split(/\s+/).filter(Boolean);
@@ -133,7 +131,7 @@ export function filtersToSearch(f: QueueFilters): URLSearchParams {
 const PLATFORMS: Platform[] = ["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"];
 const STATUSES: Status[] = ["new", "in_review", "escalation_requested", "escalated", "awaiting_correction", "resolved", "false_positive"];
 const LEVELS: RiskLevel[] = ["red", "orange", "green"];
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const clampFilter = (value: string) => value.length === 10 ? clampDate(value) : clampDateTime(value);
 
 function oneOf<T extends string>(value: string | null, allowed: readonly T[]): T | "" {
   return value && (allowed as readonly string[]).includes(value) ? (value as T) : "";
@@ -145,8 +143,8 @@ export function filtersFromSearch(p: URLSearchParams): QueueFilters {
   const to = p.get("do") ?? "";
   return {
     q: p.get("q") ?? "",
-    from: DATE_RE.test(from) ? clampDate(from) : "",
-    to: DATE_RE.test(to) ? clampDate(to) : "",
+    from: validDateInput(from) ? clampFilter(from) : "",
+    to: validDateInput(to) ? clampFilter(to) : "",
     platform: oneOf(p.get("zrodlo"), PLATFORMS),
     level: oneOf(p.get("poziom"), LEVELS),
     module: m === 1 || m === 2 || m === 3 ? m : 0,
@@ -162,8 +160,8 @@ export function filtersToApiQuery(f: QueueFilters): string {
   if (f.module) p.set("module", String(f.module));
   if (f.platform) p.set("source", f.platform);
   if (f.status) p.set("status", f.status);
-  if (f.from) p.set("from", f.from);
-  if (f.to) p.set("to", f.to);
+  if (f.from) p.set("from", apiDate(f.from));
+  if (f.to) p.set("to", apiDate(f.to));
   if (f.q) p.set("q", f.q);
   const s = p.toString();
   return s ? `?${s}` : "";
