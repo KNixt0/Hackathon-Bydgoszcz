@@ -110,7 +110,7 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <path d="M1023,142 V190 H129 V236"/><path d="M260,305 H294"/><path d="M558,305 H592"/><path d="M856,305 H890"/>
 </g>
 </svg>
-<p class="note" style="margin-top:4px">Audyt wizualny działa tylko dla stron HTML. Gdy go nie ma, reguły wracają do analizy statycznej. Cron (beat) odświeża rejestry, wyszukuje źródła i skanuje ponownie.</p>
+<p class="note" style="margin-top:4px">Audyt wizualny działa tylko dla stron HTML. Gdy go nie ma, reguły wracają do analizy statycznej.<br>Harmonogram (Celery beat, ustawiany w <span class="mono">.env</span>): ponowne skanowanie co 6 h (<span class="mono">RESCAN_CRON</span>), wyszukiwanie źródeł co 6 h, 15 min później (<span class="mono">DISCOVERY_CRON</span>), rejestry KNF raz dziennie o 3:30 (<span class="mono">REGISTRY_REFRESH_CRON</span>). Sprawa pod monitoringiem: najwyżej co 6 h. Scraper: 1,5 s przerwy na host, timeout 20 s, 2 ponowienia.</p>
 </section>
 
 <!-- 5 -->
@@ -226,6 +226,7 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <ul style="margin-top:12px">
 <li style="font-size:16px;margin-bottom:6px">Nowy moduł to jeden plik wtyczki.</li>
 <li style="font-size:16px;margin-bottom:6px">Skalowanie: <span class="mono" style="font-size:14px">--scale worker=N</span>.</li>
+<li style="font-size:16px;margin-bottom:6px">beat: rescan i discovery co 6 h, rejestry KNF codziennie o 3:30 (cron w <span class="mono" style="font-size:14px">.env</span>).</li>
 <li style="font-size:16px;margin-bottom:6px">Z modelem ok. 3 s na analizę (laptop z Apple silicon, Ollama na hoście).</li>
 </ul>
 </div>
