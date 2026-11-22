@@ -18,6 +18,7 @@ data:
   S3_ENDPOINT: http://storage:8333
   S3_BUCKET: evidence
   SAMPLES_DIR: /samples
+  SHOW_SYNTHETIC: "false"
   FIXTURE_BASE_URL: http://backend:8000
   BACKEND_PORT: "8000"
   AI_PORT: "8001"

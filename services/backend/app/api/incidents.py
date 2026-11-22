@@ -72,6 +72,8 @@ class IncidentFilters:
     def apply(self, query: SAQuery) -> SAQuery:
         # WatchIT analyses only entities under UKNF's remit: material outside it is not listed or counted
         query = query.filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
+        if not get_settings().show_synthetic:
+            query = query.filter(Incident.synthetic.is_(False))
         if self.module is not None:
             # an incident shows under every module that produced findings, not only the primary one
             query = query.filter(Incident.modules_mask.bitwise_and(1 << (self.module - 1)) != 0)
@@ -353,7 +355,9 @@ def trends(
         or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)),
     )
     query = query.filter(Incident.created_at < end if exclusive else Incident.created_at <= end)
-    fmt = "%Y-%m-%dT%H:00:00Z" if hourly else "%Y-%m-%d"
+    if not get_settings().show_synthetic:
+        query = query.filter(Incident.synthetic.is_(False))
+    fmt ="%Y-%m-%dT%H:00:00Z" if hourly else "%Y-%m-%d"
     buckets: dict[str, list[dict]] = {(first + step * n).strftime(fmt): [] for n in range(count)}
     for incident_id, score, module, created_at in query.order_by(Incident.created_at).all():
         moment = (created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)).astimezone(UTC)

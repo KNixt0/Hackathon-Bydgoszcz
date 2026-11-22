@@ -56,6 +56,8 @@ class Settings(BaseSettings):
     registry_refresh_cron: str = "30 3 * * *"
     discovery_cron: str = "15 */6 * * *"
     rescan_samples: bool = False  # scheduled re-scan also covers sample/synthetic incidents
+    # false: synthetic cases stay out of the queue, charts and exports but still feed threshold calibration
+    show_synthetic: bool = True
     discovery_max_links: int = 20  # default per-run cap of new links per source
     # keyword filter of the offline listing page (SAMPLES_DIR/discovery/index.html), comma separated
     discovery_keywords: str = "oferta,inwest,doradztw,family office,wealth"

@@ -14,6 +14,7 @@ x-backend: &backend
     S3_SECRET_KEY: ${S3_SECRET_KEY}
     S3_BUCKET: ${S3_BUCKET:-evidence}
     SAMPLES_DIR: /samples
+    SHOW_SYNTHETIC: ${SHOW_SYNTHETIC:-false}
     FIXTURE_BASE_URL: http://backend:8000
     BACKEND_PORT: "8000"
     # login (defaults keep an older .env working: demo login on, random JWT secret per start)
@@ -27,7 +28,7 @@ x-backend: &backend
     DEMO_SUPERVISOR_EMAIL: ${DEMO_SUPERVISOR_EMAIL:-kierownik@uknf.local}
     DEMO_SUPERVISOR_PASSWORD: ${DEMO_SUPERVISOR_PASSWORD:-}
   volumes:
-    - ${SAMPLES_HOST_DIR:-./samples/real}:/samples:ro
+    - ${SAMPLES_HOST_DIR:-./samples}:/samples:ro
   depends_on:
     postgres: { condition: service_healthy }
     valkey: { condition: service_healthy }
