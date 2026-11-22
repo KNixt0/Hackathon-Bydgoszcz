@@ -13,7 +13,7 @@ const FIELD_LABEL: Record<string, string> = {
   intervention_note: "Interwencja",
   follow_up_due: "Termin weryfikacji",
   label: "Ocena",
-  flag: "Próg flagowania",
+  flag: "Próg oznaczenia",
   critical: "Próg krytyczny",
   method: "Sposób",
   format: "Format",

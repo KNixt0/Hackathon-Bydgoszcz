@@ -291,10 +291,7 @@ export function AuditPage() {
                         </button>
                       </td>
                       <td>{e.actor_email}<span className="rt__sub">{(ROLE_LABEL[e.actor_role] ?? e.actor_role).toLowerCase()}</span></td>
-                      <td>
-                        {AUDIT_ACTION_LABEL[e.action] ?? e.action}
-                        {e.action === "calibration_preview" && <span className="tagline">podgląd własny</span>}
-                      </td>
+                      <td className="audit__act">{AUDIT_ACTION_LABEL[e.action] ?? e.action}</td>
                       <td>{objectLabel(e)}{e.incident_title && <span className="rt__sub truncate">{e.incident_title}</span>}</td>
                       <td className="audit__ok">Zapisano</td>
                     </tr>

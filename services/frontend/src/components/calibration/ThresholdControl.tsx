@@ -14,7 +14,7 @@ export function ThresholdControl({ value, onChange }: Props) {
   return (
     <div className="thc">
       <p className="thc__head">
-        <label className="thc__label" htmlFor="thr-flag">Próg flagowania</label>
+        <label className="thc__label" htmlFor="thr-flag">Próg oznaczenia</label>
         <span className="thc__value num" aria-hidden="true">: {value}</span>
       </p>
       <p className="thc__hint" id="thr-flag-hint">Od tego wyniku ryzyka sprawa trafia do kolejki. Strzałki na klawiaturze zmieniają próg o 1.</p>

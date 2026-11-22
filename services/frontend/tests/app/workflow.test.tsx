@@ -178,12 +178,12 @@ describe("global thresholds", () => {
     const { calls } = mockApi((call) => (call.path === "/api/settings/thresholds" ? { json: { flag: 30, critical: 80, updated_by: supervisorUser.email, updated_at: "2026-11-20T08:00:00Z" } } : undefined));
     renderApp({ route: "/kalibracja" });
     const box = await screen.findByTestId("global-thresholds");
-    await waitFor(() => expect(screen.getByLabelText("Próg flagowania")).toHaveValue("30"));
+    await waitFor(() => expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("30"));
     expect(box).toHaveTextContent(`Obowiązują progi globalne: oznaczenie od 30, krytyczne od 80. Ustawił ${supervisorUser.email}, 20.11.2026.`);
     expect(screen.getByTestId("global-owner")).toHaveTextContent(`Progi globalne ustawił ${supervisorUser.email}, 20.11.2026. Zmienia je kierownik.`);
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "31" } });
-    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("31");
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "31" } });
+    expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("31");
     expect(box).toHaveTextContent("Podgląd, niezapisane. Progi globalne to 30 i 80, a w tym podglądzie 31 i 80.");
     expect(within(box).getByText("Progi globalne zapisuje kierownik.")).toBeInTheDocument();
     expect(within(box).getByRole("button", { name: "Przywróć globalne (30 / 80)" })).toBeInTheDocument();
@@ -198,7 +198,7 @@ describe("global thresholds", () => {
     await screen.findByTestId("global-thresholds");
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument(); // nothing changed yet
     expect(screen.queryByTestId("global-owner")).not.toBeInTheDocument();
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "30" } }); // 20 → 30
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "30" } }); // 20 → 30
     await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     await waitFor(() => expect(calls.find((c) => c.method === "PUT")?.body).toEqual({ flag: 30, critical: 70 }));
     expect(await screen.findByText(/Ustawił kierownik@uknf.local/)).toBeInTheDocument();
@@ -212,10 +212,10 @@ describe("global thresholds", () => {
     mockApi((call) => (call.method === "PUT" && call.path === "/api/settings/thresholds" ? { status: 500, json: { detail: "Baza danych jest niedostępna." } } : undefined), { user: supervisorUser });
     renderApp({ route: "/kalibracja" });
     await screen.findByTestId("global-thresholds");
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "21" } });
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "21" } });
     await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Nie zapisano progów. Baza danych jest niedostępna. Spróbuj ponownie.");
-    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("21");
+    expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("21");
   });
 
   it("marks analyst-labelled cases in the calibration set", async () => {

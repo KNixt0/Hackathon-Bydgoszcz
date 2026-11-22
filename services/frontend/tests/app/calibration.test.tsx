@@ -9,9 +9,9 @@ import { mockApi, renderApp } from "../helpers";
 
 const text = (id: string) => screen.getByTestId(id).textContent;
 const scores = incidentSummaries.map((i) => i.risk_score);
-const flagField = () => screen.getByLabelText("Próg flagowania");
+const flagField = () => screen.getByLabelText("Próg oznaczenia");
 const critField = () => screen.getByLabelText("Próg krytyczny");
-const slider = () => screen.getByRole("slider", { name: "Próg flagowania" });
+const slider = () => screen.getByRole("slider", { name: "Próg oznaczenia" });
 
 async function ready() {
   await waitFor(() => expect(screen.getByTestId("live-sentence")).toHaveTextContent("sprawdzonych spraw"));
