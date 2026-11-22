@@ -271,4 +271,6 @@
 .apane__changes { margin-top: 12px; }
 .apane__hint { font-size: var(--fs-12); color: var(--muted); margin-top: 12px; }
 @media (max-width: 1100px) { .asplit--open { grid-template-columns: minmax(0, 1fr); } .apane { border-left: 0; border-top: 1px solid var(--line); } }
-.audit__act { min-width: 16rem; }
+.audit__act { white-space: nowrap; }
+.audit--striped .truncate { display: block; max-width: 26ch; }
+.asplit--open .audit { min-width: 0; }
