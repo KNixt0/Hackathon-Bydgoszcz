@@ -14,7 +14,7 @@ kubectl -n investwatch rollout status deploy/backend --timeout=10m
 kubectl -n investwatch port-forward svc/frontend 3000:8080
 ```
 
-Potem http://localhost:3000, logowanie przyciskami demo (analityk / kierownik). Formularz obywatela: http://localhost:3000/zglos. Pierwszy start importuje próbki z `samples/` (ok. minuty).
+Potem http://localhost:3000, logowanie przyciskami demo (analityk / kierownik). Formularz obywatela: http://localhost:3000/zglos. Pierwszy start importuje prawdziwe próbki z `samples/real/` (ok. minuty).
 
 Klaster bez rejestru: `SAVE=1 ./deploy/k8s/build-images.sh` zapisuje `investwatch-images.tar`; załaduj go do węzłów (`kind load image-archive`, `k3s ctr images import`, `minikube image load`). Własny rejestr: `REGISTRY=rejestr.local/investwatch ./deploy/k8s/build-images.sh` i ustaw `newName` w `kustomization.yaml`.
 
@@ -24,7 +24,7 @@ Klaster bez rejestru: `SAVE=1 ./deploy/k8s/build-images.sh` zapisuje `investwatc
 - NetworkPolicy: domyślnie wszystko zablokowane. Z zewnątrz dostępny jest tylko frontend (8080); bazy, kolejka, storage i ai przyjmują ruch wyłącznie od api/worker/beat. Żaden pod nie ma dostępu do internetu.
 - Brak tokenów ServiceAccount w podach, brak Service typu NodePort/LoadBalancer.
 - Sekrety tylko w `secrets.env` (ignorowany przez git) → Secret generowany przez kustomize.
-- Bez internetu system działa na próbkach z `samples/` (w tym `samples/real/`: publiczne strony i filmy instytucji finansowych). Odświeżanie rejestrów KNF i skanowanie nowych stron wymagają włączenia `optional/worker-internet.yaml` (tylko HTTP/HTTPS, bez adresów prywatnych).
+- Bez internetu system działa na próbkach z `samples/real/` (publiczne strony i filmy instytucji finansowych). Odświeżanie rejestrów KNF i skanowanie nowych stron wymagają włączenia `optional/worker-internet.yaml` (tylko HTTP/HTTPS, bez adresów prywatnych).
 
 ## Konfiguracja
 

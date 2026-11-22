@@ -9,7 +9,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Formularz publiczny dla obywateli, bez logowania: http://localhost:3000/zglos. Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
+Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Formularz publiczny dla obywateli, bez logowania: http://localhost:3000/zglos. Przy pierwszym starcie prawdziwe, zescrapowane próbki z `samples/real/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
 Skalowanie workerów: `docker compose up --scale worker=3`.
 
 Kubernetes (manifesty YAML, Pod Security `restricted`, NetworkPolicy, bez dostępu do internetu): `deploy/k8s/README.md`.
@@ -52,7 +52,7 @@ Wartości domyślne z `.env.example`.
 | `S3_ACCESS_KEY` | change-me-access | klucz dostępu do storage |
 | `S3_SECRET_KEY` | change-me-secret | sekret storage |
 | `S3_BUCKET` | evidence | bucket na archiwum |
-| `SAMPLES_HOST_DIR` | ./samples | katalog próbek (montowany tylko do odczytu) |
+| `SAMPLES_HOST_DIR` | ./samples/real | katalog próbek (montowany tylko do odczytu); `./samples` dodaje syntetyczne przypadki testowe |
 | `SEED_ON_START` | true | import próbek przy pierwszym starcie |
 | `ALERT_THRESHOLD` | 70 | próg wyniku dla alertu |
 | `PROXY_URLS` | (puste) | lista proxy dla scrapera |

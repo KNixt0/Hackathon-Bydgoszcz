@@ -27,7 +27,7 @@ x-backend: &backend
     DEMO_SUPERVISOR_EMAIL: ${DEMO_SUPERVISOR_EMAIL:-kierownik@uknf.local}
     DEMO_SUPERVISOR_PASSWORD: ${DEMO_SUPERVISOR_PASSWORD:-}
   volumes:
-    - ${SAMPLES_HOST_DIR:-./samples}:/samples:ro
+    - ${SAMPLES_HOST_DIR:-./samples/real}:/samples:ro
   depends_on:
     postgres: { condition: service_healthy }
     valkey: { condition: service_healthy }
