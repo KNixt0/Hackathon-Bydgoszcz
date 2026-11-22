@@ -292,7 +292,7 @@ describe("scan, demo and jobs", () => {
     const { calls } = mockApi();
     renderApp();
     await ready();
-    await user.click(screen.getByRole("button", { name: "Dane demo" }));
+    await user.click(screen.getByRole("button", { name: "Dane demonstracyjne" }));
     await user.click(await screen.findByRole("menuitem", { name: /Uruchom próbkę demo/ }));
     await waitFor(() => expect(calls.find((c) => c.path === "/api/demo/trigger")?.body).toEqual({ case: "case3" }));
     expect(await screen.findByText(/Próbka demonstracyjna została przekazana/)).toBeInTheDocument();

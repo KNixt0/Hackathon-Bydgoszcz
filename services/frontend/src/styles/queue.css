@@ -52,15 +52,15 @@
 .dl svg { width: 1.125em; height: 1.125em; flex: none; }
 
 /* ── Queue table: 14px, 2px rule under the header, 1px rules between rows, no fills */
-.queue { min-width: 1240px; table-layout: fixed; }
-.queue col.c-id { width: 96px; }
-.queue col.c-started { width: 150px; }
+.queue { min-width: 1340px; table-layout: fixed; }
+.queue col.c-id { width: 104px; }
+.queue col.c-started { width: 190px; }
 .queue col.c-level { width: 144px; }
 .queue col.c-src { width: 108px; }
 .queue col.c-mod { width: 64px; }
 .queue col.c-rules { width: 132px; }
 .queue col.c-status { width: 180px; }
-.queue col.c-when { width: 132px; }
+.queue col.c-when { width: 156px; }
 .queue th { padding: 8px 12px; border-bottom: 2px solid var(--ink); white-space: nowrap; vertical-align: bottom; }
 .queue td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .queue th:last-child, .queue td:last-child { padding-right: 0; }
@@ -82,7 +82,8 @@
 .queue__status { display: flex; flex-direction: column; min-width: 0; }
 .queue__status a { font-weight: 500; }
 .queue__new { margin-left: 8px; }
-.queue__when { white-space: nowrap; color: var(--ink-2); }
+.queue__when { color: var(--ink-2); }
+.queue__when .queue__cell-main { white-space: nowrap; }
 .skeleton-row td { padding: 12px; }
 .table-wrap[role="region"]:focus-visible { outline-offset: 2px; }
 

@@ -11,7 +11,7 @@ export function DemoMenu({ onTriggerDemo, onImportSamples }: Props) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button type="button" className="linkbtn hd__menu">
-          Dane demo<ChevronDown aria-hidden="true" />
+          Dane demonstracyjne<ChevronDown aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
