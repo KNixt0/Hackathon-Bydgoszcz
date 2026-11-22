@@ -220,7 +220,7 @@ def extract_facts(page: Page, embedder: Embedder) -> Facts:
     return facts
 
 
-_NAME_TOKEN = r"(?:[A-ZŁŚŻŹĆÓ0-9][\w&./\-]*|&|i|of|and|de)"
+_NAME_TOKEN = r"(?:[A-ZŁŚŻŹĆÓ0-9][\w&./\-]*|[a-z][A-ZŁŚŻŹĆÓ][\w&./\-]*|&|i|of|and|de)"
 _LEGAL_NAME = re.compile(rf"((?:{_NAME_TOKEN} ){{1,6}}?{lx.LEGAL_FORM_RE})(?![\w])")
 _SERVICE_NAME = re.compile(
     r"((?:[A-ZŁŚŻŹĆÓ][\w&\-]+ ){1,3}(?:Wealth Management|Family Office|Asset Management|Capital|Investments?|"
@@ -340,6 +340,12 @@ class AnalysisContext:
         return extract_facts(self.page, self.embedder)
 
     @cached_property
+    def scope(self):  # -> schemas.Scope
+        from .scope import assess_scope
+
+        return assess_scope(self)
+
+    @cached_property
     def entities(self) -> ResolvedEntities:
         return self._resolve_entities()
 
@@ -381,7 +387,10 @@ class AnalysisContext:
             counts: dict[str, int] = {}
             for _, _, entry in res.registered_brands:
                 counts[entry["name"]] = counts.get(entry["name"], 0) + 1
-            best = max(counts, key=lambda k: counts[k])
+            # Prefer an explicitly identified publisher when its legal name matches a
+            # register hit. Footer references to other firms do not outrank that identity.
+            publisher_matches = [name for name in counts if author and _same_entity(name, author)]
+            best = max(publisher_matches or counts, key=lambda name: counts[name])
             res.firm = Party(name=best, kind="investment_firm")
             res.firm_source = "register"
         else:

@@ -1,4 +1,7 @@
-"""Evidence package: Jinja2 HTML (autoescaped) rendered to A4 PDF by headless Chromium."""
+"""Detection report ("Raport z wykrycia"): Jinja2 HTML (autoescaped) rendered to A4 PDF by headless Chromium.
+
+The report documents what was detected and how; it is not a legal qualification and proposes no
+formal step (contract v4, decision #22)."""
 
 from __future__ import annotations
 
@@ -29,7 +32,8 @@ STATUSES = {
     "in_review": "W weryfikacji",
     "escalation_requested": "Wniosek o eskalację",
     "escalated": "Eskalowana",
-    "resolved": "Zamknięta – naruszenie potwierdzone",
+    "awaiting_correction": "Po interwencji – oczekuje na weryfikację",
+    "resolved": "Zamknięta – potwierdzona przez analityka",
     "false_positive": "Zamknięta – fałszywy alarm",
 }
 HISTORY_ACTIONS = {"assign": "Przypisanie", "transition": "Zmiana etapu", "label": "Ocena trafności"}
@@ -39,16 +43,24 @@ HISTORY_FIELDS = {
     "escalation_path": "Ścieżka eskalacji",
     "resolution_action": "Działanie końcowe",
     "resolution_note": "Notatka",
+    "intervention_note": "Interwencja",
+    "follow_up_due": "Termin weryfikacji",
     "label": "Ocena",
 }
 HISTORY_VALUES = {
     **STATUSES,
-    "SUPERVISION_RISK_DEPT": "Departament nadzoru (ryzyko)",
-    "LEGAL_WARNING_LIST": "Departament Prawny – lista ostrzeżeń",
-    "THIRD_PARTY_AUDIT": "Audyt podmiotu trzeciego",
-    "evidence_report": "Raport dowodowy",
-    "warning_list_request": "Wniosek o wpis na listę ostrzeżeń",
-    "enhanced_monitoring": "Wzmożony monitoring",
+    "RISK_INFORMATION": "Ryzyko informacyjne",
+    "UNLICENSED_ACTIVITY": "Działalność bez zezwolenia",
+    "THIRD_PARTY_ADVERTISING": "Reklama podmiotu trzeciego",
+    # values written before contract v4, shown in old histories
+    "SUPERVISION_RISK_DEPT": "Ryzyko informacyjne",
+    "LEGAL_WARNING_LIST": "Działalność bez zezwolenia",
+    "THIRD_PARTY_AUDIT": "Reklama podmiotu trzeciego",
+    "evidence_report": "Raport z wykrycia",
+    "content_removed": "Treść usunięta",
+    "content_corrected": "Treść poprawiona",
+    "warning_list_request": "Raport z wykrycia",
+    "enhanced_monitoring": "Monitorowanie",
     "false_positive": "Fałszywy alarm",
     "true_positive": "Trafny alarm",
     "unlabeled": "Bez oceny",
@@ -73,6 +85,17 @@ EVIDENCE_KIND = {
 }
 REPORT_CATEGORIES = {1: "reklama influencera", 2: "materiał firmy", 3: "doradztwo bez zezwolenia"}
 VERDICTS = {"upheld": "utrzymany", "weakened": "osłabiony", "rejected": "odrzucony"}
+CONTENT_STATES = {
+    "online": "dostępna, bez zmian",
+    "changed": "zmieniona od wykrycia",
+    "removed": "usunięta (HTTP 404/410)",
+    "unreachable": "niedostępna",
+}
+FOLLOW_UP_OUTCOMES = {
+    "removed": "treść usunięta",
+    "corrected": "treść poprawiona",
+    "persisting": "naruszenie trwa",
+}
 
 
 def _level(score: float, threshold: float) -> str:
@@ -120,33 +143,14 @@ def render_html(incident: dict, history: list[dict] | None = None, reports: list
         backend_version=__version__,
         reports=reports or [],
         report_categories=REPORT_CATEGORIES,
+        observation=incident.get("observation") or {},
+        follow_up=incident.get("follow_up"),
+        scope=incident.get("scope") or {},
+        content_states=CONTENT_STATES,
+        follow_up_outcomes=FOLLOW_UP_OUTCOMES,
         **_history_context(history),
     )
 
 
 def render_pdf(incident: dict, history: list[dict] | None = None, reports: list[dict] | None = None) -> bytes:
     return html_to_pdf(render_html(incident, history, reports))
-
-
-def render_warning_list_html(incident: dict, history: list[dict] | None = None) -> str:
-    """Draft request to add the entity to the KNF public warnings list (Module 3)."""
-    workflow = incident.get("workflow") or {}
-    phrases = [e for e in incident.get("evidence") or [] if isinstance(e, dict) and e.get("quote")]
-    return _env.get_template("warning_list_request.html").render(
-        i=incident,
-        source=incident.get("source") or {},
-        entities=incident.get("entities") or {},
-        registry_checks=incident.get("registry_checks") or [],
-        phrases=phrases,
-        requested_by=workflow.get("assigned_to") or "analityk prowadzący sprawę",
-        module_label=MODULES.get(incident.get("primary_module"), str(incident.get("primary_module"))),
-        status_label=STATUSES.get(incident.get("status"), incident.get("status")),
-        registry_status=REGISTRY_STATUS,
-        generated_at=datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
-        backend_version=__version__,
-        **_history_context(history),
-    )
-
-
-def render_warning_list_pdf(incident: dict, history: list[dict] | None = None) -> bytes:
-    return html_to_pdf(render_warning_list_html(incident, history))

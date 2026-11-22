@@ -100,6 +100,11 @@ export function mockApi(override?: Route, { user = analystUser, demoLogin = true
     if (path === "/api/settings/thresholds") return json(globalThresholds);
     if (path === "/api/audit") return session?.role === "SUPERVISOR" ? json({ items: [] }) : json({ detail: "supervisor role required" }, 403);
     if (/^\/api\/incidents\/[^/]+\/history$/.test(path)) return json({ items: [] });
+    if (/^\/api\/incidents\/[^/]+\/versions$/.test(path)) return json({ items: [] });
+    if (path === "/api/settings/thresholds/history") return json({ items: [] });
+    if (path === "/api/notifications") return json({ items: [] });
+    if (path === "/api/settings/thresholds/preview") return json(null, 204);
+    if (/^\/api\/incidents\/[^/]+\/rescan$/.test(path)) return json({ job_id: "job-rescan" }, 202);
     const reportsOf = path.match(/^\/api\/incidents\/([^/]+)\/reports$/);
     if (reportsOf?.[1]) {
       const found = incidentsById[reportsOf[1]] ?? incidentSummaries.find((s) => s.id === reportsOf[1]);

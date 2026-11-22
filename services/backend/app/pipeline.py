@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 from pydantic import ValidationError
@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from app import ai_client, events
 from app.config import get_settings
 from app.db import session_scope
-from app.incidents import level_for, to_summary, upsert_incident
+from app.incidents import level_for, record_unavailable, store_observation, to_summary
 from app.jobs import set_state
 from app.models import ScanJob, utcnow
 from app.public_reports import crossed_viral, link_pending
@@ -23,7 +23,7 @@ from app.scraper.parsers import GENERIC, detect_platform, select_parser
 from app.scraper.ssrf import is_fixture_url
 from app.scraper.visual_audit import attach_visual
 from app.storage import get_store
-from app.thresholds import alert_threshold
+from app.thresholds import alert_threshold, get_thresholds
 
 log = logging.getLogger(__name__)
 
@@ -154,6 +154,23 @@ def _normalise_analysis(analysis: dict, document: dict, context: dict) -> dict:
     return payload
 
 
+def detection_time(days_ago: object) -> datetime | None:
+    """When a sample is shown as detected. Never before the system existed (SYSTEM_START_DATE).
+
+    Demo samples carry `detected_days_ago` (0-30). While the system is younger than 30 days these are
+    scaled into the time since the start, one monotonic mapping for all samples, so the queue keeps its
+    order without showing dates the system could not have produced."""
+    if not isinstance(days_ago, int | float) or isinstance(days_ago, bool) or not 0 <= days_ago <= 3650:
+        return None
+    now = utcnow()
+    window = now - get_settings().system_start
+    if window <= timedelta(0):
+        return now
+    if window >= timedelta(days=30):
+        return now - min(timedelta(days=float(days_ago)), window)
+    return now - window * (min(float(days_ago), 30.0) / 30.0)
+
+
 def _run(job_id: str) -> None:
     with session_scope() as db:
         job = db.get(ScanJob, job_id)
@@ -176,6 +193,8 @@ def _run(job_id: str) -> None:
             raise _Retry(str(exc)) from exc
         raise _Fail(str(exc)) from exc
     if page.status >= 400:
+        if _observe_unavailable(job, job_id, page.status):
+            return
         raise _Fail(f"source answered with http status {page.status}")
 
     document = build_document(job, page, fetcher)
@@ -196,13 +215,10 @@ def _run(job_id: str) -> None:
         raise _Fail(str(exc)) from exc
     payload = _normalise_analysis(analysis, document, context)
 
-    created_at = None
-    days_ago = (job.meta or {}).get("detected_days_ago")
-    if isinstance(days_ago, int | float) and not isinstance(days_ago, bool) and 0 <= days_ago <= 3650:
-        created_at = utcnow() - timedelta(days=float(days_ago))
+    created_at = detection_time((job.meta or {}).get("detected_days_ago"))
 
     with session_scope() as db:
-        row, created = upsert_incident(
+        stored = store_observation(
             db,
             payload,
             created_at=created_at,
@@ -212,7 +228,10 @@ def _run(job_id: str) -> None:
             fetch_url=job.fetch_url,
             render=job.render,
             module_hint=job.module_hint,
+            job_id=job_id,
+            flag_threshold=float(get_thresholds(db)["flag"]),
         )
+        row, created = stored.row, stored.created
         linked = link_pending(db, row, job_id)  # reports that were waiting for this scan
         summary = to_summary(row)
         incident_id = row.id
@@ -220,7 +239,8 @@ def _run(job_id: str) -> None:
     set_state(job_id, "done", incident_id=incident_id)
     events.emit("incident:new" if created else "incident:updated", summary)
     critical = alert_threshold()  # global "critical" threshold
-    if created and summary["risk_score"] >= critical:
+    # alert on a detection: a new case, or a known source that only now reaches the threshold
+    if (created or stored.detected) and summary["risk_score"] >= critical:
         events.emit("alert:high", summary)
     if linked and crossed_viral(*linked) and summary["risk_score"] >= critical:
         events.emit("alert:viral", summary)
@@ -233,6 +253,22 @@ def _run(job_id: str) -> None:
             "risk_score": summary["risk_score"],
         },
     )
+
+
+def _observe_unavailable(job: ScanJob, job_id: str, status: int) -> bool:
+    """404/410 or another error page from a source that is already a case: record the observation
+    (contract v4: `removed` / `unreachable`) and finish the job, instead of failing it."""
+    with session_scope() as db:
+        row = record_unavailable(db, job.url, status, job_id)
+        if row is None:
+            return False
+        summary, incident_id = to_summary(row), row.id
+    set_state(job_id, "done", incident_id=incident_id)
+    events.emit("incident:updated", summary)
+    log.info(
+        "source unavailable", extra={"job_id": job_id, "incident_id": incident_id, "http_status": status}
+    )
+    return True
 
 
 def process_job(job_id: str) -> float | None:

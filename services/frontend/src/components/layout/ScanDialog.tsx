@@ -1,10 +1,8 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { CircleAlert, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { MODULE_LABEL, MODULES } from "../../domain/labels";
 import { useRestoreFocus } from "../../hooks/useRestoreFocus";
 import type { ScanRequest } from "../../types/api";
-import type { ModuleId } from "../../types/incident";
 import { Button } from "../ui/Button";
 
 interface Props {
@@ -25,7 +23,6 @@ function validUrl(value: string): boolean {
 
 export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
   const [url, setUrl] = useState("");
-  const [moduleHint, setModuleHint] = useState<ModuleId | 0>(0);
   const [render, setRender] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -40,7 +37,7 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
     }
     setBusy(true);
     setError(null);
-    const failure = await onSubmit({ url: trimmed, ...(moduleHint ? { module_hint: moduleHint } : {}), ...(render ? { render: true } : {}) });
+    const failure = await onSubmit({ url: trimmed, ...(render ? { render: true } : {}) });
     setBusy(false);
     if (failure) {
       setError(failure);
@@ -70,9 +67,9 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
           <form onSubmit={submit} noValidate>
             <div className="dialog__head">
               <div>
-                <Dialog.Title className="dialog__title">Skanuj adres URL</Dialog.Title>
+                <Dialog.Title className="dialog__title">Analiza URL</Dialog.Title>
                 <Dialog.Description className="dialog__desc">
-                  Strona zostanie pobrana, zarchiwizowana i oceniona przez silnik. Wynik trafi do kolejki.
+                  Strona zostanie pobrana, zarchiwizowana i przeanalizowana jednocześnie we wszystkich trzech modułach. Wynik trafi do kolejki.
                 </Dialog.Description>
               </div>
               <Dialog.Close asChild>
@@ -81,7 +78,7 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
             </div>
             <div className="dialog__body">
               <div className="field">
-                <label className="field__label" htmlFor="scan-url">Adres materiału</label>
+                <label className="field__label" htmlFor="scan-url">Adres URL materiału</label>
                 <span className="field__hint" id="scan-hint">Pełny adres strony lub posta, np. https://przyklad.pl/oferta</span>
                 <input
                   id="scan-url" className="input" type="url" inputMode="url" required value={url}
@@ -89,13 +86,6 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
                   onChange={(e) => { setUrl(e.target.value); if (error) setError(null); }}
                 />
               </div>
-              <label className="field">
-                <span className="field__label">Moduł analityczny</span>
-                <select className="select" value={moduleHint} onChange={(e) => setModuleHint(Number(e.target.value) as ModuleId | 0)}>
-                  <option value={0}>Wykryj automatycznie</option>
-                  {MODULES.map((m) => <option key={m} value={m}>Moduł {m}: {MODULE_LABEL[m]}</option>)}
-                </select>
-              </label>
               <label className="checkbox">
                 <input type="checkbox" checked={render} onChange={(e) => setRender(e.target.checked)} />
                 <span>Renderuj stronę w przeglądarce (treści ładowane skryptami, zrzut ekranu)</span>
@@ -105,7 +95,7 @@ export function ScanDialog({ open, onOpenChange, onSubmit }: Props) {
               )}
             </div>
             <div className="dialog__foot">
-              <Button type="submit" variant="primary" disabled={busy}>{busy ? "Zlecanie…" : "Zleć skanowanie"}</Button>
+              <Button type="submit" variant="primary" disabled={busy}>{busy ? "Zlecanie…" : "Uruchom analizę"}</Button>
               <Dialog.Close asChild><Button>Anuluj</Button></Dialog.Close>
             </div>
           </form>

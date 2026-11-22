@@ -25,7 +25,7 @@ function loginError(err: unknown): string {
   if (err instanceof ApiError && err.status === 401) {
     return "Ten adres e-mail i hasło nie pasują do żadnego konta. Sprawdź oba pola i spróbuj ponownie.";
   }
-  if (err instanceof ApiError && err.status === 404) return "Logowanie demo jest wyłączone na tym serwerze.";
+  if (err instanceof ApiError && err.status === 404) return "Logowanie na konta demonstracyjne jest wyłączone na tym serwerze.";
   return errorMessage(err);
 }
 

@@ -8,7 +8,15 @@ from typing import Annotated, Any, Literal
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, field_validator
 
 # contract v3: the case workflow (old closed_violation -> resolved, closed_ok -> false_positive)
-Status = Literal["new", "in_review", "escalation_requested", "escalated", "resolved", "false_positive"]
+Status = Literal[
+    "new",
+    "in_review",
+    "escalation_requested",
+    "escalated",
+    "awaiting_correction",
+    "resolved",
+    "false_positive",
+]
 ModuleId = Literal[1, 2, 3]
 Platform = Literal["web", "youtube", "instagram", "facebook", "tiktok", "x", "google_ads", "sample"]
 PLATFORMS: tuple[str, ...] = (
@@ -26,12 +34,14 @@ STATUSES: tuple[str, ...] = (
     "in_review",
     "escalation_requested",
     "escalated",
+    "awaiting_correction",  # contract v4: an intervention was recorded, the outcome is verified later
     "resolved",
     "false_positive",
 )
 Role = Literal["ANALYST", "SUPERVISOR"]
-EscalationPath = Literal["SUPERVISION_RISK_DEPT", "LEGAL_WARNING_LIST", "THIRD_PARTY_AUDIT"]
-ResolutionAction = Literal["evidence_report", "warning_list_request", "enhanced_monitoring", "false_positive"]
+# contract v4: neutral paths (risk information / activity without authorisation / third-party advertising)
+EscalationPath = Literal["RISK_INFORMATION", "UNLICENSED_ACTIVITY", "THIRD_PARTY_ADVERTISING"]
+ResolutionAction = Literal["evidence_report", "content_removed", "content_corrected", "false_positive"]
 Label = Literal["unlabeled", "true_positive", "false_positive"]
 
 
@@ -99,6 +109,7 @@ class TransitionRequest(Strict):
     reason: str | None = Field(default=None, max_length=2000)
     escalation_path: EscalationPath | None = None
     resolution_action: ResolutionAction | None = None
+    follow_up_days: int | None = Field(default=None, ge=1, le=180)  # awaiting_correction only
 
 
 class LabelRequest(Strict):

@@ -275,8 +275,8 @@ export const orangeCase = {
   evidence: orangeEvidence,
   recommendation: {
     action: "explain",
-    label: "Wezwać firmę do wyjaśnień",
-    next_step: "Wystąpić do Tradeon Europe Ltd o umowę z BrightReach Media i zasady wynagradzania podmiotów promujących; zweryfikować ręcznie próbkę kont komentujących.",
+    label: "Wymaga oceny analityka",
+    next_step: "Analityk ocenia relację Tradeon Europe Ltd z BrightReach Media i zasady wynagradzania podmiotów promujących; zweryfikować ręcznie próbkę kont komentujących.",
   },
   engine: ENGINE,
 };
@@ -486,8 +486,8 @@ export const redCase = {
   ],
   recommendation: {
     action: "escalate",
-    label: "Eskalować do Departamentu Postępowań",
-    next_step: "Przekazać pakiet dowodowy do zawiadomienia o podejrzeniu popełnienia przestępstwa z art. 178 ustawy o obrocie; zabezpieczyć archiwum strony.",
+    label: "Wysoki priorytet",
+    next_step: "Przekazać raport z wykrycia do oceny merytorycznej właściwej komórki UKNF; zabezpieczyć archiwum strony.",
   },
   engine: { ...ENGINE, duration_ms: 5320 },
 };
@@ -603,7 +603,7 @@ export function trendsFrom(summaries, days = 30, now = NOW) {
 
 export const trends = trendsFrom(incidentSummaries);
 
-const DEFAULT_PATH = { 1: "THIRD_PARTY_AUDIT", 2: "SUPERVISION_RISK_DEPT", 3: "LEGAL_WARNING_LIST" };
+const DEFAULT_PATH = { 1: "THIRD_PARTY_ADVERTISING", 2: "RISK_INFORMATION", 3: "UNLICENSED_ACTIVITY" };
 
 /** A full Incident for list rows that have no hand-written detail: empty graph, no forensics/financials. */
 export function minimalIncident(summary) {
@@ -632,9 +632,9 @@ export function minimalIncident(summary) {
     debate: { rounds: [], claims: [], arguments_for: [], arguments_against: [], arbiter_rationale: "" },
     evidence: [],
     recommendation: summary.risk_score >= 70
-      ? { action: "escalate", label: "Eskalować", next_step: "Przekazać sprawę do weryfikacji przez drugiego analityka." }
+      ? { action: "escalate", label: "Wysoki priorytet", next_step: "Przekazać raport z wykrycia do oceny merytorycznej właściwej komórki UKNF." }
       : summary.risk_score >= 20
-        ? { action: "explain", label: "Wezwać do wyjaśnień", next_step: "Zweryfikować ręcznie naruszone kryteria." }
+        ? { action: "explain", label: "Wymaga oceny analityka", next_step: "Zweryfikować ręcznie naruszone kryteria." }
         : { action: "none", label: "Bez działań", next_step: "Zamknąć sprawę." },
     engine: { ...ENGINE, llm_used: false, model: null, duration_ms: 610 },
   };

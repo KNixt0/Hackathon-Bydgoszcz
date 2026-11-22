@@ -1,0 +1,5 @@
+# Shell scripts run inside Linux containers: CRLF from a Windows checkout breaks them
+# ("exec /entrypoint.sh: no such file or directory"), so they always keep LF.
+*.sh text eol=lf
+Swarm.command text eol=lf
+swarm text eol=lf

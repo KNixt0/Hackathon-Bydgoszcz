@@ -103,3 +103,12 @@
   .page__title { font-size: 24px; }
   .user-chip__role { display: none; }
 }
+
+/* Calibration notifications (ported from #33) */
+.notifications { width: min(440px, calc(100vw - 32px)); }
+.notifications__list { max-height: 420px; overflow: auto; list-style: none; margin: 0; padding: 0; }
+.notification { display: grid; gap: 8px; margin: 0; padding: 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-14); }
+.notification p { margin: 0; }
+.notification--unread { background: var(--tint); border-left: 3px solid var(--accent); }
+.notification .btn { justify-self: start; }
+.notification-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 6px; padding: 0 6px; border-radius: 10px; background: var(--accent); color: var(--surface); font-size: var(--fs-12, 12px); }

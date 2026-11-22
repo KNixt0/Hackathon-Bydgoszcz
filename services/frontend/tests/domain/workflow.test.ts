@@ -19,10 +19,14 @@ describe("workflow actions", () => {
     expect(ids("resolved", "SUPERVISOR", null)).toEqual([]);
     expect(ids("false_positive", "ANALYST", null)).toEqual([]);
     expect(ids("new", "ANALYST", null)).toEqual(["assign", "start"]);
-    expect(ids("in_review", "ANALYST")).toEqual(["request_escalation", "close_violation", "close_false_positive"]);
+    expect(ids("in_review", "ANALYST")).toEqual(["request_escalation", "record_intervention", "close_violation", "close_false_positive"]);
+    expect(ids("awaiting_correction", "ANALYST")).toEqual(["close_after_follow_up", "reopen_review", "request_escalation"]);
   });
 
-  it("closing always asks for a required reason", () => {
+  it("closing and recording an intervention always ask for a required reason", () => {
     for (const a of availableActions("escalated", "SUPERVISOR", "a@x", "a@x")) expect(a.dialog?.reason).toBe("required");
+    const record = availableActions("in_review", "ANALYST", "a@x", "a@x").find((a) => a.id === "record_intervention");
+    expect(record?.to).toBe("awaiting_correction");
+    expect(record?.dialog?.followUpDays).toBe(true);
   });
 });

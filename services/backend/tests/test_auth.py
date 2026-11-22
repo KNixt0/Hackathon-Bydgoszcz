@@ -147,7 +147,7 @@ def test_route_inventory_is_complete():
         "/api/settings/thresholds",
         "/api/incidents/x/transition",
         "/api/incidents/x/history",
-        "/api/incidents/x/warning-list-request.pdf",
+        "/api/incidents/x/versions/x",
         "/api/evidence/x",
         "/api/calibration",
         "/api/scans",

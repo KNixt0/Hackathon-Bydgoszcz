@@ -1,4 +1,4 @@
-version: 3
+version: 4
 
 # Service boundaries
 
@@ -198,3 +198,21 @@ Additions and deviations found in the code; nothing above was renamed.
 - Backend settings `VISUAL_AUDIT_ENABLED` (default true) and `VISUAL_AUDIT_TIMEOUT_SECONDS` (default 20) control the rendered audit; it runs only for HTML documents and when Playwright is enabled, otherwise `visual` is absent and the AI service uses static analysis.
 - `GET /api/auth/config` returns `{demo_login, authenticated}`.
 
+
+## Version 4 additions
+
+| Method + path | Request | Response |
+|---|---|---|
+| `GET /api/incidents/{id}/versions` | | `{items: {id, content_hash, risk_score, changed, created_at, outcome: "content"\|"removed"\|"unreachable", http_status, published_at, is_evidence, has_snapshot}[]}` newest first, max 20 plus the evidence |
+| `GET /api/incidents/{id}/versions/{version_id}` | | `{id, created_at, is_evidence, analysis: Analysis}` · 404 when no snapshot is stored (unchanged content) |
+| `POST /api/incidents/{id}/transition` | also `follow_up_days?: 1..180` (only with `to: "awaiting_correction"`) | as before |
+| `GET /api/incidents/{id}/export.pdf` | | the detection report ("Raport z wykrycia"): publication date, first detection, last check, content state, follow-up, scope, disclaimer |
+
+Removed: `GET /api/incidents/{id}/warning-list-request.pdf` (404).
+
+Pipeline:
+- A scan of a URL that already has a case appends an observation. The case payload changes only while the case has no evidence yet (never flagged); the first observation with `risk_score >= flag` threshold becomes the evidence and `alert:high` fires for it when `>= critical`.
+- HTTP 404/410 from a known source: observation `removed`, `content_state: "removed"`, follow-up outcome `removed`, job `done`, `incident:updated`. Other error statuses of a known source: `unreachable`. An unknown URL that fails is still a failed job.
+- While `awaiting_correction`: the URL is on the watchlist (6 h); each observation sets `follow_up.outcome` (`removed`, `corrected` = changed and below the flag threshold, else `persisting`). Closing the case removes the watch.
+- A closed case whose content changed and is flagged again opens a new case with `previous_incident_id`.
+- The periodic re-scan skips cases closed as `false_positive` (a watched URL is still fetched).

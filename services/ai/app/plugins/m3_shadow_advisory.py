@@ -12,6 +12,7 @@ import re
 from .. import lexicon as lx
 from ..context import ART_76, ATTACHMENT_ART76, AnalysisContext
 from ..preprocess import Sentence, cosine
+from ..scope import is_tfi_name
 from ._registers import check_professionals, lookup_firm, make_check
 from .base import Plugin, PluginFinding, PluginResult
 
@@ -23,6 +24,7 @@ ADVISORY_PROTOTYPES = [
 ]
 MAX_QUOTES = 3
 _PUNCT = re.compile(r"\s*[,;:]\s*")
+_BANK_NAME = re.compile(r"(?:\b|\bm)bank\b", re.I)
 
 
 def _advisory_strength(s: Sentence) -> tuple[float, str] | None:
@@ -85,6 +87,8 @@ class ShadowAdvisoryPlugin(Plugin):
         return signals
 
     def applies(self, ctx: AnalysisContext) -> bool:
+        if not ctx.scope.in_scope:
+            return False
         sig = self._signals(ctx)
         return bool(sig["advisory"] or sig["service"] or sig["portfolio"] or ctx.context.module_hint == 3)
 
@@ -179,6 +183,32 @@ class ShadowAdvisoryPlugin(Plugin):
                         {"entry": lookup.listed.entry["name"]},
                     )
                 )
+            elif lookup.other_licence:
+                findings.append(
+                    PluginFinding(
+                        "ENTITY_AUTHORISED",
+                        "info",
+                        f"Podmiot „{entity}” figuruje w rejestrze towarzystw funduszy inwestycyjnych KNF: ma zezwolenie "
+                        "KNF w innym reżimie niż firma inwestycyjna (zarządzanie portfelami i doradztwo w zakresie "
+                        "objętym zezwoleniem TFI).",
+                        lookup.evidence_ids,
+                        0.95,
+                        {"entry": lookup.other_licence.entry["name"]},
+                    )
+                )
+            elif is_tfi_name(entity) or _BANK_NAME.search(entity):
+                kind = "towarzystwo funduszy inwestycyjnych" if is_tfi_name(entity) else "bank"
+                findings.append(
+                    PluginFinding(
+                        "SUPERVISED_FORM_UNVERIFIED",
+                        "low",
+                        f"Podmiot „{entity}” przedstawia się jako {kind}, czyli podmiot nadzorowany przez KNF w innym "
+                        "reżimie niż firma inwestycyjna; nie dopasowano go do rejestru w migawce. Sprawdź wpis w "
+                        "wyszukiwarce podmiotów KNF przed dalszą oceną.",
+                        lookup.evidence_ids,
+                        0.6,
+                    )
+                )
             elif sig["service"] and not offer:
                 findings.append(
                     PluginFinding(
@@ -233,7 +263,7 @@ class ShadowAdvisoryPlugin(Plugin):
 
     def _impersonation(self, ctx: AnalysisContext, entity: str, lookup) -> list[PluginFinding]:
         """A registered firm's brand used by a different entity / on a different domain."""
-        if lookup.listed:
+        if lookup.listed or lookup.other_licence:
             return []
         candidates = []
         if lookup.similar:

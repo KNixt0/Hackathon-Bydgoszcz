@@ -1,6 +1,7 @@
-import { Download } from "lucide-react";
-import { MODULE_SHORT, MODULES, PLATFORM_LABEL, PLATFORMS, STATUS_LABEL, STATUSES, TIER_FILTER_LABEL } from "../../domain/labels";
-import { TIERS, type PriorityTier } from "../../domain/priority";
+import { ChevronDown, Download, SlidersHorizontal } from "lucide-react";
+import { useId, useState } from "react";
+import { clampDate, SYSTEM_START, todayIso } from "../../domain/dates";
+import { MODULE_SHORT, MODULES, PLATFORM_LABEL, PLATFORMS, STATUS_LABEL, STATUSES } from "../../domain/labels";
 import { activeFilterCount, type QueueFilters as Filters } from "../../domain/queue";
 import type { ModuleId, Platform, Status } from "../../types/incident";
 
@@ -11,9 +12,16 @@ interface Props {
   exportHref: string;
 }
 
-/** Toolbar inside the tab panel: search left, the other filters right, each with a visible label. Filtering is live. */
+/**
+ * Under the level tabs: search and export stay visible; the other filters sit in a panel that folds away.
+ * Filtering is live. Dates run from the system start (21.11.2026) to today, never later.
+ */
 export function QueueFilters({ filters, onChange, onReset, exportHref }: Props) {
+  const panelId = useId();
+  const extra = [filters.module ? "m" : "", filters.platform, filters.status, filters.from, filters.to].filter(Boolean).length;
+  const [open, setOpen] = useState(extra > 0);
   const active = activeFilterCount({ ...filters, level: "" });
+  const today = todayIso();
   return (
     <form className="qtool" role="search" aria-label="Filtry kolejki" onSubmit={(e) => e.preventDefault()}>
       <div className="qtool__row">
@@ -23,25 +31,25 @@ export function QueueFilters({ filters, onChange, onReset, exportHref }: Props) 
             id="q-search" className="input" type="search" value={filters.q} placeholder="np. Tradeon"
             aria-describedby="q-search-hint" onChange={(e) => onChange({ q: e.target.value })}
           />
-          <span className="sr-only" id="q-search-hint">Szuka w tytule, opisie, podmiotach i adresie. Lista zmienia się w trakcie pisania.</span>
+          <span className="sr-only" id="q-search-hint">Szuka w tytule, opisie, podmiotach i adresie URL. Lista zmienia się w trakcie pisania.</span>
         </div>
-        <label className="field">
-          <span className="field__label">Sortowanie</span>
-          <select className="select" value={filters.sort} onChange={(e) => onChange({ sort: e.target.value as Filters["sort"] })}>
-            <option value="risk">Ryzyko, od najwyższego</option>
-            <option value="priority">Priorytet: ryzyko i zgłoszenia</option>
-          </select>
-        </label>
+        <button
+          type="button" className={`btn qtool__toggle${open ? " qtool__toggle--on" : ""}`}
+          aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)}
+        >
+          <SlidersHorizontal aria-hidden="true" />Więcej filtrów{extra > 0 && <span className="num"> ({extra})</span>}
+          <ChevronDown aria-hidden="true" className="qtool__chev" />
+        </button>
         <span className="qtool__links">
           {active > 0 && (
             <button type="button" className="linkbtn" onClick={onReset}>Wyczyść filtry<span className="num"> ({active})</span></button>
           )}
           <a className="dl" href={exportHref} download>
-            <Download aria-hidden="true" />Eksportuj CSV
+            <Download aria-hidden="true" />Eksportuj do arkusza
           </a>
         </span>
       </div>
-      <div className="qtool__row qtool__row--filters">
+      <div className="qtool__row qtool__row--filters" id={panelId} hidden={!open} data-testid="filters-panel">
         <label className="field">
           <span className="field__label">Moduł</span>
           <select className="select" value={filters.module} onChange={(e) => onChange({ module: Number(e.target.value) as ModuleId | 0 })}>
@@ -63,20 +71,19 @@ export function QueueFilters({ filters, onChange, onReset, exportHref }: Props) 
             {STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
           </select>
         </label>
-        <label className="field">
-          <span className="field__label">Priorytet zgłoszeń</span>
-          <select className="select" value={filters.tier} onChange={(e) => onChange({ tier: e.target.value as PriorityTier | "" })}>
-            <option value="">Wszystkie</option>
-            {TIERS.map((t) => <option key={t} value={t}>{TIER_FILTER_LABEL[t]}</option>)}
-          </select>
-        </label>
         <label className="field qtool__date">
           <span className="field__label">Wykryto od</span>
-          <input className="input" type="date" value={filters.from} max={filters.to || undefined} onChange={(e) => onChange({ from: e.target.value })} />
+          <input
+            className="input" type="date" value={filters.from} min={SYSTEM_START} max={filters.to || today}
+            onChange={(e) => onChange({ from: clampDate(e.target.value, today) })}
+          />
         </label>
         <label className="field qtool__date">
           <span className="field__label">Wykryto do</span>
-          <input className="input" type="date" value={filters.to} min={filters.from || undefined} onChange={(e) => onChange({ to: e.target.value })} />
+          <input
+            className="input" type="date" value={filters.to} min={filters.from || SYSTEM_START} max={today}
+            onChange={(e) => onChange({ to: clampDate(e.target.value, today) })}
+          />
         </label>
       </div>
     </form>

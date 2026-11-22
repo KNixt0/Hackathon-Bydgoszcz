@@ -39,14 +39,14 @@ FINDING_WEIGHTS: dict[str, float] = {
     # module 1
     "PROMOTED_FIRM_NOT_LISTED": 0.90,
     "WARNING_LISTED": 2.00,
-    "COOPERATION_NOT_NOTIFIED": 0.25,
+    "COOPERATION_NOT_NOTIFIED": 0.0,  # no confirmed legal duty to notify UKNF (decision #21); never scored
     "UNMARKED_THIRD_PARTY_AD": 0.30,
     "DISGUISED_AD": 0.30,
     "AFFILIATE_LINK_TO_FIRM": 0.35,  # affiliate/tracking link to a registered firm, no ad label
-    "LEGAL_ADVISER_INACTIVE": 0.15,
-    "LEGAL_ADVISER_NOT_FOUND": 0.15,
-    "TAX_ADVISER_INACTIVE": 0.20,
-    "TAX_ADVISER_NOT_FOUND": 0.20,
+    "LEGAL_ADVISER_INACTIVE": 0.0,  # KIRP / KIDP matter, outside UKNF's remit
+    "LEGAL_ADVISER_NOT_FOUND": 0.0,  # KIRP / KIDP matter, outside UKNF's remit
+    "TAX_ADVISER_INACTIVE": 0.0,  # KIRP / KIDP matter, outside UKNF's remit
+    "TAX_ADVISER_NOT_FOUND": 0.0,  # KIRP / KIDP matter, outside UKNF's remit
     # module 2 (RULE_<id> comes from RULE_WEIGHTS)
     "PROFIT_RISK_IMBALANCE": 0.15,
     # module 3
@@ -60,6 +60,7 @@ FINDING_WEIGHTS: dict[str, float] = {
     "FAKE_LICENCE": 0.70,
     "BRAND_IMPERSONATION": 0.90,
     "NAME_SIMILAR_TO_REGISTERED": 0.15,
+    "SUPERVISED_FORM_UNVERIFIED": 0.10,  # calls itself a TFI / bank, not matched in the snapshot
     # graph / KRS
     "PR_CONFLICT_PATH": 0.90,
     "PERSONAL_TIE_PATH": 0.50,
@@ -100,7 +101,7 @@ DEFAULT_PLUGIN_WEIGHT = 0.40
 MITIGATION_WEIGHTS: dict[str, float] = {
     "FIRM_REGISTERED": 0.12,
     "PARENT_REGISTERED": 0.25,
-    "COOPERATION_NOTIFIED": 0.08,
+    "COOPERATION_NOTIFIED": 0.0,
     "AD_MARKED": 0.06,
     "RISK_WARNING_ADJACENT": 0.08,
     "RISK_INFO_PRESENT": 0.05,

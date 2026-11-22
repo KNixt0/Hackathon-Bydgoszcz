@@ -2,19 +2,21 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<title>Pakiet dowodowy {{ i.id }}</title>
+<title>Raport z wykrycia {{ i.id }}</title>
 {% include '_style.html' %}
 </head>
 <body>
 <div class="head">
   <div>
-    <div class="brand">#InvestWatch · UKNF</div>
-    <h1>Pakiet dowodowy</h1>
+    <div class="brand">WatchIt · UKNF</div>
+    <h1>Raport z wykrycia</h1>
     <div>{{ i.title }}</div>
   </div>
   <div class="small muted" style="text-align:right">
     Incydent: <span class="mono">{{ i.id }}</span><br>
-    Wykryto: {{ i.created_at }}<br>
+    Opublikowano: {{ observation.published_at or 'nie ustalono' }}<br>
+    Pierwsze wykrycie: {{ observation.detected_at or i.created_at }}<br>
+    Ostatnie sprawdzenie: {{ observation.last_checked_at or '—' }}<br>
     Status: {{ status_label }}<br>
     Wygenerowano: {{ generated_at }}
   </div>
@@ -23,13 +25,35 @@
 {% if i.synthetic %}<div class="synthetic">Dane syntetyczne – materiał demonstracyjny, nie dotyczy rzeczywistego podmiotu</div>{% endif %}
 
 <div class="verdict">
-  <div class="box bg-{{ level }}"><div class="label">Werdykt</div><div class="value {{ level }}">{{ level_label }}</div></div>
+  <div class="box bg-{{ level }}"><div class="label">Wynik oceny automatycznej</div><div class="value {{ level }}">{{ level_label }}</div></div>
   <div class="box"><div class="label">Wskaźnik ryzyka (0–100)</div><div class="value">{{ '%.1f'|format(i.risk_score|float) }}</div></div>
-  <div class="box"><div class="label">Compliance Score</div><div class="value">{{ '%.1f'|format(i.compliance_score|default(100 - i.risk_score)|float) }}</div></div>
+  <div class="box"><div class="label">Wskaźnik zgodności</div><div class="value">{{ '%.1f'|format(i.compliance_score|default(100 - i.risk_score)|float) }}</div></div>
   <div class="box"><div class="label">Moduł</div><div style="font-weight:700">{{ module_label }}</div></div>
 </div>
 
 <p>{{ i.summary }}</p>
+
+{% if scope and scope.in_scope == false %}
+<h2>Właściwość UKNF</h2>
+<table>
+  <tr><td class="k">Ocena</td><td><strong>Poza właściwością UKNF w zakresie modułów WatchIt</strong></td></tr>
+  <tr><td class="k">Powód</td><td>{{ scope.reason }}</td></tr>
+  {% if scope.authority_hint %}<tr><td class="k">Wskazówka</td><td>{{ scope.authority_hint }}</td></tr>{% endif %}
+</table>
+{% endif %}
+
+<h2>Stan materiału</h2>
+<table>
+  <tr><td class="k">Data publikacji</td><td>{{ observation.published_at or 'nie ustalono' }}</td></tr>
+  <tr><td class="k">Pierwsze wykrycie</td><td>{{ observation.detected_at or i.created_at }} (cytaty i kryteria w raporcie pochodzą z tej obserwacji)</td></tr>
+  <tr><td class="k">Ostatnie sprawdzenie</td><td>{{ observation.last_checked_at or '—' }}</td></tr>
+  <tr><td class="k">Stan treści</td><td>{{ content_states.get(observation.content_state, observation.content_state) if observation.content_state else '—' }}</td></tr>
+  {% if follow_up %}
+  <tr><td class="k">Interwencja</td><td>{{ follow_up.intervention_at }}: {{ follow_up.note }}</td></tr>
+  <tr><td class="k">Termin weryfikacji</td><td>{{ follow_up.due or '—' }}</td></tr>
+  <tr><td class="k">Wynik weryfikacji</td><td>{{ follow_up_outcomes.get(follow_up.outcome, 'jeszcze nie sprawdzono') if follow_up.outcome else 'jeszcze nie sprawdzono' }}</td></tr>
+  {% endif %}
+</table>
 
 <h2>Rekomendacja</h2>
 <table>
@@ -133,8 +157,8 @@
   <tr><td class="k">Wtyczki</td><td>{{ (engine.plugins or [])|join(', ') or '—' }}</td></tr>
   <tr><td class="k">Model lokalny (LLM)</td><td>{% if engine.llm_used %}{{ engine.model or 'tak' }}{% else %}nie użyto (reguły deterministyczne){% endif %}</td></tr>
   <tr><td class="k">Czas analizy</td><td>{% if engine.duration_ms is number %}{{ engine.duration_ms }} ms{% else %}—{% endif %}</td></tr>
-  <tr><td class="k">Backend</td><td>#InvestWatch backend {{ backend_version }}</td></tr>
+  <tr><td class="k">Serwer aplikacji</td><td>WatchIt {{ backend_version }}</td></tr>
 </table>
-<p class="small muted">Dokument wygenerowany automatycznie. Wynik jest wskazaniem analitycznym wymagającym weryfikacji przez pracownika UKNF; nie stanowi rozstrzygnięcia.</p>
+<p class="small muted">Wynik automatycznej analizy wspierającej. Nie stanowi kwalifikacji prawnej ani rozstrzygnięcia; dalsze działania należą do właściwej komórki UKNF.</p>
 </body>
 </html>

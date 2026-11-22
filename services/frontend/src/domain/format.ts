@@ -26,6 +26,12 @@ export const formatShortDay = (v: string) => {
   return d ? shortDayFmt.format(d) : v;
 };
 /** "21.11" for chart axes. */
+/** "14:00" for an hourly bucket ("2026-11-22T14:00:00Z"), shown in local time. */
+export const formatHour = (v: string) => {
+  const d = new Date(v);
+  return Number.isNaN(d.getTime()) ? v : `${String(d.getHours()).padStart(2, "0")}:00`;
+};
+export const isHourKey = (v: string) => /T\d{2}:00:00Z$/.test(v);
 export const formatDayMonth = (v: string) => {
   const d = parse(v);
   return d ? dayMonthFmt.format(d) : v;
@@ -74,4 +80,15 @@ export function safeHref(url: string | undefined | null): string | null {
   } catch {
     return null;
   }
+}
+
+/** "45 min", "3 godz. 12 min", "2 dni 4 godz." (WatchIt: how long a case has been worked on). */
+export function formatDuration(ms: number): string {
+  const minutes = Math.max(0, Math.floor(ms / 60000));
+  if (minutes < 1) return "mniej niż minuta";
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} godz. ${minutes % 60} min`;
+  const days = Math.floor(hours / 24);
+  return `${days} ${days === 1 ? "dzień" : "dni"} ${hours % 24} godz.`;
 }

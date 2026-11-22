@@ -10,7 +10,17 @@ from sqlalchemy.orm import Session
 from app.models import AuditLog, utcnow
 from app.schemas import iso
 
-ACTIONS = ("login", "assign", "transition", "label", "thresholds", "export", "rescan", "public_report")
+ACTIONS = (
+    "login",
+    "assign",
+    "transition",
+    "label",
+    "thresholds",
+    "calibration_preview",  # WatchIt: a user changed the thresholds for their own view
+    "export",
+    "rescan",
+    "public_report",  # kept so that old audit rows stay valid
+)
 # what the case page and the PDFs call "decision history"
 DECISION_ACTIONS = ("assign", "transition", "label")
 

@@ -29,6 +29,8 @@ os.environ.update(
         "DEMO_ANALYST_PASSWORD": "analyst-pass-1",
         "DEMO_SUPERVISOR_EMAIL": "kierownik@uknf.local",
         "DEMO_SUPERVISOR_PASSWORD": "supervisor-pass-1",
+        # filter tests back-date samples by days; the system start rule has its own tests
+        "SYSTEM_START_DATE": "2000-01-01",
     }
 )
 ANALYST = ("analityk@uknf.local", "analyst-pass-1")
@@ -97,7 +99,20 @@ def make_analysis(document: dict, context: dict | None = None) -> dict:
             }
         )
     module = context.get("module_hint", 2)
+    out_of_scope = "POZA_ZAKRESEM" in text  # contract v4 scope, for WatchIt list tests
     return {
+        **(
+            {
+                "scope": {
+                    "in_scope": False,
+                    "category": "consumer_credit",
+                    "basis": "out_of_scope",
+                    "reason": "Kredyt.",
+                }
+            }
+            if out_of_scope
+            else {}
+        ),
         "title": document["title"] or "Materiał bez tytułu",
         "summary": "Materiał obiecuje gwarantowany zysk." if risky else "Nie stwierdzono naruszeń.",
         "modules": [module] if not risky else sorted({module, 1}),

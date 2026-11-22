@@ -13,6 +13,8 @@ from sqlalchemy.orm import Session
 
 from app import audit, events
 from app.auth import Actor
+from app.config import get_settings
+from app.date_bounds import check_bound, window
 from app.db import get_db, session_scope
 from app.exports import csv_export
 from app.incidents import rescan_options, to_incident, to_summary
@@ -63,9 +65,13 @@ class IncidentFilters:
         self.module, self.source, self.status, self.q = module, source, status, q
         self.start = _parse_bound(from_, "from", end=False)
         self.end = _parse_bound(to, "to", end=True)
+        check_bound(from_, self.start, lower=True)
+        check_bound(to, self.end, lower=False)
         self.end_inclusive = bool(to) and len(to or "") > 10
 
     def apply(self, query: SAQuery) -> SAQuery:
+        # WatchIt analyses only entities under UKNF's remit: material outside it is not listed or counted
+        query = query.filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
         if self.module is not None:
             # an incident shows under every module that produced findings, not only the primary one
             query = query.filter(Incident.modules_mask.bitwise_and(1 << (self.module - 1)) != 0)
@@ -176,13 +182,6 @@ def label_incident(incident_id: str, body: LabelRequest, db: Db, user: Actor) ->
     return _commit_and_announce(db, row)
 
 
-@router.get("/incidents/{incident_id}/reports")
-def incident_reports(incident_id: str, db: Db) -> dict:
-    """Logged-in only: what citizens wrote about the case (no reporter data)."""
-    row = _get_or_404(db, incident_id)
-    return {"items": _report_items(db, row.id)}
-
-
 def _report_items(db: Session, incident_id: str, limit: int = 50) -> list[dict]:
     reports = (
         db.query(UserReport)
@@ -219,7 +218,7 @@ def rescan_incident(incident_id: str, db: Db, user: Actor) -> dict:
 
 @router.get("/incidents/{incident_id}/versions")
 def incident_versions(incident_id: str, db: Db) -> dict:
-    """Extra (not in the contract): re-scan history used for diffing."""
+    """Contract v4: observations of the source, newest first. `is_evidence` marks the frozen detection."""
     row = _get_or_404(db, incident_id)
     versions = (
         db.query(IncidentVersion)
@@ -230,13 +229,34 @@ def incident_versions(incident_id: str, db: Db) -> dict:
     return {
         "items": [
             {
+                "id": v.id,
                 "content_hash": v.content_hash,
                 "risk_score": v.risk_score,
                 "changed": v.changed,
                 "created_at": iso(v.created_at),
+                "outcome": v.outcome or "content",
+                "http_status": v.http_status,
+                "published_at": v.published_at,
+                "is_evidence": v.id == row.evidence_version_id,
+                "has_snapshot": v.payload is not None,
             }
             for v in versions
         ]
+    }
+
+
+@router.get("/incidents/{incident_id}/versions/{version_id}")
+def incident_version(incident_id: str, version_id: int, db: Db) -> dict:
+    """Contract v4: one stored observation with its full analysis (for a before / after comparison)."""
+    row = _get_or_404(db, incident_id)
+    version = db.get(IncidentVersion, version_id)
+    if version is None or version.incident_id != row.id or version.payload is None:
+        raise HTTPException(404, "observation not found")
+    return {
+        "id": version.id,
+        "created_at": iso(version.created_at),
+        "is_evidence": version.id == row.evidence_version_id,
+        "analysis": version.payload,
     }
 
 
@@ -248,63 +268,80 @@ def export_incident_csv(incident_id: str, db: Db, user: Actor) -> Response:
     return _csv_response(body, f"investwatch-{row.id}.csv")
 
 
-def _render(kind: str, incident_id: str, db: Session, user: Actor) -> Response:
-    from app.exports.pdf import render_pdf, render_warning_list_pdf
+def _render(incident_id: str, db: Session, user: Actor) -> Response:
+    from app.exports.pdf import render_pdf
     from app.scraper.browser import BrowserUnavailable
 
     row = _get_or_404(db, incident_id)
     incident = to_incident(row)
-    if kind == "warning_list_request" and not (
-        3 in (incident.get("modules") or []) or row.primary_module == 3 or row.resolution_action == kind
-    ):
-        raise HTTPException(409, "the warning-list request is only available for Module 3 cases")
     history = audit.incident_history(db, row.id, audit.DECISION_ACTIONS)
     reports = _report_items(db, row.id, 20)
     db.close()  # do not hold a connection while Chromium renders
     try:
-        if kind == "warning_list_request":
-            pdf = render_warning_list_pdf(incident, history)
-        else:
-            pdf = render_pdf(incident, history, reports)
+        pdf = render_pdf(incident, history, reports)
     except BrowserUnavailable as exc:
         raise HTTPException(503, "PDF renderer is not available") from exc
     with session_scope() as audit_db:  # only a document that was really produced is logged
         audit.record(
-            audit_db, user, "export", incident_id=incident["id"], new={"format": "pdf", "document": kind}
+            audit_db,
+            user,
+            "export",
+            incident_id=incident["id"],
+            new={"format": "pdf", "document": "detection_report"},
         )
-    name = "wniosek-lista-ostrzezen" if kind == "warning_list_request" else "investwatch"
     return Response(
         pdf,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{name}-{incident["id"]}.pdf"'},
+        headers={"Content-Disposition": f'attachment; filename="raport-z-wykrycia-{incident["id"]}.pdf"'},
     )
 
 
 @router.get("/incidents/{incident_id}/export.pdf")
 def export_incident_pdf(incident_id: str, db: Db, user: Actor) -> Response:
-    return _render("evidence_package", incident_id, db, user)
+    """Contract v4: the detection report (replaces the evidence package; no warning-list request)."""
+    return _render(incident_id, db, user)
 
 
-@router.get("/incidents/{incident_id}/warning-list-request.pdf")
-def warning_list_request_pdf(incident_id: str, db: Db, user: Actor) -> Response:
-    return _render("warning_list_request", incident_id, db, user)
+@router.get("/stats/date-bounds")
+def date_bounds() -> dict:
+    """The range every date filter accepts: system start date to now."""
+    return window()
 
 
 @router.get("/stats/trends")
-def trends(db: Db, days: Annotated[int, Query(ge=1, le=366)] = 30) -> dict:
-    today = utcnow().date()
-    first = today - timedelta(days=days - 1)
-    start = datetime.combine(first, time.min, tzinfo=UTC)
+def trends(
+    db: Db,
+    days: Annotated[int, Query(ge=1, le=366)] = 30,
+    hours: Annotated[int | None, Query(ge=1, le=168)] = None,
+) -> dict:
+    """Detections per day (or per hour with `hours`), never before the system start date.
+
+    Items keep raw scores so the client recomputes levels for its thresholds. Material outside UKNF's
+    remit is left out."""
+    now = utcnow()
+    system_start = get_settings().system_start
+    if hours:
+        step = timedelta(hours=1)
+        first = now.replace(minute=0, second=0, microsecond=0) - step * (hours - 1)
+        count = hours
+    else:
+        step = timedelta(days=1)
+        first = datetime.combine(now.date() - timedelta(days=days - 1), time.min, tzinfo=UTC)
+        count = days
+    while first < system_start and count > 1:  # no buckets from before the system existed
+        first, count = first + step, count - 1
     rows = (
         db.query(Incident.id, Incident.risk_score, Incident.primary_module, Incident.created_at)
-        .filter(Incident.created_at >= start)
+        .filter(Incident.created_at >= first)
+        .filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
         .order_by(Incident.created_at)
         .all()
     )
-    buckets: dict[str, list[dict]] = {(first + timedelta(days=n)).isoformat(): [] for n in range(days)}
+    fmt = "%Y-%m-%dT%H:00:00Z" if hours else "%Y-%m-%d"
+    buckets: dict[str, list[dict]] = {(first + step * n).strftime(fmt): [] for n in range(count)}
     for incident_id, score, module, created_at in rows:
-        moment = created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)
-        key = moment.astimezone(UTC).date().isoformat()
+        moment = (created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)).astimezone(UTC)
+        key = moment.strftime(fmt)
         if key in buckets:
             buckets[key].append({"id": incident_id, "risk_score": score, "module": module})
     return {"days": [{"date": key, "items": items} for key, items in buckets.items()]}

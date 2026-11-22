@@ -1,4 +1,4 @@
-import { Download, FlaskConical, OctagonAlert } from "lucide-react";
+import { Download, FlaskConical, OctagonAlert, Scale } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
@@ -7,21 +7,19 @@ import { DebateBlock } from "../components/case/DebateBlock";
 import { DecisionHistory } from "../components/case/DecisionHistory";
 import { EvidenceDrawer } from "../components/case/EvidenceDrawer";
 import { EvidenceProvider } from "../components/case/EvidenceContext";
-import { UserReports } from "../components/case/UserReports";
 import { SourcesBlock } from "../components/case/SourcesBlock";
 import { VerdictBlock } from "../components/case/VerdictBlock";
 import { VISUAL_TABS, VisualsBlock, type VisualTab } from "../components/case/VisualsBlock";
 import { WorkflowPanel } from "../components/case/WorkflowPanel";
+import { ObservationPanel } from "../components/case/ObservationPanel";
 import { PartiesCard } from "../components/case/PartiesCard";
-import { RecommendationCard } from "../components/case/RecommendationCard";
 import { RegistryChecks } from "../components/case/RegistryChecks";
 import { caseRef } from "../components/queue/QueueTable";
 import { Badge } from "../components/ui/Badge";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { formatDateTime, hostOf, safeHref } from "../domain/format";
-import { MODULE_LABEL, PLATFORM_LABEL } from "../domain/labels";
+import { MODULE_LABEL, PLATFORM_LABEL, SCOPE_CATEGORY_LABEL } from "../domain/labels";
 import { deriveLevel } from "../domain/levels";
-import { reportsOf, tierOf } from "../domain/priority";
 import { useUser } from "../hooks/useAuth";
 import { useIncidents } from "../hooks/useIncidents";
 import { useLiveEvent } from "../hooks/useLive";
@@ -59,8 +57,8 @@ export function CasePage() {
   const [statusBusy, setStatusBusy] = useState(false);
   const history = useResource((signal) => api.history(id, signal), `history:${id}`);
   const { refresh: refreshHistory } = history;
-  const reports = useResource((signal) => api.incidentReports(id, signal), `reports:${id}`);
-  const { refresh: refreshReports } = reports;
+  const versions = useResource((signal) => api.versions(id, signal), `versions:${id}`);
+  const { refresh: refreshVersions } = versions;
   const [notFound, setNotFound] = useState(false);
 
   const { resource, reload, refresh, setData } = useResource(
@@ -82,16 +80,16 @@ export function CasePage() {
     if (summary.id === id) {
       refresh();
       refreshHistory();
-      refreshReports();
+      refreshVersions();
     }
   });
 
   const incident = resource.phase === "ready" ? resource.data : null;
   const title = incident?.title;
   useEffect(() => {
-    document.title = title ? `${title} · InvestWatch` : "InvestWatch · UKNF";
+    document.title = title ? `${title} · WatchIt` : "WatchIt · UKNF";
     return () => {
-      document.title = "InvestWatch · UKNF";
+      document.title = "WatchIt · UKNF";
     };
   }, [title]);
 
@@ -135,6 +133,14 @@ export function CasePage() {
   );
   const onTransition = useCallback((body: TransitionRequest) => act(() => transition(id, body), "Nie zmieniono etapu sprawy."), [act, transition, id]);
   const onAssign = useCallback(() => act(() => assign(id), "Nie przejęto sprawy."), [act, assign, id]);
+  const onRescan = useCallback(async (): Promise<string | null> => {
+    try {
+      await api.rescan(id);
+      return null;
+    } catch (err) {
+      return `Nie zlecono sprawdzenia. ${err instanceof Error ? err.message : ""}`.trim();
+    }
+  }, [id]);
   const onLabel = useCallback((label: CaseLabel) => act(() => setLabel(id, label), "Nie zapisano oceny."), [act, setLabel, id]);
 
   if (resource.phase === "loading") return <CaseSkeleton />;
@@ -179,12 +185,12 @@ export function CasePage() {
           <h1 className="case-head__title">{inc.title}</h1>
           <nav className="case-nav" aria-label="Sekcje sprawy">
             <span className="muted">Na tej stronie:</span>
-            <a href="#werdykt">Ocena</a>
+            <a href="#werdykt">Werdykt AI</a>
             <a href="#workflow-h">Postępowanie</a>
+            <a href="#obserwacja">Weryfikacja</a>
             <a href="#wizualizacje">Analiza</a>
-            <a href="#argumenty">Argumenty</a>
+            <a href="#rekomendacja">Rekomendacja AI</a>
             <a href="#zrodla">Źródła dowodowe</a>
-            <a href="#zgloszenia">Zgłoszenia</a>
             <a href="#historia">Historia decyzji</a>
           </nav>
         </header>
@@ -193,7 +199,7 @@ export function CasePage() {
           <div className="case-col">
             <dl className="kv case-meta" aria-label="Dane sprawy">
               <dt>Sygnatura</dt><dd><span className="num">{caseRef(inc.id)}</span> <span className="muted">({inc.id})</span></dd>
-              <dt>Wykryto</dt><dd>{formatDateTime(inc.created_at)}</dd>
+              <dt>Pierwsze wykrycie</dt><dd>{formatDateTime(inc.created_at)}</dd>
               <dt>Podmiot</dt>
               <dd>{parties.length ? parties.map((p) => p && `${p.name}${p.krs ? `, KRS ${p.krs}` : ""}`).join("; ") : <span className="muted">nieustalony</span>}</dd>
               <dt>Źródło</dt>
@@ -201,14 +207,30 @@ export function CasePage() {
                 {PLATFORM_LABEL[inc.source.platform] ?? inc.source.platform},{" "}
                 {href ? <a href={href} target="_blank" rel="noopener noreferrer">{hostOf(inc.source.url)}<span className="sr-only"> (otwiera się w nowej karcie)</span></a> : hostOf(inc.source.url)}
               </dd>
-              <dt>Moduły</dt><dd>{inc.modules.map((m) => `${m} ${MODULE_LABEL[m]}`).join("; ")}</dd>
+              <dt>Moduły</dt>
+              <dd>{inc.scope?.in_scope === false ? <span className="muted">żaden: materiał poza właściwością UKNF</span> : inc.modules.map((m) => `${m} ${MODULE_LABEL[m]}`).join("; ")}</dd>
               <dt>Aktualizacja</dt><dd>{formatDateTime(inc.updated_at)}</dd>
               <dt>Silnik</dt>
               <dd>{inc.engine.version}{inc.engine.llm_used && inc.engine.model ? `, model ${inc.engine.model}` : ", bez modelu językowego"}, {(inc.engine.duration_ms / 1000).toFixed(1).replace(".", ",")} s</dd>
             </dl>
+            {inc.scope && !inc.scope.in_scope && (
+              <div className="callout callout--compact" data-testid="out-of-scope" role="note">
+                <p className="callout__lead"><Scale aria-hidden="true" />Poza właściwością UKNF</p>
+                <p>
+                  {SCOPE_CATEGORY_LABEL[inc.scope.category]}. {inc.scope.reason}
+                  {inc.scope.authority_hint ? ` Wskazówka: ${inc.scope.authority_hint}` : ""}
+                </p>
+              </div>
+            )}
             <VerdictBlock incident={inc} thresholds={thresholds} />
-            <RecommendationCard recommendation={inc.recommendation} />
             <WorkflowPanel incident={inc} user={user} busy={statusBusy} onTransition={onTransition} onAssign={onAssign} onLabel={onLabel} />
+            <ObservationPanel
+              incident={inc}
+              versions={versions.resource.phase === "ready" ? versions.resource.data.items ?? [] : null}
+              error={versions.resource.phase === "error" ? versions.resource.error : null}
+              onRetry={versions.reload}
+              onRescan={onRescan}
+            />
           </div>
           <div className="case-col">
             <section className="csec csec--first" aria-labelledby="rejestry-h">
@@ -217,18 +239,18 @@ export function CasePage() {
             </section>
             <section className="csec" aria-labelledby="podmioty-h">
               <h2 className="section-title" id="podmioty-h">Podmioty</h2>
-              <PartiesCard entities={inc.entities} registryChecks={inc.registry_checks} />
+              <PartiesCard entities={inc.entities} registryChecks={inc.registry_checks} inScope={inc.scope?.in_scope !== false} />
             </section>
             <section className="csec" aria-labelledby="pliki-h">
               <h2 className="section-title" id="pliki-h">Pliki do pobrania</h2>
               <ul className="files">
                 <li>
-                  <a href={exportPdfUrl(inc.id)} download={`pakiet-dowodowy-${inc.id}.pdf`}><Download aria-hidden="true" />Pakiet dowodowy PDF</a>
-                  <span>PDF: ocena, dowody, rejestry i historia decyzji</span>
+                  <a href={exportPdfUrl(inc.id)} download={`raport-z-wykrycia-${inc.id}.pdf`}><Download aria-hidden="true" />Pobierz raport z wykrycia</a>
+                  <span>Dokument do druku: wykrycie, dowody, rejestry, stan materiału i historia decyzji</span>
                 </li>
                 <li>
-                  <a href={exportCsvUrl(inc.id)} download={`sprawa-${inc.id}.csv`}><Download aria-hidden="true" />Dane sprawy CSV</a>
-                  <span>CSV: kryteria i ustalenia w arkuszu</span>
+                  <a href={exportCsvUrl(inc.id)} download={`sprawa-${inc.id}.csv`}><Download aria-hidden="true" />Pobierz dane sprawy</a>
+                  <span>Arkusz kalkulacyjny: kryteria i ustalenia</span>
                 </li>
               </ul>
             </section>
@@ -241,15 +263,8 @@ export function CasePage() {
         </div>
 
         <VisualsBlock incident={inc} tab={tab} onTabChange={setTab} />
-        <DebateBlock debate={inc.debate} />
+        <DebateBlock debate={inc.debate} recommendation={inc.recommendation} />
         <SourcesBlock evidence={inc.evidence} source={inc.source} onOpen={openEvidence} />
-        <UserReports
-          count={inc.user_reports_count ?? 0}
-          tier={tierOf({ risk_score: inc.risk_score, user_reports_count: reportsOf(inc) }, thresholds)}
-          items={reports.resource.phase === "ready" ? reports.resource.data.items ?? [] : null}
-          error={reports.resource.phase === "error" ? reports.resource.error : null}
-          onRetry={reports.reload}
-        />
       </div>
       <EvidenceDrawer incident={inc} evidenceId={evidenceId} onClose={closeEvidence} onNavigate={openEvidence} />
     </EvidenceProvider>

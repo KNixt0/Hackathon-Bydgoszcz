@@ -38,10 +38,11 @@ function record(user, action, incidentId, previous, next, reason = null) {
 }
 
 const TRANSITIONS = {
-  new: ["in_review"], in_review: ["escalation_requested", "resolved", "false_positive"],
-  escalation_requested: ["escalated", "in_review"], escalated: ["resolved", "false_positive"], resolved: [], false_positive: [],
+  new: ["in_review"], in_review: ["escalation_requested", "awaiting_correction", "resolved", "false_positive"],
+  escalation_requested: ["escalated", "in_review"], escalated: ["awaiting_correction", "resolved", "false_positive"],
+  awaiting_correction: ["resolved", "in_review", "escalation_requested"], resolved: [], false_positive: [],
 };
-const DEFAULT_PATH = { 1: "THIRD_PARTY_AUDIT", 2: "SUPERVISION_RISK_DEPT", 3: "LEGAL_WARNING_LIST" };
+const DEFAULT_PATH = { 1: "THIRD_PARTY_ADVERTISING", 2: "RISK_INFORMATION", 3: "UNLICENSED_ACTIVITY" };
 
 /** Same rules as the backend: 409 edge, 403 role, 422 reason. Returns [status, body]. */
 function transition(user, inc, body) {
@@ -50,7 +51,7 @@ function transition(user, inc, body) {
   if (!TRANSITIONS[from].includes(body.to)) return [409, { detail: `transition ${from} -> ${body.to} is not allowed` }];
   if (from === "escalation_requested" && body.to === "escalated" && user.role !== "SUPERVISOR") return [403, { detail: "only a supervisor can approve an escalation" }];
   const reason = typeof body.reason === "string" && body.reason.trim() ? body.reason.trim() : null;
-  if (["resolved", "false_positive"].includes(body.to) && !reason) return [422, { detail: "a reason is required" }];
+  if (["resolved", "false_positive", "awaiting_correction"].includes(body.to) && !reason) return [422, { detail: "a reason is required" }];
   const wf = { ...inc.workflow };
   const before = { status: from, ...inc.workflow };
   if (body.to === "in_review" && from === "new" && !wf.assigned_to) wf.assigned_to = user.email;
@@ -59,7 +60,11 @@ function transition(user, inc, body) {
   if (body.to === "escalated" && body.escalation_path) wf.escalation_path = body.escalation_path;
   if (body.to === "false_positive") Object.assign(wf, { resolution_action: "false_positive", resolution_note: reason, label: "false_positive" });
   if (body.to === "resolved") Object.assign(wf, { resolution_action: body.resolution_action ?? "evidence_report", resolution_note: reason });
-  const updated = { ...inc, status: body.to, workflow: wf, updated_at: new Date().toISOString() };
+  const now = new Date();
+  const followUp = body.to === "awaiting_correction"
+    ? { intervention_at: now.toISOString(), note: reason, due: new Date(now.getTime() + (body.follow_up_days ?? 14) * 864e5).toISOString(), outcome: null }
+    : inc.follow_up ?? null;
+  const updated = { ...inc, status: body.to, workflow: wf, follow_up: followUp, updated_at: now.toISOString() };
   const after = { status: body.to, ...wf };
   const keys = Object.keys(after).filter((k) => k === "status" || before[k] !== after[k]);
   record(user, "transition", inc.id, Object.fromEntries(keys.map((k) => [k, before[k]])), Object.fromEntries(keys.map((k) => [k, after[k]])), reason);
@@ -120,6 +125,8 @@ function handleReport(io, req, body) {
   return [202, { status: "accepted", known: false }, {}];
 }
 
+/** Calibration notifications (ported from #33), one per user with its own read state. */
+const notifications = [];
 const send = (res, status, body, type = "application/json; charset=utf-8") => {
   const payload = typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body);
   res.writeHead(status, { "Content-Type": type, "Cache-Control": "no-store" });
@@ -308,9 +315,28 @@ const server = createServer(async (req, res) => {
       const critical = Number(body?.critical);
       if (!(flag >= 0 && critical <= 100 && flag <= critical)) return send(res, 422, { detail: "invalid thresholds" });
       record(user, "thresholds", null, { flag: thresholds.flag, critical: thresholds.critical }, { flag, critical });
+      if (flag !== thresholds.flag || critical !== thresholds.critical) {
+        const message = `${user.name} zmienił(a) kalibrację: próg oznaczenia ${thresholds.flag} → ${flag}, próg krytyczny ${thresholds.critical} → ${critical}.`;
+        for (const email of [analystUser.email, supervisorUser.email]) {
+          notifications.unshift({ id: notifications.length + 1, email, created_at: new Date().toISOString(), read_at: null, message, details: {} });
+        }
+      }
       thresholds = { flag, critical, updated_by: user.email, updated_at: new Date().toISOString() };
     }
     return send(res, 200, thresholds);
+  }
+  if (path === "/api/settings/thresholds/history") {
+    return send(res, 200, { items: audit.filter((e) => e.action === "thresholds" || e.action === "calibration_preview") });
+  }
+  if (path === "/api/notifications") {
+    return send(res, 200, { items: notifications.filter((n) => n.email === user.email).map(({ email: _email, ...n }) => n) });
+  }
+  const readCall = path.match(/^\/api\/notifications\/(\d+)\/read$/);
+  if (readCall && method === "POST") {
+    const note = notifications.find((n) => n.id === Number(readCall[1]) && n.email === user.email);
+    if (!note) return send(res, 404, { detail: "Nie znaleziono powiadomienia." });
+    note.read_at = note.read_at ?? new Date().toISOString();
+    return send(res, 200, { id: note.id, read_at: note.read_at });
   }
   if (path === "/api/audit") {
     if (user.role !== "SUPERVISOR") return send(res, 403, { detail: "supervisor role required" });
@@ -325,16 +351,24 @@ const server = createServer(async (req, res) => {
     if (!inc) return notFound(res);
     return send(res, 200, { items: inc.__reports ?? reportsForCase(inc) });
   }
-  const wfCall = path.match(/^\/api\/incidents\/([^/]+)\/(transition|assign|label|history|warning-list-request\.pdf)$/);
+  const wfCall = path.match(/^\/api\/incidents\/([^/]+)\/(transition|assign|label|history|versions|rescan)$/);
   if (wfCall) {
     const inc = detailOf(wfCall[1]);
     if (!inc) return notFound(res);
     const action = wfCall[2];
     if (action === "history") return send(res, 200, { items: audit.filter((e) => e.incident_id === inc.id).slice().reverse() });
-    if (action === "warning-list-request.pdf") {
-      if (!inc.modules.includes(3) && inc.primary_module !== 3) return send(res, 409, { detail: "only for Module 3 cases" });
-      record(user, "export", inc.id, null, { format: "pdf", document: "warning_list_request" });
-      return send(res, 200, PDF, "application/pdf");
+    if (action === "versions") {
+      // contract v4: the detection (evidence) and one later check
+      const detected = inc.created_at;
+      return send(res, 200, { items: [
+        { id: 2, content_hash: "1".repeat(64), risk_score: inc.risk_score, changed: false, created_at: inc.updated_at, outcome: "content", http_status: 200, published_at: null, is_evidence: false, has_snapshot: false },
+        { id: 1, content_hash: "1".repeat(64), risk_score: inc.risk_score, changed: false, created_at: detected, outcome: "content", http_status: 200, published_at: null, is_evidence: true, has_snapshot: true },
+      ] });
+    }
+    if (action === "rescan") {
+      if (method !== "POST") return notFound(res);
+      record(user, "rescan", inc.id, null, { url: inc.source.url });
+      return send(res, 202, { job_id: randomUUID() });
     }
     if (method !== "POST") return notFound(res);
     const body = action === "assign" ? {} : await readJson(req);

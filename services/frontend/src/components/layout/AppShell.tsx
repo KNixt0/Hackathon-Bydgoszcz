@@ -10,6 +10,7 @@ import { Notices } from "../ui/Notices";
 import { CommandPalette, type PaletteCommand } from "./CommandPalette";
 import { DemoMenu } from "./DemoMenu";
 import { JobsMenu } from "./JobsMenu";
+import { NotificationsMenu } from "./NotificationsMenu";
 import { ScanDialog } from "./ScanDialog";
 import { ConnectionIndicator } from "./ConnectionIndicator";
 import { Header } from "./Header";
@@ -42,7 +43,7 @@ export function AppShell() {
 
   const triggerDemo = async () => {
     const failure = await scans.triggerDemo();
-    notify(failure ? "error" : "info", failure ?? "Próbka demo została przekazana do potoku. Postęp widać w zadaniach.");
+    notify(failure ? "error" : "info", failure ?? "Próbka demonstracyjna została przekazana do analizy. Postęp widać w zadaniach.");
   };
   const importSamples = async () => {
     const failure = await scans.importSamples();
@@ -50,7 +51,7 @@ export function AppShell() {
   };
   const startScan = async (req: Parameters<typeof scans.startScan>[0]) => {
     const failure = await scans.startScan(req);
-    if (!failure) notify("info", "Skanowanie zlecone. Postęp widać w zadaniach.");
+    if (!failure) notify("info", "Analiza zlecona. Postęp widać w zadaniach.");
     return failure;
   };
 
@@ -69,6 +70,7 @@ export function AppShell() {
         trailing={<UserChip user={user} onLogout={() => void logout()} />}
       >
         <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
+        <NotificationsMenu />
         <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
         <ConnectionIndicator status={connection} />
       </Header>

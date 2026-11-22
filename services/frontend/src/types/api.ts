@@ -78,6 +78,15 @@ export interface TransitionRequest {
   resolution_action?: ResolutionAction;
 }
 
+/** A calibration change, one per user with its own read state (GET /api/notifications). */
+export interface CalibrationNotification {
+  id: number;
+  created_at: string;
+  read_at: string | null;
+  message: string;
+  details: Record<string, unknown>;
+}
+
 export interface ThresholdSettings {
   flag: number;
   critical: number;
@@ -85,7 +94,8 @@ export interface ThresholdSettings {
   updated_at: string | null;
 }
 
-export type AuditAction = "login" | "assign" | "transition" | "label" | "thresholds" | "export" | "rescan" | "public_report";
+export type AuditAction =
+  | "login" | "assign" | "transition" | "label" | "thresholds" | "calibration_preview" | "export" | "rescan" | "public_report";
 
 export interface AuditEntry {
   id: number | string;
@@ -97,6 +107,8 @@ export interface AuditEntry {
   previous: unknown;
   new: unknown;
   reason: string | null;
+  /** WatchIt: title of the case the entry refers to (audit log list only) */
+  incident_title?: string | null;
 }
 
 // ── Contract v3: public reports

@@ -42,7 +42,7 @@ describe("case workflow", () => {
     await waitFor(() => expect(calls.filter((c) => c.path.endsWith("/history")).length).toBeGreaterThanOrEqual(3));
   });
 
-  it("requesting an escalation proposes the module's path (Module 3: warning list)", async () => {
+  it("requesting an escalation proposes the module's path (Module 3: activity without authorisation)", async () => {
     const user = userEvent.setup();
     const inReview = { ...structuredClone(redCase), status: "in_review" as const };
     const { calls } = mockApi(withCase(inReview));
@@ -50,11 +50,11 @@ describe("case workflow", () => {
     const wf = await caseReady(redCase.title);
     await user.click(wf.getByRole("button", { name: "Wnioskuj o eskalację" }));
     const dialog = within(await screen.findByTestId("transition-dialog"));
-    expect(dialog.getByLabelText("Ścieżka eskalacji")).toHaveValue("LEGAL_WARNING_LIST");
+    expect(dialog.getByLabelText("Ścieżka eskalacji")).toHaveValue("UNLICENSED_ACTIVITY");
     await user.type(dialog.getByLabelText(/Uzasadnienie/), "Rekomendacje bez licencji");
     await user.click(dialog.getByRole("button", { name: "Wyślij wniosek" }));
     await waitFor(() => expect(calls.find((c) => c.path.endsWith("/transition"))?.body).toEqual({
-      to: "escalation_requested", reason: "Rekomendacje bez licencji", escalation_path: "LEGAL_WARNING_LIST",
+      to: "escalation_requested", reason: "Rekomendacje bez licencji", escalation_path: "UNLICENSED_ACTIVITY",
     }));
     await waitFor(() => expect(screen.queryByTestId("transition-dialog")).not.toBeInTheDocument());
   });
@@ -75,7 +75,7 @@ describe("case workflow", () => {
   });
 
   it("a pending escalation: the analyst waits or withdraws, the supervisor approves or rejects", async () => {
-    const requested = { ...structuredClone(orangeCase), status: "escalation_requested" as const, workflow: { ...orangeCase.workflow, escalation_path: "THIRD_PARTY_AUDIT" as const } };
+    const requested = { ...structuredClone(orangeCase), status: "escalation_requested" as const, workflow: { ...orangeCase.workflow, escalation_path: "THIRD_PARTY_ADVERTISING" as const } };
     mockApi(withCase(requested));
     const analystView = renderApp({ route: `/sprawy/${orangeCase.id}` });
     let wf = await caseReady(orangeCase.title);
@@ -91,9 +91,9 @@ describe("case workflow", () => {
     expect(wf.getByRole("button", { name: "Odrzuć eskalację" })).toBeInTheDocument();
     await user.click(wf.getByRole("button", { name: "Zatwierdź eskalację" }));
     const dialog = within(await screen.findByTestId("transition-dialog"));
-    expect(dialog.getByLabelText("Ścieżka eskalacji")).toHaveValue("THIRD_PARTY_AUDIT");
+    expect(dialog.getByLabelText("Ścieżka eskalacji")).toHaveValue("THIRD_PARTY_ADVERTISING");
     await user.click(dialog.getByRole("button", { name: "Zatwierdź eskalację" }));
-    await waitFor(() => expect(calls.find((c) => c.path.endsWith("/transition"))?.body).toEqual({ to: "escalated", escalation_path: "THIRD_PARTY_AUDIT" }));
+    await waitFor(() => expect(calls.find((c) => c.path.endsWith("/transition"))?.body).toEqual({ to: "escalated", escalation_path: "THIRD_PARTY_ADVERTISING" }));
   });
 
   it("closing requires a reason; the request is only sent once one is given", async () => {
@@ -104,18 +104,19 @@ describe("case workflow", () => {
     const wf = await caseReady(redCase.title);
     await user.click(wf.getByRole("button", { name: "Zamknij: naruszenie potwierdzone" }));
     const dialog = within(await screen.findByTestId("transition-dialog"));
-    expect(dialog.getByLabelText("Działanie końcowe")).toHaveValue("warning_list_request"); // Module 3 default
+    expect(dialog.getByLabelText("Działanie końcowe")).toHaveValue("evidence_report"); // no formal motions (contract v4)
+    expect(dialog.queryByRole("option", { name: /lista ostrzeżeń|listę ostrzeżeń/i })).not.toBeInTheDocument();
     await user.click(dialog.getByRole("button", { name: "Zamknij sprawę" }));
     expect(dialog.getByRole("alert")).toHaveTextContent("Uzasadnienie jest wymagane");
     expect(calls.some((c) => c.path.endsWith("/transition"))).toBe(false);
 
-    await user.selectOptions(dialog.getByLabelText("Działanie końcowe"), "enhanced_monitoring");
+    await user.selectOptions(dialog.getByLabelText("Działanie końcowe"), "content_corrected");
     await user.type(dialog.getByLabelText(/Uzasadnienie/), "Naruszenie art. 76");
     await user.click(dialog.getByRole("button", { name: "Zamknij sprawę" }));
     await waitFor(() => expect(calls.find((c) => c.path.endsWith("/transition"))?.body).toEqual({
-      to: "resolved", reason: "Naruszenie art. 76", resolution_action: "enhanced_monitoring",
+      to: "resolved", reason: "Naruszenie art. 76", resolution_action: "content_corrected",
     }));
-    expect(await wf.findByText("Wzmożony monitoring (co 6 godzin)")).toBeInTheDocument();
+    expect(await wf.findByText("Treść poprawiona")).toBeInTheDocument();
     expect(wf.queryByRole("button", { name: /Zamknij/ })).not.toBeInTheDocument();
   });
 
@@ -132,7 +133,7 @@ describe("case workflow", () => {
     expect(await dialog.findByRole("alert")).toHaveTextContent("Tej zmiany nie można wykonać na obecnym etapie sprawy");
   });
 
-  it("labels the alert, lists the decision history and offers the warning-list draft for Module 3", async () => {
+  it("labels the alert and lists the decision history; no warning-list draft (contract v4)", async () => {
     const user = userEvent.setup();
     const history: AuditEntry[] = [
       { id: 1, at: "2026-11-21T09:00:00Z", actor_email: analystUser.email, actor_role: "ANALYST", action: "assign", incident_id: redCase.id, previous: { assigned_to: null }, new: { assigned_to: analystUser.email }, reason: null },
@@ -147,17 +148,28 @@ describe("case workflow", () => {
     expect(list.getAllByTestId("decision-row")[0]).toHaveTextContent("Pilne"); // newest first
     expect(list.getByText(/Etap: Nowe →/)).toHaveTextContent("Etap: Nowe → W weryfikacji");
 
-    expect(wf.getByRole("link", { name: /Wniosek o wpis na listę ostrzeżeń/ })).toHaveAttribute("href", `/api/incidents/${redCase.id}/warning-list-request.pdf`);
+    expect(screen.queryByRole("link", { name: /Wniosek o wpis|listę ostrzeżeń/ })).not.toBeInTheDocument();
     await user.selectOptions(wf.getByLabelText("Ocena trafności alarmu"), "true_positive");
     await waitFor(() => expect(calls.find((c) => c.path.endsWith("/label"))?.body).toEqual({ label: "true_positive" }));
     await waitFor(() => expect(wf.getByLabelText("Ocena trafności alarmu")).toHaveValue("true_positive"));
   });
 
-  it("no warning-list draft outside Module 3", async () => {
-    mockApi();
-    renderApp({ route: `/sprawy/${orangeCase.id}` });
-    const wf = await caseReady(orangeCase.title);
-    expect(wf.queryByRole("link", { name: /Wniosek o wpis/ })).not.toBeInTheDocument();
+  it("records an intervention with a follow-up date and shows the outcome", async () => {
+    const user = userEvent.setup();
+    const inReview = { ...structuredClone(redCase), status: "in_review" as const };
+    const { calls } = mockApi(withCase(inReview));
+    renderApp({ route: redUrl });
+    const wf = await caseReady(redCase.title);
+    await user.click(wf.getByRole("button", { name: "Odnotuj interwencję" }));
+    const dialog = within(await screen.findByTestId("transition-dialog"));
+    await user.selectOptions(dialog.getByLabelText("Termin weryfikacji"), "7");
+    await user.click(dialog.getByRole("button", { name: "Zapisz i obserwuj" }));
+    expect(dialog.getByRole("alert")).toHaveTextContent("Uzasadnienie jest wymagane");
+    await user.type(dialog.getByLabelText(/Co zrobił urząd/), "Pismo do podmiotu z 21.11");
+    await user.click(dialog.getByRole("button", { name: "Zapisz i obserwuj" }));
+    await waitFor(() => expect(calls.find((c) => c.path.endsWith("/transition"))?.body).toEqual({
+      to: "awaiting_correction", reason: "Pismo do podmiotu z 21.11", follow_up_days: 7,
+    }));
   });
 });
 
@@ -166,12 +178,12 @@ describe("global thresholds", () => {
     const { calls } = mockApi((call) => (call.path === "/api/settings/thresholds" ? { json: { flag: 30, critical: 80, updated_by: supervisorUser.email, updated_at: "2026-11-20T08:00:00Z" } } : undefined));
     renderApp({ route: "/kalibracja" });
     const box = await screen.findByTestId("global-thresholds");
-    await waitFor(() => expect(screen.getByLabelText("Próg flagowania")).toHaveValue("30"));
+    await waitFor(() => expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("30"));
     expect(box).toHaveTextContent(`Obowiązują progi globalne: oznaczenie od 30, krytyczne od 80. Ustawił ${supervisorUser.email}, 20.11.2026.`);
     expect(screen.getByTestId("global-owner")).toHaveTextContent(`Progi globalne ustawił ${supervisorUser.email}, 20.11.2026. Zmienia je kierownik.`);
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "31" } });
-    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("31");
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "31" } });
+    expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("31");
     expect(box).toHaveTextContent("Podgląd, niezapisane. Progi globalne to 30 i 80, a w tym podglądzie 31 i 80.");
     expect(within(box).getByText("Progi globalne zapisuje kierownik.")).toBeInTheDocument();
     expect(within(box).getByRole("button", { name: "Przywróć globalne (30 / 80)" })).toBeInTheDocument();
@@ -186,11 +198,11 @@ describe("global thresholds", () => {
     await screen.findByTestId("global-thresholds");
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument(); // nothing changed yet
     expect(screen.queryByTestId("global-owner")).not.toBeInTheDocument();
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "30" } }); // 20 → 30
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "30" } }); // 20 → 30
     await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     await waitFor(() => expect(calls.find((c) => c.method === "PUT")?.body).toEqual({ flag: 30, critical: 70 }));
     expect(await screen.findByText(/Ustawił kierownik@uknf.local/)).toBeInTheDocument();
-    expect(await screen.findByText(/Zapisano progi globalne: oznaczenie od 30, krytyczne od 70/)).toBeInTheDocument();
+    expect(screen.queryByText(/Zapisano progi globalne/)).not.toBeInTheDocument(); // WatchIt: no notification, the history records it
     expect(screen.queryByRole("button", { name: "Zapisz jako progi globalne" })).not.toBeInTheDocument();
     expect(window.localStorage.getItem("investwatch.thresholds.v2")).toBeNull();
   });
@@ -200,10 +212,10 @@ describe("global thresholds", () => {
     mockApi((call) => (call.method === "PUT" && call.path === "/api/settings/thresholds" ? { status: 500, json: { detail: "Baza danych jest niedostępna." } } : undefined), { user: supervisorUser });
     renderApp({ route: "/kalibracja" });
     await screen.findByTestId("global-thresholds");
-    fireEvent.change(screen.getByRole("slider", { name: "Próg flagowania" }), { target: { value: "21" } });
+    fireEvent.change(screen.getByRole("slider", { name: "Próg oznaczenia" }), { target: { value: "21" } });
     await user.click(screen.getByRole("button", { name: "Zapisz jako progi globalne" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Nie zapisano progów. Baza danych jest niedostępna. Spróbuj ponownie.");
-    expect(screen.getByLabelText("Próg flagowania")).toHaveValue("21");
+    expect(screen.getByLabelText("Próg oznaczenia")).toHaveValue("21");
   });
 
   it("marks analyst-labelled cases in the calibration set", async () => {

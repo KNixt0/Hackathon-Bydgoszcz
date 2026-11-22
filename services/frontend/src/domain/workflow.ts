@@ -3,9 +3,10 @@ import type { EscalationPath, ModuleId, Role, Status } from "../types/incident";
 /** Mirrors the server's transition table (contract v3); the server enforces it, the UI only offers what is allowed. */
 export const TRANSITIONS: Record<Status, Status[]> = {
   new: ["in_review"],
-  in_review: ["escalation_requested", "resolved", "false_positive"],
+  in_review: ["escalation_requested", "awaiting_correction", "resolved", "false_positive"],
   escalation_requested: ["escalated", "in_review"],
-  escalated: ["resolved", "false_positive"],
+  escalated: ["awaiting_correction", "resolved", "false_positive"],
+  awaiting_correction: ["resolved", "in_review", "escalation_requested"],
   resolved: [],
   false_positive: [],
 };
@@ -13,14 +14,15 @@ export const TRANSITIONS: Record<Status, Status[]> = {
 export const CLOSED: Status[] = ["resolved", "false_positive"];
 
 export const DEFAULT_ESCALATION_PATH: Record<ModuleId, EscalationPath> = {
-  1: "THIRD_PARTY_AUDIT",
-  2: "SUPERVISION_RISK_DEPT",
-  3: "LEGAL_WARNING_LIST",
+  1: "THIRD_PARTY_ADVERTISING",
+  2: "RISK_INFORMATION",
+  3: "UNLICENSED_ACTIVITY",
 };
 
 export type ActionId =
   | "assign" | "start" | "request_escalation" | "approve_escalation" | "reject_escalation"
-  | "withdraw_escalation" | "close_violation" | "close_false_positive";
+  | "withdraw_escalation" | "close_violation" | "close_false_positive"
+  | "record_intervention" | "close_after_follow_up" | "reopen_review";
 
 export interface WorkflowAction {
   id: ActionId;
@@ -35,6 +37,8 @@ export interface WorkflowAction {
     reason: "required" | "optional";
     escalationPath?: boolean;
     resolutionAction?: boolean;
+    /** Contract v4: ask for the follow-up deadline (awaiting_correction). */
+    followUpDays?: boolean;
     confirm: string;
   };
 }
@@ -70,6 +74,21 @@ const ACTIONS: Record<Exclude<ActionId, "assign">, WorkflowAction> = {
       reason: "required", resolutionAction: true, confirm: "Zamknij sprawę",
     },
   },
+  record_intervention: {
+    id: "record_intervention", label: "Odnotuj interwencję", to: "awaiting_correction",
+    dialog: {
+      title: "Interwencja i weryfikacja", description: "Opisz, co zrobił urząd (np. pismo do podmiotu). System będzie sprawdzał źródło co 6 godzin i pokaże, czy treść usunięto, poprawiono, czy naruszenie trwa.",
+      reason: "required", followUpDays: true, confirm: "Zapisz i obserwuj",
+    },
+  },
+  close_after_follow_up: {
+    id: "close_after_follow_up", label: "Zamknij po weryfikacji", to: "resolved", primary: true,
+    dialog: {
+      title: "Zamknięcie po weryfikacji", description: "Wybierz wynik interwencji. Uzasadnienie trafi do historii decyzji i do raportu z wykrycia.",
+      reason: "required", resolutionAction: true, confirm: "Zamknij sprawę",
+    },
+  },
+  reopen_review: { id: "reopen_review", label: "Wróć do weryfikacji", to: "in_review" },
   close_false_positive: {
     id: "close_false_positive", label: "Zamknij: fałszywy alarm", to: "false_positive",
     dialog: {
@@ -84,12 +103,19 @@ export function availableActions(status: Status, role: Role, assignedTo: string 
   const out: WorkflowAction[] = [];
   if (!CLOSED.includes(status) && assignedTo !== me) out.push({ id: "assign", label: "Przejmij sprawę" });
   if (status === "new") out.push(ACTIONS.start);
-  if (status === "in_review") out.push(ACTIONS.request_escalation, ACTIONS.close_violation, ACTIONS.close_false_positive);
+  if (status === "in_review") {
+    out.push(ACTIONS.request_escalation, ACTIONS.record_intervention, ACTIONS.close_violation, ACTIONS.close_false_positive);
+  }
   if (status === "escalation_requested") {
     if (role === "SUPERVISOR") out.push(ACTIONS.approve_escalation, ACTIONS.reject_escalation);
     else out.push(ACTIONS.withdraw_escalation);
   }
-  if (status === "escalated") out.push({ ...ACTIONS.close_violation, primary: true }, ACTIONS.close_false_positive);
+  if (status === "escalated") {
+    out.push({ ...ACTIONS.record_intervention, primary: true }, ACTIONS.close_violation, ACTIONS.close_false_positive);
+  }
+  if (status === "awaiting_correction") {
+    out.push(ACTIONS.close_after_follow_up, ACTIONS.reopen_review, { ...ACTIONS.request_escalation, primary: false });
+  }
   return out.filter((a) => !a.to || TRANSITIONS[status].includes(a.to));
 }
 
@@ -98,5 +124,6 @@ export const STEPS: { key: string; label: string; statuses: Status[] }[] = [
   { key: "new", label: "Nowe", statuses: ["new"] },
   { key: "in_review", label: "Weryfikacja", statuses: ["in_review"] },
   { key: "escalation", label: "Eskalacja", statuses: ["escalation_requested", "escalated"] },
+  { key: "follow_up", label: "Weryfikacja po interwencji", statuses: ["awaiting_correction"] },
   { key: "closed", label: "Zamknięte", statuses: ["resolved", "false_positive"] },
 ];

@@ -11,7 +11,6 @@ const FRESH_MS = 12000;
 interface IncidentsContextValue extends IncidentsState {
   reload: () => void;
   dismissAlert: (id: string) => void;
-  dismissViralAlert: (id: string) => void;
   /** Workflow calls; each resolves with the full incident or throws an Error with a Polish message. */
   transition: (id: string, body: TransitionRequest) => Promise<Incident>;
   assign: (id: string) => Promise<Incident>;
@@ -92,7 +91,6 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
     markFresh(incident.id);
   });
 
-  useLiveEvent("alert:viral", (incident) => dispatch({ type: "alert:viral", incident }));
 
   const run = useCallback(async (call: () => Promise<Incident>) => {
     try {
@@ -110,11 +108,10 @@ export function IncidentsProvider({ children }: { children: ReactNode }) {
   const reload = useCallback(() => load(), [load]);
   const dismissAlert = useCallback((id: string) => dispatch({ type: "alert:dismiss", id }), []);
 
-  const dismissViralAlert = useCallback((id: string) => dispatch({ type: "alert:viral:dismiss", id }), []);
 
   const value = useMemo(
-    () => ({ ...state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision }),
-    [state, reload, dismissAlert, dismissViralAlert, transition, assign, setLabel, revision],
+    () => ({ ...state, reload, dismissAlert, transition, assign, setLabel, revision }),
+    [state, reload, dismissAlert, transition, assign, setLabel, revision],
   );
   return <IncidentsContext.Provider value={value}>{children}</IncidentsContext.Provider>;
 }

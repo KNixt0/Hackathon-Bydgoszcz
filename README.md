@@ -27,13 +27,13 @@ Skalowanie workerów: `docker compose up --scale worker=3`.
 | backend (api) | FastAPI + Socket.IO | `BACKEND_PORT` (8000): REST, logowanie, workflow, dziennik audytu, zgłoszenia publiczne |
 | worker | Celery, scraper httpx + Playwright (Chromium) | kolejka zadań; audyt wizualny w 3 rozdzielczościach |
 | beat | Celery beat | harmonogram (cron) |
-
-`api`, `worker` i `beat` używają jednego obrazu (`investwatch-backend`), więc przebudowa aktualizuje wszystkie trzy.
-| ai | FastAPI | `AI_PORT` (8001): wtyczki modułów 1-3, scoring |
+| ai | FastAPI | `AI_PORT` (8001): wtyczki modułów 1-3, ocena właściwości UKNF, scoring |
 | postgres | PostgreSQL 16 | baza danych |
 | valkey | Valkey 8 | kolejka (broker) |
 | storage | SeaweedFS | S3 API: archiwum HTML i zrzuty ekranu |
 | ollama | Ollama (profil `llm`) | opcjonalny model lokalny |
+
+`api`, `worker` i `beat` używają jednego obrazu (`investwatch-backend`), więc przebudowa aktualizuje wszystkie trzy.
 
 ## Konfiguracja (.env)
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
 from contextlib import contextmanager
 
 from sqlalchemy import JSON, create_engine, inspect, text
@@ -35,7 +35,16 @@ def make_engine(url: str) -> Engine:
         if ":memory:" in url or url in ("sqlite://", "sqlite:///"):
             kwargs["poolclass"] = StaticPool
         return create_engine(url, **kwargs)
-    return create_engine(url, pool_pre_ping=True, pool_size=5, max_overflow=10)
+    # Sized for one API process (the threadpool runs up to 40 sync endpoints) and a few workers;
+    # under overload a request fails fast (503 after DB_POOL_TIMEOUT) instead of piling up.
+    settings = get_settings()
+    return create_engine(
+        url,
+        pool_pre_ping=True,
+        pool_size=settings.db_pool_size,
+        max_overflow=settings.db_max_overflow,
+        pool_timeout=settings.db_pool_timeout,
+    )
 
 
 def get_engine() -> Engine:
@@ -70,10 +79,26 @@ def session_scope() -> Iterator[Session]:
         session.close()
 
 
-def get_db() -> Iterator[Session]:
-    """FastAPI dependency."""
-    with session_scope() as session:
+async def get_db() -> AsyncIterator[Session]:
+    """FastAPI dependency.
+
+    Deliberately an *async* generator: a sync generator dependency is closed in the threadpool, and
+    when the client disconnects (e.g. a proxy timeout under load) that teardown is cancelled, the
+    session is never closed and its connection stays "idle in transaction" for good. Fifteen of those
+    exhaust the pool and the API stops answering (found by scripts/stress.py). Here the teardown runs
+    on the event loop and always completes, also on cancellation.
+    """
+    get_engine()
+    assert _factory is not None
+    session = _factory()
+    try:
         yield session
+        session.commit()
+    except BaseException:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 
 def _add_missing_columns() -> None:
@@ -94,6 +119,12 @@ def _add_missing_columns() -> None:
 
 # Contract v3 replaced the five case statuses: old values are rewritten in place on start.
 STATUS_RENAMES = {"closed_violation": "resolved", "closed_ok": "false_positive"}
+# Contract v4: neutral escalation paths (no "warning list" step: the system detects and reports).
+ESCALATION_RENAMES = {
+    "SUPERVISION_RISK_DEPT": "RISK_INFORMATION",
+    "LEGAL_WARNING_LIST": "UNLICENSED_ACTIVITY",
+    "THIRD_PARTY_AUDIT": "THIRD_PARTY_ADVERTISING",
+}
 
 _PG_AUDIT_GUARD = [
     """CREATE OR REPLACE FUNCTION audit_logs_append_only() RETURNS trigger AS $$
@@ -121,6 +152,42 @@ def _backfill_norm_hash(engine: Engine) -> None:
             )
 
 
+def _backfill_evidence() -> None:
+    """Contract v4: cases stored before observations existed get their current payload frozen as the
+    evidence, so that a later re-scan of a corrected page cannot overwrite what was detected."""
+    from app.models import Incident, IncidentVersion
+    from app.thresholds import get_thresholds
+
+    with session_scope() as db:
+        if db.get_bind().dialect.name == "postgresql":
+            # api, worker and beat start together: only one of them backfills, the others then see its rows
+            db.execute(text("SELECT pg_advisory_xact_lock(74210013)"))
+        flag = float(get_thresholds(db)["flag"])
+        rows = (
+            db.query(Incident)
+            .filter(Incident.evidence_version_id.is_(None), Incident.risk_score >= flag)
+            .all()
+        )
+        for row in rows:
+            version = IncidentVersion(
+                incident_id=row.id,
+                content_hash=row.content_hash,
+                risk_score=row.risk_score,
+                changed=False,
+                created_at=row.created_at,
+                outcome="content",
+                http_status=200,
+                payload=row.payload,
+                published_at=(row.payload.get("source") or {}).get("published_at"),
+            )
+            db.add(version)
+            db.flush()
+            row.evidence_version_id = version.id
+            row.content_state = row.content_state or "online"
+        if rows:
+            log.info("backfilled evidence", extra={"rows": len(rows)})
+
+
 def _upgrade_data() -> None:
     """Idempotent value migrations that create_all cannot express."""
     engine = get_engine()
@@ -131,12 +198,18 @@ def _upgrade_data() -> None:
             )
             if result.rowcount:
                 log.info("migrated status", extra={"from": old, "to": new, "rows": result.rowcount})
+        for old, new in ESCALATION_RENAMES.items():
+            connection.execute(
+                text("UPDATE incidents SET escalation_path = :new WHERE escalation_path = :old"),
+                {"new": new, "old": old},
+            )
         for statement in (
             "UPDATE incidents SET user_reports_count = 0 WHERE user_reports_count IS NULL",
             "UPDATE incidents SET priority_score = risk_score WHERE priority_score IS NULL",
         ):
             connection.execute(text(statement))
     _backfill_norm_hash(engine)
+    _backfill_evidence()
     if engine.dialect.name == "postgresql":
         try:
             with engine.begin() as connection:

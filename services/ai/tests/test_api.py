@@ -33,6 +33,7 @@ ANALYSIS_KEYS = {
     "evidence",
     "recommendation",
     "engine",
+    "scope",  # contract v4
 }
 
 
@@ -80,7 +81,7 @@ def test_analyze_conforms_to_contract(client, case):
     body = resp.json()
     assert set(body) == ANALYSIS_KEYS
     Analysis.model_validate(body)  # strict mirror of the contract: unknown or missing keys fail
-    assert set(body["source"]) == {"platform", "url", "fetched_at", "language", "content_hash", "text", "archive"}
+    assert set(body["source"]) - {"published_at"} == {"platform", "url", "fetched_at", "language", "content_hash", "text", "archive"}
     assert set(body["graph"]) == {"nodes", "edges", "flagged_paths"}
     assert set(body["debate"]) == {"rounds", "claims", "arguments_for", "arguments_against", "arbiter_rationale"}
     assert set(body["engine"]) == {"version", "plugins", "llm_used", "model", "duration_ms"}

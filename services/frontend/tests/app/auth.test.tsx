@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { AuditEntry } from "../../src/types/api";
@@ -34,14 +34,14 @@ describe("login and session", () => {
     const socket = new FakeSocket();
     renderApp({ route: `/sprawy/${orangeCase.id}`, socket });
     await onLoginPage();
-    await user.click(screen.getByRole("button", { name: "Zaloguj jako analityk (demo)" }));
+    await user.click(screen.getByRole("button", { name: "Zaloguj jako analityk (konto demonstracyjne)" }));
     expect(await screen.findByRole("heading", { level: 1, name: orangeCase.title })).toBeInTheDocument();
     expect(calls.find((c) => c.path === "/api/auth/demo")?.body).toEqual({ role: "ANALYST" });
     const chip = within(screen.getByTestId("user-chip"));
     expect(chip.getByText(analystUser.name)).toBeInTheDocument();
     expect(chip.getByText("analityk")).toBeInTheDocument();
     await waitFor(() => expect(socket.connected).toBe(true));
-    expect(screen.queryByRole("link", { name: /Dziennik audytu/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Dziennik audytu/ })).toBeInTheDocument(); // WatchIt: an analyst sees their own entries
 
     await user.click(chip.getByRole("button", { name: /Wyloguj/ }));
     await onLoginPage();
@@ -89,12 +89,13 @@ describe("login and session", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Sesja wygasła");
   });
 
-  it("an analyst opening /audyt sees that the page is for the supervisor", async () => {
-    const { calls } = mockApi();
+  it("an analyst opening /audyt sees only their own entries (the server scopes them)", async () => {
+    const { calls } = mockApi((call) => (call.path.startsWith("/api/audit") ? { json: { items: [] } } : undefined));
     renderApp({ route: "/audyt" });
-    expect(await screen.findByText("Dziennik audytu jest dostępny dla kierownika")).toBeInTheDocument();
-    await act(async () => {});
-    expect(calls.some((c) => c.path.startsWith("/api/audit"))).toBe(false);
+    expect(await screen.findByText(/Twoje wpisy/)).toBeInTheDocument();
+    await waitFor(() => expect(calls.some((c) => c.path.startsWith("/api/audit"))).toBe(true));
+    expect(calls.find((c) => c.path.startsWith("/api/audit"))?.path).not.toMatch(/actor=/);
+    expect(screen.queryByRole("button", { name: /^Kto:/ })).not.toBeInTheDocument(); // no filter by other people
   });
 });
 
@@ -106,7 +107,7 @@ const ENTRIES: AuditEntry[] = [
   {
     id: 2, at: "2026-11-21T10:00:00Z", actor_email: analystUser.email, actor_role: "ANALYST", action: "transition",
     incident_id: orangeCase.id, previous: { status: "in_review", escalation_path: null },
-    new: { status: "escalation_requested", escalation_path: "THIRD_PARTY_AUDIT" }, reason: "Brak oznaczenia współpracy",
+    new: { status: "escalation_requested", escalation_path: "THIRD_PARTY_ADVERTISING" }, reason: "Brak oznaczenia współpracy",
   },
   {
     id: 1, at: "2026-11-21T09:00:00Z", actor_email: analystUser.email, actor_role: "ANALYST", action: "login",
@@ -115,28 +116,33 @@ const ENTRIES: AuditEntry[] = [
 ];
 
 describe("audit log page", () => {
-  it("lists entries with previous → new values and filters by case and actor on the server", async () => {
+  it("Entra-style log: rows open a detail pane with field · before · after; filters go to the server", async () => {
     const user = userEvent.setup();
     const { calls } = mockApi((call) => {
       if (!call.path.startsWith("/api/audit")) return undefined;
       const q = new URLSearchParams(call.path.split("?")[1]);
-      const items = ENTRIES.filter((e) => (!q.get("actor") || e.actor_email === q.get("actor")) && (!q.get("incident_id") || e.incident_id === q.get("incident_id")));
+      const items = ENTRIES.filter((e) => (!q.get("incident_id") || e.incident_id === q.get("incident_id")) && (!q.get("action") || q.get("action")!.split(",").includes(e.action)));
       return { json: { items } };
     }, { user: supervisorUser });
     renderApp({ route: "/audyt" });
     expect(await screen.findByRole("heading", { level: 1, name: "Dziennik audytu" })).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByTestId("audit-row")).toHaveLength(3));
-    const first = within(screen.getAllByTestId("audit-row")[1] as HTMLElement);
-    expect(first.getByText("Zmiana etapu")).toBeInTheDocument();
-    expect(first.getByText(/Etap: W weryfikacji →/)).toHaveTextContent("Etap: W weryfikacji → Wniosek o eskalację");
-    expect(first.getByText("Brak oznaczenia współpracy")).toBeInTheDocument();
-    expect(first.getByRole("link", { name: orangeCase.title })).toHaveAttribute("href", `/sprawy/${orangeCase.id}#historia`);
+    expect(calls.find((c) => c.path.startsWith("/api/audit"))?.path).toMatch(/from=/); // default: the last 24 hours
 
-    await user.selectOptions(screen.getByLabelText("Użytkownik"), analystUser.email);
-    await waitFor(() => expect(screen.getAllByTestId("audit-row")).toHaveLength(2));
-    expect(calls.some((c) => c.path.includes(`actor=${encodeURIComponent(analystUser.email)}`))).toBe(true);
-    await user.selectOptions(screen.getByLabelText("Sprawa"), orangeCase.id);
-    await waitFor(() => expect(screen.getAllByTestId("audit-row")).toHaveLength(1));
-    expect(calls.some((c) => c.path.includes(`incident_id=${orangeCase.id}`))).toBe(true);
+    const row = screen.getAllByTestId("audit-row")[1] as HTMLElement;
+    await user.click(within(row).getByRole("button"));
+    const pane = within(await screen.findByTestId("audit-pane"));
+    expect(pane.getByRole("heading", { name: "Zmiana etapu" })).toBeInTheDocument();
+    const changes = within(pane.getByTestId("audit-changes"));
+    expect(changes.getByText("W weryfikacji")).toBeInTheDocument();
+    expect(changes.getByText("Wniosek o eskalację")).toBeInTheDocument();
+    expect(pane.getByText("Brak oznaczenia współpracy")).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByTestId("audit-pane")).not.toBeInTheDocument());
+
+    await user.type(screen.getByLabelText("ID sprawy"), orangeCase.id);
+    await waitFor(() => expect(calls.some((c) => c.path.includes(`incident_id=${orangeCase.id}`))).toBe(true));
+    await waitFor(() => expect(screen.getAllByTestId("audit-row").length).toBeGreaterThan(0));
+    expect(screen.getByText(/1 aktywny/)).toBeInTheDocument();
   });
 });
