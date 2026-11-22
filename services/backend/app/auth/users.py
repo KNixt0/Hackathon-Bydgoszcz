@@ -16,7 +16,10 @@ from app.models import User
 log = logging.getLogger(__name__)
 
 ROLES = ("ANALYST", "SUPERVISOR")
-DEMO_NAMES = {"ANALYST": "Analityk (konto demonstracyjne)", "SUPERVISOR": "Kierownik zespołu (konto demonstracyjne)"}
+DEMO_NAMES = {
+    "ANALYST": "Analityk (konto demonstracyjne)",
+    "SUPERVISOR": "Kierownik zespołu (konto demonstracyjne)",
+}
 
 
 def normalise_email(email: str) -> str:
