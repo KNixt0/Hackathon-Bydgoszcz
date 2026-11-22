@@ -17,7 +17,7 @@ The browser only ever talks to the frontend origin; nginx proxies `/api/*` and `
 | `GET /api/incidents` | query: `module` (1\|2\|3), `source` (platform), `status`, `from`, `to` (ISO date), `q` | `{items: IncidentSummary[], total: number}`, sorted by `risk_score` desc. No level filter server-side: levels depend on the client threshold. |
 | `GET /api/incidents/{id}` | | `Incident` · 404 |
 | `PATCH /api/incidents/{id}` | `{status: Status}` | `Incident` · 404 · 422 |
-| `GET /api/stats/trends` | query `days` (default 30) | `{days: {date: string, items: {id:string, risk_score:number, module:1\|2\|3}[]}[]}` (raw scores so the chart follows the threshold) |
+| `GET /api/stats/trends` | query `days` (default 30), `hours` (1–168), optional ISO `from` / `to` (custom range, max 366 days; exact timestamps inclusive, bare end date exclusive at next midnight). Partial buckets retained; detections bounded by system launch and now | `{days: {date: string, items: {id:string, risk_score:number, module:1\|2\|3}[]}[]}` (raw scores so the chart follows the threshold) |
 | `GET /api/calibration` | | `{items: {id, title, risk_score, ground_truth: "violation"\|"ok", module}[]}`: only incidents with a label. The client computes TP/FP/FN/TN, precision, recall for any threshold. |
 | `POST /api/scans` | `{url: string, module_hint?: 1\|2\|3, render?: boolean}` | `202 {job_id}` · 422 |
 | `GET /api/scans` | | `{items: ScanJob[]}` (latest 50) |

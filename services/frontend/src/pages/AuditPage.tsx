@@ -1,13 +1,12 @@
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, Filter, X } from "lucide-react";
-import { useCallback, useEffect, useId, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api/endpoints";
 import { caseRef } from "../components/queue/QueueTable";
 import { Button } from "../components/ui/Button";
 import { EmptyState, ErrorState, Skeleton } from "../components/ui/States";
 import { describeChange } from "../domain/audit";
-import { clampDate, SYSTEM_START, todayIso } from "../domain/dates";
+import { apiDate, clampDateTime, SYSTEM_START_LOCAL, todayIso, warsawInput } from "../domain/dates";
 import { formatDateTime } from "../domain/format";
 import { AUDIT_ACTION_LABEL, ROLE_LABEL } from "../domain/labels";
 import { useUser } from "../hooks/useAuth";
@@ -20,7 +19,6 @@ const ACTIONS: AuditAction[] = ["login", "assign", "transition", "label", "thres
 type Range = "24h" | "7d" | "30d" | "all" | "custom";
 const RANGE_LABEL: Record<Range, string> = { "24h": "ostatnie 24 godz.", "7d": "ostatnie 7 dni", "30d": "ostatnie 30 dni", all: "od uruchomienia systemu", custom: "własny zakres" };
 type SortKey = "at" | "actor" | "action" | "object";
-type Tab = "details" | "changes" | "case";
 
 interface Filters {
   range: Range;
@@ -38,8 +36,8 @@ function readFilters(p: URLSearchParams): Filters {
   const role = p.get("rola");
   return {
     range,
-    from: clampDate(p.get("od") ?? ""),
-    to: clampDate(p.get("do") ?? ""),
+    from: clampDateTime(p.get("od") ?? ""),
+    to: clampDateTime(p.get("do") ?? ""),
     actions: (p.get("dzialanie") ?? "").split(",").filter((a): a is AuditAction => (ACTIONS as string[]).includes(a)),
     role: role === "ANALYST" || role === "SUPERVISOR" ? role : "",
     actor: p.get("kto") ?? "",
@@ -67,7 +65,7 @@ function rangeWindow(f: Filters): { from?: string; to?: string } {
   if (f.range === "24h") return { from: new Date(now - 864e5).toISOString() };
   if (f.range === "7d") return { from: new Date(now - 7 * 864e5).toISOString().slice(0, 10) };
   if (f.range === "30d") return { from: new Date(now - 30 * 864e5).toISOString().slice(0, 10) };
-  if (f.range === "custom") return { from: f.from || undefined, to: f.to || undefined };
+  if (f.range === "custom") return { from: f.from ? apiDate(f.from) : undefined, to: f.to ? apiDate(f.to) : undefined };
   return {};
 }
 
@@ -83,11 +81,7 @@ function csvOf(entries: AuditEntry[]): string {
   return ["Data i godzina;Kto;Rola;Działanie;Obiekt;Zmiany;Uzasadnienie", ...rows].join("\r\n");
 }
 
-/**
- * WatchIt audit log, after Microsoft Entra ID's logs: a folding filter bar of pills, the entries as a
- * sortable table, and the selected entry in a pane on the right (field · before · after). A supervisor
- * sees every entry; an analyst sees only their own (the server enforces it).
- */
+/** Ruled audit register; the server enforces each user’s visibility. */
 export function AuditPage() {
   const user = useUser();
   const supervisor = user.role === "SUPERVISOR";
@@ -102,7 +96,7 @@ export function AuditPage() {
     }, { replace: true }),
     [setParams],
   );
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({ key: "at", dir: "desc" });
 
   const win = rangeWindow(filters);
@@ -166,7 +160,7 @@ export function AuditPage() {
     URL.revokeObjectURL(url);
   };
   const bodyId = useId();
-  const today = todayIso();
+  const today = warsawInput(new Date());
   const sortBy = (k: SortKey) => setSort((s) => ({ key: k, dir: s.key === k && s.dir === "desc" ? "asc" : "desc" }));
 
   return (
@@ -188,55 +182,22 @@ export function AuditPage() {
           </button>
         </div>
         <div className="fbar__body" id={bodyId} hidden={!open} data-testid="audit-filters">
-          <Pill label="Data" value={RANGE_LABEL[filters.range]} set={filters.range !== "24h"} onClear={() => setFilters({ range: "24h", from: "", to: "" })}>
-            {(["24h", "7d", "30d", "all", "custom"] as Range[]).map((r) => (
-              <DropdownMenu.CheckboxItem key={r} className="menu__item pillmenu__item" checked={filters.range === r} onCheckedChange={() => setFilters({ range: r })}>
-                {RANGE_LABEL[r]}
-              </DropdownMenu.CheckboxItem>
-            ))}
-          </Pill>
-          {filters.range === "custom" && (
-            <span className="fbar__dates">
-              <label className="field fbar__date"><span className="field__label">Od</span>
-                <input className="input" type="date" value={filters.from} min={SYSTEM_START} max={filters.to || today} onChange={(e) => setFilters({ from: clampDate(e.target.value, today) })} />
-              </label>
-              <label className="field fbar__date"><span className="field__label">Do</span>
-                <input className="input" type="date" value={filters.to} min={filters.from || SYSTEM_START} max={today} onChange={(e) => setFilters({ to: clampDate(e.target.value, today) })} />
-              </label>
-            </span>
-          )}
-          <Pill
-            label="Działanie" value={filters.actions.length ? filters.actions.map((a) => (AUDIT_ACTION_LABEL[a] ?? a).toLowerCase()).join(", ") : "wszystkie"}
-            set={filters.actions.length > 0} onClear={() => setFilters({ actions: [] })}
-          >
-            {ACTIONS.map((a) => (
-              <DropdownMenu.CheckboxItem
-                key={a} className="menu__item pillmenu__item" checked={filters.actions.includes(a)}
-                onSelect={(e) => e.preventDefault()}
-                onCheckedChange={(on) => setFilters({ actions: on ? [...filters.actions, a] : filters.actions.filter((x) => x !== a) })}
-              >
-                {AUDIT_ACTION_LABEL[a] ?? a}
-              </DropdownMenu.CheckboxItem>
-            ))}
-          </Pill>
-          {supervisor && (
-            <>
-              <Pill label="Rola" value={filters.role ? ROLE_LABEL[filters.role].toLowerCase() : "wszystkie"} set={Boolean(filters.role)} onClear={() => setFilters({ role: "" })}>
-                {(["", "ANALYST", "SUPERVISOR"] as const).map((r) => (
-                  <DropdownMenu.CheckboxItem key={r || "all"} className="menu__item pillmenu__item" checked={filters.role === r} onCheckedChange={() => setFilters({ role: r })}>
-                    {r ? ROLE_LABEL[r] : "Wszystkie"}
-                  </DropdownMenu.CheckboxItem>
-                ))}
-              </Pill>
-              <Pill label="Kto" value={filters.actor || "wszyscy"} set={Boolean(filters.actor)} onClear={() => setFilters({ actor: "" })}>
-                {["", ...actors].map((a) => (
-                  <DropdownMenu.CheckboxItem key={a || "all"} className="menu__item pillmenu__item" checked={filters.actor === a} onCheckedChange={() => setFilters({ actor: a })}>
-                    {a || "Wszyscy"}
-                  </DropdownMenu.CheckboxItem>
-                ))}
-              </Pill>
-            </>
-          )}
+          <label className="field"><span className="field__label">Zakres dat</span>
+            <select className="select" value={filters.range} onChange={(e) => setFilters({ range: e.target.value as Range })}>
+              {(Object.keys(RANGE_LABEL) as Range[]).map((r) => <option key={r} value={r}>{RANGE_LABEL[r]}</option>)}
+            </select>
+          </label>
+          {filters.range === "custom" && <>
+            <label className="field"><span className="field__label">Od (czas polski)</span><input className="input" type="datetime-local" min={SYSTEM_START_LOCAL} max={filters.to || today} value={filters.from} onChange={(e) => setFilters({ from: clampDateTime(e.target.value, filters.to || today) })} /></label>
+            <label className="field"><span className="field__label">Do (czas polski)</span><input className="input" type="datetime-local" min={filters.from || SYSTEM_START_LOCAL} max={today} value={filters.to} onChange={(e) => { const to = clampDateTime(e.target.value, today); setFilters({ to: to && filters.from && to < filters.from ? filters.from : to }); }} /></label>
+          </>}
+          <fieldset className="audit-actions"><legend>Działanie</legend>
+            {ACTIONS.map((a) => <label key={a}><input type="checkbox" checked={filters.actions.includes(a)} onChange={(e) => setFilters({ actions: e.target.checked ? [...filters.actions, a] : filters.actions.filter((x) => x !== a) })} /> {AUDIT_ACTION_LABEL[a] ?? a}</label>)}
+          </fieldset>
+          {supervisor && <>
+            <label className="field"><span className="field__label">Rola</span><select className="select" value={filters.role} onChange={(e) => setFilters({ role: e.target.value as Role | "" })}><option value="">Wszystkie</option>{(["ANALYST", "SUPERVISOR"] as const).map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}</select></label>
+            <label className="field"><span className="field__label">Kto</span><select className="select" value={filters.actor} onChange={(e) => setFilters({ actor: e.target.value })}><option value="">Wszyscy</option>{actors.map((a) => <option key={a} value={a}>{a}</option>)}</select></label>
+          </>}
           <label className="field fbar__case">
             <span className="field__label">ID sprawy</span>
             <input className="input" value={filters.caseId} placeholder="np. 429655D5" onChange={(e) => setFilters({ caseId: e.target.value })} />
@@ -262,10 +223,10 @@ export function AuditPage() {
         <EmptyState compact title="Brak wpisów" text={active ? "Żaden wpis nie spełnia filtrów. Zmień je albo wyczyść." : "W ostatnich 24 godzinach nie było żadnych zdarzeń. Wybierz dłuższy zakres dat."} />
       )}
       {log.resource.phase === "ready" && sorted.length > 0 && (
-        <div className={`asplit${selected ? " asplit--open" : ""}`}>
+        <div className="audit-register">
           <div className="table-wrap" role="region" aria-label="Wpisy dziennika" tabIndex={0}>
             <table className="audit audit--striped" data-testid="audit-table">
-              <caption className="sr-only">Wpisy dziennika audytu. Wybierz wpis, aby zobaczyć szczegóły w panelu obok.</caption>
+              <caption className="sr-only">Wpisy dziennika audytu. Wybierz wpis, aby zobaczyć szczegóły pod tabelą.</caption>
               <thead>
                 <tr>
                   {([["at", "Data i godzina"], ["actor", "Kto i rola"], ["action", "Działanie"], ["object", "Obiekt"]] as [SortKey, string][]).map(([k, label]) => {
@@ -307,87 +268,27 @@ export function AuditPage() {
   );
 }
 
-function Pill({ label, value, set, onClear, children }: { label: string; value: string; set: boolean; onClear: () => void; children: ReactNode }) {
-  return (
-    <span className={`pill${set ? " pill--set" : ""}`}>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <button type="button" className="pill__btn" aria-label={`${label}: ${value}. Zmień`}>
-            {label}: <b>{value}</b>{!set && <ChevronDown aria-hidden="true" />}
-          </button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content className="menu pillmenu" align="start" sideOffset={6}>
-            <DropdownMenu.Label className="menu__label">{label}</DropdownMenu.Label>
-            {children}
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-      {set && (
-        <button type="button" className="pill__x" aria-label={`Usuń filtr: ${label}`} onClick={onClear}><X aria-hidden="true" /></button>
-      )}
-    </span>
-  );
-}
-
-const TABS: { key: Tab; label: string }[] = [
-  { key: "details", label: "Szczegóły" },
-  { key: "changes", label: "Zmienione wartości" },
-  { key: "case", label: "Sprawa" },
-];
-
 function DetailPane({ entry, onClose }: { entry: AuditEntry; onClose: () => void }) {
-  const [tab, setTab] = useState<Tab>("details");
   const changes = describeChange(entry);
-  const tabs = TABS.filter((t) => t.key !== "case" || entry.incident_id);
-  const current = tabs.some((t) => t.key === tab) ? tab : "details";
   return (
-    <aside className="apane" id="audit-pane" aria-label="Szczegóły wpisu" data-testid="audit-pane">
+    <section className="audit-details" id="audit-pane" aria-label="Szczegóły wpisu" data-testid="audit-pane">
       <div className="apane__head">
-        <div>
-          <h2 className="apane__title">{AUDIT_ACTION_LABEL[entry.action] ?? entry.action}</h2>
-          <span className="rt__sub">{formatDateTime(entry.at)} · wpis nr {entry.id}</span>
-        </div>
+        <h2 className="apane__title">{AUDIT_ACTION_LABEL[entry.action] ?? entry.action}</h2>
         <Button variant="ghost" iconOnly aria-label="Zamknij szczegóły" onClick={onClose}><X aria-hidden="true" /></Button>
       </div>
-      <div className="apane__tabs" role="tablist" aria-label="Widok wpisu">
-        {tabs.map((t) => (
-          <button key={t.key} type="button" role="tab" aria-selected={current === t.key} className={`apane__tab${current === t.key ? " apane__tab--on" : ""}`} onClick={() => setTab(t.key)}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-      {current === "details" && (
-        <dl className="kv">
-          <dt>Kto</dt><dd>{entry.actor_email} ({(ROLE_LABEL[entry.actor_role] ?? entry.actor_role).toLowerCase()})</dd>
-          <dt>Działanie</dt><dd>{AUDIT_ACTION_LABEL[entry.action] ?? entry.action}</dd>
-          <dt>Obiekt</dt><dd>{objectLabel(entry)}</dd>
-          {entry.incident_id && <><dt>ID sprawy</dt><dd><Link to={`/sprawy/${entry.incident_id}#historia`}>{caseRef(entry.incident_id)}</Link></dd></>}
-          <dt>Uzasadnienie</dt><dd>{entry.reason ?? <span className="muted">brak</span>}</dd>
-          <dt>Wynik</dt><dd className="audit__ok">Zapisano</dd>
-        </dl>
-      )}
-      {(current === "changes" || current === "details") && (
-        changes.length === 0 ? (current === "changes" ? <p className="muted">Ten wpis nie zmienił żadnej wartości.</p> : null) : (
-          <table className="rt apane__changes" data-testid="audit-changes">
-            <caption className="sr-only">Zmienione wartości</caption>
-            <thead><tr><th scope="col">Pole</th><th scope="col">Było</th><th scope="col">Jest</th></tr></thead>
-            <tbody>
-              {changes.map((c) => (
-                <tr key={c.field}><td>{c.label}</td><td className="muted">{c.before ?? "—"}</td><td><b>{c.after}</b></td></tr>
-              ))}
-            </tbody>
-          </table>
-        )
-      )}
-      {current === "case" && entry.incident_id && (
-        <dl className="kv">
-          <dt>ID sprawy</dt><dd>{caseRef(entry.incident_id)}</dd>
-          <dt>Tytuł</dt><dd>{entry.incident_title ?? <span className="muted">sprawa niedostępna</span>}</dd>
-          <dt>Przejdź</dt><dd><Link to={`/sprawy/${entry.incident_id}`}>Otwórz sprawę</Link> · <Link to={`/sprawy/${entry.incident_id}#historia`}>Historia decyzji</Link></dd>
-        </dl>
-      )}
-      <p className="apane__hint">Esc zamyka panel, strzałki w górę i w dół przechodzą do sąsiednich wpisów.</p>
-    </aside>
+      <dl className="kv">
+        <dt>Data i godzina</dt><dd>{formatDateTime(entry.at)} · wpis nr {entry.id}</dd>
+        <dt>Kto</dt><dd>{entry.actor_email} ({ROLE_LABEL[entry.actor_role] ?? entry.actor_role})</dd>
+        <dt>Obiekt</dt><dd>{objectLabel(entry)}</dd>
+        {entry.incident_id && <><dt>ID sprawy</dt><dd><Link to={`/sprawy/${entry.incident_id}#historia`}>{caseRef(entry.incident_id)}</Link></dd></>}
+        <dt>Uzasadnienie</dt><dd>{entry.reason ?? <span className="muted">brak</span>}</dd>
+      </dl>
+      {changes.length > 0 ? <div className="table-wrap"><table className="rt" data-testid="audit-changes">
+        <caption>Zmienione wartości</caption>
+        <thead><tr><th scope="col">Pole</th><th scope="col">Było</th><th scope="col">Jest</th></tr></thead>
+        <tbody>{changes.map((c) => <tr key={c.field}><td>{c.label}</td><td>{c.before ?? "—"}</td><td>{c.after}</td></tr>)}</tbody>
+      </table></div> : <p className="muted">Ten wpis nie zmienił żadnej wartości.</p>}
+      <p className="apane__hint">Esc zamyka szczegóły, strzałki w górę i w dół przechodzą do sąsiednich wpisów.</p>
+    </section>
   );
 }

@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { STATUS_LABEL } from "../../src/domain/labels";
@@ -314,5 +314,32 @@ describe("scan, demo and jobs", () => {
     mockApi();
     renderApp({ route: "/nie-ma-takiej" });
     expect(await screen.findByText("Nie ma takiej strony")).toBeInTheDocument();
+  });
+});
+
+
+describe("custom inflow range", () => {
+  it("converts Warsaw times to UTC only after the range is applied", async () => {
+    const user = userEvent.setup();
+    const { calls } = mockApi();
+    renderApp();
+    await ready();
+    await user.click(screen.getByRole("button", { name: "Własny zakres" }));
+    const from = screen.getByLabelText("Wykres od (czas polski)");
+    const to = screen.getByLabelText("Wykres do (czas polski)");
+    expect(from).toHaveAttribute("min", "2026-11-21T20:50");
+    fireEvent.change(from, { target: { value: "2026-11-21T21:00" } });
+    fireEvent.change(to, { target: { value: "2026-11-21T22:00" } });
+    await user.click(screen.getByRole("button", { name: "Zastosuj zakres" }));
+    await waitFor(() => expect(calls.some((c) => {
+      if (!c.path.startsWith("/api/stats/trends")) return false;
+      const params = new URLSearchParams(c.path.split("?")[1]);
+      return params.get("from") === "2026-11-21T20:00:00.000Z" && params.get("to") === "2026-11-21T21:00:00.000Z";
+    })).toBe(true));
+    fireEvent.change(from, { target: { value: "2026-11-21T23:00" } });
+    expect(screen.getByRole("button", { name: "Zastosuj zakres" })).toBeDisabled();
+    expect(screen.getByRole("alert")).toHaveTextContent("początek nie późniejszy");
+    await user.click(screen.getByRole("button", { name: "24 godz." }));
+    await waitFor(() => expect(calls.some((c) => c.path === "/api/stats/trends?hours=24")).toBe(true));
   });
 });

@@ -313,33 +313,49 @@ def trends(
     db: Db,
     days: Annotated[int, Query(ge=1, le=366)] = 30,
     hours: Annotated[int | None, Query(ge=1, le=168)] = None,
+    from_: Annotated[str | None, Query(alias="from", max_length=40)] = None,
+    to: Annotated[str | None, Query(max_length=40)] = None,
 ) -> dict:
-    """Detections per day (or per hour with `hours`), never before the system start date.
-
-    Items keep raw scores so the client recomputes levels for its thresholds. Material outside UKNF's
-    remit is left out."""
+    """Raw scores by hour/day in a bounded range; partial first/last buckets are retained."""
     now = utcnow()
     system_start = get_settings().system_start
-    if hours:
-        step = timedelta(hours=1)
-        first = now.replace(minute=0, second=0, microsecond=0) - step * (hours - 1)
-        count = hours
-    else:
-        step = timedelta(days=1)
-        first = datetime.combine(now.date() - timedelta(days=days - 1), time.min, tzinfo=UTC)
-        count = days
-    while first < system_start and count > 1:  # no buckets from before the system existed
-        first, count = first + step, count - 1
-    rows = (
-        db.query(Incident.id, Incident.risk_score, Incident.primary_module, Incident.created_at)
-        .filter(Incident.created_at >= first)
-        .filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
-        .order_by(Incident.created_at)
-        .all()
+    start = _parse_bound(from_, "from", end=False)
+    end = _parse_bound(to, "to", end=True)
+    check_bound(from_, start, lower=True)
+    check_bound(to, end, lower=False)
+    end = min(end or now, now)
+    custom = start is not None or to is not None
+    hourly = bool(hours) or (custom and start is not None and end - start <= timedelta(days=1))
+    step = timedelta(hours=1) if hourly else timedelta(days=1)
+    if start is None:
+        count = hours or days
+        start = (
+            now.replace(minute=0, second=0, microsecond=0)
+            if hourly
+            else datetime.combine(now.date(), time.min, tzinfo=UTC)
+        ) - step * (count - 1)
+    start = max(start, system_start)
+    if start > end:
+        raise HTTPException(422, "Początek zakresu nie może być późniejszy niż jego koniec.")
+    if end - start > timedelta(days=366):
+        raise HTTPException(422, "Wybierz zakres nie dłuższy niż 366 dni.")
+    first = (
+        start.replace(minute=0, second=0, microsecond=0)
+        if hourly
+        else start.replace(hour=0, minute=0, second=0, microsecond=0)
     )
-    fmt = "%Y-%m-%dT%H:00:00Z" if hours else "%Y-%m-%d"
+    # Bare end dates are exclusive; exact timestamps are inclusive.
+    exclusive = bool(to) and len(to or "") <= 10 and _parse_bound(to, "to", end=True) <= now
+    last = end - timedelta(microseconds=1) if exclusive else end
+    count = max(1, int((last - first) // step) + 1)
+    query = db.query(Incident.id, Incident.risk_score, Incident.primary_module, Incident.created_at).filter(
+        Incident.created_at >= start,
+        or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)),
+    )
+    query = query.filter(Incident.created_at < end if exclusive else Incident.created_at <= end)
+    fmt = "%Y-%m-%dT%H:00:00Z" if hourly else "%Y-%m-%d"
     buckets: dict[str, list[dict]] = {(first + step * n).strftime(fmt): [] for n in range(count)}
-    for incident_id, score, module, created_at in rows:
+    for incident_id, score, module, created_at in query.order_by(Incident.created_at).all():
         moment = (created_at if created_at.tzinfo else created_at.replace(tzinfo=UTC)).astimezone(UTC)
         key = moment.strftime(fmt)
         if key in buckets:

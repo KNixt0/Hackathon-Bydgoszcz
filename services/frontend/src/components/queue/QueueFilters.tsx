@@ -1,6 +1,6 @@
 import { ChevronDown, Download, SlidersHorizontal } from "lucide-react";
 import { useId, useState } from "react";
-import { clampDate, SYSTEM_START, todayIso } from "../../domain/dates";
+import { clampDateTime, SYSTEM_START_LOCAL, warsawInput } from "../../domain/dates";
 import { MODULE_SHORT, MODULES, PLATFORM_LABEL, PLATFORMS, STATUS_LABEL, STATUSES } from "../../domain/labels";
 import { activeFilterCount, type QueueFilters as Filters } from "../../domain/queue";
 import type { ModuleId, Platform, Status } from "../../types/incident";
@@ -21,7 +21,7 @@ export function QueueFilters({ filters, onChange, onReset, exportHref }: Props) 
   const extra = [filters.module ? "m" : "", filters.platform, filters.status, filters.from, filters.to].filter(Boolean).length;
   const [open, setOpen] = useState(extra > 0);
   const active = activeFilterCount({ ...filters, level: "" });
-  const today = todayIso();
+  const today = warsawInput(new Date());
   return (
     <form className="qtool" role="search" aria-label="Filtry kolejki" onSubmit={(e) => e.preventDefault()}>
       <div className="qtool__row">
@@ -74,15 +74,15 @@ export function QueueFilters({ filters, onChange, onReset, exportHref }: Props) 
         <label className="field qtool__date">
           <span className="field__label">Wykryto od</span>
           <input
-            className="input" type="date" value={filters.from} min={SYSTEM_START} max={filters.to || today}
-            onChange={(e) => onChange({ from: clampDate(e.target.value, today) })}
+            className="input" type="datetime-local" value={filters.from ? clampDateTime(filters.from) : ""} min={SYSTEM_START_LOCAL} max={filters.to || today}
+            onChange={(e) => onChange({ from: clampDateTime(e.target.value, filters.to || today) })}
           />
         </label>
         <label className="field qtool__date">
           <span className="field__label">Wykryto do</span>
           <input
-            className="input" type="date" value={filters.to} min={filters.from || SYSTEM_START} max={today}
-            onChange={(e) => onChange({ to: clampDate(e.target.value, today) })}
+            className="input" type="datetime-local" value={filters.to ? clampDateTime(filters.to) : ""} min={filters.from || SYSTEM_START_LOCAL} max={today}
+            onChange={(e) => onChange({ to: e.target.value ? [clampDateTime(e.target.value, today), filters.from].sort().at(-1) || "" : "" })}
           />
         </label>
       </div>

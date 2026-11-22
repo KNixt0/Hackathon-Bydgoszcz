@@ -133,3 +133,48 @@ def test_date_filters_reject_future_and_an_end_before_system_start(client):
         "items"
     ]
     assert client.get("/api/incidents", params={"from": before}).json()["items"]
+
+
+def test_launch_is_exactly_2050_warsaw():
+    from datetime import UTC, datetime
+
+    from app.config import Settings
+
+    settings = Settings(system_start_date="2026-11-21", system_start_time="20:50")
+    assert settings.system_start == datetime(2026, 11, 21, 19, 50, tzinfo=UTC)
+
+
+def test_custom_trends_keep_partial_first_bucket_and_exclude_outside_range(client, monkeypatch):
+    from datetime import UTC, datetime
+
+    import app.api.incidents as endpoint
+    import app.date_bounds as bounds
+    from app.config import get_settings
+    from app.db import session_scope
+    from app.models import Incident
+
+    cid = case_id(client)
+    settings = get_settings()
+    monkeypatch.setattr(settings, "system_start_date", "2026-11-21")
+    monkeypatch.setattr(settings, "system_start_time", "20:50")
+    now = datetime(2026, 11, 22, 12, tzinfo=UTC)
+    monkeypatch.setattr(endpoint, "utcnow", lambda: now)
+    monkeypatch.setattr(bounds, "utcnow", lambda: now)
+    with session_scope() as db:
+        db.get(Incident, cid).created_at = settings.system_start
+    params = {"from": "2026-11-21T19:50:00Z", "to": "2026-11-21T19:59:00Z"}
+    response = client.get("/api/stats/trends", params=params)
+    assert response.status_code == 200
+    buckets = response.json()["days"]
+    assert len(buckets) == 1 and buckets[0]["date"] == "2026-11-21T19:00:00Z"
+    assert [i["id"] for i in buckets[0]["items"]] == [cid]
+    params["from"] = "2026-11-21T19:51:00Z"
+    assert client.get("/api/stats/trends", params=params).json()["days"][0]["items"] == []
+    for params in (
+        {"from": "bad"},
+        {"from": "2026-11-22T11:00Z", "to": "2026-11-22T10:00Z"},
+        {"to": "2026-11-21T19:49Z"},
+        {"to": "2026-11-23T00:00Z"},
+        {"to": "2026-11-22T12:01Z"},
+    ):
+        assert client.get("/api/stats/trends", params=params).status_code == 422

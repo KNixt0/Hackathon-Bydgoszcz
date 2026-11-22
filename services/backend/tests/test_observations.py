@@ -152,7 +152,7 @@ def test_no_detection_before_the_system_start(monkeypatch):
     monkeypatch.setattr(get_settings(), "system_start_date", "2026-11-21")
     now = datetime(2026, 11, 22, 12, 0, tzinfo=UTC)
     monkeypatch.setattr(pipeline, "utcnow", lambda: now)
-    start = datetime(2026, 11, 21, tzinfo=UTC)
+    start = datetime(2026, 11, 21, 19, 50, tzinfo=UTC)
     times = [pipeline.detection_time(d) for d in (0, 0.5, 1, 3, 10, 29, 400)]
     assert all(start <= t <= now for t in times)
     assert times[0] == now and times[-1] == start  # newest stays now, the oldest lands on the start

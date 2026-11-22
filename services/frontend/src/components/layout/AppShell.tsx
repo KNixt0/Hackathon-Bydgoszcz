@@ -77,7 +77,7 @@ export function AppShell() {
       <main id="tresc" tabIndex={-1} className="main">
         <Outlet />
       </main>
-      <footer className="foot">Narzędzie analityczne UKNF, prototyp. Dane są przetwarzane lokalnie.</footer>
+      <footer className="foot">Narzędzie analityczne UKNF, prototyp. Dane są przetwarzane lokalnie. <span data-testid="build-version">Wersja 2026.11.22.2</span></footer>
       <CommandPalette open={ui.paletteOpen} onOpenChange={ui.setPaletteOpen} incidents={incidents.items} thresholds={thresholds} onCommand={onCommand} />
       <ScanDialog open={ui.scanOpen} onOpenChange={ui.setScanOpen} onSubmit={startScan} />
       <Notices notices={ui.notices} onDismiss={ui.dismissNotice} />
