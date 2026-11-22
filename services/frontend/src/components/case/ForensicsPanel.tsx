@@ -25,7 +25,7 @@ function MiniBars({ data, xKey, testId }: { data: Record<string, string | number
   );
 }
 
-/** Block 2b: opinions over time and who is behind them (account age, origin, handle patterns). */
+/** Block 2b: opinions over time and who is behind them (account age, handle patterns). */
 export function ForensicsPanel({ forensics }: { forensics: Forensics | null }) {
   if (!forensics) {
     return (
@@ -89,10 +89,7 @@ export function ForensicsPanel({ forensics }: { forensics: Forensics | null }) {
           <h3 className="subhead">Wiek kont</h3>
           {accounts.age_buckets.length ? <MiniBars data={accounts.age_buckets} xKey="bucket" testId="age-buckets" /> : <p className="muted">Brak danych.</p>}
         </div>
-        <div className="vsub">
-          <h3 className="subhead">Pochodzenie kont</h3>
-          {accounts.origins.length ? <MiniBars data={accounts.origins} xKey="country" testId="origins" /> : <p className="muted">Brak danych.</p>}
-        </div>
+        {/* WatchIt: no chart of account origins (inside / outside the EU is not shown) */}
         <div className="vsub">
           <h3 className="subhead">Wzorce nazw kont</h3>
           {accounts.name_patterns.length === 0 ? <p className="muted">Nie wykryto powtarzalnych wzorców.</p> : (

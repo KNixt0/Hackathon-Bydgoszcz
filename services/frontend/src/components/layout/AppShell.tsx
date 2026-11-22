@@ -42,7 +42,7 @@ export function AppShell() {
 
   const triggerDemo = async () => {
     const failure = await scans.triggerDemo();
-    notify(failure ? "error" : "info", failure ?? "Próbka demo została przekazana do potoku. Postęp widać w zadaniach.");
+    notify(failure ? "error" : "info", failure ?? "Próbka demonstracyjna została przekazana do analizy. Postęp widać w zadaniach.");
   };
   const importSamples = async () => {
     const failure = await scans.importSamples();
@@ -50,7 +50,7 @@ export function AppShell() {
   };
   const startScan = async (req: Parameters<typeof scans.startScan>[0]) => {
     const failure = await scans.startScan(req);
-    if (!failure) notify("info", "Skanowanie zlecone. Postęp widać w zadaniach.");
+    if (!failure) notify("info", "Analiza zlecona. Postęp widać w zadaniach.");
     return failure;
   };
 

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { api, exportListCsvUrl } from "../api/endpoints";
 import { AlertBanner } from "../components/queue/AlertBanner";
 import { LevelTabs, levelTabId } from "../components/queue/LevelTabs";
@@ -20,13 +20,20 @@ import { useUi } from "../hooks/useUi";
 
 const PANEL_ID = "kolejka-panel";
 
-/** "3 nowe sprawy dziś, średnio 2 dziennie w ostatnich 30 dniach." from the trend rows (nothing invented). */
-function inflowSentence(rows: TrendRow[]): string {
-  const totals = rows.map((r) => r.red + r.orange + r.green);
-  const today = totals[totals.length - 1] ?? 0;
-  const avg = totals.length ? Math.round(totals.reduce((a, b) => a + b, 0) / totals.length) : 0;
-  const todayText = today === 0 ? "Dziś nie wpłynęła żadna sprawa" : `Dziś ${pl(today, "wpłynęła", "wpłynęły", "wpłynęło")} ${plN(today, "nowa sprawa", "nowe sprawy", "nowych spraw")}`;
-  return `${todayText}, średnio ${avg} dziennie w ostatnich ${totals.length} dniach.`;
+/** WatchIt: quick ranges for the inflow chart. 24 h is drawn per hour, the others per day. */
+type Range = "24h" | "7d" | "30d";
+const RANGES: { key: Range; label: string }[] = [
+  { key: "24h", label: "24 godz." },
+  { key: "7d", label: "7 dni" },
+  { key: "30d", label: "30 dni" },
+];
+
+/** "W ostatnich 24 godzinach wpłynęły 3 sprawy." from the trend rows (nothing invented). */
+function inflowSentence(rows: TrendRow[], range: Range): string {
+  const total = rows.reduce((sum, r) => sum + r.red + r.orange + r.green, 0);
+  const period = range === "24h" ? "W ostatnich 24 godzinach" : `W ostatnich ${rows.length} ${rows.length === 1 ? "dniu" : "dniach"}`;
+  if (total === 0) return `${period} nie wpłynęła żadna sprawa.`;
+  return `${period} ${pl(total, "wpłynęła", "wpłynęły", "wpłynęło")} ${plN(total, "sprawa", "sprawy", "spraw")}.`;
 }
 
 export function QueuePage() {
@@ -36,7 +43,11 @@ export function QueuePage() {
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => filtersFromSearch(params), [params]);
 
-  const trends = useResource((signal) => api.trends(30, signal), "trends");
+  const [range, setRange] = useState<Range>("7d");
+  const trends = useResource(
+    (signal) => (range === "24h" ? api.trendsHourly(24, signal) : api.trends(range === "7d" ? 7 : 30, signal)),
+    `trends:${range}`,
+  );
   const { refresh: refreshTrends } = trends;
   useEffect(() => {
     if (incidents.revision > 0) refreshTrends();
@@ -48,10 +59,7 @@ export function QueuePage() {
   );
   const resetFilters = useCallback(() => setParams(filtersToSearch(EMPTY_FILTERS), { replace: true }), [setParams]);
 
-  const pinned = useMemo(
-    () => [...incidents.alerts, ...incidents.viralAlerts.filter((v) => !incidents.alerts.some((a) => a.id === v.id))].map((a) => a.id),
-    [incidents.alerts, incidents.viralAlerts],
-  );
+  const pinned = useMemo(() => incidents.alerts.map((a) => a.id), [incidents.alerts]);
   const visible = useMemo(() => applyQueue(incidents.items, filters, thresholds, pinned), [incidents.items, filters, thresholds, pinned]);
 
   // Tab counts include everything that matches the other filters, so they stay useful while a level is selected.
@@ -88,12 +96,11 @@ export function QueuePage() {
           </p>
         )}
         <p className="page__note" data-testid="queue-thresholds">
-          Poziomy według progów {isGlobal ? "globalnych" : "z podglądu w tej przeglądarce"}: oznaczenie od <b className="num">{thresholds.orange}</b>, krytyczne od <b className="num">{thresholds.red}</b>.{" "}
-          <Link to="/kalibracja">{isGlobal ? "Kalibracja progów" : "Zapisz lub przywróć w kalibracji"}</Link>
+          Poziomy według progów {isGlobal ? "globalnych" : "z podglądu w tej przeglądarce"}: oznaczenie od <b className="num">{thresholds.orange}</b>, krytyczne od <b className="num">{thresholds.red}</b>.
         </p>
       </div>
 
-      <AlertBanner alerts={incidents.alerts} onDismiss={incidents.dismissAlert} viral={incidents.viralAlerts} onDismissViral={incidents.dismissViralAlert} />
+      <AlertBanner alerts={incidents.alerts} onDismiss={incidents.dismissAlert} />
 
       {incidents.phase === "error" ? (
         <div className="panel panel--flush">
@@ -104,7 +111,14 @@ export function QueuePage() {
           <section className="strip" aria-labelledby="naplyw-h">
             <div className="strip__head">
               <h2 className="strip__title" id="naplyw-h">Napływ spraw</h2>
-              {trends.resource.phase === "ready" && rows.length > 0 && <p className="strip__text">{inflowSentence(rows)} Słupki według poziomu przy obecnych progach.</p>}
+              <div className="seg" role="group" aria-label="Zakres wykresu">
+                {RANGES.map((r) => (
+                  <button key={r.key} type="button" className={`seg__btn${range === r.key ? " seg__btn--on" : ""}`} aria-pressed={range === r.key} onClick={() => setRange(r.key)}>
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+              {trends.resource.phase === "ready" && rows.length > 0 && <p className="strip__text">{inflowSentence(rows, range)} Słupki według poziomu przy obecnych progach.</p>}
             </div>
             {trends.resource.phase === "loading" && <div className="trend"><Skeleton height="100%" /></div>}
             {trends.resource.phase === "error" && <ErrorState compact title="Nie udało się wczytać napływu spraw" message={trends.resource.error} onRetry={trends.reload} />}
@@ -124,21 +138,24 @@ export function QueuePage() {
                 items={visible}
                 thresholds={thresholds}
                 freshIds={incidents.fresh}
+                sort={filters.sort}
+                dir={filters.dir}
+                onSort={(sort, dir) => setFilters({ sort, dir })}
                 loading={loading}
                 filtered={filtered}
                 filterSummary={filterSummary}
                 emptyAction={filtered
                   ? <Button onClick={resetFilters}>Wyczyść filtry</Button>
-                  : <Button variant="primary" onClick={() => setScanOpen(true)}>Skanuj URL</Button>}
+                  : <Button variant="primary" onClick={() => setScanOpen(true)}>Analiza URL</Button>}
               />
               <div className="qfoot">
                 <span role="status" data-testid="queue-count">
-                  {filtered ? `Pokazano ${visible.length} z ${total} spraw` : `${plN(total, "sprawa", "sprawy", "spraw")}`}, {filters.sort === "priority" ? "od najwyższego priorytetu" : "od najwyższego ryzyka"}
+                  {filtered ? `Pokazano ${visible.length} z ${total} spraw` : `${plN(total, "sprawa", "sprawy", "spraw")}`}
                 </span>
               </div>
               <p className="qleg">
-                Moduły: 1 Finfluencerzy i podmioty trzecie, 2 Zgodność i informacja o ryzyku, 3 Shadow advisory. Kryteria według załącznika UKNF (18 kryteriów).
-                Skala przy wyniku: kreski oznaczają progi oznaczenia i krytyczny.
+                Moduły: 1 Reklamy podmiotów trzecich, 2 Zgodność i informacja o ryzyku, 3 Doradztwo bez zezwolenia. Kryteria według załącznika UKNF (18 kryteriów);
+                najedź na numer kryterium, aby zobaczyć jego definicję. Skala przy wyniku: kreski oznaczają progi oznaczenia i krytyczny.
               </p>
             </div>
           </section>

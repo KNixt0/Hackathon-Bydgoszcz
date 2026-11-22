@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-51-lokata-bankowa",
+  "platform": "web",
+  "title": "Lokata Na Start",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 3
+ },
+ "text": "Bank Przykładowy Fikcyjny S.A. Lokata Na Start: 8% w skali roku, gwarantowany zysk bez ryzyka. Środki objęte gwarancją BFG. Załóż lokatę online i zarabiaj bezpiecznie.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

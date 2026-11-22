@@ -188,6 +188,7 @@ describe("triage queue", () => {
     mockApi();
     renderApp();
     await ready();
+    await user.click(screen.getByRole("button", { name: /Więcej filtrów/ })); // the extra filters fold away
     await user.selectOptions(screen.getByLabelText("Status"), "false_positive");
     const expected = incidentSummaries.filter((i) => i.status === "false_positive").length;
     expect(expected).toBeGreaterThan(0);
@@ -237,10 +238,10 @@ describe("scan, demo and jobs", () => {
     mockApi();
     renderApp();
     await ready();
-    const trigger = screen.getByRole("button", { name: "Skanuj URL" });
+    const trigger = screen.getByRole("button", { name: "Analiza URL" });
     await user.click(trigger);
     const dialog = await screen.findByRole("dialog");
-    expect(within(dialog).getByLabelText("Adres materiału")).toHaveFocus();
+    expect(within(dialog).getByLabelText("Adres URL materiału")).toHaveFocus();
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
@@ -253,16 +254,16 @@ describe("scan, demo and jobs", () => {
     renderApp({ socket });
     await ready();
 
-    await user.click(screen.getByRole("button", { name: "Skanuj URL" }));
+    await user.click(screen.getByRole("button", { name: "Analiza URL" }));
     const dialog = await screen.findByRole("dialog");
-    await user.type(within(dialog).getByLabelText("Adres materiału"), "nie-adres");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.type(within(dialog).getByLabelText("Adres URL materiału"), "nie-adres");
+    await user.click(within(dialog).getByRole("button", { name: "Uruchom analizę" }));
     expect(within(dialog).getByRole("alert")).toHaveTextContent("Podaj pełny adres");
     expect(calls.some((c) => c.method === "POST")).toBe(false);
 
-    await user.clear(within(dialog).getByLabelText("Adres materiału"));
-    await user.type(within(dialog).getByLabelText("Adres materiału"), "https://broker.example/oferta");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.clear(within(dialog).getByLabelText("Adres URL materiału"));
+    await user.type(within(dialog).getByLabelText("Adres URL materiału"), "https://broker.example/oferta");
+    await user.click(within(dialog).getByRole("button", { name: "Uruchom analizę" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(calls.find((c) => c.method === "POST" && c.path === "/api/scans")?.body).toEqual({ url: "https://broker.example/oferta" });
 
@@ -279,10 +280,10 @@ describe("scan, demo and jobs", () => {
     mockApi((call) => (call.method === "POST" && call.path === "/api/scans" ? { status: 422, json: { detail: "Domena jest na liście wykluczeń." } } : undefined));
     renderApp();
     await ready();
-    await user.click(screen.getByRole("button", { name: "Skanuj URL" }));
+    await user.click(screen.getByRole("button", { name: "Analiza URL" }));
     const dialog = await screen.findByRole("dialog");
-    await user.type(within(dialog).getByLabelText("Adres materiału"), "https://x.example");
-    await user.click(within(dialog).getByRole("button", { name: "Zleć skanowanie" }));
+    await user.type(within(dialog).getByLabelText("Adres URL materiału"), "https://x.example");
+    await user.click(within(dialog).getByRole("button", { name: "Uruchom analizę" }));
     expect(await within(dialog).findByText("Domena jest na liście wykluczeń.")).toBeInTheDocument();
   });
 
@@ -291,10 +292,10 @@ describe("scan, demo and jobs", () => {
     const { calls } = mockApi();
     renderApp();
     await ready();
-    await user.click(screen.getByRole("button", { name: "Dane demo" }));
+    await user.click(screen.getByRole("button", { name: "Dane demonstracyjne" }));
     await user.click(await screen.findByRole("menuitem", { name: /Uruchom próbkę demo/ }));
     await waitFor(() => expect(calls.find((c) => c.path === "/api/demo/trigger")?.body).toEqual({ case: "case3" }));
-    expect(await screen.findByText(/Próbka demo została przekazana/)).toBeInTheDocument();
+    expect(await screen.findByText(/Próbka demonstracyjna została przekazana/)).toBeInTheDocument();
   });
 
   it("opens the command palette with Ctrl+K and jumps to a case", async () => {

@@ -80,6 +80,8 @@
 /* ── Workflow */
 .workflow__wait { color: var(--c-amb); font-weight: 500; }
 .workflow__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.observation__acts { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; margin: var(--sp-4) 0; }
+.observation__acts p { margin: 0; }
 .workflow__row { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end; }
 .workflow__label { width: 260px; }
 .workflow__dl { min-height: 40px; }
@@ -281,3 +283,17 @@
 .reports__cat { margin-left: 16px; color: var(--ink-2); }
 .section-title[tabindex="-1"]:focus { outline: none; }
 .section-title[tabindex="-1"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* WatchIt: "Werdykt AI" is optional, folded behind a button */
+.verdict__toggle { margin-bottom: var(--sp-4); }
+.chev { width: 16px; height: 16px; transition: transform var(--dur) ease-out; }
+.chev--up { transform: rotate(180deg); }
+/* WatchIt: "Tok rozumowania" folds away, closed by default */
+.reasoning { margin-top: var(--sp-6); border-top: 1px solid var(--line); padding-top: var(--sp-4); }
+.reasoning__summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+.reasoning__summary::-webkit-details-marker { display: none; }
+.reasoning__summary::before { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(-45deg); transition: transform var(--dur) ease-out; }
+.reasoning[open] > .reasoning__summary::before { transform: rotate(45deg); }
+.reasoning__summary .subhead { margin: 0; }
+.reasoning__summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .chev, .reasoning__summary::before { transition: none; } }

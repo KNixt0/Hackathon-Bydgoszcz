@@ -72,3 +72,16 @@ Zasady, które agenci dostali wprost, bo AI lubi je łamać: żadnych cytatów s
 5. **Model i effort dobrane do zadania:** mocny model do funkcji przekrojowych i projektu interfejsu, tańsze modele do dokumentacji, audytów i porządków na GitHubie.
 6. **Projekt interfejsu też przeszedł przez bramkę człowieka.** Agent przygotował cztery propozycje języka wizualnego na tych samych trzech fragmentach ekranu; właściciel odrzucił pierwszą rundę jako zbyt szablonową, wybrał kierunek „Urzędowy" z drugiej i zażądał prostszej kalibracji. Dopiero wtedy powstała specyfikacja ([DESIGN.md](../DESIGN.md), [PRODUCT.md](../PRODUCT.md)), a po niej wdrożenie; decyzje #16–#17.
 7. **Wdrożenie w chmurze dopiero po testach lokalnych.** Skrypty Azure CLI ([deploy/azure](../deploy/azure/)) uruchomiono na gotowym, sprawdzonym stosie; te same kontenery, jedna maszyna, dostęp ograniczony do adresu IP (decyzja #18).
+
+## 8. Skille designowe: jeden zestaw dla wszystkich agentów
+
+Skille są przypięte w [.claude/settings.json](../.claude/settings.json) (`extraKnownMarketplaces` + `enabledPlugins`), więc każdy agent Claude otwierający repo ma ten sam zestaw. Wszystkie mają licencje permisywne (Apache-2.0, MIT).
+
+| Plugin | Źródło | Skille | Kiedy |
+|---|---|---|---|
+| `impeccable` | pbakaus/impeccable | `impeccable` (audit, critique, polish) + detektor po edycjach UI | każda zmiana interfejsu; detektor zgłasza wzorce szablonowe |
+| `frontend-design` | anthropics/claude-plugins-official | `frontend-design` | nowe ekrany i komponenty |
+| `vectorlab-ux-skills` | VectorLabAU/skills | `anti-slop`, `typography`, `colour-palette`, `spacing`, `page-patterns`, `forms`, `keyboard` i inne | dobór typografii, kolorów, odstępów, formularzy, obsługi klawiatury |
+| `design` | anthropics/knowledge-work-plugins | `design-critique`, `accessibility-review`, `ux-copy` | przegląd przed scaleniem: krytyka, WCAG, teksty interfejsu |
+
+Jak były używane: propozycje kierunków wizualnych (frontend-design, impeccable, vectorlab: typography, colour-palette, spacing, anti-slop, page-patterns), przeprojektowanie po uwadze „za bardzo AI” (impeccable, frontend-design, anti-slop, typography, colour-palette, spacing), wdrożenie „Urzędowego” (impeccable z listą kontrolną, frontend-design, anti-slop, typography, spacing, forms, keyboard). Agenci piszący DESIGN.md nie ładowali skilli, bo tylko przepisywali wartości z wybranej propozycji. Wyjątki detektora są zapisane z uzasadnieniem w `.impeccable/config.json`. Zestaw `design` (WCAG, UX copy) dodano później, bo kontrast i klawiaturę sprawdzali wcześniej tylko agenci we własnym zakresie.

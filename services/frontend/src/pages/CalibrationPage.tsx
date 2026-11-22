@@ -19,11 +19,11 @@ import { flagSentence, precisionFraction, queueOnlySentence, recallFraction } fr
 import { formatDate, formatPercent } from "../domain/format";
 import { countLevels } from "../domain/levels";
 import { pl, plN } from "../domain/plural";
+import { CalibrationHistory } from "../components/calibration/CalibrationHistory";
 import { useUser } from "../hooks/useAuth";
 import { useIncidents } from "../hooks/useIncidents";
 import { useResource } from "../hooks/useResource";
 import { useThresholds } from "../hooks/useThresholds";
-import { useUi } from "../hooks/useUi";
 import type { CalibrationItem } from "../types/api";
 
 const EMPTY: CalibrationItem[] = [];
@@ -31,9 +31,8 @@ const EMPTY: CalibrationItem[] = [];
 const SMALL_SET = 30;
 
 export function CalibrationPage() {
-  const { thresholds, setThresholds, reset, isGlobal, global, globalThresholds, saveGlobal } = useThresholds();
+  const { thresholds, setThresholds, reset, isGlobal, global, globalThresholds, saveGlobal, historyRevision } = useThresholds();
   const user = useUser();
-  const { notify } = useUi();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const supervisor = user.role === "SUPERVISOR";
@@ -59,8 +58,8 @@ export function CalibrationPage() {
     setSaveError(null);
     const failure = await saveGlobal();
     setSaving(false);
+    // WatchIt: no notification; the change appears in the calibration history below
     if (failure) setSaveError(failure);
-    else notify("success", `Zapisano progi globalne: oznaczenie od ${thresholds.orange}, krytyczne od ${thresholds.red}. Obowiązują wszystkich analityków i alert na żywo.`);
   };
 
   const n = items.length;
@@ -195,6 +194,7 @@ export function CalibrationPage() {
           )}
         </Details>
       )}
+      <CalibrationHistory revision={historyRevision} />
     </div>
   );
 }

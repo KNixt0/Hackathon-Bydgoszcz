@@ -17,6 +17,12 @@ ALLOWED = [
     ("escalation_requested", "in_review"),
     ("escalated", "resolved"),
     ("escalated", "false_positive"),
+    # contract v4: follow-up after an intervention
+    ("in_review", "awaiting_correction"),
+    ("escalated", "awaiting_correction"),
+    ("awaiting_correction", "resolved"),
+    ("awaiting_correction", "in_review"),
+    ("awaiting_correction", "escalation_requested"),
 ]
 # shortest route from "new" to each status
 ROUTE = {
@@ -24,6 +30,7 @@ ROUTE = {
     "in_review": ["in_review"],
     "escalation_requested": ["in_review", "escalation_requested"],
     "escalated": ["in_review", "escalation_requested", "escalated"],
+    "awaiting_correction": ["in_review", "awaiting_correction"],
     "resolved": ["in_review", "resolved"],
     "false_positive": ["in_review", "false_positive"],
 }
@@ -46,7 +53,11 @@ def move(client, incident_id, to, **extra):
 
 def drive(client, incident_id, status):
     for step in ROUTE[status]:
-        body = {"reason": "uzasadnienie"} if step in ("resolved", "false_positive") else {}
+        body = (
+            {"reason": "uzasadnienie"}
+            if step in ("resolved", "false_positive", "awaiting_correction")
+            else {}
+        )
         response = move(client, incident_id, step, **body)
         assert response.status_code == 200, (step, response.text)
 
@@ -62,7 +73,8 @@ def fresh_case(client):
 def test_every_allowed_transition(client, start, target):
     incident_id = fresh_case(client)
     drive(client, incident_id, start)
-    body = {"reason": "Potwierdzone w materiale"} if target in ("resolved", "false_positive") else {}
+    needs_reason = ("resolved", "false_positive", "awaiting_correction")
+    body = {"reason": "Potwierdzone w materiale"} if target in needs_reason else {}
     response = move(client, incident_id, target, **body)
     assert response.status_code == 200, response.text
     assert response.json()["status"] == target
@@ -109,7 +121,7 @@ def test_payload_must_match_the_transition(client, cases):
         {"to": "escalation_requested", "resolution_action": "evidence_report"},
         {"to": "resolved", "reason": "x", "escalation_path": "THIRD_PARTY_AUDIT"},
         {"to": "resolved", "reason": "x", "resolution_action": "false_positive"},
-        {"to": "false_positive", "reason": "x", "resolution_action": "warning_list_request"},
+        {"to": "false_positive", "reason": "x", "resolution_action": "content_removed"},
         {"to": "escalation_requested", "escalation_path": "NOWHERE"},
         {"to": "bogus"},
         {"to": "resolved", "reason": "x", "extra": 1},
@@ -125,21 +137,28 @@ def test_workflow_shape_defaults_and_escalation_path(client, analyst, cases):
         "resolution_action": None,
         "resolution_note": "",
         "label": "unlabeled",
+        "started_at": None,  # WatchIt: processing time
+        "closed_at": None,
     }
     summary = next(i for i in client.get("/api/incidents").json()["items"] if i["id"] == cases["red"])
-    assert summary["workflow"] == {"assigned_to": None, "label": "unlabeled"}
+    assert summary["workflow"] == {
+        "assigned_to": None,
+        "label": "unlabeled",
+        "started_at": None,
+        "closed_at": None,
+    }
 
     started = move(analyst, cases["red"], "in_review").json()
     assert started["workflow"]["assigned_to"] == ANALYST[0]  # starting the review takes the case
     requested = move(analyst, cases["red"], "escalation_requested").json()
-    assert requested["workflow"]["escalation_path"] == "LEGAL_WARNING_LIST"  # Module 3 default
-    approved = move(client, cases["red"], "escalated", escalation_path="SUPERVISION_RISK_DEPT").json()
-    assert approved["workflow"]["escalation_path"] == "SUPERVISION_RISK_DEPT"
+    assert requested["workflow"]["escalation_path"] == "UNLICENSED_ACTIVITY"  # Module 3 default
+    approved = move(client, cases["red"], "escalated", escalation_path="RISK_INFORMATION").json()
+    assert approved["workflow"]["escalation_path"] == "RISK_INFORMATION"
 
     drive(client, cases["green"], "escalation_requested")
     assert (
         client.get(f"/api/incidents/{cases['green']}").json()["workflow"]["escalation_path"]
-        == "THIRD_PARTY_AUDIT"
+        == "THIRD_PARTY_ADVERTISING"
     )
     back = move(client, cases["green"], "in_review", reason="Brak podstaw").json()
     assert back["status"] == "in_review" and back["workflow"]["escalation_path"] is None
@@ -174,7 +193,8 @@ def test_resolved_defaults_to_an_evidence_report(client, cases):
     assert closed["workflow"]["label"] == "unlabeled"
 
 
-def test_enhanced_monitoring_watches_the_url_every_6_hours(client, cases):
+def test_intervention_follow_up_watches_the_url_and_records_the_outcome(client, cases):
+    """Contract v4: after an intervention the source is re-checked every 6 h until the case is closed."""
     from datetime import timedelta
 
     from app.db import session_scope
@@ -182,26 +202,36 @@ def test_enhanced_monitoring_watches_the_url_every_6_hours(client, cases):
     from app.tasks import enqueue_rescan
 
     drive(client, cases["red"], "in_review")
-    closed = move(
-        client, cases["red"], "resolved", reason="Monitorować", resolution_action="enhanced_monitoring"
+    assert move(client, cases["red"], "awaiting_correction").status_code == 422  # what was done is required
+    moved = move(
+        client, cases["red"], "awaiting_correction", reason="Pismo do podmiotu z 21.11", follow_up_days=7
     )
-    assert closed.status_code == 200
-    url = closed.json()["source"]["url"]
-    items = client.get("/api/watchlist").json()["items"]
-    assert [i["url"] for i in items] == [url]
+    assert moved.status_code == 200
+    body = moved.json()
+    assert body["status"] == "awaiting_correction"
+    assert body["follow_up"]["note"] == "Pismo do podmiotu z 21.11" and body["follow_up"]["outcome"] is None
+    url = body["source"]["url"]
+    assert [i["url"] for i in client.get("/api/watchlist").json()["items"]] == [url]
     with session_scope() as db:
         assert db.query(WatchlistItem).one().interval_hours == 6
 
     before = client.get("/api/incidents").json()["total"]
-    first = enqueue_rescan()
-    assert len(first) == 1  # the sample is fetched again from its fixture, not from instagram
+    assert len(enqueue_rescan()) == 1  # the sample is fetched again from its fixture
     assert client.get("/api/scans").json()["items"][0]["state"] == "done"
-    assert client.get("/api/incidents").json()["total"] == before  # updated in place
+    assert client.get("/api/incidents").json()["total"] == before  # the same case, not a new one
+    after = client.get(f"/api/incidents/{cases['red']}").json()
+    assert after["follow_up"]["outcome"] == "persisting"  # unchanged content
     assert enqueue_rescan() == []  # too early: the interval is 6 h
     with session_scope() as db:
         item = db.query(WatchlistItem).one()
         item.last_scanned_at = utcnow() - timedelta(hours=6)
     assert len(enqueue_rescan()) == 1
+
+    closed = move(
+        client, cases["red"], "resolved", reason="Treść usunięta", resolution_action="content_removed"
+    )
+    assert closed.status_code == 200 and closed.json()["workflow"]["resolution_action"] == "content_removed"
+    assert client.get("/api/watchlist").json()["items"] == []  # the follow-up ends with the case
 
 
 def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
@@ -210,7 +240,7 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     move(analyst, case, "in_review")
     move(analyst, case, "escalation_requested", reason="Doradztwo bez licencji")
     move(client, case, "escalated")
-    move(client, case, "resolved", reason="Wniosek o wpis", resolution_action="warning_list_request")
+    move(client, case, "resolved", reason="Raport przekazany", resolution_action="evidence_report")
     analyst.post(f"/api/incidents/{case}/label", json={"label": "true_positive"})
 
     history = client.get(f"/api/incidents/{case}/history").json()["items"]
@@ -239,13 +269,12 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     assert history[0]["actor_role"] == "ANALYST"
     req = history[2]
     assert req["previous"] == {"status": "in_review", "escalation_path": None}
-    assert req["new"] == {"status": "escalation_requested", "escalation_path": "LEGAL_WARNING_LIST"}
+    assert req["new"] == {"status": "escalation_requested", "escalation_path": "UNLICENSED_ACTIVITY"}
     assert req["reason"] == "Doradztwo bez licencji"
     assert history[3]["actor_email"] == SUPERVISOR[0] and history[3]["actor_role"] == "SUPERVISOR"
     closing = history[4]
     assert (
-        closing["new"]["resolution_action"] == "warning_list_request"
-        and closing["reason"] == "Wniosek o wpis"
+        closing["new"]["resolution_action"] == "evidence_report" and closing["reason"] == "Raport przekazany"
     )
     assert history[5]["previous"] == {"label": "unlabeled"} and history[5]["new"] == {
         "label": "true_positive"
@@ -261,7 +290,13 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     by_actor = client.get(f"/api/audit?actor={ANALYST[0].upper()}").json()["items"]
     assert by_actor and all(e["actor_email"] == ANALYST[0] for e in by_actor)
     assert len(client.get("/api/audit?limit=2").json()["items"]) == 2
-    assert analyst.get("/api/audit").status_code == 403
+    # WatchIt: an analyst reads the log too, but only their own entries
+    own = analyst.get("/api/audit").json()["items"]
+    assert own and all(e["actor_email"] == ANALYST[0] for e in own)
+    assert all(
+        e["actor_email"] == ANALYST[0]
+        for e in analyst.get(f"/api/audit?actor={SUPERVISOR[0]}").json()["items"]
+    )
 
 
 def test_failed_transitions_write_no_audit_row(client, cases):
@@ -382,39 +417,12 @@ def test_existing_volume_gets_workflow_columns(client, cases):
     assert client.post(f"/api/incidents/{cases['red']}/assign").status_code == 200
 
 
-def test_warning_list_request(client, cases):
-    from app.exports.pdf import render_warning_list_html
-
-    assert client.get(f"/api/incidents/{cases['green']}/warning-list-request.pdf").status_code == 409
+def test_no_warning_list_request_document(client, cases):
+    """Contract v4: the system detects and reports; it does not draft formal motions."""
+    assert client.get(f"/api/incidents/{cases['red']}/warning-list-request.pdf").status_code == 404
     drive(client, cases["red"], "in_review")
-    move(
-        client,
-        cases["red"],
-        "resolved",
-        reason="Doradztwo bez zezwolenia",
-        resolution_action="warning_list_request",
-    )
-    incident = client.get(f"/api/incidents/{cases['red']}").json()
-    history = client.get(f"/api/incidents/{cases['red']}/history").json()["items"]
-    html = render_warning_list_html(incident, history)
-    for needle in (
-        "PROJEKT",
-        "ostrzeżeń publicznych",
-        "art. 76",
-        "Żółw Capital S.A.",
-        incident["source"]["url"],
-        incident["source"]["content_hash"],
-        incident["source"]["fetched_at"],
-        "Gwarantowany zysk",
-        "Sprawdzenie w rejestrach",
-        "nie figuruje",
-        "Historia decyzji",
-        "Doradztwo bez zezwolenia",
-        "Zamknięta – naruszenie potwierdzone",
-        "Wniosek o wpis na listę ostrzeżeń",
-        "Dane syntetyczne",
-    ):
-        assert needle.lower() in html.lower(), needle
+    bad = move(client, cases["red"], "resolved", reason="x", resolution_action="warning_list_request")
+    assert bad.status_code == 422
 
 
 def test_evidence_pdf_has_decision_history(client, cases):

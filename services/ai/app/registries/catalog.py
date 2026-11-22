@@ -25,6 +25,10 @@ REGISTRIES: dict[str, tuple[str, str]] = {
         "Lista ostrzeżeń publicznych KNF",
         "https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne",
     ),
+    "knf_tfi": (
+        "Towarzystwa funduszy inwestycyjnych (KNF)",
+        f"{_KNF}/Fundusze_Inwestycyjne/TFI_i_FI",
+    ),
     "knf_investment_advisors": (
         "Lista doradców inwestycyjnych (KNF)",
         f"{_KNF}/lista_doradcow_inwestycyjnych",
@@ -43,6 +47,9 @@ KNF_FIRM_REGISTERS = [
     "knf_foreign_branches",
     "knf_foreign_cross_border",
 ]
+# Supervised entities that are not investment firms but hold a KNF licence of their own
+# (fund management companies may manage portfolios and give investment advice).
+KNF_OTHER_LICENSED = ["knf_tfi"]
 # Sub-registers whose union forms the umbrella "Rejestr firm inwestycyjnych".
 KNF_SUB_REGISTERS = KNF_FIRM_REGISTERS[1:]
 CONTEXT_ONLY = {"uknf_cooperation_notice"}

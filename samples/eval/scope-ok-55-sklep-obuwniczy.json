@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-55-sklep-obuwniczy",
+  "platform": "instagram",
+  "title": "Wyprzedaż",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 7
+ },
+ "text": "ButyMax Przykład: wyprzedaż! Zysk dla Ciebie: rabaty do 50%. Inwestuj w wygodę – kup dwie pary, trzecia gratis. Oferta ograniczona!",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

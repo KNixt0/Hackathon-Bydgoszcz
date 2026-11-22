@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-54-doradca-podatkowy",
+  "platform": "web",
+  "title": "Rozliczenie PIT-38",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 6
+ },
+ "text": "Kancelaria Podatkowa Przykładowa – doradca podatkowy. Rozliczymy PIT-38 i podatek od zysków kapitałowych, pomożemy w optymalizacji podatkowej dla inwestorów.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

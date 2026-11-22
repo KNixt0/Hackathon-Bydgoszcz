@@ -44,6 +44,6 @@ No model weights, fonts or icons are bundled. The default embedder is implemente
 
 | File | Source | Status |
 |---|---|---|
-| `data/registries/knf_banks_brokerage.json`, `knf_brokerage_houses.json`, `knf_foreign_branches.json`, `knf_foreign_cross_border.json` | public registers of the Polish Financial Supervision Authority (knf.gov.pl), fetched with `scripts/fetch_knf_registers.py` | real data, snapshot date inside each file |
-| `data/registries/knf_public_warnings.json`, `knf_investment_advisors.json`, `kirp_legal_advisers.json`, `kidp_tax_advisers.json` | written for the demo | synthetic samples (`"synthetic_sample": true`), invented entries only |
+| `data/registries/knf_banks_brokerage.json`, `knf_brokerage_houses.json`, `knf_foreign_branches.json`, `knf_foreign_cross_border.json`, `knf_tfi.json`, `knf_public_warnings.json` | public registers and the public warnings list of the Polish Financial Supervision Authority (knf.gov.pl), fetched with `scripts/fetch_knf_registers.py` | real data, snapshot date inside each file; the warnings list names entities exactly as KNF publishes them and must be refreshed (entries removed by KNF disappear on refresh) |
+| `data/registries/knf_investment_advisors.json`, `kirp_legal_advisers.json`, `kidp_tax_advisers.json` | written for the demo | synthetic samples (`"synthetic_sample": true`), invented entries only |
 | `data/registries/_demo_overlay.json` | written for the demo | fictional "registered" entities for the demo cases, flagged `synthetic`; disable with `AI_DEMO_OVERLAY=false` |

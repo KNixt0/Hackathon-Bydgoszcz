@@ -1,3 +1,4 @@
+import { formatDateTime } from "./format";
 import type { AuditEntry } from "../types/api";
 import { CASE_LABEL_LABEL, ESCALATION_PATH_LABEL, RESOLUTION_ACTION_LABEL, STATUS_LABEL } from "./labels";
 
@@ -7,8 +8,12 @@ const FIELD_LABEL: Record<string, string> = {
   escalation_path: "Ścieżka eskalacji",
   resolution_action: "Działanie końcowe",
   resolution_note: "Notatka",
+  started_at: "Rozpoczęcie pracy",
+  closed_at: "Zamknięcie sprawy",
+  intervention_note: "Interwencja",
+  follow_up_due: "Termin weryfikacji",
   label: "Ocena",
-  flag: "Próg flagowania",
+  flag: "Próg oznaczenia",
   critical: "Próg krytyczny",
   method: "Sposób",
   format: "Format",
@@ -27,9 +32,15 @@ const VALUE_LABEL: Record<string, string> = {
   ...RESOLUTION_ACTION_LABEL,
   ...CASE_LABEL_LABEL,
   password: "hasło",
-  demo: "konto demo",
-  evidence_package: "pakiet dowodowy",
-  warning_list_request: "wniosek o wpis na listę ostrzeżeń",
+  demo: "konto demonstracyjne",
+  evidence_package: "raport z wykrycia",
+  detection_report: "raport z wykrycia",
+  // entries written before contract v4
+  warning_list_request: "raport z wykrycia (dawny wniosek)",
+  enhanced_monitoring: "monitorowanie",
+  SUPERVISION_RISK_DEPT: "ryzyko informacyjne",
+  LEGAL_WARNING_LIST: "działalność bez zezwolenia",
+  THIRD_PARTY_AUDIT: "reklama podmiotu trzeciego",
   list: "lista spraw",
 };
 // the same key means different things per field
@@ -41,6 +52,7 @@ const FIELD_VALUE: Record<string, Record<string, string>> = {
 
 function show(field: string, value: unknown): string {
   if (value === null || value === undefined || value === "") return "brak";
+  if (typeof value === "string" && /(_at|_due)$/.test(field) && /^\d{4}-\d{2}-\d{2}T/.test(value)) return formatDateTime(value);
   if (typeof value === "string") return FIELD_VALUE[field]?.[value] ?? VALUE_LABEL[value] ?? value;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
   return JSON.stringify(value);

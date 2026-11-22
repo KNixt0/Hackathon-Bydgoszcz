@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "url": "https://przyklad-poza-zakresem.example/scope-ok-53-polisa-ufk",
+  "platform": "web",
+  "title": "Polisa z UFK",
+  "published_at": "2026-11-15",
+  "seed": true,
+  "detected_days_ago": 5
+ },
+ "text": "Polisa inwestycyjna z UFK Towarzystwa Ubezpieczeń Przykładowego S.A. – nawet 12% rocznie! Twój kapitał pracuje w ubezpieczeniowych funduszach kapitałowych.",
+ "context": {
+  "synthetic": true,
+  "ground_truth": "ok",
+  "demo_case": null
+ }
+}

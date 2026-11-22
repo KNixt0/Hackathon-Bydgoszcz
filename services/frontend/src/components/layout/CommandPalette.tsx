@@ -53,14 +53,14 @@ export function CommandPalette({ open, onOpenChange, incidents, thresholds, onCo
                 <Command.Item value="kolejka spraw strona główna" onSelect={() => run({ type: "navigate", to: "/" })}>
                   <Inbox aria-hidden="true" /><span className="palette__item-main">Otwórz kolejkę spraw</span>
                 </Command.Item>
-                <Command.Item value="kalibracja próg suwak precision recall" onSelect={() => run({ type: "navigate", to: "/kalibracja" })}>
+                <Command.Item value="kalibracja próg suwak precyzja czułość" onSelect={() => run({ type: "navigate", to: "/kalibracja" })}>
                   <SlidersHorizontal aria-hidden="true" /><span className="palette__item-main">Otwórz kalibrację progów</span>
                 </Command.Item>
-                <Command.Item value="skanuj url adres strona" onSelect={() => run({ type: "scan" })}>
-                  <Radar aria-hidden="true" /><span className="palette__item-main">Skanuj adres URL</span>
+                <Command.Item value="analiza url adres strona skanuj" onSelect={() => run({ type: "scan" })}>
+                  <Radar aria-hidden="true" /><span className="palette__item-main">Analiza URL</span>
                 </Command.Item>
                 <Command.Item value="uruchom próbkę demo" onSelect={() => run({ type: "demo" })}>
-                  <Play aria-hidden="true" /><span className="palette__item-main">Uruchom próbkę demo</span>
+                  <Play aria-hidden="true" /><span className="palette__item-main">Uruchom próbkę demonstracyjną</span>
                 </Command.Item>
               </Command.Group>
 

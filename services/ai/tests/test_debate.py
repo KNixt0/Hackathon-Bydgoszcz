@@ -218,7 +218,7 @@ def test_recommendation_levels(make_ctx):
     )
     assert green.verdict.recommendation.action == "none" and green.verdict.level == "green"
     assert red.verdict.recommendation.action in {"explain", "escalate"}
-    assert red.verdict.recommendation.label in {"Postępowanie wyjaśniające", "Eskalacja"}
+    assert red.verdict.recommendation.label in {"Wymaga oceny analityka", "Wysoki priorytet"}
     assert "Rekomendacja" in red.verdict.rationale
 
 

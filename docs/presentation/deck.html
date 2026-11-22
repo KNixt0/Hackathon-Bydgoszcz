@@ -43,9 +43,9 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <div style="position:absolute;left:96px;top:170px;width:1000px">
 <div class="mark" style="font-size:20px;margin-bottom:26px"><i></i>InvestWatch</div>
 <h1 style="font-size:60px;margin-bottom:22px">Nadzór nad reklamą finansową,<br>który pokazuje dowody.</h1>
-<p style="font-size:26px;color:var(--mute);line-height:1.4;max-width:900px">System on-premise dla UKNF: zbiera reklamy i oferty z sieci, mierzy je w prawdziwej przeglądarce, ocenia lokalnym modelem AI i podaje analitykowi werdykt, przepis i dosłowny cytat.</p>
+<p style="font-size:26px;color:var(--mute);line-height:1.4;max-width:900px">System on-premise dla UKNF: zbiera reklamy i oferty z sieci, mierzy je w prawdziwej przeglądarce, ocenia lokalnym modelem AI i podaje analitykowi wynik oceny, przepis i dosłowny cytat.</p>
 </div>
-<div style="position:absolute;left:96px;bottom:60px;font-size:18px;color:var(--mute)">HackNation 2026 · wyzwanie UKNF · <b style="color:var(--ink)">[nazwa zespołu]</b></div>
+<div style="position:absolute;left:96px;bottom:60px;font-size:18px;color:var(--mute)">HackNation 2026 · wyzwanie UKNF · <b style="color:var(--ink)">Hikari</b></div>
 </section>
 
 <!-- 2 -->
@@ -53,7 +53,7 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <h2>Dziś analityk robi to ręcznie</h2>
 <p class="lead" style="margin-bottom:34px">Trzy obszary wyzwania. W każdym sprawa zaczyna się od przeglądania sieci i porównywania treści z przepisami i rejestrami.</p>
 <div class="row" style="gap:24px;margin-top:10px">
-<div class="box" style="flex:1;height:300px"><span class="tag">1</span><h3 style="font-size:23px;margin:12px 0 10px">Reklamy podmiotów trzecich</h3><p>Reklamy firm inwestycyjnych prowadzone przez podmioty trzecie i finfluencerów. Trzeba ustalić, kto reklamuje, czyją usługę i czy współpraca została zgłoszona.</p></div>
+<div class="box" style="flex:1;height:300px"><span class="tag">1</span><h3 style="font-size:23px;margin:12px 0 10px">Reklamy podmiotów trzecich</h3><p>Reklamy firm inwestycyjnych prowadzone przez podmioty trzecie i finfluencerów. Trzeba ustalić, kto reklamuje, czyją usługę i czy komunikat marketingowy firmy jest rozpoznawalny jako reklama. Tylko podmioty i usługi pod nadzorem UKNF.</p></div>
 <div class="box" style="flex:1;height:300px"><span class="tag">2</span><h3 style="font-size:23px;margin:12px 0 10px">Informacja o ryzyku</h3><p>Niewystarczające informacje o ryzyku w materiałach firm. Każdy materiał trzeba sprawdzić względem 18 kryteriów UKNF, osobno dla każdej reklamy.</p></div>
 <div class="box" style="flex:1;height:300px"><span class="tag">3</span><h3 style="font-size:23px;margin:12px 0 10px">Doradztwo bez licencji</h3><p>Nielicencjonowane doradztwo inwestycyjne. Trzeba odróżnić je od edukacji i sprawdzić, czy autor figuruje w rejestrach.</p></div>
 </div>
@@ -66,7 +66,7 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <div><div class="shot crop" style="width:835px;height:522px;"><img src="img/01_kolejka.png" style="width:835px;left:0px;top:-75px"></div><p class="cap" style="margin-top:6px">Kolejka spraw po zalogowaniu (dane syntetyczne i próbki)</p></div>
 <div style="width:300px;padding-top:4px">
 <ul>
-<li>Kolejka od najgroźniejszych, z licznikami poziomów w zakładkach.</li>
+<li>Kolejka od najgroźniejszych: 54 sprawy, w tym 7 krytycznych i 19 do weryfikacji.</li>
 <li>Poziomy ryzyka z licznikami, trend napływu z 30 dni.</li>
 <li>Logowanie z dwiema rolami: analityk i kierownik.</li>
 </ul>
@@ -135,7 +135,7 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <div style="margin-top:8px"><div class="shot crop" style="width:1142px;height:398px"><img src="img/03b_graf.png" style="width:1210px;left:-34px;top:-109px"></div></div>
 <div class="row" style="gap:28px;margin-top:12px">
 <p style="flex:1;font-size:17px">Graf łączy firmę, zarząd, agencję PR i twórcę. Oznaczona ścieżka to współpraca nieujawniona w materiale.</p>
-<p style="flex:1;font-size:17px">Z każdej sprawy eksport: pakiet dowodowy PDF i CSV (URL, czas pobrania, skrót treści, cytaty, przepisy).</p>
+<p style="flex:1;font-size:17px">Z każdej sprawy eksport: raport z wykrycia PDF i CSV (URL, data publikacji, pierwsze wykrycie, ostatnie sprawdzenie, skrót treści, cytaty). Wykrycie jest zamrożone; po interwencji system sprawdza, czy treść usunięto lub poprawiono.</p>
 </div>
 </section>
 
@@ -186,12 +186,12 @@ th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;let
 <!-- 10 -->
 <section><div class="hd"><span class="mark"><i></i>InvestWatch</span><span>10</span></div>
 <h2>Jeden suwak, a koszt wyboru widać od razu</h2>
-<p class="lead" style="margin-bottom:8px;font-size:18px">Sprawdzone na 49 oznaczonych sprawach (27 naruszeń). Zdanie pod suwakiem liczy się na żywo.</p>
+<p class="lead" style="margin-bottom:8px;font-size:18px">Sprawdzone na syntetycznym zbiorze 55 spraw oznaczonych przez zespół (27 naruszeń, 6 materiałów spoza właściwości UKNF). Zdanie pod suwakiem liczy się na żywo.</p>
 <div class="row" style="gap:32px">
 <div style="width:560px"><div class="shot crop" style="width:560px;height:271px;"><img src="img/07a_kalibracja_20.png" style="width:831px;left:-12px;top:-196px"></div>
-<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 20.</b> Przy progu 20 system oznacza 23 z 49 sprawdzonych spraw. W tym 21 rzeczywistych naruszeń i 2 fałszywe alarmy. 6 naruszeń zostaje przeoczonych.</p></div>
+<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 20.</b> Przy progu 20 system oznacza 23 z 55 sprawdzonych spraw. W tym 21 rzeczywistych naruszeń i 2 fałszywe alarmy. 6 naruszeń zostaje przeoczonych.</p></div>
 <div style="width:560px"><div class="shot crop" style="width:560px;height:271px;"><img src="img/07b_kalibracja_35.png" style="width:831px;left:-12px;top:-228px"></div>
-<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 35.</b> Przy progu 35 system oznacza 13 z 49 sprawdzonych spraw. W tym 13 rzeczywistych naruszeń i 0 fałszywych alarmów. 14 naruszeń zostaje przeoczonych.</p></div>
+<p style="font-size:17px;margin-top:10px;line-height:1.4"><b>Próg 35.</b> Przy progu 35 system oznacza 11 z 55 sprawdzonych spraw. W tym 11 rzeczywistych naruszeń i 0 fałszywych alarmów. 16 naruszeń zostaje przeoczonych.</p></div>
 </div>
 <p class="note" style="margin-top:8px">Zbiór jest syntetyczny; progi na realnych danych UKNF trzeba dostroić. Globalne progi zapisuje tylko kierownik.</p>
 </section>

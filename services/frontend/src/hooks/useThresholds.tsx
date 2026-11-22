@@ -1,11 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { errorMessage } from "../api/client";
 import { api } from "../api/endpoints";
 import { DEFAULT_THRESHOLDS, normalizeThresholds, type Thresholds } from "../domain/levels";
 import type { ThresholdSettings } from "../types/api";
 
 // The local preview (this browser only). v2: the default flag threshold moved from 35 to 20; v1 values are ignored.
-const STORAGE_KEY = "investwatch.thresholds.v2";
+const STORAGE_KEY = "investwatch.thresholds.v2"; // key kept from before the WatchIt rename
 const LEGACY_KEYS = ["investwatch.thresholds.v1"];
 
 export function readStoredThresholds(): Thresholds | null {
@@ -46,6 +46,8 @@ interface ThresholdsContextValue {
   isGlobal: boolean;
   /** Supervisor only: stores the current thresholds as the global ones. Resolves to null or an error message. */
   saveGlobal: () => Promise<string | null>;
+  /** Bumps after every recorded change, so the calibration history can refresh. */
+  historyRevision: number;
 }
 
 const ThresholdsContext = createContext<ThresholdsContextValue | null>(null);
@@ -69,6 +71,25 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
 
   const globalThresholds = useMemo(() => (global ? fromSettings(global) : DEFAULT_THRESHOLDS), [global]);
   const thresholds = preview ?? globalThresholds;
+
+  // WatchIt: a user's own thresholds are recorded in the calibration history (who changed what), once the
+  // slider has settled. Silent: no notification, a failed write never disturbs the screen.
+  const [historyRevision, setHistoryRevision] = useState(0);
+  const lastRecorded = useRef<string | null>(null);
+  useEffect(() => {
+    if (!preview) return;
+    const key = `${preview.orange}/${preview.red}`;
+    if (key === lastRecorded.current) return;
+    const timer = window.setTimeout(() => {
+      lastRecorded.current = key;
+      api.recordPreview(preview.orange, preview.red)
+        .then(() => setHistoryRevision((r) => r + 1))
+        .catch(() => {
+          // offline or session ended: the preview still applies locally
+        });
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [preview]);
 
   const setThresholds = useCallback(
     (next: Partial<Thresholds>) => {
@@ -98,6 +119,7 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
       setGlobal(saved);
       store(null);
       setPreview(null);
+      setHistoryRevision((r) => r + 1);
       return null;
     } catch (err) {
       return errorMessage(err);
@@ -113,8 +135,9 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
       globalThresholds,
       isGlobal: thresholds.red === globalThresholds.red && thresholds.orange === globalThresholds.orange,
       saveGlobal,
+      historyRevision,
     }),
-    [thresholds, setThresholds, reset, global, globalThresholds, saveGlobal],
+    [thresholds, setThresholds, reset, global, globalThresholds, saveGlobal, historyRevision],
   );
   return <ThresholdsContext.Provider value={value}>{children}</ThresholdsContext.Provider>;
 }

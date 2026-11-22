@@ -170,20 +170,7 @@ class OpinionForensicsPlugin(Plugin):
             text = f"{clustered} z {total} kont ma nazwy z tych samych rodzin „rdzeń + cyfry”: {names}."
             anomalies.append(Anomaly(type="name_pattern_cluster", severity=sev, description=text))
             findings.append(PluginFinding("NAME_PATTERN_CLUSTER", sev, text, [], 0.8, {"share": clustered / total}))
-        home = LANG_COUNTRY.get(ctx.page.language, "")
-        if enough and home:
-            foreign = [(c, a) for c, _, a in rows if (c.country or "").upper() not in {home, ""}]
-            foreign_share = len(foreign) / total
-            if foreign_share >= FOREIGN_SHARE:
-                fresh_foreign = sum(1 for _, a in foreign if a is not None and a < 14) / len(foreign)
-                sev = "high" if fresh_foreign >= FRESH_SHARE_HIGH else "medium"
-                top = ", ".join(f"{k} ({v})" for k, v in origin_counts.most_common(4) if k != home)
-                text = (
-                    f"{foreign_share:.0%} komentarzy pod polskojęzycznym materiałem pochodzi z kont spoza "
-                    f"Polski: {top}."
-                )
-                anomalies.append(Anomaly(type="foreign_origin_cluster", severity=sev, description=text))
-                findings.append(PluginFinding("FOREIGN_ORIGIN_CLUSTER", sev, text, [], 0.75, {"share": foreign_share}))
+        # WatchIt: no "accounts from abroad" marker (origin inside / outside the EU is not shown).
         if findings:
             # attach the most telling accounts as evidence
             suspects = sorted((r for r in rows if r[2] is not None), key=lambda r: r[2])[:3]

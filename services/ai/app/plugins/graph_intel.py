@@ -216,19 +216,8 @@ class GraphIntelPlugin(Plugin):
                     0.85,
                 )
             )
-        country = (company.country or "").upper()
-        if country and country not in EEA:
-            flags.append(f"Siedziba poza EOG ({country})")
-            findings.append(
-                PluginFinding(
-                    "FOREIGN_SHELL",
-                    "medium",
-                    f"Podmiot „{company.name}” jest zarejestrowany poza Europejskim Obszarem Gospodarczym ({country}), "
-                    "co utrudnia nadzór i dochodzenie roszczeń.",
-                    ev,
-                    0.8,
-                )
-            )
+        # WatchIt: no marker based on whether the entity comes from inside or outside the EU / EEA
+        # (requirement 1: such "unknown origin" markers are removed from the interface).
         return Financials(
             company=company.name,
             krs=company.krs,

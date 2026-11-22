@@ -11,19 +11,20 @@ export interface TransitionInput {
   reason?: string;
   escalation_path?: EscalationPath;
   resolution_action?: ResolutionAction;
+  follow_up_days?: number;
 }
 
 interface Props {
   action: WorkflowAction | null;
   defaultPath: EscalationPath;
-  /** Module 3 cases offer the warning-list request first. */
   defaultResolution: ResolutionAction;
   onCancel: () => void;
   /** Resolves to null on success or an error message to show in the dialog. */
   onConfirm: (input: TransitionInput) => Promise<string | null>;
 }
 
-const RESOLUTIONS: ResolutionAction[] = ["evidence_report", "warning_list_request", "enhanced_monitoring"];
+const RESOLUTIONS: ResolutionAction[] = ["evidence_report", "content_removed", "content_corrected"];
+const FOLLOW_UP_DAYS = [7, 14, 30];
 
 /** Asks for what the step needs (reason, escalation path, resolution action) before it is sent. */
 export function TransitionDialog({ action, defaultPath, defaultResolution, onCancel, onConfirm }: Props) {
@@ -60,6 +61,7 @@ function DialogForm({ action, defaultPath, defaultResolution, onConfirm }: Omit<
   const [reason, setReason] = useState("");
   const [path, setPath] = useState<EscalationPath>(defaultPath);
   const [resolution, setResolution] = useState<ResolutionAction>(defaultResolution);
+  const [days, setDays] = useState(14);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   if (!spec) return null;
@@ -77,6 +79,7 @@ function DialogForm({ action, defaultPath, defaultResolution, onConfirm }: Omit<
       ...(reason.trim() ? { reason: reason.trim() } : {}),
       ...(spec.escalationPath ? { escalation_path: path } : {}),
       ...(spec.resolutionAction ? { resolution_action: resolution } : {}),
+      ...(spec.followUpDays ? { follow_up_days: days } : {}),
     });
     setBusy(false);
     if (failure) setError(failure);
@@ -110,8 +113,18 @@ function DialogForm({ action, defaultPath, defaultResolution, onConfirm }: Omit<
             </select>
           </label>
         )}
+        {spec.followUpDays && (
+          <label className="field">
+            <span className="field__label">Termin weryfikacji</span>
+            <select className="select" value={days} onChange={(e) => setDays(Number(e.target.value))}>
+              {FOLLOW_UP_DAYS.map((d) => <option key={d} value={d}>{`za ${d} dni`}</option>)}
+            </select>
+          </label>
+        )}
         <div className="field">
-          <label className="field__label" htmlFor="transition-reason">Uzasadnienie decyzji{required ? " (wymagane)" : " (opcjonalnie)"}</label>
+          <label className="field__label" htmlFor="transition-reason">
+            {spec.followUpDays ? "Co zrobił urząd" : "Uzasadnienie decyzji"}{required ? " (wymagane)" : " (opcjonalnie)"}
+          </label>
           <span className="field__hint" id="transition-hint">Wpis trafia do historii decyzji i do dziennika audytu.</span>
           <textarea
             id="transition-reason" className="input textarea" rows={4} maxLength={2000} value={reason}

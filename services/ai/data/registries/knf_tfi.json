@@ -1,0 +1,529 @@
+{
+ "registry": "knf_tfi",
+ "label": "Towarzystwa funduszy inwestycyjnych (KNF)",
+ "url": "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Fundusze_Inwestycyjne/TFI_i_FI",
+ "snapshot_date": "2026-11-21",
+ "source": "official KNF page, fetched by scripts/fetch_knf_registers.py",
+ "partial": false,
+ "synthetic_sample": false,
+ "entries": [
+  {
+   "name": "AgioFunds Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "AgioFunds TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Alior Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Alior TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Allied Funds Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Allied Funds TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "ALTUS Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "ALTUS TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "AMATHUS Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "AMATHUS TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Amundi Polska Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Amundi Polska TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "ARP Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "ARP TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Baltic Capital Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Baltic Capital TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "BEST Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "BEST TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "BNP Paribas Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "BNP Paribas TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "BPS Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "BPS TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "CASPAR Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "CASPAR TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Copernicus Capital Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Copernicus Capital TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Eques Investment Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Eques Investment TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "ERSTE Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "ERSTE TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Esaliens Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Esaliens TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "FINCREA Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "FINCREA TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Forum Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Forum TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Fundusze Inwestycji Polskich Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Fundusze Inwestycji Polskich TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Generali Investments Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Generali Investments TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "GO Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "GO TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Harenda Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Harenda TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Hoist Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Hoist TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "IB Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "IB TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "ING Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "ING TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Insignis Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Insignis TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Intrum Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Intrum TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "INVENTUM Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "INVENTUM TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Investors Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Investors TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Ipopema Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Ipopema TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "KRUK Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "KRUK TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Lartiq Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Lartiq TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "MCI Capital Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "MCI Capital TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Mebis Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Mebis TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Michael/Ström Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Michael/Ström TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "MILLENNIUM Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "MILLENNIUM TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "MMP Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "MMP TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "MOUNT Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "MOUNT TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "MS Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "MS TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "mTowarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "mTFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "OPERA Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "OPERA TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Opoka Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Opoka TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "OPTI Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "OPTI TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Origin Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Origin TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "OSTOJA Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "OSTOJA TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Pekao Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Pekao TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "PFR Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "PFR TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "PKO Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "PKO TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "PRA Group Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "PRA Group TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Quercus Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Quercus TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Rockbridge Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Rockbridge TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "SATURN Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "SATURN TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Skanska Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Skanska TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "SKARBIEC Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "SKARBIEC TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Superfund Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Superfund TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Towarzystwo Funduszy Inwestycyjnych AGRO S.A.",
+   "aliases": [
+    "TFI AGRO S.A.",
+    "AGRO TFI S.A.",
+    "AGRO Towarzystwo Funduszy Inwestycyjnych S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Towarzystwo Funduszy Inwestycyjnych Allianz Polska S.A.",
+   "aliases": [
+    "TFI Allianz Polska S.A.",
+    "Allianz Polska TFI S.A.",
+    "Allianz Polska Towarzystwo Funduszy Inwestycyjnych S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Towarzystwo Funduszy Inwestycyjnych PZU S.A.",
+   "aliases": [
+    "TFI PZU S.A.",
+    "PZU TFI S.A.",
+    "PZU Towarzystwo Funduszy Inwestycyjnych S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "TYR Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "TYR TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "ULTIMO Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "ULTIMO TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "Uniqa Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "Uniqa TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "VeloFunds Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "VeloFunds TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "VIG/C-QUADRAT Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "VIG/C-QUADRAT TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  },
+  {
+   "name": "White Berg Towarzystwo Funduszy Inwestycyjnych S.A.",
+   "aliases": [
+    "White Berg TFI S.A."
+   ],
+   "status": "listed",
+   "detail": "zezwolenie KNF (TFI)"
+  }
+ ]
+}

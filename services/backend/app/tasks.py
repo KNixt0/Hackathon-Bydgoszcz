@@ -33,6 +33,8 @@ def enqueue_rescan() -> list[str]:
         query = db.query(Incident)
         if not get_settings().rescan_samples:  # offline material never changes: skipped unless asked for
             query = query.filter(Incident.synthetic.is_(False), Incident.origin != "sample")
+        # a case closed as a false alarm is not re-checked (a watched URL still is, below)
+        query = query.filter(Incident.status != "false_positive")
         for row in query.all():
             targets[row.source_url] = rescan_options(row)
         for item in db.query(WatchlistItem).all():

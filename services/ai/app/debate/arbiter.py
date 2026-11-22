@@ -22,17 +22,21 @@ from ..scoring import (
 from ..scoring import weights as W
 from .models import AgentReport, DebateClaim
 
+# The system detects and reports. Its output never qualifies conduct legally and never proposes a
+# formal step (summons, criminal notice, warning-list entry): that belongs to the competent UKNF unit.
 RECOMMENDATIONS = {
-    "none": ("Brak działań", "Materiał nie wymaga działań nadzorczych; wynik pozostaje w archiwum."),
-    "monitor": ("Monitorowanie", "Dodać podmiot do obserwacji i powtórzyć analizę przy kolejnej publikacji."),
+    "none": ("Brak działań", "Materiał nie wymaga oceny analityka; wynik pozostaje w archiwum."),
+    "monitor": (
+        "Monitorowanie",
+        "Obserwować źródło i powtórzyć analizę przy zmianie treści lub kolejnej publikacji.",
+    ),
     "explain": (
-        "Postępowanie wyjaśniające",
-        "Wezwać podmiot do złożenia wyjaśnień i przedstawienia dokumentów w zakresie: {topics}.",
+        "Wymaga oceny analityka",
+        "Analityk ocenia ustalenia i materiał dowodowy w zakresie: {topics}.",
     ),
     "escalate": (
-        "Eskalacja",
-        "Przekazać sprawę do właściwego departamentu UKNF; rozważyć wpis na listę ostrzeżeń "
-        "publicznych i zawiadomienie o podejrzeniu przestępstwa. Zakres: {topics}.",
+        "Wysoki priorytet",
+        "Przekazać raport z wykrycia do oceny merytorycznej właściwej komórki UKNF. Zakres ustaleń: {topics}.",
     ),
 }
 LEVEL_PL = {"green": "niskie", "orange": "podwyższone", "red": "wysokie"}

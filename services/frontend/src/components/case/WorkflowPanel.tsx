@@ -1,6 +1,5 @@
-import { CircleAlert, FileWarning } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import { useState } from "react";
-import { warningListRequestUrl } from "../../api/endpoints";
 import { CASE_LABEL_LABEL, ESCALATION_PATH_LABEL, RESOLUTION_ACTION_LABEL, STATUS_LABEL } from "../../domain/labels";
 import { availableActions, CLOSED, DEFAULT_ESCALATION_PATH, type WorkflowAction } from "../../domain/workflow";
 import type { TransitionRequest, User } from "../../types/api";
@@ -19,9 +18,6 @@ interface Props {
   onAssign: () => Promise<string | null>;
   onLabel: (label: CaseLabel) => Promise<string | null>;
 }
-
-export const offersWarningList = (inc: Incident) =>
-  inc.modules.includes(3) || inc.primary_module === 3 || inc.workflow.resolution_action === "warning_list_request";
 
 /** The case workflow: where the case is, who has it, and the moves this user may make from here. */
 export function WorkflowPanel({ incident, user, busy = false, onTransition, onAssign, onLabel }: Props) {
@@ -65,10 +61,10 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
           ) : <span className="muted">nikt, sprawa nieprzypisana</span>}
         </dd>
         {workflow.escalation_path && (
-          <><dt>Ścieżka eskalacji</dt><dd>{ESCALATION_PATH_LABEL[workflow.escalation_path]}</dd></>
+          <><dt>Ścieżka eskalacji</dt><dd>{ESCALATION_PATH_LABEL[workflow.escalation_path] ?? workflow.escalation_path}</dd></>
         )}
         {closed && workflow.resolution_action && (
-          <><dt>Działanie końcowe</dt><dd>{RESOLUTION_ACTION_LABEL[workflow.resolution_action]}</dd></>
+          <><dt>Działanie końcowe</dt><dd>{RESOLUTION_ACTION_LABEL[workflow.resolution_action] ?? workflow.resolution_action}</dd></>
         )}
         {closed && workflow.resolution_note && (
           <><dt>Uzasadnienie</dt><dd>{workflow.resolution_note}</dd></>
@@ -97,17 +93,15 @@ export function WorkflowPanel({ incident, user, busy = false, onTransition, onAs
             {LABELS.map((l) => <option key={l} value={l}>{CASE_LABEL_LABEL[l]}</option>)}
           </select>
         </label>
-        {offersWarningList(incident) && (
-          <a className="dl workflow__dl" href={warningListRequestUrl(incident.id)} download={`wniosek-lista-ostrzezen-${incident.id}.pdf`}>
-            <FileWarning aria-hidden="true" />Wniosek o wpis na listę ostrzeżeń (projekt PDF)
-          </a>
-        )}
       </div>
 
       <TransitionDialog
         action={pending}
         defaultPath={defaultPath}
-        defaultResolution={offersWarningList(incident) ? "warning_list_request" : "evidence_report"}
+        defaultResolution={
+          incident.follow_up?.outcome === "removed" ? "content_removed"
+            : incident.follow_up?.outcome === "corrected" ? "content_corrected" : "evidence_report"
+        }
         onCancel={() => setPending(null)}
         onConfirm={confirm}
       />

@@ -12,10 +12,11 @@ import socketio
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import TimeoutError as SQLAlchemyTimeoutError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
-from app.api import admin, auth, discovery, incidents, public, scans, system
+from app.api import admin, auth, discovery, incidents, scans, system
 from app.auth import session_guard
 from app.auth.socket import SocketAuthGate
 from app.auth.tokens import get_secret
@@ -67,7 +68,8 @@ def _validation_message(exc: RequestValidationError) -> str:
 
 def create_api() -> FastAPI:
     settings = get_settings()
-    # every /api route needs a session except /api/health, /api/auth/*, /api/public/* (app.auth.deps)
+    # every /api route needs a session except /api/health and /api/auth/* (app.auth.deps).
+    # WatchIt: the public report form (/api/public/*) is switched off; its router is not mounted.
     api = FastAPI(
         title="#InvestWatch backend",
         version=__version__,
@@ -95,6 +97,14 @@ def create_api() -> FastAPI:
         detail = exc.detail if isinstance(exc.detail, str) else "error"
         return JSONResponse({"detail": detail}, status_code=exc.status_code, headers=exc.headers)
 
+    @api.exception_handler(SQLAlchemyTimeoutError)
+    async def _busy(request: Request, exc: SQLAlchemyTimeoutError) -> JSONResponse:
+        # every database connection is busy: shed load quickly instead of queueing until the proxy times out
+        log.warning("database pool exhausted", extra={"path": request.url.path})
+        return JSONResponse(
+            {"detail": "service busy, retry shortly"}, status_code=503, headers={"Retry-After": "2"}
+        )
+
     @api.exception_handler(Exception)
     async def _unhandled(request: Request, exc: Exception) -> JSONResponse:
         log.error(
@@ -104,7 +114,6 @@ def create_api() -> FastAPI:
 
     api.include_router(auth.router)
     api.include_router(admin.router)
-    api.include_router(public.router)
     api.include_router(incidents.router)
     api.include_router(scans.router)
     api.include_router(discovery.router)

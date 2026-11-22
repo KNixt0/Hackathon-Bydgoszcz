@@ -16,7 +16,10 @@ from app.models import User
 log = logging.getLogger(__name__)
 
 ROLES = ("ANALYST", "SUPERVISOR")
-DEMO_NAMES = {"ANALYST": "Analityk (demo)", "SUPERVISOR": "Kierownik zespołu (demo)"}
+DEMO_NAMES = {
+    "ANALYST": "Analityk (konto demonstracyjne)",
+    "SUPERVISOR": "Kierownik zespołu (konto demonstracyjne)",
+}
 
 
 def normalise_email(email: str) -> str:
@@ -64,6 +67,7 @@ def seed_users() -> None:
                     log.info("demo account created", extra={"role": role})
                 else:
                     user.role = role
+                    user.name = DEMO_NAMES[role]  # renames reach existing volumes too
                     if password and not verify_password(user.password_hash, password):
                         user.password_hash = hash_password(password)
                         log.info("demo account password updated", extra={"role": role})

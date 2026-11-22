@@ -85,7 +85,8 @@ export interface ThresholdSettings {
   updated_at: string | null;
 }
 
-export type AuditAction = "login" | "assign" | "transition" | "label" | "thresholds" | "export" | "rescan" | "public_report";
+export type AuditAction =
+  | "login" | "assign" | "transition" | "label" | "thresholds" | "calibration_preview" | "export" | "rescan" | "public_report";
 
 export interface AuditEntry {
   id: number | string;
@@ -97,6 +98,8 @@ export interface AuditEntry {
   previous: unknown;
   new: unknown;
   reason: string | null;
+  /** WatchIt: title of the case the entry refers to (audit log list only) */
+  incident_title?: string | null;
 }
 
 // ── Contract v3: public reports

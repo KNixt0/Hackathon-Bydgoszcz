@@ -94,7 +94,11 @@ def test_rescan_updates_same_incident_and_keeps_versions(client):
     assert len({v["content_hash"] for v in versions}) == 2
     assert len(events_named(client, "incident:new")) == 1
     assert len([p for p in events_named(client, "incident:updated") if p["risk_score"] in (12.0, 88.0)]) == 3
-    assert events_named(client, "alert:high") == []  # alerts only for new incidents
+    # contract v4: the first observation (12) was below the flag threshold, so it was not a detection;
+    # the changed content (88) is the detection and alerts like a new case
+    alerts = events_named(client, "alert:high")
+    assert [a["id"] for a in alerts] == [first]
+    assert [v["is_evidence"] for v in versions] == [True, False, False]
 
 
 def test_fetch_failure_marks_job_failed(client):

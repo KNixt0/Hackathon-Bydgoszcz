@@ -11,7 +11,7 @@ export function DemoMenu({ onTriggerDemo, onImportSamples }: Props) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button type="button" className="linkbtn hd__menu">
-          Dane demo<ChevronDown aria-hidden="true" />
+          Dane demonstracyjne<ChevronDown aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -20,7 +20,7 @@ export function DemoMenu({ onTriggerDemo, onImportSamples }: Props) {
           <DropdownMenu.Item className="menu__item" onSelect={onTriggerDemo}>
             <Play aria-hidden="true" />
             <span>
-              <span className="menu__item-title">Uruchom próbkę demo</span>
+              <span className="menu__item-title">Uruchom próbkę demonstracyjną</span>
               <span className="menu__item-hint">Przepuszcza nieznaną próbkę przez pełny potok: pobranie, analiza, alert.</span>
             </span>
           </DropdownMenu.Item>

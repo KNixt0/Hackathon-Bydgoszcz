@@ -1,5 +1,6 @@
 """Refresh the public KNF registers into data/registries/*.json: the four investment-firm
-registers and the public warnings list ("Lista ostrzeżeń publicznych KNF").
+registers, the investment fund management companies (TFI) and the public warnings list
+("Lista ostrzeżeń publicznych KNF"). All of them list legal persons only.
 
 Usage:  python scripts/fetch_knf_registers.py [--cache raw.json] [--out data/registries]
                                               [--only knf_public_warnings]
@@ -36,6 +37,9 @@ SOURCES = {
         BASE + "/notyfikowane_zagraniczne_firmy_inwestycyjne",
     ),
 }
+TFI_ID = "knf_tfi"
+TFI_LABEL = "Towarzystwa funduszy inwestycyjnych (KNF)"
+TFI_URL = "https://www.knf.gov.pl/podmioty/Podmioty_rynku_kapitalowego/Fundusze_Inwestycyjne/TFI_i_FI"
 WARNINGS_ID = "knf_public_warnings"
 WARNINGS_LABEL = "Lista ostrzeżeń publicznych KNF"
 WARNINGS_URL = "https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne"
@@ -75,6 +79,10 @@ def fetch_all(only: str | None = None) -> dict:
     raw = {}
     if only in (None, WARNINGS_ID):
         raw[WARNINGS_ID] = fetch_warnings()
+    if only in (None, TFI_ID):
+        tables = parse_tables(get(TFI_URL))
+        raw[TFI_ID] = {"pages": 1, "tables": tables}
+        print(TFI_ID, "tables:", len(tables), file=sys.stderr)
     for registry, (_, url) in SOURCES.items():
         if only and registry != only:
             continue
@@ -162,6 +170,34 @@ def fetch_warnings() -> dict:
     return {"pages": 1, "tables": tables}
 
 
+_TFI_LONG = re.compile(r"towarzystwo funduszy inwestycyjnych", re.I)
+
+
+def tfi_entries(tables: list) -> list[dict]:
+    """The page lists the companies first (one table: L.p. | Nazwa Towarzystwa), then their funds."""
+    entries = []
+    for rows in tables:
+        if not rows or len(rows[0]) < 2 or "towarzystwa" not in " ".join(rows[0][1]).lower():
+            continue
+        for row in rows[1:]:
+            if len(row) < 2 or not row[1]:
+                continue
+            name = " ".join(row[1]).strip()
+            aliases = []
+            short = _TFI_LONG.sub("TFI", name)
+            if short != name:
+                aliases.append(short)
+            # "Towarzystwo Funduszy Inwestycyjnych PZU S.A." is advertised as "PZU TFI S.A.".
+            lead = re.match(r"(?i)towarzystwo funduszy inwestycyjnych\s+(.+?)(\s+S\.A\.)?$", name)
+            if lead:
+                brand, form = lead.group(1), lead.group(2) or ""
+                aliases += [f"{brand} TFI{form}", f"{brand} Towarzystwo Funduszy Inwestycyjnych{form}"]
+            aliases = list(dict.fromkeys(aliases))
+            entries.append({"name": name, "aliases": aliases, "status": "listed", "detail": "zezwolenie KNF (TFI)"})
+        break
+    return entries
+
+
 def to_entries(tables: list) -> list[dict]:
     entries = []
     for rows in tables:
@@ -197,11 +233,14 @@ def main() -> None:
         if args.cache:
             args.cache.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
     args.out.mkdir(parents=True, exist_ok=True)
-    for registry, (label, url) in {WARNINGS_ID: (WARNINGS_LABEL, WARNINGS_URL), **SOURCES}.items():
+    registers = {WARNINGS_ID: (WARNINGS_LABEL, WARNINGS_URL), TFI_ID: (TFI_LABEL, TFI_URL), **SOURCES}
+    for registry, (label, url) in registers.items():
         if registry not in raw:
             continue
         if registry == WARNINGS_ID:
             entries = warning_entries(raw[registry]["tables"])
+        elif registry == TFI_ID:
+            entries = tfi_entries(raw[registry]["tables"])
         else:
             entries = to_entries(raw[registry]["tables"])
         payload = {
