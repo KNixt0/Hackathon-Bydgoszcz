@@ -10,6 +10,14 @@ const id = (v: string) => encodeURIComponent(v);
 export interface AuditQuery {
   incident_id?: string;
   actor?: string;
+  /** comma-separated actions */
+  action?: string;
+  role?: string;
+  /** ISO date or datetime */
+  from?: string;
+  to?: string;
+  /** search in reasons */
+  q?: string;
   limit?: number;
 }
 
@@ -48,7 +56,10 @@ export const api = {
   saveThresholds: (flag: number, critical: number) =>
     request<ThresholdSettings>("/api/settings/thresholds", { method: "PUT", body: JSON.stringify({ flag, critical }) }),
   audit: (q: AuditQuery = {}, signal?: AbortSignal) =>
-    request<{ items: AuditEntry[] }>(`/api/audit${query({ incident_id: q.incident_id, actor: q.actor, limit: q.limit })}`, { signal }),
+    request<{ items: AuditEntry[] }>(
+      `/api/audit${query({ incident_id: q.incident_id, actor: q.actor, action: q.action, role: q.role, from: q.from, to: q.to, q: q.q, limit: q.limit })}`,
+      { signal },
+    ),
   authConfig: (signal?: AbortSignal) => request<AuthConfig>("/api/auth/config", { signal }),
   me: (signal?: AbortSignal) => request<{ user: User }>("/api/auth/me", { signal }),
   login: (email: string, password: string) => request<{ user: User }>("/api/auth/login", post({ email, password })),

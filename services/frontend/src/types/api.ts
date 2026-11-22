@@ -98,6 +98,8 @@ export interface AuditEntry {
   previous: unknown;
   new: unknown;
   reason: string | null;
+  /** WatchIt: title of the case the entry refers to (audit log list only) */
+  incident_title?: string | null;
 }
 
 // ── Contract v3: public reports

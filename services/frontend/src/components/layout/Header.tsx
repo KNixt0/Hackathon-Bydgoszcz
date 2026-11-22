@@ -17,7 +17,8 @@ interface Props {
 const TABS = [
   { to: "/", label: "Kolejka spraw", match: (p: string) => p === "/" || p.startsWith("/sprawy/") },
   { to: "/kalibracja", label: "Kalibracja", match: (p: string) => p.startsWith("/kalibracja") },
-  { to: "/audyt", label: "Dziennik audytu", match: (p: string) => p.startsWith("/audyt"), supervisor: true },
+  // WatchIt: everybody sees the audit log; an analyst only their own entries (the server enforces it)
+  { to: "/audyt", label: "Dziennik audytu", match: (p: string) => p.startsWith("/audyt"), supervisor: false },
 ];
 
 /** Two stacked rows: service name and quick actions; then the section tabs (replaces the left sidebar). */
