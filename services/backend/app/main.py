@@ -16,7 +16,7 @@ from sqlalchemy.exc import TimeoutError as SQLAlchemyTimeoutError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app import __version__, events
-from app.api import admin, auth, discovery, incidents, scans, system
+from app.api import admin, auth, discovery, incidents, notifications, scans, system
 from app.auth import session_guard
 from app.auth.socket import SocketAuthGate
 from app.auth.tokens import get_secret
@@ -118,6 +118,7 @@ def create_api() -> FastAPI:
     api.include_router(scans.router)
     api.include_router(discovery.router)
     api.include_router(system.router)
+    api.include_router(notifications.router)
     return api
 
 

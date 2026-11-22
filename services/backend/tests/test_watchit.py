@@ -87,3 +87,43 @@ def test_audit_log_filters(client, analyst):
     found = client.get("/api/audit?q=pi%C5%9Bmie").json()["items"]
     assert [e["reason"] for e in found] == ["Treść usunięta po piśmie"]
     assert client.get("/api/audit?from=wczoraj").status_code == 422
+
+
+# ── Ported from #33 (agent/KNixt0/32) ──────────────────────────────────────────────
+
+
+def test_calibration_notifications_are_persistent_and_private(client, analyst):
+    assert client.put("/api/settings/thresholds", json={"flag": 25, "critical": 75}).status_code == 200
+    supervisor_items = client.get("/api/notifications").json()["items"]
+    analyst_items = analyst.get("/api/notifications").json()["items"]
+    assert len(supervisor_items) == len(analyst_items) == 1
+    assert "25" in analyst_items[0]["message"] and "75" in analyst_items[0]["message"]
+    supervisor_id, analyst_id = supervisor_items[0]["id"], analyst_items[0]["id"]
+    assert supervisor_id != analyst_id
+    assert analyst.post(f"/api/notifications/{supervisor_id}/read").status_code == 404  # not theirs
+    assert analyst.post(f"/api/notifications/{analyst_id}/read").status_code == 200
+    assert analyst.get("/api/notifications").json()["items"][0]["read_at"]
+    assert client.get("/api/notifications").json()["items"][0]["read_at"] is None  # read state is per user
+    client.put("/api/settings/thresholds", json={"flag": 25, "critical": 75})  # no change, no notification
+    assert len(client.get("/api/notifications").json()["items"]) == 1
+
+
+def test_notifications_need_a_session(anon):
+    assert anon.get("/api/notifications").status_code == 401
+
+
+def test_date_filters_reject_before_system_start_and_future(client):
+    from datetime import UTC, datetime, timedelta
+
+    case_id(client)
+    bounds = client.get("/api/stats/date-bounds").json()
+    earliest = datetime.fromisoformat(bounds["earliest"].replace("Z", "+00:00"))
+    assert bounds["timezone"] == "Europe/Warsaw"
+    before = (earliest - timedelta(days=1)).date().isoformat()
+    future = (datetime.now(UTC) + timedelta(days=2)).isoformat()
+    for path in ("/api/incidents", "/api/audit"):
+        assert client.get(path, params={"from": before}).status_code == 422
+        assert client.get(path, params={"to": future}).status_code == 422
+        assert "uruchomienia systemu" in client.get(path, params={"from": before}).json()["detail"]
+    today = datetime.now(UTC).date().isoformat()
+    assert client.get("/api/incidents", params={"from": earliest.date().isoformat(), "to": today}).json()["items"]

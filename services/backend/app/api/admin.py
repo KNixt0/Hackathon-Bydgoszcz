@@ -6,12 +6,14 @@ from datetime import UTC, date, datetime, time
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import audit
 from app.auth import Actor, Supervisor
+from app.date_bounds import check_bound
 from app.db import get_db
-from app.models import AuditLog, Incident
+from app.models import AuditLog, Incident, Notification, User
 from app.schemas import ThresholdsRequest
 from app.thresholds import get_thresholds, set_thresholds
 
@@ -38,6 +40,15 @@ def write_thresholds(body: ThresholdsRequest, db: Db, user: Supervisor) -> dict:
         previous={"flag": before["flag"], "critical": before["critical"]},
         new={"flag": after["flag"], "critical": after["critical"]},
     )
+    if (before["flag"], before["critical"]) != (after["flag"], after["critical"]):
+        # Ported from #33: a global calibration change reaches every user, each with their own read state.
+        message = (
+            f"{user.name} zmienił(a) kalibrację: próg oznaczenia {before['flag']} → {after['flag']}, "
+            f"próg krytyczny {before['critical']} → {after['critical']}."
+        )
+        details = {"actor": user.email, "previous": before, "new": after}
+        for recipient_id in db.scalars(select(User.id)):
+            db.add(Notification(user_id=recipient_id, message=message, details=details))
     db.commit()
     return after
 
@@ -135,8 +146,11 @@ def _bound(value: str, end_of_day: bool) -> datetime:
     try:
         if len(value) == 10:
             day = date.fromisoformat(value)
+            check_bound(value, datetime.combine(day, time.min, tzinfo=UTC))
             return datetime.combine(day, time.max if end_of_day else time.min, tzinfo=UTC)
         moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        return moment if moment.tzinfo else moment.replace(tzinfo=UTC)
+        moment = moment if moment.tzinfo else moment.replace(tzinfo=UTC)
     except ValueError as exc:
         raise HTTPException(422, "from / to must be ISO dates") from exc
+    check_bound(value, moment)
+    return moment

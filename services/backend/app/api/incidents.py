@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app import audit, events
 from app.auth import Actor
 from app.config import get_settings
+from app.date_bounds import check_bound, window
 from app.db import get_db, session_scope
 from app.exports import csv_export
 from app.incidents import rescan_options, to_incident, to_summary
@@ -64,6 +65,8 @@ class IncidentFilters:
         self.module, self.source, self.status, self.q = module, source, status, q
         self.start = _parse_bound(from_, "from", end=False)
         self.end = _parse_bound(to, "to", end=True)
+        check_bound(from_, self.start)
+        check_bound(to, self.end)
         self.end_inclusive = bool(to) and len(to or "") > 10
 
     def apply(self, query: SAQuery) -> SAQuery:
@@ -297,6 +300,12 @@ def _render(incident_id: str, db: Session, user: Actor) -> Response:
 def export_incident_pdf(incident_id: str, db: Db, user: Actor) -> Response:
     """Contract v4: the detection report (replaces the evidence package; no warning-list request)."""
     return _render(incident_id, db, user)
+
+
+@router.get("/stats/date-bounds")
+def date_bounds() -> dict:
+    """The range every date filter accepts: system start date to now."""
+    return window()
 
 
 @router.get("/stats/trends")
