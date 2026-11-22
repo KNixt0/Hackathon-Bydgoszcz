@@ -14,7 +14,7 @@ kubectl -n investwatch rollout status deploy/backend --timeout=10m
 kubectl -n investwatch port-forward svc/frontend 3000:8080
 ```
 
-Potem http://localhost:3000, logowanie przyciskami demo (analityk / kierownik). Formularz obywatela: http://localhost:3000/zglos. Pierwszy start importuje próbki z `samples/` (w kolejce tylko prawdziwe, `SHOW_SYNTHETIC=false`) (ok. minuty).
+Potem http://localhost:3000, logowanie przyciskami demo (analityk / kierownik). Pierwszy start importuje próbki z `samples/` (ok. minuty); w kolejce są tylko prawdziwe dane (`SHOW_SYNTHETIC=false`).
 
 Klaster bez rejestru: `SAVE=1 ./deploy/k8s/build-images.sh` zapisuje `investwatch-images.tar`; załaduj go do węzłów (`kind load image-archive`, `k3s ctr images import`, `minikube image load`). Własny rejestr: `REGISTRY=rejestr.local/investwatch ./deploy/k8s/build-images.sh` i ustaw `newName` w `kustomization.yaml`.
 

@@ -9,7 +9,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Formularz publiczny dla obywateli, bez logowania: http://localhost:3000/zglos. Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
+Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty). W kolejce widać tylko prawdziwe dane z `samples/real/`; syntetyczne próbki z etykietami służą kalibracji.
 Skalowanie workerów: `docker compose up --scale worker=3`.
 
 Kubernetes (manifesty YAML, Pod Security `restricted`, NetworkPolicy, bez dostępu do internetu): `deploy/k8s/README.md`.
@@ -72,7 +72,7 @@ Wartości domyślne z `.env.example`.
 | `LLM_TIMEOUT_S` | 60 | limit czasu zapytania do modelu (s) |
 | `VISUAL_AUDIT_ENABLED` | true | renderowanie stron w Chromium i pomiar ostrzeżeń (reguły 4-8, 13 `method: "rendered"`) |
 | `VISUAL_AUDIT_TIMEOUT_SECONDS` | 20 | limit czasu audytu wizualnego na dokument |
-| `PUBLIC_REPORTS_PER_HOUR` | 20 | limit zgłoszeń z `/zglos` na zgłaszającego (solony skrót IP) |
+| `PUBLIC_REPORTS_PER_HOUR` | 20 | limit zgłoszeń publicznych na zgłaszającego (formularz `/zglos` jest wyłączony) |
 | `PUBLIC_REPORTS_MAX_QUEUED` | 50 | maks. skanów oczekujących, uruchomionych przez zgłoszenia |
 | `PUBLIC_REPORTS_SALT` | (puste) | sól skrótu zgłaszającego; puste = pochodna `JWT_SECRET` |
 | `APP_ENV` | development | `production` wymaga prawdziwego `JWT_SECRET` (min. 32 znaki) |
