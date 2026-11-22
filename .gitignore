@@ -11,3 +11,5 @@ __pycache__/
 dist/
 .pytest_cache/
 .ruff_cache/
+deploy/k8s/secrets.env
+investwatch-images.tar

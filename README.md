@@ -12,6 +12,8 @@ docker compose up --build
 Po starcie otwórz http://localhost:3000 i użyj przycisków logowania demo (analityk lub kierownik). Formularz publiczny dla obywateli, bez logowania: http://localhost:3000/zglos. Przy pierwszym starcie próbki z `samples/` są pobierane i oceniane tym samym pipeline'em co dane produkcyjne (ok. minuty).
 Skalowanie workerów: `docker compose up --scale worker=3`.
 
+Kubernetes (manifesty YAML, Pod Security `restricted`, NetworkPolicy, bez dostępu do internetu): `deploy/k8s/README.md`.
+
 ## Wymagania sprzętowe
 
 - Docker z Compose v2.

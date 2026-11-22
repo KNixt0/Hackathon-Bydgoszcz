@@ -1,0 +1,47 @@
+# Non-secret settings shared by api, worker, beat and ai. Same meaning as in .env.example / README.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: investwatch-config
+data:
+  LOG_LEVEL: INFO
+  APP_ENV: development
+  JWT_EXPIRE_HOURS: "8"
+  COOKIE_SECURE: auto
+  DEMO_LOGIN: "true"
+  DEMO_ANALYST_EMAIL: analityk@uknf.local
+  DEMO_SUPERVISOR_EMAIL: kierownik@uknf.local
+
+  # service addresses (Kubernetes Service names match the docker compose service names)
+  REDIS_URL: redis://valkey:6379/0
+  AI_URL: http://ai:8001
+  S3_ENDPOINT: http://storage:8333
+  S3_BUCKET: evidence
+  SAMPLES_DIR: /samples
+  FIXTURE_BASE_URL: http://backend:8000
+  BACKEND_PORT: "8000"
+  AI_PORT: "8001"
+  AI_DATA_DIR: /data
+
+  # pipeline
+  SEED_ON_START: "true"
+  ALERT_THRESHOLD: "70"
+  PROXY_URLS: ""
+  RESCAN_CRON: "0 */6 * * *"
+  REGISTRY_REFRESH_CRON: "30 3 * * *"
+  DISCOVERY_CRON: "15 */6 * * *"
+  RESCAN_SAMPLES: "false"
+  RESPECT_ROBOTS: "true"
+  WORKER_CONCURRENCY: "2"
+  VISUAL_AUDIT_ENABLED: "true"
+  VISUAL_AUDIT_TIMEOUT_SECONDS: "20"
+  PUBLIC_REPORTS_PER_HOUR: "20"
+  PUBLIC_REPORTS_MAX_QUEUED: "50"
+
+  # local model (optional, see optional/ollama.yaml). Off = rules + statistical scoring only.
+  LLM_ENABLED: "false"
+  OLLAMA_URL: http://ollama:11434
+  OLLAMA_MODEL: gemma4:e4b
+  EMBEDDINGS_BACKEND: hash
+  OLLAMA_EMBED_MODEL: embeddinggemma:300m
+  LLM_TIMEOUT_S: "60"

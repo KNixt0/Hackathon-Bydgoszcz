@@ -1,0 +1,20 @@
+# Opt-in: lets the scraper (worker) fetch public web pages over HTTP/HTTPS.
+# Without this file the system runs fully offline on the bundled samples.
+#   kubectl -n investwatch apply -f deploy/k8s/optional/worker-internet.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: worker-internet
+  namespace: investwatch
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: worker }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 100.64.0.0/10]
+      ports:
+        - { protocol: TCP, port: 80 }
+        - { protocol: TCP, port: 443 }

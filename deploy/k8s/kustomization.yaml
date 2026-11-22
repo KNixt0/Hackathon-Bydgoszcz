@@ -1,0 +1,45 @@
+# InvestWatch on Kubernetes: `kubectl apply -k deploy/k8s` (see README.md in this folder).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: investwatch
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: investwatch
+    includeSelectors: false
+
+resources:
+  - namespace.yaml
+  - config.yaml
+  - networkpolicies.yaml
+  - postgres.yaml
+  - valkey.yaml
+  - storage.yaml
+  - ai.yaml
+  - backend.yaml
+  - worker.yaml
+  - beat.yaml
+  - frontend.yaml
+
+# Secrets come from a local file that is never committed: cp secrets.env.example secrets.env
+secretGenerator:
+  - name: investwatch-secrets
+    envs: [secrets.env]
+
+configMapGenerator:
+  - name: frontend-nginx
+    files:
+      - default.conf.template=frontend-nginx.conf.template
+
+# Images built by ./build-images.sh. In an offline cluster, load them into the node runtime
+# (or push to your internal registry and set newName here).
+images:
+  - name: investwatch-backend
+    newTag: demo
+  - name: investwatch-ai
+    newTag: demo
+  - name: investwatch-frontend
+    newTag: demo
+  - name: investwatch-samples
+    newTag: demo

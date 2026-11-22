@@ -1,0 +1,141 @@
+# Default deny, then only the connections the system needs. No pod can reach the internet;
+# the scraper's internet access is a separate, opt-in file (optional/worker-internet.yaml).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# DNS for every pod (kube-dns / CoreDNS in kube-system)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: kube-system }
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+---
+# Users reach the frontend only (port-forward, Ingress controller or NodePort, from any namespace)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: frontend }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports: [{ protocol: TCP, port: 8080 }]
+  egress:
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: backend } } }]
+      ports: [{ protocol: TCP, port: 8000 }]
+---
+# backend ← frontend, and ← worker (samples are served to the scraper as fixtures over HTTP)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: backend }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app.kubernetes.io/name: frontend } }
+        - podSelector: { matchLabels: { app.kubernetes.io/name: worker } }
+      ports: [{ protocol: TCP, port: 8000 }]
+---
+# api, worker and beat → postgres, valkey, storage, ai (and worker → backend fixtures)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-family-egress
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: app.kubernetes.io/name, operator: In, values: [backend, worker, beat] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: postgres } } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: valkey } } }]
+      ports: [{ protocol: TCP, port: 6379 }]
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: storage } } }]
+      ports: [{ protocol: TCP, port: 8333 }]
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: ai } } }]
+      ports: [{ protocol: TCP, port: 8001 }]
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: backend } } }]
+      ports: [{ protocol: TCP, port: 8000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: postgres }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - { key: app.kubernetes.io/name, operator: In, values: [backend, worker, beat] }
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: valkey
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: valkey }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - { key: app.kubernetes.io/name, operator: In, values: [backend, worker, beat] }
+      ports: [{ protocol: TCP, port: 6379 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: storage
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: storage }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - { key: app.kubernetes.io/name, operator: In, values: [backend, worker, beat] }
+      ports: [{ protocol: TCP, port: 8333 }]
+---
+# ai ← backend family; ai → ollama (only used when optional/ollama.yaml is applied)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ai
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: ai }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - { key: app.kubernetes.io/name, operator: In, values: [backend, worker, beat] }
+      ports: [{ protocol: TCP, port: 8001 }]
+  egress:
+    - to: [{ podSelector: { matchLabels: { app.kubernetes.io/name: ollama } } }]
+      ports: [{ protocol: TCP, port: 11434 }]

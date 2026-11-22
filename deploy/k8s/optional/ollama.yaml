@@ -1,0 +1,104 @@
+# Opt-in local model (Ollama, MIT). Apply, pull the models once, then enable it in config.yaml:
+#   kubectl -n investwatch apply -f deploy/k8s/optional/ollama.yaml
+#   kubectl -n investwatch exec deploy/ollama -- ollama pull gemma4:e4b
+#   kubectl -n investwatch exec deploy/ollama -- ollama pull embeddinggemma:300m
+#   config.yaml: LLM_ENABLED: "true", EMBEDDINGS_BACKEND: ollama → kubectl apply -k deploy/k8s
+# Pulling needs internet egress (ollama-pull below). For an air-gapped cluster, delete that policy
+# and copy a pre-filled models directory into the PVC instead.
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: investwatch
+spec:
+  selector: { app.kubernetes.io/name: ollama }
+  ports:
+    - { name: http, port: 11434, targetPort: 11434 }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama
+  namespace: investwatch
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests: { storage: 15Gi }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: investwatch
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector:
+    matchLabels: { app.kubernetes.io/name: ollama }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: ollama, app.kubernetes.io/part-of: investwatch }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10003
+        runAsGroup: 10003
+        fsGroup: 10003
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: ollama
+          image: ollama/ollama:0.40.16
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: HOME, value: /models }
+            - { name: OLLAMA_MODELS, value: /models/models }
+            - { name: OLLAMA_HOST, value: "0.0.0.0:11434" }
+          ports:
+            - { name: http, containerPort: 11434 }
+          readinessProbe:
+            httpGet: { path: /, port: 11434 }
+            periodSeconds: 10
+          resources:
+            requests: { cpu: "2", memory: 8Gi }
+            limits: { cpu: "8", memory: 16Gi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: models, mountPath: /models }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: models
+          persistentVolumeClaim: { claimName: ollama }
+        - { name: tmp, emptyDir: {} }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ollama
+  namespace: investwatch
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: ollama }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app.kubernetes.io/name: ai } } }]
+      ports: [{ protocol: TCP, port: 11434 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ollama-pull
+  namespace: investwatch
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: ollama }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 100.64.0.0/10]
+      ports: [{ protocol: TCP, port: 443 }]
