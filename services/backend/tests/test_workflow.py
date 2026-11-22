@@ -137,7 +137,7 @@ def test_workflow_shape_defaults_and_escalation_path(client, analyst, cases):
         "resolution_action": None,
         "resolution_note": "",
         "label": "unlabeled",
-        "started_at": None,  # WatchIt: processing time
+        "started_at": None,  # WatchIT: processing time
         "closed_at": None,
     }
     summary = next(i for i in client.get("/api/incidents").json()["items"] if i["id"] == cases["red"])
@@ -290,7 +290,7 @@ def test_audit_rows_have_previous_new_and_reason(client, analyst, cases):
     by_actor = client.get(f"/api/audit?actor={ANALYST[0].upper()}").json()["items"]
     assert by_actor and all(e["actor_email"] == ANALYST[0] for e in by_actor)
     assert len(client.get("/api/audit?limit=2").json()["items"]) == 2
-    # WatchIt: an analyst reads the log too, but only their own entries
+    # WatchIT: an analyst reads the log too, but only their own entries
     own = analyst.get("/api/audit").json()["items"]
     assert own and all(e["actor_email"] == ANALYST[0] for e in own)
     assert all(

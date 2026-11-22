@@ -89,7 +89,7 @@ def test_case3_red(analyze_sample):
         "BRAND_IMPERSONATION",
         "FAKE_LICENCE",
     } <= codes(a)
-    assert "FOREIGN_SHELL" not in codes(a)  # WatchIt: no EU / EEA origin marker
+    assert "FOREIGN_SHELL" not in codes(a)  # WatchIT: no EU / EEA origin marker
     firm_registers = {
         "knf_investment_firms",
         "knf_banks_brokerage",

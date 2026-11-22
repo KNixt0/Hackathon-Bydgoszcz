@@ -82,7 +82,7 @@ export function safeHref(url: string | undefined | null): string | null {
   }
 }
 
-/** "45 min", "3 godz. 12 min", "2 dni 4 godz." (WatchIt: how long a case has been worked on). */
+/** "45 min", "3 godz. 12 min", "2 dni 4 godz." (WatchIT: how long a case has been worked on). */
 export function formatDuration(ms: number): string {
   const minutes = Math.max(0, Math.floor(ms / 60000));
   if (minutes < 1) return "mniej niż minuta";

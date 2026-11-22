@@ -163,7 +163,7 @@ describe("trendRows", () => {
   });
 });
 
-describe("WatchIt: dates and column sorting", () => {
+describe("WatchIT: dates and column sorting", () => {
   it("never accepts a date before the system start or after today from the URL", () => {
     const f = filtersFromSearch(new URLSearchParams("od=2026-10-01&do=2999-01-01"));
     expect(f.from).toBe("2026-11-21");

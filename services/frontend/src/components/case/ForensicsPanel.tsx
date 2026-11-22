@@ -89,7 +89,7 @@ export function ForensicsPanel({ forensics }: { forensics: Forensics | null }) {
           <h3 className="subhead">Wiek kont</h3>
           {accounts.age_buckets.length ? <MiniBars data={accounts.age_buckets} xKey="bucket" testId="age-buckets" /> : <p className="muted">Brak danych.</p>}
         </div>
-        {/* WatchIt: no chart of account origins (inside / outside the EU is not shown) */}
+        {/* WatchIT: no chart of account origins (inside / outside the EU is not shown) */}
         <div className="vsub">
           <h3 className="subhead">Wzorce nazw kont</h3>
           {accounts.name_patterns.length === 0 ? <p className="muted">Nie wykryto powtarzalnych wzorców.</p> : (

@@ -143,7 +143,7 @@ def test_db_session_is_closed_when_the_request_is_cancelled(client):
 
 
 def test_no_detection_before_the_system_start(monkeypatch):
-    """WatchIt: the system did not exist before SYSTEM_START_DATE; demo back-dating is squeezed after it."""
+    """WatchIT: the system did not exist before SYSTEM_START_DATE; demo back-dating is squeezed after it."""
     from datetime import UTC, datetime
 
     from app import pipeline

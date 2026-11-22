@@ -1,4 +1,4 @@
-# WatchIt requirements after integration #34
+# WatchIT requirements after integration #34
 
 Source review against the owner's list (items 2–22). This records code coverage, not a claim that the stopped local deployment is updated. Follow-up #35 restores the missing date controls and removes the unapproved Entra layout.
 

@@ -41,7 +41,7 @@ describe("login and session", () => {
     expect(chip.getByText(analystUser.name)).toBeInTheDocument();
     expect(chip.getByText("analityk")).toBeInTheDocument();
     await waitFor(() => expect(socket.connected).toBe(true));
-    expect(screen.getByRole("link", { name: /Dziennik audytu/ })).toBeInTheDocument(); // WatchIt: an analyst sees their own entries
+    expect(screen.getByRole("link", { name: /Dziennik audytu/ })).toBeInTheDocument(); // WatchIT: an analyst sees their own entries
 
     await user.click(chip.getByRole("button", { name: /Wyloguj/ }));
     await onLoginPage();

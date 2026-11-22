@@ -15,7 +15,7 @@ function pair(v: unknown): string {
 }
 
 /**
- * WatchIt: who changed the calibration and how. Global changes (supervisor) and the thresholds each user set
+ * WatchIT: who changed the calibration and how. Global changes (supervisor) and the thresholds each user set
  * for their own view, newest first. Recorded on the server; nothing pops up when a change is saved.
  */
 export function CalibrationHistory({ revision }: { revision: number }) {

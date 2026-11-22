@@ -5,7 +5,7 @@ import { DEFAULT_THRESHOLDS, normalizeThresholds, type Thresholds } from "../dom
 import type { ThresholdSettings } from "../types/api";
 
 // The local preview (this browser only). v2: the default flag threshold moved from 35 to 20; v1 values are ignored.
-const STORAGE_KEY = "investwatch.thresholds.v2"; // key kept from before the WatchIt rename
+const STORAGE_KEY = "investwatch.thresholds.v2"; // key kept from before the WatchIT rename
 const LEGACY_KEYS = ["investwatch.thresholds.v1"];
 
 export function readStoredThresholds(): Thresholds | null {
@@ -72,7 +72,7 @@ export function ThresholdsProvider({ children, initial }: { children: ReactNode;
   const globalThresholds = useMemo(() => (global ? fromSettings(global) : DEFAULT_THRESHOLDS), [global]);
   const thresholds = preview ?? globalThresholds;
 
-  // WatchIt: a user's own thresholds are recorded in the calibration history (who changed what), once the
+  // WatchIT: a user's own thresholds are recorded in the calibration history (who changed what), once the
   // slider has settled. Silent: no notification, a failed write never disturbs the screen.
   const [historyRevision, setHistoryRevision] = useState(0);
   const lastRecorded = useRef<string | null>(null);

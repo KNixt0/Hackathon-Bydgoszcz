@@ -117,7 +117,7 @@
 .audit__f-case { width: min(360px, 100%); }
 .qpanel .state, .strip .state, .calib__sec .state, .csec .state, .vpanel .state { padding-left: 0; padding-right: 0; }
 
-/* WatchIt: the extra filters fold away under the level tabs */
+/* WatchIT: the extra filters fold away under the level tabs */
 .qtool__toggle { align-self: flex-end; }
 .qtool__toggle svg { width: 16px; height: 16px; }
 .qtool__chev { transition: transform var(--dur) ease-out; }
@@ -125,7 +125,7 @@
 .qtool__row--filters[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .qtool__chev { transition: none; } }
 
-/* WatchIt: range presets for the inflow chart (segmented control, square, register style) */
+/* WatchIT: range presets for the inflow chart (segmented control, square, register style) */
 .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--r-sm); overflow: hidden; }
 .seg { max-width: 100%; }
 .seg__btn { padding: 4px 12px; border: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-14); cursor: pointer; white-space: nowrap; }

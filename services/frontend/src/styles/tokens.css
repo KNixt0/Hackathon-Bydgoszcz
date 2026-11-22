@@ -7,7 +7,7 @@
   --field: #eeeeee;
   --surface-sunken: var(--field);
   --hover: #f6f6f6;
-  --stripe: #f3f3f3; /* WatchIt: alternate queue rows (white / light grey) */
+  --stripe: #f3f3f3; /* WatchIT: alternate queue rows (white / light grey) */
   --surface-hover: var(--hover);
   --tint: #edeff8;
   --sel: #d9dff6;

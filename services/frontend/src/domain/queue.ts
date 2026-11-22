@@ -1,7 +1,7 @@
 import type { IncidentSummary, ModuleId, Platform, RiskLevel, Status } from "../types/incident";
 import { apiDate, clampDate, clampDateTime, matchesDates, validDateInput } from "./dates";
 import { deriveLevel, LEVEL_ORDER, type Thresholds } from "./levels";
-/** Sortable columns of the queue table (WatchIt: every header sorts, ascending or descending). */
+/** Sortable columns of the queue table (WatchIT: every header sorts, ascending or descending). */
 export type SortKey = "risk" | "id" | "title" | "source" | "module" | "rules" | "status" | "detected" | "started";
 export type SortDir = "asc" | "desc";
 export const SORT_KEYS: SortKey[] = ["risk", "id", "title", "source", "module", "rules", "status", "detected", "started"];

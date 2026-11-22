@@ -18,7 +18,7 @@ export interface Workflow {
   resolution_action: ResolutionAction | null;
   resolution_note: string;
   label: CaseLabel;
-  /** WatchIt: when somebody started working on the case, and when it was closed */
+  /** WatchIT: when somebody started working on the case, and when it was closed */
   started_at?: string | null;
   closed_at?: string | null;
 }

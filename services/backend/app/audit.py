@@ -16,7 +16,7 @@ ACTIONS = (
     "transition",
     "label",
     "thresholds",
-    "calibration_preview",  # WatchIt: a user changed the thresholds for their own view
+    "calibration_preview",  # WatchIT: a user changed the thresholds for their own view
     "export",
     "rescan",
     "public_report",  # kept so that old audit rows stay valid

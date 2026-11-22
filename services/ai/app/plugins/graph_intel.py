@@ -216,7 +216,7 @@ class GraphIntelPlugin(Plugin):
                     0.85,
                 )
             )
-        # WatchIt: no marker based on whether the entity comes from inside or outside the EU / EEA
+        # WatchIT: no marker based on whether the entity comes from inside or outside the EU / EEA
         # (requirement 1: such "unknown origin" markers are removed from the interface).
         return Financials(
             company=company.name,

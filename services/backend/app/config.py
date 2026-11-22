@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     # --- dependencies ---
     database_url: str = "sqlite:///./investwatch.db"
-    # WatchIt: the system did not exist before this day. No detection is dated earlier and no
+    # WatchIT: the system did not exist before this day. No detection is dated earlier and no
     # date picker or chart goes back further.
     system_start_date: str = "2026-11-21"
     system_start_time: str = "20:50"

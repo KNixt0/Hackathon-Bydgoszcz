@@ -1,4 +1,4 @@
-"""WatchIt requirements: processing time, calibration history, remit, no public reports, chart ranges."""
+"""WatchIT requirements: processing time, calibration history, remit, no public reports, chart ranges."""
 
 from __future__ import annotations
 

@@ -278,7 +278,7 @@ def test_foreign_shell_flag(make_ctx):
         text="x",
         companies=[{"name": "Testowa Shell Ltd", "role": "investment_firm", "country": "SC"}],
     )
-    # WatchIt requirement 1: the interface shows no marker based on origin inside / outside the EU / EEA
+    # WatchIT requirement 1: the interface shows no marker based on origin inside / outside the EU / EEA
     assert "FOREIGN_SHELL" not in codes(res) and not any("EOG" in f for f in res.financials.flags)
 
 
@@ -338,7 +338,7 @@ def test_forensics_bot_farm(make_ctx):
         "opinion_spike",
         "fresh_account_cluster",
         "name_pattern_cluster",
-    }  # WatchIt: no "accounts from abroad" anomaly
+    }  # WatchIT: no "accounts from abroad" anomaly
     assert f.accounts.name_patterns[0].pattern == "zysk_pewny<cyfry>" and f.accounts.name_patterns[0].count == 30
     spike = next(p for p in f.opinion_timeline if p.date == "2026-11-10")
     assert spike.count == 31 and spike.new_account_share > 0.9

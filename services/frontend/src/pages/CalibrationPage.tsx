@@ -58,7 +58,7 @@ export function CalibrationPage() {
     setSaveError(null);
     const failure = await saveGlobal();
     setSaving(false);
-    // WatchIt: no notification; the change appears in the calibration history below
+    // WatchIT: no notification; the change appears in the calibration history below
     if (failure) setSaveError(failure);
   };
 

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export function PublicHeader({ linkTo }: { linkTo?: string }) {
   const inner = (
     <>
-      <span className="hd__name">WatchIt</span>
+      <span className="hd__name">WatchIT</span>
     </>
   );
   return (

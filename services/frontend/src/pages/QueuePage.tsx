@@ -21,7 +21,7 @@ import { useUi } from "../hooks/useUi";
 
 const PANEL_ID = "kolejka-panel";
 
-/** WatchIt: quick ranges for the inflow chart. 24 h is drawn per hour, the others per day. */
+/** WatchIT: quick ranges for the inflow chart. 24 h is drawn per hour, the others per day. */
 type Range = "24h" | "7d" | "30d" | "custom";
 const RANGES: { key: Range; label: string }[] = [
   { key: "24h", label: "24 godz." },

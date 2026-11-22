@@ -69,7 +69,7 @@ def _validation_message(exc: RequestValidationError) -> str:
 def create_api() -> FastAPI:
     settings = get_settings()
     # every /api route needs a session except /api/health and /api/auth/* (app.auth.deps).
-    # WatchIt: the public report form (/api/public/*) is switched off; its router is not mounted.
+    # WatchIT: the public report form (/api/public/*) is switched off; its router is not mounted.
     api = FastAPI(
         title="#InvestWatch backend",
         version=__version__,

@@ -17,7 +17,7 @@ interface Props {
 const TABS = [
   { to: "/", label: "Kolejka spraw", match: (p: string) => p === "/" || p.startsWith("/sprawy/") },
   { to: "/kalibracja", label: "Kalibracja", match: (p: string) => p.startsWith("/kalibracja") },
-  // WatchIt: everybody sees the audit log; an analyst only their own entries (the server enforces it)
+  // WatchIT: everybody sees the audit log; an analyst only their own entries (the server enforces it)
   { to: "/audyt", label: "Dziennik audytu", match: (p: string) => p.startsWith("/audyt"), supervisor: false },
 ];
 
@@ -27,8 +27,8 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
   return (
     <header className="hd">
       <div className="hd__top">
-        <Link to="/" className="hd__svc" aria-label="WatchIt, kolejka spraw">
-          <span className="hd__name">WatchIt</span>
+        <Link to="/" className="hd__svc" aria-label="WatchIT, kolejka spraw">
+          <span className="hd__name">WatchIT</span>
         </Link>
         <div className="hd__qa">
           <span className="hd__actions">
@@ -44,7 +44,7 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
           </span>
           {children}
         </div>
-        {/* WatchIt: the user and connection stay on the brand row when the actions fold onto a row of their own */}
+        {/* WatchIT: the user and connection stay on the brand row when the actions fold onto a row of their own */}
         {trailing && <div className="hd__user">{trailing}</div>}
       </div>
       <nav className="hd__nav" aria-label="Główna nawigacja">

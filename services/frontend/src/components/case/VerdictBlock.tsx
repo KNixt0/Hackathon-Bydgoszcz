@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * WatchIt "Werdykt AI": optional, folded behind a button. Inside: the sentence first (finding word + the
+ * WatchIT "Werdykt AI": optional, folded behind a button. Inside: the sentence first (finding word + the
  * engine's summary + violated criteria), then the numbers and the findings.
  */
 export function VerdictBlock({ incident, thresholds }: Props) {

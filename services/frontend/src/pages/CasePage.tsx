@@ -87,9 +87,9 @@ export function CasePage() {
   const incident = resource.phase === "ready" ? resource.data : null;
   const title = incident?.title;
   useEffect(() => {
-    document.title = title ? `${title} · WatchIt` : "WatchIt · UKNF";
+    document.title = title ? `${title} · WatchIT` : "WatchIT · UKNF";
     return () => {
-      document.title = "WatchIt · UKNF";
+      document.title = "WatchIT · UKNF";
     };
   }, [title]);
 

@@ -58,7 +58,7 @@ CALIBRATION_ACTIONS = ("thresholds", "calibration_preview")
 
 @router.post("/settings/thresholds/preview", status_code=204)
 def record_preview(body: ThresholdsRequest, db: Db, user: Actor) -> Response:
-    """WatchIt: any user who changes the thresholds for their own view leaves a trace (who and what).
+    """WatchIT: any user who changes the thresholds for their own view leaves a trace (who and what).
 
     Nothing is shown to the user (no toast): the entry appears in the calibration history."""
     if body.flag > body.critical:
@@ -105,7 +105,7 @@ def audit_log(
 ) -> dict:
     """Newest first. There is deliberately no endpoint that updates or deletes audit rows.
 
-    WatchIt: a supervisor sees every entry; an analyst sees only their own (the actor filter is forced).
+    WatchIT: a supervisor sees every entry; an analyst sees only their own (the actor filter is forced).
     `incident_id` takes the full id or the 8-character case ID shown in the UI; `action` a comma list;
     `from` / `to` ISO dates or datetimes (a bare `to` date covers that whole day); `q` searches reasons."""
     query = db.query(AuditLog)

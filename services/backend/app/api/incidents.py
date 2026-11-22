@@ -70,7 +70,7 @@ class IncidentFilters:
         self.end_inclusive = bool(to) and len(to or "") > 10
 
     def apply(self, query: SAQuery) -> SAQuery:
-        # WatchIt analyses only entities under UKNF's remit: material outside it is not listed or counted
+        # WatchIT analyses only entities under UKNF's remit: material outside it is not listed or counted
         query = query.filter(or_(Incident.in_scope.is_(None), Incident.in_scope.is_(True)))
         if self.module is not None:
             # an incident shows under every module that produced findings, not only the primary one

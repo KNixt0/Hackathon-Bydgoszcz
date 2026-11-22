@@ -170,7 +170,7 @@ class OpinionForensicsPlugin(Plugin):
             text = f"{clustered} z {total} kont ma nazwy z tych samych rodzin „rdzeń + cyfry”: {names}."
             anomalies.append(Anomaly(type="name_pattern_cluster", severity=sev, description=text))
             findings.append(PluginFinding("NAME_PATTERN_CLUSTER", sev, text, [], 0.8, {"share": clustered / total}))
-        # WatchIt: no "accounts from abroad" marker (origin inside / outside the EU is not shown).
+        # WatchIT: no "accounts from abroad" marker (origin inside / outside the EU is not shown).
         if findings:
             # attach the most telling accounts as evidence
             suspects = sorted((r for r in rows if r[2] is not None), key=lambda r: r[2])[:3]

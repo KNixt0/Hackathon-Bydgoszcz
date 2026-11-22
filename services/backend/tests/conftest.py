@@ -99,7 +99,7 @@ def make_analysis(document: dict, context: dict | None = None) -> dict:
             }
         )
     module = context.get("module_hint", 2)
-    out_of_scope = "POZA_ZAKRESEM" in text  # contract v4 scope, for WatchIt list tests
+    out_of_scope = "POZA_ZAKRESEM" in text  # contract v4 scope, for WatchIT list tests
     return {
         **(
             {

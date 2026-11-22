@@ -49,7 +49,7 @@ function groupRounds(rounds: DebateRound[]): [number, DebateRound[]][] {
 }
 
 /**
- * WatchIt "Rekomendacja AI" (in the place of the former "Argumenty za i przeciw"): what the engine
+ * WatchIT "Rekomendacja AI" (in the place of the former "Argumenty za i przeciw"): what the engine
  * recommends and why, then the arguments it kept. The full reasoning (every claim with the critic's
  * verdict, round by round) is folded under "Tok rozumowania" and closed by default.
  */

@@ -21,9 +21,9 @@ export function LoginPage() {
   const [busy, setBusy] = useState<"form" | Role | null>(null);
 
   useEffect(() => {
-    document.title = "Logowanie · WatchIt";
+    document.title = "Logowanie · WatchIT";
     return () => {
-      document.title = "WatchIt · UKNF";
+      document.title = "WatchIT · UKNF";
     };
   }, []);
 

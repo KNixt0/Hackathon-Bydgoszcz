@@ -76,7 +76,7 @@ class Incident(Base):
     previous_incident_id: Mapped[str | None] = mapped_column(
         String(36), nullable=True
     )  # recurrence after closure
-    # WatchIt: when somebody started working on the case and when it was closed (processing time)
+    # WatchIT: when somebody started working on the case and when it was closed (processing time)
     review_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 

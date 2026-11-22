@@ -8,7 +8,7 @@
 <body>
 <div class="head">
   <div>
-    <div class="brand">WatchIt · UKNF</div>
+    <div class="brand">WatchIT · UKNF</div>
     <h1>Raport z wykrycia</h1>
     <div>{{ i.title }}</div>
   </div>
@@ -36,7 +36,7 @@
 {% if scope and scope.in_scope == false %}
 <h2>Właściwość UKNF</h2>
 <table>
-  <tr><td class="k">Ocena</td><td><strong>Poza właściwością UKNF w zakresie modułów WatchIt</strong></td></tr>
+  <tr><td class="k">Ocena</td><td><strong>Poza właściwością UKNF w zakresie modułów WatchIT</strong></td></tr>
   <tr><td class="k">Powód</td><td>{{ scope.reason }}</td></tr>
   {% if scope.authority_hint %}<tr><td class="k">Wskazówka</td><td>{{ scope.authority_hint }}</td></tr>{% endif %}
 </table>
@@ -157,7 +157,7 @@
   <tr><td class="k">Wtyczki</td><td>{{ (engine.plugins or [])|join(', ') or '—' }}</td></tr>
   <tr><td class="k">Model lokalny (LLM)</td><td>{% if engine.llm_used %}{{ engine.model or 'tak' }}{% else %}nie użyto (reguły deterministyczne){% endif %}</td></tr>
   <tr><td class="k">Czas analizy</td><td>{% if engine.duration_ms is number %}{{ engine.duration_ms }} ms{% else %}—{% endif %}</td></tr>
-  <tr><td class="k">Serwer aplikacji</td><td>WatchIt {{ backend_version }}</td></tr>
+  <tr><td class="k">Serwer aplikacji</td><td>WatchIT {{ backend_version }}</td></tr>
 </table>
 <p class="small muted">Wynik automatycznej analizy wspierającej. Nie stanowi kwalifikacji prawnej ani rozstrzygnięcia; dalsze działania należą do właściwej komórki UKNF.</p>
 </body>

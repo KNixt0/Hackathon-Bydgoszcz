@@ -284,11 +284,11 @@
 .section-title[tabindex="-1"]:focus { outline: none; }
 .section-title[tabindex="-1"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-/* WatchIt: "Werdykt AI" is optional, folded behind a button */
+/* WatchIT: "Werdykt AI" is optional, folded behind a button */
 .verdict__toggle { margin-bottom: var(--sp-4); }
 .chev { width: 16px; height: 16px; transition: transform var(--dur) ease-out; }
 .chev--up { transform: rotate(180deg); }
-/* WatchIt: "Tok rozumowania" folds away, closed by default */
+/* WatchIT: "Tok rozumowania" folds away, closed by default */
 .reasoning { margin-top: var(--sp-6); border-top: 1px solid var(--line); padding-top: var(--sp-4); }
 .reasoning__summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
 .reasoning__summary::-webkit-details-marker { display: none; }
