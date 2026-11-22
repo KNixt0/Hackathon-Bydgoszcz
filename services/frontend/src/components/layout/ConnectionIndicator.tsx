@@ -17,7 +17,7 @@ export function ConnectionIndicator({ status }: { status: ConnectionStatus }) {
       title={status === "offline" ? "Nowe sprawy nie pojawią się automatycznie. Trwa ponawianie połączenia." : "Połączenie na żywo z serwerem"}
     >
       <Icon aria-hidden="true" />
-      {LABEL[status]}
+      <span className="conn__label">{LABEL[status]}</span>
     </span>
   );
 }

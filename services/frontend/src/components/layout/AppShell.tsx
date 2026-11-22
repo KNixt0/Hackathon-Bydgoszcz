@@ -67,12 +67,11 @@ export function AppShell() {
       <Header
         onOpenPalette={() => ui.setPaletteOpen(true)} onOpenScan={() => ui.setScanOpen(true)} shortcutLabel={isMac ? "⌘K" : "Ctrl K"}
         isSupervisor={user.role === "SUPERVISOR"}
-        trailing={<UserChip user={user} onLogout={() => void logout()} />}
+        trailing={<><ConnectionIndicator status={connection} /><UserChip user={user} onLogout={() => void logout()} /></>}
       >
         <JobsMenu jobs={scans.jobs} activeCount={scans.activeCount} onClearFinished={scans.clearFinished} />
         <NotificationsMenu />
         <DemoMenu onTriggerDemo={() => void triggerDemo()} onImportSamples={() => void importSamples()} />
-        <ConnectionIndicator status={connection} />
       </Header>
       <main id="tresc" tabIndex={-1} className="main">
         <Outlet />

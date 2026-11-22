@@ -43,8 +43,9 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
             </Button>
           </span>
           {children}
-          {trailing}
         </div>
+        {/* WatchIt: the user and connection stay on the brand row when the actions fold onto a row of their own */}
+        {trailing && <div className="hd__user">{trailing}</div>}
       </div>
       <nav className="hd__nav" aria-label="Główna nawigacja">
         {TABS.filter((t) => !t.supervisor || isSupervisor).map((t) => {

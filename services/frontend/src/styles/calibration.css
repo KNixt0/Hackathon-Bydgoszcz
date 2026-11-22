@@ -35,7 +35,7 @@
 .live b { font-weight: 700; }
 
 /* Two opposing quantities */
-.trade { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+.trade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 32px; }
 .trade__q { display: grid; gap: 4px; align-content: start; min-width: 0; }
 .trade__title { font-size: var(--fs-18); line-height: 1.35; font-weight: 700; }
 .trade__gloss { font-size: var(--fs-14); color: var(--muted); }
@@ -47,7 +47,7 @@
 .trade__cap { grid-column: 1 / -1; font-size: var(--fs-14); color: var(--muted); max-width: 75ch; }
 
 /* Secondary figures */
-.sec { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+.sec { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 32px; }
 .sec__item { display: grid; gap: 2px; align-content: start; }
 .sec dt { font-size: var(--fs-14); font-weight: 500; color: var(--ink-2); }
 .sec__value { font-size: var(--fs-18); font-weight: 700; }
@@ -97,7 +97,7 @@
 .mtab { max-width: 860px; }
 .mtab td.v { font-size: var(--fs-18); font-weight: 700; padding-right: 16px; }
 
-.miss__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.miss__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
 .miss__col { min-width: 0; display: grid; gap: 4px; align-content: start; }
 .miss__col .subhead { margin: 0; }
 .miss__scroll { max-height: 360px; overflow: auto; margin-top: 8px; }

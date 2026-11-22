@@ -14,11 +14,13 @@
 .alert--viral .alert__icon { color: var(--c-amb); }
 
 /* ── Trend strip */
-.strip { border: 1px solid var(--line); padding: 16px; display: grid; gap: 8px; min-width: 0; }
+.strip { border: 1px solid var(--line); padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
 .strip__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
 .strip__title { font-size: var(--fs-18); line-height: 1.35; font-weight: 700; }
 .strip__text { font-size: var(--fs-14); color: var(--ink-2); max-width: 90ch; }
-.trend { height: 120px; min-width: 0; }
+/* The chart is taken out of flow so its last-measured width can never hold the page open while the window narrows. */
+.trend { position: relative; height: 120px; min-width: 0; overflow: hidden; }
+.trend > .recharts-responsive-container { position: absolute; inset: 0; }
 .trend__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; font-size: var(--fs-14); }
 .trend__table { max-height: 280px; overflow: auto; }
 
@@ -38,10 +40,10 @@
 .ltab--green svg { color: var(--c-grn); }
 .ltab[aria-selected="true"] { background: var(--surface); border-color: var(--line); border-top-color: var(--accent); color: var(--accent); }
 .ltab:focus-visible { outline-offset: -3px; }
-.qpanel { border: 1px solid var(--line); padding: 16px; display: grid; gap: 16px; min-width: 0; }
+.qpanel { border: 1px solid var(--line); padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
 
 /* ── Toolbar */
-.qtool { display: grid; gap: 16px; }
+.qtool { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .qtool__row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; }
 .qtool__row .field { width: 200px; }
 .qtool__row .qtool__search { width: min(320px, 100%); flex: 0 1 320px; }
@@ -125,7 +127,9 @@
 
 /* WatchIt: range presets for the inflow chart (segmented control, square, register style) */
 .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--r-sm); overflow: hidden; }
-.seg__btn { padding: 4px 12px; border: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-14); cursor: pointer; }
+.seg { max-width: 100%; }
+.seg__btn { padding: 4px 12px; border: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-14); cursor: pointer; white-space: nowrap; }
+@media (max-width: 640px) { .seg__btn { padding: 4px 8px; } }
 .seg__btn + .seg__btn { border-left: 1px solid var(--line-strong); }
 .seg__btn:hover { background: var(--tint); }
 .seg__btn--on { background: var(--accent); color: #fff; font-weight: 700; }
