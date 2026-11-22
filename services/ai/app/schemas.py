@@ -335,6 +335,7 @@ class Recommendation(Out):
 
 
 class EngineInfo(Out):
+    evaluated_modules: list[ModuleId] = Field(default_factory=list)
     version: str
     plugins: list[str]
     llm_used: bool

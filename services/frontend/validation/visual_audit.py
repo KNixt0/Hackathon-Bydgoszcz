@@ -7,7 +7,7 @@ import os
 import time
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 OUT = Path(os.environ.get("VALIDATION_OUTPUT", "validation-results"))
 OUT.mkdir(parents=True, exist_ok=True)
@@ -61,7 +61,25 @@ with sync_playwright() as playwright:
         page.get_by_role("button", name="Zaloguj jako kierownik (demo)").click()
         page.get_by_test_id("queue-row").first.wait_for()
         page.evaluate("document.fonts.ready")
+        if width < 640:
+            for tab in page.get_by_role("tab").all():
+                box = tab.bounding_box()
+                assert box and box["x"] >= 0 and box["x"] + box["width"] <= width, "Status tab is clipped"
+            page.get_by_label("Sortuj według", exact=True).select_option("detected")
+            page.get_by_role("button", name="Zmień kierunek sortowania:").click()
+            expect(page).to_have_url(__import__("re").compile("kierunek=desc"))
+        else:
+            page.get_by_role("button", name="Wykryto", exact=False).click()
+            page.get_by_role("button", name="Wykryto", exact=False).click()
         inspect(page, "queue", width)
+        trigger = page.locator('.rule-tip__number').first
+        trigger.click()
+        popup = page.get_by_role("tooltip")
+        expect(popup).to_be_visible()
+        box = popup.bounding_box()
+        assert box and box["x"] >= 0 and box["x"] + box["width"] <= width, "Rule popup is clipped"
+        page.keyboard.press("Escape")
+        expect(popup).to_have_count(0)
         page.locator('.filters-disclosure > summary').first.click()
         inspect(page, "queue-filters", width)
         page.get_by_role("button", name="7 dni", exact=True).click()
@@ -96,3 +114,6 @@ if summary:
         handle.write(f"## Browser audit\nScreens: {len(REPORT['screens'])}; layout/style observations: {len(REPORT['defects'])}; console messages: {len(REPORT['console'])}.\n")
 
 print("::notice title=Watchit validation::" + json.dumps(REPORT, ensure_ascii=False).replace("%", "%25").replace("\n", "%0A").replace("\r", "%0D"))
+
+if REPORT["defects"] or REPORT["console"]:
+    raise SystemExit("Browser audit found layout defects or console errors")

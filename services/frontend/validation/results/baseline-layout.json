@@ -1,0 +1,901 @@
+{
+  "screens": 21,
+  "defects": [
+    {
+      "screen": "queue",
+      "width": 1440,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 1440,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 1440,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "case",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "reasoning",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "audit",
+      "width": 1440,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "weight-600",
+          "text": "Filtry dziennika"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Data i godzina↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Użytkownik↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Zdarzenie↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Szczegóły↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Uzasadnienie↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue",
+      "width": 1024,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 1024,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 1024,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "case",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "reasoning",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "calibration",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        }
+      ]
+    },
+    {
+      "screen": "audit",
+      "width": 1024,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry dziennika"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Data i godzina↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Użytkownik↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Zdarzenie↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Szczegóły↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Uzasadnienie↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue",
+      "width": 390,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 390,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-filters",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 390,
+      "type": "spills",
+      "details": [
+        {
+          "text": "Moduł↕, sortuj rosnąco",
+          "excess": 11
+        },
+        {
+          "text": "Naruszone kryteria↕, sortuj rosnąco",
+          "excess": 28
+        },
+        {
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco",
+          "excess": 4
+        }
+      ]
+    },
+    {
+      "screen": "queue-range",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Poziom i ryzyko↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "ID sprawy↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Źródło↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Moduł↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Naruszone kryteria↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Status i prowadzący↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Wykryto↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Rozpoczęto obsługę↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Czas obsługi↕, sortuj rosnąco"
+        }
+      ]
+    },
+    {
+      "screen": "case",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "reasoning",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Werdykt AI"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Tok rozumowania"
+        }
+      ]
+    },
+    {
+      "screen": "calibration",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        }
+      ]
+    },
+    {
+      "screen": "audit",
+      "width": 390,
+      "type": "forbidden",
+      "details": [
+        {
+          "issue": "pill",
+          "text": "1"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Filtry dziennika"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Data i godzina↓, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Użytkownik↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Zdarzenie↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Sprawa↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Szczegóły↕, sortuj rosnąco"
+        },
+        {
+          "issue": "weight-600",
+          "text": "Uzasadnienie↕, sortuj rosnąco"
+        }
+      ]
+    }
+  ],
+  "console": []
+}

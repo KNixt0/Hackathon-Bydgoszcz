@@ -4,6 +4,7 @@ on:
     branches: [agent/KNixt0/32]
 permissions:
   contents: read
+  actions: read
 jobs:
   validation:
     runs-on: ubuntu-latest
@@ -33,6 +34,26 @@ jobs:
         env:
           VALIDATION_OUTPUT: ${{ github.workspace }}/validation-results
         run: python services/frontend/validation/visual_audit.py
+      - name: Load fixed baseline capture for offline replay
+        id: baseline
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: watchit-validation
+          run-id: 44981430126
+          github-token: ${{ github.token }}
+          path: baseline-capture
+      - name: Replay captured pages with the current local engine
+        if: steps.baseline.outcome == 'success'
+        env:
+          PYTHONPATH: services/ai
+          VALIDATION_OUTPUT: ${{ github.workspace }}/baseline-capture
+          AI_DEMO_OVERLAY: 'false'
+          LLM_ENABLED: 'false'
+          EMBEDDINGS_BACKEND: hash
+        run: |
+          python services/ai/validation/analyze_probe.py
+          cp baseline-capture/live-analysis.json validation-results/replayed-analysis.json
       - name: Bounded real public-page scrape
         if: always() && contains(github.event.head_commit.message, '[live-probe]')
         env:

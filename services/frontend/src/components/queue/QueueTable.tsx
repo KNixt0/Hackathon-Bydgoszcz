@@ -53,12 +53,17 @@ export function QueueTable({ items, thresholds, freshIds, loading = false, empty
   const [now, setNow] = useState(Date.now);
   useEffect(() => { const timer = window.setInterval(() => setNow(Date.now()), 60000); return () => window.clearInterval(timer); }, []);
   if (!loading && items.length === 0) return <EmptyState title={filtered ? "Żadna sprawa nie spełnia filtrów" : "Kolejka jest pusta"} text={filtered ? `${filterSummary ?? ""} Zmień kryteria albo wyczyść filtry.` : "Nowe sprawy pojawią się automatycznie. Możesz też zlecić analizę adresu URL."} action={emptyAction} />;
-  return <div className="table-wrap" role="region" aria-label="Tabela spraw" tabIndex={0}>
+  return <>
+    <div className="queue-sort" aria-label="Sortowanie spraw">
+      <label className="field"><span className="field__label">Sortuj według</span><select className="select" value={sort} onChange={(event) => onSort?.(event.target.value as QueueFilters["sort"])}>{COLUMNS.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
+      <button type="button" className="btn" onClick={() => onSort?.(sort)} aria-label={`Zmień kierunek sortowania: ${direction === "asc" ? "rosnąco" : "malejąco"}`}>{direction === "asc" ? "Rosnąco ↑" : "Malejąco ↓"}</button>
+    </div>
+    <div className="table-wrap" role="region" aria-label="Tabela spraw" tabIndex={0}>
     <table className="queue" aria-busy={loading}>
       <caption className="sr-only">Kolejka spraw</caption>
       <colgroup><col className="c-level" /><col className="c-id" /><col /><col className="c-src" /><col className="c-mod" /><col className="c-rules" /><col className="c-status" /><col className="c-when" /><col className="c-when" /><col className="c-duration" /></colgroup>
       <thead><tr>{COLUMNS.map(([key, label]) => <SortHeader key={key} label={label} active={sort === key} direction={direction} onSort={() => onSort?.(key)} />)}</tr></thead>
       <tbody>{loading ? Array.from({ length: 8 }, (_, i) => <tr key={i} className="skeleton-row">{COLUMNS.map(([key]) => <td key={key}><Skeleton width="80%" /></td>)}</tr>) : items.map((it) => <QueueRow key={it.id} incident={it} thresholds={thresholds} fresh={freshIds.includes(it.id)} now={now} />)}</tbody>
     </table>
-  </div>;
+  </div></>;
 }

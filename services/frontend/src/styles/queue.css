@@ -179,3 +179,14 @@
   .trend__foot { align-items: flex-start; }
 }
 .rule-tip__body { width: min(320px, calc(100vw - 16px)); max-width: none; max-height: min(320px, calc(100dvh - 16px)); overflow-y: auto; z-index: 60; }
+
+.queue-sort { display: none; }
+@media (max-width: 960px) {
+  .queue-sort { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 8px; }
+  .queue-sort .field { flex: 1; min-width: 160px; }
+}
+@media (max-width: 640px) {
+  .ltabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+  .ltab { height: auto; min-height: 44px; padding: 8px; white-space: normal; gap: 6px; }
+  .ltab > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+}

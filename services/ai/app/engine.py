@@ -187,6 +187,7 @@ class Engine:
             evidence=ctx.evidence.items,
             recommendation=verdict.recommendation,
             engine=EngineInfo(
+                evaluated_modules=sorted({p.module for p in self.plugins.values() if p.module is not None}),
                 version=__version__,
                 plugins=[r.plugin for r in results],
                 llm_used=llm_used,

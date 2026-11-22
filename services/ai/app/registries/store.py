@@ -17,7 +17,7 @@ from pathlib import Path
 
 from ..config import BUNDLED_DATA_DIR
 from .catalog import CONTEXT_ONLY, KNF_SUB_REGISTERS, REGISTRIES
-from .matching import Match, best_match, find_brands_in_text
+from .matching import Match, best_match, compile_brand_index, find_brands_in_text
 
 log = logging.getLogger(__name__)
 OVERLAY_FILE = "_demo_overlay.json"
@@ -29,6 +29,7 @@ class Snapshot:
     snapshot_date: str | None
     entries: list[dict]
     meta: dict
+    brand_index: dict | None = None
 
 
 class RegistryStore:
@@ -150,7 +151,12 @@ class RegistryStore:
         return None
 
     def brands_in_text(self, registry: str, text: str, folded: str) -> list[tuple[int, int, dict]]:
-        return find_brands_in_text(text, folded, self._snapshots[registry].entries)
+        with self._lock:
+            snapshot = self._snapshots[registry]
+            if snapshot.brand_index is None:
+                snapshot.brand_index = compile_brand_index(snapshot.entries)
+            index = snapshot.brand_index
+        return find_brands_in_text(text, folded, snapshot.entries, index)
 
 
 def _number_key(value: str) -> str:

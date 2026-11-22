@@ -287,34 +287,48 @@ def best_match(query: str, entries: list[dict]) -> Match | None:
     return best
 
 
-def find_brands_in_text(text: str, folded: str, entries: list[dict]) -> list[tuple[int, int, dict]]:
-    """Occurrences of register names (legal form optional) in a text: (start, end, entry).
-
-    Single-word names must start with a capital letter in the original text, so that a
-    register entry never matches an ordinary lower-case word.
-    """
-    index: dict[str, dict] = {}
+def compile_brand_index(entries: list[dict]) -> dict:
+    """A longest-prefix index. Sector words alone never identify a particular firm."""
+    root: dict = {}
     for entry in entries:
-        for key, _ in _keys(entry):
-            if len(key) >= 3 and key not in GENERIC_TOKENS:
-                index.setdefault(key, entry)
+        keys = [key for key, _ in _keys(entry) if any(token not in GENERIC_TOKENS for token in key.split())]
+        # Preserve a literal full legal name too: INC can be a brand inside a Polish
+        # registered name, although it is normally an English legal-form token.
+        for name in [entry["name"], *entry.get("aliases", [])]:
+            literal = " ".join(re.findall(r"[^\W_]+", fold(name)))
+            if len(literal) >= 3 and any(t not in GENERIC_TOKENS for t in literal.split()):
+                keys.append(literal)
+        for key in dict.fromkeys(keys):
+            node = root
+            for token in key.split():
+                node = node.setdefault(token, {})
+            node.setdefault(None, entry)
+    return root
+
+
+def find_brands_in_text(
+    text: str, folded: str, entries: list[dict], index: dict | None = None
+) -> list[tuple[int, int, dict]]:
+    """Longest register-name occurrences, with original source offsets.
+
+    Single-word brands require a capital letter. A trie removes the old six-word limit
+    and lets RegistryStore reuse its index across documents without repeated rebuilding.
+    """
+    index = compile_brand_index(entries) if index is None else index
     words = [(m.start(), m.end(), m.group(0)) for m in re.finditer(r"[^\W_]+", folded)]
     hits: list[tuple[int, int, dict]] = []
     i = 0
     while i < len(words):
-        found = False
-        for n in range(min(6, len(words) - i), 0, -1):
-            key = " ".join(w for _, _, w in words[i : i + n])
-            entry = index.get(key)
-            if entry is None:
-                continue
-            start, end = words[i][0], words[i + n - 1][1]
-            if n == 1 and not text[start].isupper():
-                continue
-            hits.append((start, end, entry))
-            i += n
-            found = True
-            break
-        if not found:
+        node, j, best = index, i, None
+        while j < len(words) and words[j][2] in node:
+            node = node[words[j][2]]
+            j += 1
+            if None in node and (j > i + 1 or text[words[i][0]].isupper()):
+                best = (j, node[None])
+        if best is None:
             i += 1
+            continue
+        end, entry = best
+        hits.append((words[i][0], words[end - 1][1], entry))
+        i = end
     return hits

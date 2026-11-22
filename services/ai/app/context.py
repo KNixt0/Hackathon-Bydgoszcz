@@ -381,7 +381,10 @@ class AnalysisContext:
             counts: dict[str, int] = {}
             for _, _, entry in res.registered_brands:
                 counts[entry["name"]] = counts.get(entry["name"], 0) + 1
-            best = max(counts, key=lambda k: counts[k])
+            # Prefer an explicitly identified publisher when its legal name matches a
+            # register hit. Footer references to other firms do not outrank that identity.
+            publisher_matches = [name for name in counts if author and _same_entity(name, author)]
+            best = max(publisher_matches or counts, key=lambda name: counts[name])
             res.firm = Party(name=best, kind="investment_firm")
             res.firm_source = "register"
         else:

@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://bossa.pl/oferta",
+    "analysis_ms": 181,
+    "evaluated_plugins": [
+      "m1_finfluencer",
+      "m2_risk_disclosure",
+      "m3_shadow_advisory"
+    ],
+    "rules": 19,
+    "entities": {
+      "investment_firm": {
+        "name": "DOM MAKLERSKI INC S.A.",
+        "kind": "investment_firm"
+      },
+      "advertiser": {
+        "name": "Dom Maklerski Banku Ochrony Środowiska",
+        "kind": "advertiser",
+        "url": "https://bossa.pl"
+      },
+      "others": []
+    }
+  },
+  {
+    "url": "https://www.xtb.com/pl/konto-i-oplaty",
+    "analysis_ms": 97,
+    "evaluated_plugins": [
+      "m1_finfluencer",
+      "m2_risk_disclosure"
+    ],
+    "rules": 19,
+    "entities": {
+      "investment_firm": {
+        "name": "XTB S.A.",
+        "kind": "investment_firm"
+      },
+      "advertiser": {
+        "name": "xtbpl",
+        "kind": "advertiser",
+        "handle": "@xtbpl"
+      },
+      "others": []
+    }
+  },
+  {
+    "url": "https://www.bm.pkobp.pl/oferta/rachunek-inwestycyjny",
+    "analysis_ms": 128,
+    "evaluated_plugins": [
+      "m2_risk_disclosure",
+      "m3_shadow_advisory"
+    ],
+    "rules": 19,
+    "entities": {
+      "investment_firm": {
+        "name": "POWSZECHNA KASA OSZCZĘDNOŚCI BANK POLSKI S.A. (PKO BP S.A.)",
+        "kind": "investment_firm"
+      },
+      "advertiser": null,
+      "others": []
+    }
+  }
+]
