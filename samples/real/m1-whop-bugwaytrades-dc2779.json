@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://whop.com/bugwaytrades/",
+  "platform": "web",
+  "title": "BugWayTrades | Whop",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "BugWayTrades",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m1-whop-bugwaytrades-dc2779.html"
+}

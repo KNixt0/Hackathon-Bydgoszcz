@@ -1,0 +1,20 @@
+{
+ "meta": {
+  "url": "https://pl.tradingview.com/chart/GOLD/L8A48LmT/",
+  "platform": "web",
+  "title": "「ゴールド（XAU/USD）ショート戦略：レジスタンス反転とブレイクダウンによるエントリー分析」 dla CAPITALCOM:GOLD przez EA_GOLD_MAN_COPY_TRADE — TradingView",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "EA_GOLD_MAN_COPY_TRADE"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 3
+ },
+ "html_file": "m3-pl-chart-gold-l8a48lmt-e1b703.html"
+}

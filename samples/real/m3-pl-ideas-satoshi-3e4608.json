@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://pl.tradingview.com/ideas/satoshi/",
+  "platform": "web",
+  "title": "Satoshi — Pomysły Handlowe na TradingView",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "Satoshi"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "ForexClub_pl",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m3-pl-ideas-satoshi-3e4608.html"
+}

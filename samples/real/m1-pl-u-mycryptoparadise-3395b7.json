@@ -1,0 +1,23 @@
+{
+ "meta": {
+  "url": "https://pl.tradingview.com/u/MyCryptoParadise/",
+  "platform": "web",
+  "title": "MyCryptoParadise — Pomysły Handlowe i Skrypty — TradingView",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "MyCryptoParadise",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m1-pl-u-mycryptoparadise-3395b7.html"
+}

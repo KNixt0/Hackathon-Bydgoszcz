@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://whop.com/1h-rozmowa-z-antkiemict/",
+  "platform": "web",
+  "title": "Forex House - Trading po polsku | Whop",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "Antek"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "Forex House",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m1-whop-1h-rozmowa-z-antkiemict-9f34d2.html"
+}

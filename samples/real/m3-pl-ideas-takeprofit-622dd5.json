@@ -1,0 +1,20 @@
+{
+ "meta": {
+  "url": "https://pl.tradingview.com/ideas/takeprofit/",
+  "platform": "web",
+  "title": "Takeprofit — Pomysły Handlowe na TradingView",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "SayMoney"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 3
+ },
+ "html_file": "m3-pl-ideas-takeprofit-622dd5.html"
+}

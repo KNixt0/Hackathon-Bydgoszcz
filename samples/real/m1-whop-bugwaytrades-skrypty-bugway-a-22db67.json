@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://whop.com/bugwaytrades/skrypty-bugway-a",
+  "platform": "web",
+  "title": "Skrypty | Whop",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "null"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "BugWayTrades",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m1-whop-bugwaytrades-skrypty-bugway-a-22db67.html"
+}

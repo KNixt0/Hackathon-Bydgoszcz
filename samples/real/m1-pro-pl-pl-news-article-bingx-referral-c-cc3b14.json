@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://pro.edgex.exchange/pl-PL/news/article/bingx-referral-code-hhzmeiy5",
+  "platform": "web",
+  "title": "Kod polecający BingX 2026: HHZMEIY5 oferuje do 6 000 USD w bonusach powitalnych i 10% zniżki na opłaty transakcyjne",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "Crypto Ninjas"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 1,
+  "companies": [
+   {
+    "name": "BingX",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m1-pro-pl-pl-news-article-bingx-referral-c-cc3b14.html"
+}

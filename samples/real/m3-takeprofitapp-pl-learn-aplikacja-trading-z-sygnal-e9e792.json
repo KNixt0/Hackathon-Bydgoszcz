@@ -1,0 +1,26 @@
+{
+ "meta": {
+  "url": "https://takeprofitapp.com/pl/learn/aplikacja-trading-z-sygnalami-pl-2026",
+  "platform": "web",
+  "title": "App z Sygnałami PL 2026 | Take Profit Trader's App",
+  "published_at": "2026-11-22",
+  "seed": true,
+  "detected_days_ago": 0,
+  "author": {
+   "name": "Kacper Mruk"
+  }
+ },
+ "context": {
+  "synthetic": false,
+  "ground_truth": null,
+  "demo_case": null,
+  "module_hint": 3,
+  "companies": [
+   {
+    "name": "Take Profit",
+    "role": "advertiser"
+   }
+  ]
+ },
+ "html_file": "m3-takeprofitapp-pl-learn-aplikacja-trading-z-sygnal-e9e792.html"
+}
