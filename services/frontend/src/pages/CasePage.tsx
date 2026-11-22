@@ -195,7 +195,6 @@ export function CasePage() {
                 {href ? <a href={href} target="_blank" rel="noopener noreferrer">{hostOf(inc.source.url)}<span className="sr-only"> (otwiera się w nowej karcie)</span></a> : hostOf(inc.source.url)}
               </dd>
               <dt>Moduły</dt><dd>{inc.modules.map((m) => `${m} ${MODULE_LABEL[m]}`).join("; ")}</dd>
-              {inc.engine.evaluated_modules?.length ? <><dt>Sprawdzone moduły</dt><dd>{inc.engine.evaluated_modules.join(", ")} (moduły bez ustaleń nie podnoszą ryzyka)</dd></> : null}
               <dt>Aktualizacja</dt><dd>{formatDateTime(inc.updated_at)}</dd>
               <dt>Silnik</dt>
               <dd>{inc.engine.version}{inc.engine.llm_used && inc.engine.model ? `, model ${inc.engine.model}` : ", bez modelu językowego"}, {(inc.engine.duration_ms / 1000).toFixed(1).replace(".", ",")} s</dd>

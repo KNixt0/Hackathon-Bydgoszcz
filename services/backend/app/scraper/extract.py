@@ -6,6 +6,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from typing import Any
+from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup, Comment
 
@@ -245,6 +246,21 @@ def extract(html: str) -> Extracted:
         name = meta.get("author") or meta.get("article:author") or meta.get("dc.creator")
         if name and not name.startswith("http"):
             author = {"name": name}
+    if author is None:
+        # A page-level organization paired with its own WebSite identifies the publisher.
+        # Do not promote a social handle to a different legal person when this exists.
+        organizations = [node for node in jsonld if "Organization" in _types(node) and node.get("name")]
+        websites = [node for node in jsonld if "WebSite" in _types(node)]
+        if len(organizations) == 1:
+            organization = organizations[0]
+            organization_url = organization.get("url")
+            if isinstance(organization_url, str):
+                host = urlsplit(organization_url).hostname
+                if host and any(
+                    isinstance(site.get("url"), str) and urlsplit(site["url"]).hostname == host
+                    for site in websites
+                ):
+                    author = _author_from(organization)
     handle = meta.get("twitter:creator") or meta.get("twitter:site")
     if handle and handle.startswith("@"):
         author = {**(author or {"name": handle.lstrip("@")}), "handle": handle}

@@ -30,7 +30,18 @@ def test_long_register_names_are_not_cut_off_at_six_words():
     assert len(hits) == 1 and text[hits[0][0] : hits[0][1]] == entry["name"]
 
 
-def test_all_three_modules_are_checked_even_when_not_all_apply(analyze):
+def test_all_three_modules_are_checked_even_when_not_all_apply(analyze, engine, monkeypatch):
+    from unittest.mock import Mock
+
+    probes = {}
+    for name, plugin in engine.plugins.items():
+        probe = Mock(wraps=plugin.applies)
+        monkeypatch.setattr(plugin, "applies", probe)
+        probes[name] = probe
     result = analyze(text="Rzetelna informacja o rachunku maklerskim. Inwestowanie wiąże się z ryzykiem.")
-    assert result.engine.evaluated_modules == [1, 2, 3]
+    assert {plugin.module for name, plugin in engine.plugins.items() if probes[name].called and plugin.module} == {
+        1,
+        2,
+        3,
+    }
     assert len(result.rules) == 19

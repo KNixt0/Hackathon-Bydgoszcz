@@ -52,8 +52,19 @@ jobs:
           LLM_ENABLED: 'false'
           EMBEDDINGS_BACKEND: hash
         run: |
+          PYTHONPATH=services/backend python services/backend/validation/reextract_probe.py
           python services/ai/validation/analyze_probe.py
           cp baseline-capture/live-analysis.json validation-results/replayed-analysis.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          source = Path('baseline-capture')
+          capture = {'records': json.loads((source / 'live-analysis.json').read_text())}
+          Path('validation-results/real-preview-input.json').write_text(json.dumps(capture))
+          PY
+          node services/frontend/validation/build_real_preview.mjs "$GITHUB_WORKSPACE/services/frontend" validation-results/real-preview-input.json "$GITHUB_WORKSPACE/services/frontend/dist/real-data.html"
+          cp services/frontend/dist/real-data.html validation-results/watchit-real-data-preview.html
+          python services/frontend/validation/real_preview_audit.py
       - name: Bounded real public-page scrape
         if: always() && contains(github.event.head_commit.message, '[live-probe]')
         env:
@@ -79,3 +90,68 @@ jobs:
       - name: Include service logs
         if: failure()
         run: cat /tmp/watchit-mock.log /tmp/watchit-preview.log
+
+  model-workload:
+    if: contains(github.event.head_commit.message, '[workload-probe]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OLLAMA_HOST: 127.0.0.1:11434
+      OLLAMA_MODEL: qwen2.5:0.5b
+      LLM_ENABLED: 'true'
+      LLM_TIMEOUT_S: '90'
+      AI_DEMO_OVERLAY: 'false'
+      EMBEDDINGS_BACKEND: hash
+      OLLAMA_URL: http://127.0.0.1:11434
+      AI_URL: http://127.0.0.1:8124
+      AI_TIMEOUT_SECONDS: '240'
+      DEMO_LOGIN: 'true'
+      TASK_MODE: eager
+      DATABASE_URL: sqlite:////tmp/watchit-model-workload.db
+      PLAYWRIGHT_ENABLED: 'false'
+      VISUAL_AUDIT_ENABLED: 'false'
+      SCRAPE_HOST_DELAY_SECONDS: '0'
+      VALIDATION_OUTPUT: ${{ github.workspace }}/workload-results
+      CAPTURE_DIRECTORY: ${{ github.workspace }}/workload-capture
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install -r services/backend/requirements-dev.txt
+      - name: Load the three real captures
+        uses: actions/download-artifact@v4
+        with:
+          name: watchit-validation
+          run-id: 44981430126
+          github-token: ${{ github.token }}
+          path: workload-capture
+      - name: Install checksum-pinned local inference runtime
+        run: |
+          curl -fL --max-time 240 https://github.com/ollama/ollama/releases/download/v0.13.0/ollama-linux-amd64.tgz -o /tmp/watchit-ollama.tgz
+          echo 'c5e5b4840008d9c9bf955ec32c32b03afc57c986ac1c382d44c89c9f7dd2cc30  /tmp/watchit-ollama.tgz' | sha256sum -c -
+          mkdir -p /tmp/watchit-ollama
+          tar -xzf /tmp/watchit-ollama.tgz -C /tmp/watchit-ollama
+          /tmp/watchit-ollama/bin/ollama serve > /tmp/watchit-ollama.log 2>&1 &
+          for attempt in $(seq 1 30); do curl -sf http://127.0.0.1:11434/api/tags && break; sleep 1; done
+          /tmp/watchit-ollama/bin/ollama pull "$OLLAMA_MODEL"
+          curl -sf http://127.0.0.1:11434/api/tags
+      - name: Start the actual local-model analysis service
+        run: |
+          PYTHONPATH=services/ai python -m uvicorn app.main:app --host 127.0.0.1 --port 8124 > /tmp/watchit-ai-model.log 2>&1 &
+          for attempt in $(seq 1 30); do curl -sf http://127.0.0.1:8124/health && break; sleep 1; done
+      - name: Simulate persisted queue, analysis and review workflow
+        env:
+          PYTHONPATH: services/backend
+        run: python services/backend/validation/model_workload.py
+      - name: Attach workload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watchit-model-workload
+          path: workload-results/
+          retention-days: 7
+      - name: Include model service logs
+        if: always()
+        run: tail -n 80 /tmp/watchit-ollama.log /tmp/watchit-ai-model.log

@@ -55,7 +55,7 @@ export function QueueTable({ items, thresholds, freshIds, loading = false, empty
   if (!loading && items.length === 0) return <EmptyState title={filtered ? "Żadna sprawa nie spełnia filtrów" : "Kolejka jest pusta"} text={filtered ? `${filterSummary ?? ""} Zmień kryteria albo wyczyść filtry.` : "Nowe sprawy pojawią się automatycznie. Możesz też zlecić analizę adresu URL."} action={emptyAction} />;
   return <>
     <div className="queue-sort" aria-label="Sortowanie spraw">
-      <label className="field"><span className="field__label">Sortuj według</span><select className="select" value={sort} onChange={(event) => onSort?.(event.target.value as QueueFilters["sort"])}>{COLUMNS.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
+      <label className="field"><span className="field__label">Sortuj według</span><select aria-label="Sortuj według" className="select" value={sort} onChange={(event) => onSort?.(event.target.value as QueueFilters["sort"])}>{COLUMNS.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
       <button type="button" className="btn" onClick={() => onSort?.(sort)} aria-label={`Zmień kierunek sortowania: ${direction === "asc" ? "rosnąco" : "malejąco"}`}>{direction === "asc" ? "Rosnąco ↑" : "Malejąco ↓"}</button>
     </div>
     <div className="table-wrap" role="region" aria-label="Tabela spraw" tabIndex={0}>

@@ -220,7 +220,6 @@ export interface Recommendation {
 }
 
 export interface EngineInfo {
-  evaluated_modules?: ModuleId[];
   version: string;
   plugins: string[];
   llm_used: boolean;
