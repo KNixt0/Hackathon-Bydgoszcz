@@ -1,6 +1,7 @@
 """Browser regression audit of our own app, including layout measurements and screenshots."""
 from __future__ import annotations
 
+import base64
 import json
 import os
 import time
@@ -16,6 +17,9 @@ REPORT = {"screens": [], "defects": [], "console": []}
 
 def inspect(page, label, width):
     page.screenshot(path=str(OUT / f"{label}-{width}.png"), full_page=True)
+    if label in ("queue", "case") and width in (1440, 390):
+        thumbnail = page.screenshot(type="jpeg", quality=50)
+        print(f"WATCHIT_SCREEN|{label}|{width}|" + base64.b64encode(thumbnail).decode())
     measurement = page.evaluate("""() => {
       const visible = (el) => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden';
       const spills = [...document.querySelectorAll('.sort-heading')].filter(visible).flatMap(el => {
@@ -32,6 +36,7 @@ def inspect(page, label, width):
       return {pageOverflow:document.documentElement.scrollWidth>innerWidth+1,spills,forbidden,tableWidth:document.querySelector('.queue')?.getBoundingClientRect().width, viewport:innerWidth};
     }""")
     REPORT["screens"].append({"name": label, "width": width, **measurement})
+    (OUT / "visual-audit.json").write_text(json.dumps(REPORT, ensure_ascii=False, indent=2))
     for key in ("pageOverflow", "spills", "forbidden"):
         value = measurement[key]
         if value:
@@ -72,7 +77,8 @@ with sync_playwright() as playwright:
         page.get_by_role("link", name="Kalibracja", exact=True).click()
         page.get_by_label("Próg flagowania").wait_for()
         inspect(page, "calibration", width)
-        page.get_by_label("Próg flagowania").fill("26")
+        page.get_by_label("Próg flagowania").focus()
+        page.get_by_label("Próg flagowania").press("ArrowRight")
         save=page.get_by_role("button", name="Zapisz jako progi globalne")
         if save.count():
             save.click()
@@ -88,3 +94,5 @@ summary = os.environ.get("GITHUB_STEP_SUMMARY")
 if summary:
     with open(summary, "a") as handle:
         handle.write(f"## Browser audit\nScreens: {len(REPORT['screens'])}; layout/style observations: {len(REPORT['defects'])}; console messages: {len(REPORT['console'])}.\n")
+
+print("::notice title=Watchit validation::" + json.dumps(REPORT, ensure_ascii=False).replace("%", "%25").replace("\n", "%0A").replace("\r", "%0D"))

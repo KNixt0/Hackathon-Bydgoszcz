@@ -20,12 +20,12 @@ export function TrendStrip({ rows, hourly = false }: { rows: TrendRow[]; hourly?
   return (
     <>
       {<div className="trend" data-testid="trend-chart" aria-hidden="true">
-        <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 900, height: 200 }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 900, height: 120 }}>
           <BarChart data={rows} margin={{ top: 4, right: 4, bottom: 0, left: 0 }} barCategoryGap={2}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="date" tickFormatter={tick} tickLine={false} axisLine={{ stroke: "var(--ink-2)" }} minTickGap={24} height={22} />
             <YAxis allowDecimals={false} width={28} tickLine={false} axisLine={false} tickCount={3} domain={[0, Math.ceil(max / 2) * 2]} />
-            <Tooltip cursor={{ fill: "rgba(22,22,22,0.06)" }} content={<ChartTip labels={LEVEL_LABEL} />} isAnimationActive={false} />
+            <Tooltip cursor={{ fill: "rgba(22,22,22,0.06)" }} content={<ChartTip labels={LEVEL_LABEL} hourly={hourly} />} isAnimationActive={false} />
             {STACK.map((k) => (
               <Bar key={k} dataKey={k} name={LEVEL_LABEL[k]} stackId="level" fill={COLOR[k]} isAnimationActive={false} />
             ))}

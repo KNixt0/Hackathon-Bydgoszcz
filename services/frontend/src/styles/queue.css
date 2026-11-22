@@ -53,7 +53,7 @@
 
 /* ── Queue table: 14px, 2px rule under the header, 1px rules between rows, no fills */
 .queue { min-width: 1100px; table-layout: fixed; }
-.queue col.c-level { width: 144px; }
+.queue col.c-level { width: 160px; }
 .queue col.c-src { width: 108px; }
 .queue col.c-mod { width: 64px; }
 .queue col.c-rules { width: 132px; }
@@ -111,28 +111,28 @@
 
 
 /* Table rows remain readable across large queues and audit logs. */
-.queue { min-width: 1600px; }
-.queue col.c-id { width: 110px; }
-.queue col.c-when { width: 164px; }
-.queue col.c-duration { width: 150px; }
-.queue tbody tr:nth-child(odd), .audit tbody tr:nth-child(odd), .rt tbody tr:nth-child(odd) { background: #fff; }
-.queue tbody tr:nth-child(even), .audit tbody tr:nth-child(even), .rt tbody tr:nth-child(even) { background: #f3f4f5; }
+.queue { min-width: 1480px; }
+.queue col.c-id { width: 104px; }
+.queue col.c-when { width: 144px; }
+.queue col.c-duration { width: 128px; }
+.queue tbody tr:nth-child(odd), .audit tbody tr:nth-child(odd), .rt tbody tr:nth-child(odd) { background: var(--surface); }
+.queue tbody tr:nth-child(even), .audit tbody tr:nth-child(even), .rt tbody tr:nth-child(even) { background: var(--row-alt); }
 .queue th:first-child, .queue td:first-child, .audit th:first-child, .audit td:first-child { padding-left: 12px; }
-.sort-heading { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
+.sort-heading { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; text-align: left; }
 .sort-heading:hover { color: var(--accent); }
 .sort-heading span[aria-hidden] { color: var(--muted); }
-.disclosure > summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
+.disclosure > summary { cursor: pointer; font-weight: 700; padding: 12px 0; }
 .disclosure[open] > summary { margin-bottom: 12px; border-bottom: 1px solid var(--line); }
 .filters-disclosure .qtool__row + .qtool__row { margin-top: 16px; }
 .filters-disclosure .field__hint { margin-top: 12px; }
 .qtool__row--filters .qtool__date { width: 240px; }
-.trend { height: 200px; }
+.trend { height: 120px; }
 .chart-controls { display: grid; gap: 16px; padding-block: 8px; }
 .range-presets { display: flex; flex-wrap: wrap; gap: 6px; }
 .range-presets [aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
 .rule-tip { position: relative; display: inline-block; }
 .rule-tip__number { border: 0; border-bottom: 1px dotted currentColor; background: transparent; color: var(--accent); cursor: help; font: inherit; padding: 2px 3px; min-width: 24px; }
-.rule-tip__body { display: none; position: absolute; z-index: 40; top: 100%; left: 0; width: 300px; max-width: 70vw; white-space: normal; background: #fff; color: var(--ink); border: 1px solid var(--ink-2); box-shadow: 0 4px 16px #0002; padding: 12px; text-align: left; font-weight: 400; font-size: 14px; }
+.rule-tip__body { display: none; position: absolute; z-index: 40; top: 100%; left: 0; width: 300px; max-width: 70vw; white-space: normal; background: var(--surface); color: var(--ink); border: 1px solid var(--ink-2); box-shadow: none; padding: 12px; text-align: left; font-weight: 400; font-size: var(--fs-14); }
 .rule-tip__body > * { display: block; margin-bottom: 6px; }
 .rule-tip:hover .rule-tip__body, .rule-tip:focus-within .rule-tip__body { display: block; }
 .recommendation-arguments { margin-top: 24px; }
@@ -140,8 +140,42 @@
 .verdict-disclosure { border: 1px solid var(--line); padding: 0 16px; }
 .notifications { width: min(440px, calc(100vw - 32px)); }
 .notifications__list { max-height: 420px; overflow: auto; list-style: none; padding: 0; }
-.notification { display: grid; gap: 8px; padding: 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.notification { display: grid; gap: 8px; padding: 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-14); }
 .notification--unread { background: var(--tint); border-left: 3px solid var(--accent); }
 .notification .btn { justify-self: start; }
-.notification-count { display: inline-grid; place-items: center; min-width: 20px; padding: 0 5px; background: var(--accent); color: white; border-radius: 12px; margin-left: 6px; }
+.notification-count { display: inline-grid; place-items: center; min-width: 20px; padding: 0 5px; background: var(--accent); color: white; border-radius: var(--r-sm); margin-left: 6px; }
 .rule-tip__body--open { display: block; }
+
+/* Sort labels wrap within their own column instead of painting over neighbouring headings. */
+.sort-heading { max-width: 100%; white-space: normal; line-height: 1.35; }
+.sort-heading > span[aria-hidden] { flex: none; }
+.filters-shell { position: relative; }
+.filters-shell > .filters-disclosure > summary { padding-right: 180px; min-height: 44px; }
+.filters-export { position: absolute; right: 0; top: 0; min-height: 44px; align-items: center; }
+.queue td { overflow-wrap: anywhere; }
+.queue__when time { display: block; }
+.queue__when time > span { display: block; }
+.queue__when { white-space: normal; }
+.disclosure > summary { min-height: 40px; }
+.verdict-disclosure[open] { padding-bottom: 16px; }
+.notifications .form-error { padding: 12px 16px; }
+@media (max-width: 960px) {
+  .queue { min-width: 0; table-layout: auto; }
+  .queue colgroup, .queue thead { display: none; }
+  .queue tbody { display: grid; gap: 12px; }
+  .queue tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); }
+  .queue tbody td { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px; min-width: 0; border: 0; }
+  .queue tbody td::before { content: attr(data-label); color: var(--muted); font-size: var(--fs-12); font-weight: 500; }
+  .queue tbody td:nth-child(3), .queue tbody td:nth-child(7) { grid-column: 1 / -1; }
+  .queue__title { white-space: normal; overflow-wrap: anywhere; }
+  .queue tbody tr:hover td { background: transparent; }
+}
+@media (max-width: 640px) {
+  .chart-controls .qtool__row > .field { width: 100%; }
+  .range-presets { gap: 4px; }
+  .range-presets .btn { padding-inline: 10px; font-size: var(--fs-14); }
+  .filters-shell > .filters-disclosure > summary { padding-right: 150px; }
+  .filters-export { font-size: var(--fs-14); }
+  .trend__foot { align-items: flex-start; }
+}
+.rule-tip__body { width: min(320px, calc(100vw - 16px)); max-width: none; max-height: min(320px, calc(100dvh - 16px)); overflow-y: auto; z-index: 60; }

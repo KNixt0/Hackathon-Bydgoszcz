@@ -1,4 +1,5 @@
 """Analyze captured public-page input offline, with deterministic local rules and no cloud model."""
+
 from __future__ import annotations
 
 import asyncio
@@ -24,15 +25,30 @@ async def run():
             result = await engine.analyze(Document.model_validate(document), Context(synthetic=False))
             payload = result.model_dump(mode="json")
             # Keep machine output for a private engineering review, not a public allegation.
-            records.append({"url": document["url"], "analysis_ms": round((time.perf_counter()-started)*1000),
-                            "analysis": payload})
+            records.append(
+                {
+                    "url": document["url"],
+                    "analysis_ms": round((time.perf_counter() - started) * 1000),
+                    "analysis": payload,
+                }
+            )
         except Exception as error:
             records.append({"url": document["url"], "error": f"{type(error).__name__}: {error}"})
     (output / "live-analysis.json").write_text(json.dumps(records, ensure_ascii=False, indent=2))
-    print(json.dumps([{k: v for k, v in item.items() if k != "analysis"} | {
-        "evaluated_plugins": item.get("analysis", {}).get("engine", {}).get("plugins", []),
-        "rules": len(item.get("analysis", {}).get("rules", [])),
-        "entities": item.get("analysis", {}).get("entities", {})} for item in records], ensure_ascii=False))
+    print(
+        json.dumps(
+            [
+                {k: v for k, v in item.items() if k != "analysis"}
+                | {
+                    "evaluated_plugins": item.get("analysis", {}).get("engine", {}).get("plugins", []),
+                    "rules": len(item.get("analysis", {}).get("rules", [])),
+                    "entities": item.get("analysis", {}).get("entities", {}),
+                }
+                for item in records
+            ],
+            ensure_ascii=False,
+        )
+    )
 
 
 asyncio.run(run())

@@ -1,6 +1,7 @@
 import { Radar, Search } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { Button } from "../ui/Button";
 
 interface Props {
@@ -23,6 +24,7 @@ const TABS = [
 /** Two stacked rows: service name and quick actions; then the section tabs (replaces the left sidebar). */
 export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor, children, trailing }: Props) {
   const { pathname } = useLocation();
+  const compact = useMediaQuery("(max-width: 960px)");
   return (
     <header className="hd">
       <div className="hd__top">
@@ -31,17 +33,22 @@ export function Header({ onOpenPalette, onOpenScan, shortcutLabel, isSupervisor,
         </Link>
         <div className="hd__qa">
           <span className="hd__actions">
-            <Button
+            {!compact && (<Button
               onClick={onOpenPalette} aria-keyshortcuts="Control+K Meta+K"
               title={`Szukaj sprawy lub polecenia (${shortcutLabel})`}
             >
               <Search aria-hidden="true" />Szukaj<kbd className="kbd hd__kbd" aria-hidden="true">{shortcutLabel}</kbd>
-            </Button>
+            </Button>)}
             <Button variant="primary" onClick={onOpenScan}>
               <Radar aria-hidden="true" />Analiza URL
             </Button>
           </span>
-          {children}
+          {compact ? <details className="hd__compact"><summary>Menu</summary><div className="hd__compact-content"><Button
+              onClick={onOpenPalette} aria-keyshortcuts="Control+K Meta+K"
+              title={`Szukaj sprawy lub polecenia (${shortcutLabel})`}
+            >
+              <Search aria-hidden="true" />Szukaj<kbd className="kbd hd__kbd" aria-hidden="true">{shortcutLabel}</kbd>
+            </Button>{children}</div></details> : children}
           {trailing}
         </div>
       </div>

@@ -1,9 +1,9 @@
-const dateFmt = new Intl.DateTimeFormat("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
-const dateTimeFmt = new Intl.DateTimeFormat("pl-PL", {
+const dateFmt = new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", day: "2-digit", month: "2-digit", year: "numeric" });
+const dateTimeFmt = new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw",
   day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
 });
-const shortDayFmt = new Intl.DateTimeFormat("pl-PL", { day: "numeric", month: "short" });
-const dayMonthFmt = new Intl.DateTimeFormat("pl-PL", { day: "2-digit", month: "2-digit" });
+const shortDayFmt = new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "short" });
+const dayMonthFmt = new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", day: "2-digit", month: "2-digit" });
 const plnFmt = new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN", maximumFractionDigits: 0 });
 const compactFmt = new Intl.NumberFormat("pl-PL", { notation: "compact", maximumFractionDigits: 1 });
 
@@ -17,6 +17,7 @@ export const formatDate = (v: string | null | undefined) => {
   const d = parse(v);
   return d ? dateFmt.format(d) : "brak danych";
 };
+export const formatTime = (v: string) => new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", hour: "2-digit", minute: "2-digit" }).format(new Date(v));
 export const formatDateTime = (v: string | null | undefined) => {
   const d = parse(v);
   return d ? dateTimeFmt.format(d) : "brak danych";

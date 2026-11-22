@@ -103,3 +103,21 @@
   .page__title { font-size: 24px; }
   .user-chip__role { display: none; }
 }
+
+
+.hd__compact { position: relative; }
+.hd__compact > summary { min-height: 40px; padding: 8px; color: var(--accent); cursor: pointer; }
+.hd__compact-content { position: absolute; top: 100%; right: 0; z-index: 30; display: grid; gap: 8px; width: min(300px, calc(100vw - 32px)); padding: 16px; background: var(--surface); border: 1px solid var(--ink-2); }
+.hd__compact-content > * { justify-self: start; }
+@media (max-width: 960px) {
+  .hd__top { align-items: flex-start; }
+  .hd__qa { flex: 1 1 auto; justify-content: flex-end; min-width: 0; }
+  .user-chip__text { max-width: 30ch; }
+}
+@media (max-width: 640px) {
+  .hd__top { gap: 8px 12px; }
+  .hd__qa { gap: 4px 8px; }
+  .hd__actions .btn { padding-inline: 12px; font-size: var(--fs-14); }
+  .user-chip { flex-basis: 100%; justify-content: flex-end; gap: 12px; font-size: var(--fs-14); }
+  .user-chip__text { max-width: calc(100vw - 120px); }
+}

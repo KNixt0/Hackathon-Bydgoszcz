@@ -34,7 +34,7 @@ jobs:
           VALIDATION_OUTPUT: ${{ github.workspace }}/validation-results
         run: python services/frontend/validation/visual_audit.py
       - name: Bounded real public-page scrape
-        if: contains(github.event.head_commit.message, '[live-probe]')
+        if: always() && contains(github.event.head_commit.message, '[live-probe]')
         env:
           PYTHONPATH: services/backend
           VALIDATION_OUTPUT: ${{ github.workspace }}/validation-results

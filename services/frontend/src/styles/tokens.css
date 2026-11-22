@@ -7,6 +7,7 @@
   --field: #eeeeee;
   --surface-sunken: var(--field);
   --hover: #f6f6f6;
+  --row-alt: #f3f4f5;
   --surface-hover: var(--hover);
   --tint: #edeff8;
   --sel: #d9dff6;

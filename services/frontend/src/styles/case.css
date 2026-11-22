@@ -7,7 +7,7 @@
 
 /* Two columns: case data, verdict, recommendation, workflow | registers, parties, files, history */
 .case-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 32px; align-items: start; margin-top: 8px; }
-.case-col { display: grid; gap: 32px; align-content: start; min-width: 0; }
+.case-col { display: grid; gap: 24px; align-content: start; min-width: 0; }
 .case-meta { scroll-margin-top: 16px; }
 
 /* A case section: h2 plus content, separated by space, never by a box */
@@ -281,3 +281,15 @@
 .reports__cat { margin-left: 16px; color: var(--ink-2); }
 .section-title[tabindex="-1"]:focus { outline: none; }
 .section-title[tabindex="-1"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+
+/* The reasoning sits inside a case column: three tiny columns are unreadable there. */
+.recommendation-arguments .rounds__grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.recommendation-arguments .round { border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.recommendation-arguments .round:last-child { border-bottom: 0; }
+.recommendation-arguments .debate__head { flex-wrap: wrap; gap: 4px 12px; }
+.recommendation-arguments .claim, .recommendation-arguments .round { overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .callout { padding: 16px; }
+  .case-head__title, .case-meta dd, .sources__meta dd { overflow-wrap: anywhere; }
+}

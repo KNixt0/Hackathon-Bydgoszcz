@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { formatDateTime, hostOf, relativeTime } from "../../domain/format";
+import { formatDate, formatDateTime, formatTime, hostOf, relativeTime } from "../../domain/format";
 import { processingDuration } from "../../domain/dates";
 import { PLATFORM_LABEL, STATUS_LABEL } from "../../domain/labels";
 import { deriveLevel, type Thresholds } from "../../domain/levels";
@@ -22,16 +22,16 @@ export function QueueRow({ incident: it, thresholds, fresh, now = Date.now() }: 
   const started = it.workflow?.processing_started_at;
   const finished = it.workflow?.processing_finished_at;
   return <tr className={fresh ? "queue__row--fresh" : undefined} data-testid="queue-row" data-level={level}>
-    <td><span className="queue__level"><LevelBadge level={level} /><ScoreRail riskScore={it.risk_score} thresholds={thresholds} /></span></td>
-    <td className="num"><Link to={`/sprawy/${it.id}`} title={it.id}>{caseRef(it.id)}</Link></td>
-    <td className="queue__case"><Link to={`/sprawy/${it.id}`} className="queue__title" title={it.title}>{it.title}</Link><span className="queue__sub truncate">{parties || "Podmiot do ustalenia"}</span></td>
-    <td><span className="queue__cell-main">{PLATFORM_LABEL[it.source.platform] ?? it.source.platform}</span><span className="queue__sub truncate" title={it.source.url}>{hostOf(it.source.url)}</span></td>
-    <td><ModuleList modules={it.modules} /></td>
-    <td>{it.failed_rules.length ? <span className="queue__rules"><span className="sr-only">Naruszone kryteria: </span>{it.failed_rules.map((id, index) => <span key={id}>{index > 0 && ", "}<RuleTip id={id} definition={it.failed_rule_details?.find((r) => r.id === id)} /></span>)}</span> : <span className="muted">brak</span>}</td>
-    <td><span className="queue__status"><Link to={`/sprawy/${it.id}#workflow-h`} aria-label={`Status sprawy: ${it.title}: ${STATUS_LABEL[it.status]}`} data-status={it.status}>{STATUS_LABEL[it.status]}</Link>{fresh && <Badge tone="accent">Nowa</Badge>}<span className="queue__sub truncate" title={it.workflow?.assigned_to ?? undefined}>{it.workflow?.assigned_to ?? "nieprzypisana"}</span></span></td>
-    <td className="queue__when"><time dateTime={it.created_at} title={relativeTime(it.created_at)}>{formatDateTime(it.created_at)}</time></td>
-    <td className="queue__when">{started ? <time dateTime={started}>{formatDateTime(started)}</time> : <span className="muted">Nie rozpoczęto</span>}</td>
-    <td><span className="nowrap num">{processingDuration(started, finished, now)}</span>{finished && <span className="queue__sub">zakończono</span>}</td>
+    <td data-label="Poziom i ryzyko"><span className="queue__level"><LevelBadge level={level} /><ScoreRail riskScore={it.risk_score} thresholds={thresholds} /></span></td>
+    <td className="num" data-label="ID sprawy"><Link to={`/sprawy/${it.id}`} title={it.id}>{caseRef(it.id)}</Link></td>
+    <td className="queue__case" data-label="Sprawa"><Link to={`/sprawy/${it.id}`} className="queue__title" title={it.title}>{it.title}</Link><span className="queue__sub truncate">{parties || "Podmiot do ustalenia"}</span></td>
+    <td data-label="Źródło"><span className="queue__cell-main">{PLATFORM_LABEL[it.source.platform] ?? it.source.platform}</span><span className="queue__sub truncate" title={it.source.url}>{hostOf(it.source.url)}</span></td>
+    <td data-label="Moduł"><ModuleList modules={it.modules} /></td>
+    <td data-label="Naruszone kryteria">{it.failed_rules.length ? <span className="queue__rules"><span className="sr-only">Naruszone kryteria: </span>{it.failed_rules.map((id, index) => <span key={id}>{index > 0 && ", "}<RuleTip id={id} definition={it.failed_rule_details?.find((r) => r.id === id)} /></span>)}</span> : <span className="muted">brak</span>}</td>
+    <td data-label="Status i prowadzący"><span className="queue__status"><Link to={`/sprawy/${it.id}#workflow-h`} aria-label={`Status sprawy: ${it.title}: ${STATUS_LABEL[it.status]}`} data-status={it.status}>{STATUS_LABEL[it.status]}</Link>{fresh && <Badge tone="accent">Nowa</Badge>}<span className="queue__sub truncate" title={it.workflow?.assigned_to ?? undefined}>{it.workflow?.assigned_to ?? "nieprzypisana"}</span></span></td>
+    <td className="queue__when" data-label="Wykryto"><time dateTime={it.created_at} aria-label={formatDateTime(it.created_at)} title={relativeTime(it.created_at)}><span>{formatDate(it.created_at)}</span><span className="queue__sub">{formatTime(it.created_at)}</span></time></td>
+    <td className="queue__when" data-label="Rozpoczęto obsługę">{started ? <time dateTime={started} aria-label={formatDateTime(started)}><span>{formatDate(started)}</span><span className="queue__sub">{formatTime(started)}</span></time> : <span className="muted">Nie rozpoczęto</span>}</td>
+    <td data-label="Czas obsługi"><span className="nowrap num">{processingDuration(started, finished, now)}</span>{finished && <span className="queue__sub">zakończono</span>}</td>
   </tr>;
 }
 

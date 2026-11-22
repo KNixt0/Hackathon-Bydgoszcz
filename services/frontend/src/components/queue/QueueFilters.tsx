@@ -16,9 +16,10 @@ interface Props {
 export function QueueFilters({ filters, onChange, onReset, exportHref, bounds }: Props) {
   const active = activeFilterCount({ ...filters, level: "" });
   return (
-    <form className="qtool" role="search" aria-label="Filtry kolejki" onSubmit={(e) => e.preventDefault()}>
+    <div className="filters-shell">
       <details className="disclosure filters-disclosure">
         <summary>Filtry{active > 0 && ` (${active})`}</summary>
+        <form className="qtool" role="search" aria-label="Filtry kolejki" onSubmit={(e) => e.preventDefault()}>
       <div className="qtool__row">
         <div className="field qtool__search">
           <label className="field__label" htmlFor="q-search">Szukaj w kolejce</label>
@@ -32,9 +33,6 @@ export function QueueFilters({ filters, onChange, onReset, exportHref, bounds }:
           {active > 0 && (
             <button type="button" className="linkbtn" onClick={onReset}>Wyczyść filtry<span className="num"> ({active})</span></button>
           )}
-          <a className="dl" href={exportHref} download>
-            <Download aria-hidden="true" />Eksportuj CSV
-          </a>
         </span>
       </div>
       <div className="qtool__row qtool__row--filters">
@@ -69,7 +67,9 @@ export function QueueFilters({ filters, onChange, onReset, exportHref, bounds }:
         </label>
       </div>
       <p className="field__hint">Daty w czasie polskim. Monitorowanie od {warsawInput(bounds.earliest).replace("T", " ")}. Przyszłe daty są niedostępne.</p>
+        </form>
       </details>
-    </form>
+      <a className="dl filters-export" href={exportHref} download><Download aria-hidden="true" />Eksportuj CSV</a>
+    </div>
   );
 }
